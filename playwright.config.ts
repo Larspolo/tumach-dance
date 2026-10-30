@@ -1,8 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
+import webpush from "web-push";
 
 // The slow tests: the home page on a phone and a laptop, the login of the studio app on a phone. Screenshots go to out/ (scratch).
 // PLAYWRIGHT_CHROMIUM: a Chromium that is already installed (the cloud image: /opt/pw-browsers/chromium).
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM || undefined;
+// Throwaway VAPID keys for the push test (#25), new at each run.
+const vapid = webpush.generateVAPIDKeys();
 
 export default defineConfig({
   testDir: "e2e",
@@ -32,6 +35,9 @@ export default defineConfig({
       DATABASE_PATH: "out/e2e/tumach.db",
       BETTER_AUTH_URL: "http://localhost:3100",
       BETTER_AUTH_SECRET: "e2e-only-secret-of-the-throwaway-test-database",
+      VAPID_PUBLIC_KEY: vapid.publicKey,
+      VAPID_PRIVATE_KEY: vapid.privateKey,
+      VAPID_SUBJECT: "mailto:test@example.test",
     },
   },
 });
