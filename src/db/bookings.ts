@@ -3,9 +3,11 @@ import { and, eq, gt, inArray, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
+import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
+import { listClassTimes } from "./classes";
 import type { Db } from "./index";
 import type { Offer } from "./offers";
 import { bookings, offers } from "./schema";
@@ -83,7 +85,10 @@ export function requestBooking(
       const open = openRanges(getHoursRule(db), date, date);
       const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
       if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
-      if (busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      // A class uses the room: a request never takes its time (#99).
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
         .insert(bookings)
         .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })

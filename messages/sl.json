@@ -23,7 +23,11 @@
     "offers": "Ponudba",
     "hours": "Ure",
     "bookings": "Rezervacije",
-    "questions": "Za Nino"
+    "calendarAdd": "Dodaj v moj koledar",
+    "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
+    "calendarRenew": "Naredi nov naslov",
+    "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
+    "week": "Ta teden",    "questions": "Za Nino"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -155,6 +159,10 @@
     "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "Nova prošnja za rezervacijo",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Rezervacije",
     "back": "Nazaj",
@@ -175,5 +183,14 @@
     "thanks": "Hvala! Tvoj odgovor je poslan.",
     "error": "Tvoj odgovor ni bil poslan. Poskusi znova čez trenutek.",
     "loadError": "Vprašanj ni bilo mogoče naložiti. Poskusi znova pozneje."
+  },
+  "StudioWeek": {
+    "title": "Ta teden",
+    "back": "Nazaj",
+    "previous": "Prejšnji teden",
+    "next": "Naslednji teden",
+    "free": "Ni rezervacij.",
+    "request": "prošnja",
+    "approved": "potrjeno"
   }
 }
