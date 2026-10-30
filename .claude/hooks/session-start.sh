@@ -5,7 +5,8 @@ set -euo pipefail
 # The merge driver of game/data/*.jsonl (.gitattributes, #2004): merge the lines by "name", not by union. Also local.
 # A copy in the git directory: an older branch that merges main does not have framework/tools/merge_jsonl.py in its tree.
 ( cd "${CLAUDE_PROJECT_DIR:-.}" && gd=$(git rev-parse --path-format=absolute --git-common-dir) &&
-  cp framework/tools/merge_jsonl.py "$gd/" && git config merge.jsonl.driver "python3 $gd/merge_jsonl.py %O %A %B" ) || true
+  cp framework/tools/merge_jsonl.py framework/tools/merge_json.py "$gd/" && git config merge.jsonl.driver "python3 $gd/merge_jsonl.py %O %A %B" \
+  && git config merge.json.driver "python3 $gd/merge_json.py %O %A %B" ) || true   # merge.json: messages/*.json (#131)
 
 # The Bash tool of a cloud session has no TMPDIR: "$TMPDIR/x.py" was "/x.py" (#2032).
 if [ -n "${CLAUDE_ENV_FILE:-}" ] && [ -z "${TMPDIR:-}" ]; then

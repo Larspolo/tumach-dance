@@ -44,8 +44,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config merge.conflictStyle diff3     # framework/tools/unconflict.py needs the base of each hunk
-          cp framework/tools/unconflict.py framework/tools/merge_jsonl.py "$RUNNER_TEMP/"   # main's copy: an older PR branch does not have it
+          cp framework/tools/unconflict.py framework/tools/merge_jsonl.py framework/tools/merge_json.py "$RUNNER_TEMP/"   # main's copy: an older PR branch does not have it
           git config merge.jsonl.driver "python3 $RUNNER_TEMP/merge_jsonl.py %O %A %B"   # game/data/*.jsonl (#2004)
+          git config merge.json.driver "python3 $RUNNER_TEMP/merge_json.py %O %A %B"   # messages/*.json (#131)
           python3 -m pip install -q "$(grep '^ruff' requirements-dev.txt)"   # checks a "keep both sides" merge (#2631)
           # The PRs to merge main into, with git and 3 to 4 API calls (framework/tools/unconflict_pick.py, 2026-10-29): one line
           # "<number> <branch> <sha> <label 1|0> <dirty|red>". It reads main's tools: the loop checks out PR branches.
