@@ -154,6 +154,10 @@
     "soon": "Nina will look at it and answer you soon.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "New booking request",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Bookings",
     "back": "Back",
