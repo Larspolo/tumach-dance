@@ -272,7 +272,9 @@
     "reminder": "Opomnik za tvojo rezervacijo: {offer}, {when}.",
     "sign": "TUMACH",
     "payLink": "Cena je {price}. Plačaj s tem Tikkiejem: {url}",
-    "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo."
+    "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo.",
+    "payReminderSubject": "Plačilo tvoje rezervacije pri TUMACH",
+    "payReminder": "Nina še ni prejela tvojega plačila za: {offer}, {when}. Je plačilo že poslano? Potem je vse v redu."
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",

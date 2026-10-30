@@ -1,7 +1,8 @@
 // The timer of the booking emails (#165): `src/instrumentation.ts` starts it at each start of the server, also with
-// no `GITHUB_TOKEN`. It checks now and every 5 minutes. The payment reminder of `book:pay` (#167) adds its check here.
+// no `GITHUB_TOKEN`. It checks now and every 5 minutes: the reminder the day before, and the payment reminder (#167).
 import type { Db } from "../db";
 import { checkReminders } from "./booking-reminder";
+import { checkPaymentReminders } from "./payment-reminder";
 
 export const BOOKING_CHECK_INTERVAL_MS = 5 * 60_000;
 
@@ -15,7 +16,7 @@ export function startBookingTimer(db: Db): NodeJS.Timeout {
   if (timer.tumachBookingTimer) return timer.tumachBookingTimer;
   let failing = false;
   const check = () =>
-    checkReminders(db).then(
+    Promise.all([checkReminders(db), checkPaymentReminders(db)]).then(
       () => {
         failing = false;
       },

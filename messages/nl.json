@@ -272,7 +272,9 @@
     "reminder": "Een herinnering aan je boeking: {offer}, {when}.",
     "sign": "TUMACH",
     "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
-    "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen."
+    "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen.",
+    "payReminderSubject": "Betaling van je boeking bij TUMACH",
+    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",

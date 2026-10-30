@@ -111,6 +111,24 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
   return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics] };
 }
 
+/** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
+export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const price = priceText(offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.payReminder", { offer: offerLabel, when }),
+    "",
+    booking.tikkieUrl
+      ? t("bookingEmail.payLink", { price, url: booking.tikkieUrl })
+      : t("bookingEmail.payLater", { price }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text };
+}
+
 /**
  * Send the request email after `requestBooking()` gave `ok`. A failed email does not undo the booking: the error is
  * logged, and the dancer's request is still stored for Nina.
