@@ -1,0 +1,48 @@
+/* The guide for Nina (#45): the look of the studio app (P2). */
+.main {
+  box-sizing: border-box;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  color: #141210;
+  font-family: "Fraunces", Georgia, serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 1rem;
+}
+
+.note {
+  color: #3a352e;
+}
+
+.part {
+  margin-top: 2.5rem;
+}
+
+.heading {
+  font-family: "Space Mono", monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7c3527;
+}
+
+.steps {
+  padding-left: 1.25rem;
+}
+
+.step {
+  margin-bottom: 1.5rem;
+}
+
+.image {
+  display: block;
+  width: 70%;
+  height: auto;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.75rem;
+}

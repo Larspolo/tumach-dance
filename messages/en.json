@@ -61,5 +61,22 @@
   },
   "LanguageSwitcher": {
     "label": "Language"
+  },
+  "StudioGuide": {
+    "title": "How to use the studio app",
+    "intro": "Three short steps. You do them once on your phone.",
+    "loginTitle": "Log in",
+    "loginOpen": "Open tumach.dance/studio on your phone.",
+    "loginEmail": "Type your email and tap \"Send me a code\".",
+    "loginCode": "Look in your email. Type the code of 6 numbers and tap \"Log in\".",
+    "installTitle": "Put the app on your home screen",
+    "installIphone": "iPhone (Safari): tap the Share button (the square with an arrow up), then \"Add to Home Screen\", then \"Add\".",
+    "installAndroid": "Android (Chrome): tap the menu (three dots at the top right), then \"Install app\" or \"Add to Home screen\".",
+    "installOpen": "From now on, open the app with the TUMACH icon on your home screen.",
+    "pushTitle": "Turn on notifications",
+    "pushTurnOn": "Open the app from your home screen and tap \"Turn on notifications\".",
+    "pushAllow": "Your phone asks if the app may send notifications. Tap \"Allow\".",
+    "pushTest": "Tap \"Send a test\". A notification comes on your phone.",
+    "link": "How does the app work? Read the guide"
   }
 }

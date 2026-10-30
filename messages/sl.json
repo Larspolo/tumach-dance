@@ -61,5 +61,22 @@
   },
   "LanguageSwitcher": {
     "label": "Jezik"
+  },
+  "StudioGuide": {
+    "title": "Kako uporabljaš studijsko aplikacijo",
+    "intro": "Trije kratki koraki. Narediš jih enkrat na telefonu.",
+    "loginTitle": "Prijava",
+    "loginOpen": "Na telefonu odpri tumach.dance/studio.",
+    "loginEmail": "Vpiši svoj e-poštni naslov in tapni \"Pošlji mi kodo\".",
+    "loginCode": "Poglej v e-pošto. Vpiši kodo s 6 številkami in tapni \"Prijava\".",
+    "installTitle": "Dodaj aplikacijo na začetni zaslon",
+    "installIphone": "iPhone (Safari): tapni gumb Deli (kvadrat s puščico navzgor), nato \"Dodaj na začetni zaslon\" in nato \"Dodaj\".",
+    "installAndroid": "Android (Chrome): tapni meni (tri pike zgoraj desno), nato \"Namesti aplikacijo\" ali \"Dodaj na začetni zaslon\".",
+    "installOpen": "Od zdaj aplikacijo odpiraj z ikono TUMACH na začetnem zaslonu.",
+    "pushTitle": "Vklopi obvestila",
+    "pushTurnOn": "Odpri aplikacijo z začetnega zaslona in tapni \"Vklopi obvestila\".",
+    "pushAllow": "Telefon vpraša, ali aplikacija sme pošiljati obvestila. Tapni \"Dovoli\".",
+    "pushTest": "Tapni \"Pošlji preizkus\". Na telefon pride obvestilo.",
+    "link": "Kako deluje aplikacija? Preberi navodila"
   }
 }
