@@ -105,11 +105,17 @@ export type DecideResult = { ok: true; booking: Booking } | { ok: false; reason:
 /**
  * Nina approves or declines a `requested` booking. One `UPDATE` changes the status only while it is `requested`: a
  * second decision gets `not-requested` and changes nothing. A declined booking no longer holds its time.
+ * `tikkieUrl`: the payment link of an approval (#142), checked by `tikkieLink()` of `src/lib/tikkie.ts`.
  */
-export function decideBooking(db: Db, id: number, decision: "approved" | "declined"): DecideResult {
+export function decideBooking(
+  db: Db,
+  id: number,
+  decision: "approved" | "declined",
+  tikkieUrl: string | null = null,
+): DecideResult {
   const booking = db
     .update(bookings)
-    .set({ status: decision })
+    .set({ status: decision, tikkieUrl: decision === "approved" ? tikkieUrl : null })
     .where(and(eq(bookings.id, id), eq(bookings.status, "requested")))
     .returning()
     .get();

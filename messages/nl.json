@@ -270,7 +270,9 @@
     "cancelled": "Nina heeft je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "reminderSubject": "Herinnering: je boeking bij TUMACH",
     "reminder": "Een herinnering aan je boeking: {offer}, {when}.",
-    "sign": "TUMACH"
+    "sign": "TUMACH",
+    "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
+    "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen."
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",
@@ -283,7 +285,9 @@
     "approve": "Goedkeuren",
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
-    "declined": "Afgewezen."
+    "declined": "Afgewezen.",
+    "tikkie": "Tikkie-link (optioneel)",
+    "badLink": "De Tikkie-link moet beginnen met https://."
   },
   "StudioQuestions": {
     "title": "Voor Nina",

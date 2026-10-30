@@ -270,7 +270,9 @@
     "cancelled": "Nina je preklicala tvojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin.",
     "reminderSubject": "Opomnik: tvoja rezervacija pri TUMACH",
     "reminder": "Opomnik za tvojo rezervacijo: {offer}, {when}.",
-    "sign": "TUMACH"
+    "sign": "TUMACH",
+    "payLink": "Cena je {price}. Plačaj s tem Tikkiejem: {url}",
+    "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo."
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",
@@ -283,7 +285,9 @@
     "approve": "Potrdi",
     "decline": "Zavrni",
     "approved": "Potrjeno.",
-    "declined": "Zavrnjeno."
+    "declined": "Zavrnjeno.",
+    "tikkie": "Povezava Tikkie (neobvezno)",
+    "badLink": "Povezava Tikkie se mora začeti s https://."
   },
   "StudioQuestions": {
     "title": "Za Nino",
