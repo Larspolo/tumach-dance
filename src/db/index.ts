@@ -5,6 +5,7 @@ import Database from "better-sqlite3";
 import { type BetterSQLite3Database, drizzle } from "drizzle-orm/better-sqlite3";
 import { runMigrations } from "./migrate";
 import * as schema from "./schema";
+import { setWalMode } from "./wal";
 
 export type Db = BetterSQLite3Database<typeof schema> & { $client: Database.Database };
 
@@ -16,7 +17,7 @@ export const MIGRATIONS_FOLDER = join(process.cwd(), "drizzle");
 export function openDb(path: string): Db {
   if (path !== ":memory:") mkdirSync(dirname(path), { recursive: true });
   const sqlite = new Database(path, { timeout: 10_000 });
-  sqlite.pragma("journal_mode = WAL");
+  setWalMode(sqlite);
   sqlite.pragma("foreign_keys = ON");
   runMigrations(sqlite, MIGRATIONS_FOLDER);
   return drizzle(sqlite, { schema });
