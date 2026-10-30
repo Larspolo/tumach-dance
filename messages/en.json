@@ -45,5 +45,8 @@
     "show": "Show",
     "add": "Add an offer",
     "addSave": "Add"
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
   }
 }

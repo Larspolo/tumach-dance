@@ -45,5 +45,8 @@
     "show": "Prikaži",
     "add": "Dodaj ponudbo",
     "addSave": "Dodaj"
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
   }
 }
