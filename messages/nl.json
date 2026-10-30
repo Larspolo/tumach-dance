@@ -143,5 +143,12 @@
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
+  },
+  "bookingEmail": {
+    "subject": "Je aanvraag bij TUMACH",
+    "greeting": "Hoi {name},",
+    "body": "Bedankt voor je aanvraag: {offer}, {when}.",
+    "soon": "Nina kijkt ernaar en antwoordt je snel.",
+    "sign": "TUMACH"
   }
 }
