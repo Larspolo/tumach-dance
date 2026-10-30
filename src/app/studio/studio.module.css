@@ -1,0 +1,83 @@
+/* The look of the studio app: the colors and fonts of the current tumach.dance (P2, docs/design/current-site.html). */
+.body {
+  margin: 0;
+  min-height: 100dvh;
+  background: #f4efe6;
+  color: #141210;
+  font-family: "Fraunces", Georgia, serif;
+}
+
+.main {
+  box-sizing: border-box;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  font-family: "Space Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7c3527;
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 1.15rem;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.5rem;
+  background: #fbf8f1;
+  color: inherit;
+  font-family: inherit;
+}
+
+.button {
+  padding: 0.95rem 1rem;
+  font-size: 1.05rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #a8503a;
+  color: #fbf8f1;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+}
+
+.link {
+  padding: 0.5rem 0;
+  border: 0;
+  background: none;
+  color: #7c3527;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.note {
+  margin: 0 0 0.5rem;
+  color: #3a352e;
+}
+
+.error {
+  margin: 0;
+  color: #7c3527;
+}

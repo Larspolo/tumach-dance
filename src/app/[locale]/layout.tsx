@@ -5,6 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
+import TestBanner from "@/components/TestBanner";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
@@ -40,6 +41,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${fraunces.variable} ${spaceMono.variable}`}>
       <body>
+        <TestBanner />
         <NextIntlClientProvider>
           <Nav />
           {children}
