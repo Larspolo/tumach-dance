@@ -32,7 +32,10 @@ describe("answered questions", () => {
         { number: 3, title: "New", body, labels: [], comments: 0 },
       ],
       [`${api}/issues/1/comments?per_page=100`]: [{ body: "A run note" }, { body: "Nina's answer: B. Blue" }],
-      [`${api}/issues/2/comments?per_page=100`]: [{ body: "Nina's answer: A. Red" }, { body: "And the size?" }],
+      [`${api}/issues/2/comments?per_page=100`]: [
+        { body: "Nina's answer: A. Red" },
+        { body: "## For Nina\nAnd the size?\n- A. S\n- B. M" },
+      ],
     });
     expect((await listNinaQuestions(env)).map((q) => q.number)).toEqual([2, 3]);
     expect(await countNinaQuestions(env)).toBe(2);

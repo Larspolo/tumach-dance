@@ -39,7 +39,10 @@ async function call(s: NonNullable<ReturnType<typeof settings>>, path: string, i
 
 const ANSWER_HEAD = "Nina's answer:";
 
-/** True when the last comment of the issue is an answer of Nina (#178): a newer comment of a run asks again. */
+/**
+ * True when a comment of Nina answers the question and no later comment asks again (#178, #195). A later comment
+ * asks again only with its own section `## For Nina`: the reply of a run to her answer does not.
+ */
 async function answered(s: NonNullable<ReturnType<typeof settings>>, issue: Issue): Promise<boolean> {
   if (!issue.comments) return false;
   const page = Math.ceil(issue.comments / 100);
@@ -47,12 +50,14 @@ async function answered(s: NonNullable<ReturnType<typeof settings>>, issue: Issu
     s,
     `/issues/${issue.number}/comments?per_page=100${page > 1 ? `&page=${page}` : ""}`,
   )) as { body?: string | null }[];
-  return (comments.at(-1)?.body ?? "").startsWith(ANSWER_HEAD);
+  const bodies = comments.map((c) => c.body ?? "");
+  const last = bodies.findLastIndex((b) => b.startsWith(ANSWER_HEAD));
+  return last >= 0 && !bodies.slice(last + 1).some((b) => b.split("\n").some((line) => line.trim() === "## For Nina"));
 }
 
 /**
  * The open questions for Nina, parsed. No pull requests, no tickets without `## For Nina`, and no question that
- * Nina answered last (#178).
+ * Nina answered and no later comment asks again (#178, #195).
  */
 export async function listNinaQuestions(env: NodeJS.ProcessEnv = process.env): Promise<NinaQuestion[]> {
   const s = settings(env);
