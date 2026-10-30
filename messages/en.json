@@ -2,5 +2,8 @@
   "HomePage": {
     "title": "TUMACH",
     "welcome": "[Placeholder (en): the welcome of Nina]"
+  },
+  "StudioPage": {
+    "placeholder": "The studio app comes soon."
   }
 }

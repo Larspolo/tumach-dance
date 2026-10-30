@@ -2,5 +2,8 @@
   "HomePage": {
     "title": "TUMACH",
     "welcome": "[Placeholder (nl): the welcome of Nina]"
+  },
+  "StudioPage": {
+    "placeholder": "De studio-app komt binnenkort."
   }
 }

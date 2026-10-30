@@ -29,7 +29,8 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
   (`npm run db:generate` after a change of `src/db/schema.ts`); `src/instrumentation.ts` applies them at the start.
 - `messages/` – the texts, one file per language (`en`, `nl`, `sl`).
-- `public/` – the images, the app manifest and the service worker (push).
+- `public/` – the images, the app icons (`public/icons/`, made by `scripts/make-icons.ts`) and the service worker
+  (push). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
 - `Dockerfile`, `deploy/` – the image and the compose files of the home server (preview and live).
 - `framework/`, `.claude/`, `steering/` – the agent system.
