@@ -116,7 +116,25 @@
     "hide": "Hide",
     "show": "Show",
     "add": "Add a class",
-    "addSave": "Add"
+    "addSave": "Add",
+    "times": "Weekly times",
+    "noTimes": "No times yet.",
+    "time": "{day} {from} to {to}",
+    "weekday": "Day",
+    "start": "Start",
+    "end": "End",
+    "addTime": "Add the time",
+    "removeTime": "Remove",
+    "wrongTime": "The end must be after the start. The time was not added.",
+    "day": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    }
   },
   "Push": {
     "title": "Notifications",

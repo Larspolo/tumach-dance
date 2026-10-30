@@ -116,7 +116,25 @@
     "hide": "Verbergen",
     "show": "Tonen",
     "add": "Les toevoegen",
-    "addSave": "Toevoegen"
+    "addSave": "Toevoegen",
+    "times": "Vaste tijden",
+    "noTimes": "Nog geen tijden.",
+    "time": "{day} {from} tot {to}",
+    "weekday": "Dag",
+    "start": "Begin",
+    "end": "Einde",
+    "addTime": "Tijd toevoegen",
+    "removeTime": "Verwijderen",
+    "wrongTime": "Het einde moet na het begin zijn. De tijd is niet toegevoegd.",
+    "day": {
+      "mon": "maandag",
+      "tue": "dinsdag",
+      "wed": "woensdag",
+      "thu": "donderdag",
+      "fri": "vrijdag",
+      "sat": "zaterdag",
+      "sun": "zondag"
+    }
   },
   "Push": {
     "title": "Meldingen",

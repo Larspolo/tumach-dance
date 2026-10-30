@@ -116,7 +116,25 @@
     "hide": "Skrij",
     "show": "Prikaži",
     "add": "Dodaj tečaj",
-    "addSave": "Dodaj"
+    "addSave": "Dodaj",
+    "times": "Tedenski termini",
+    "noTimes": "Še ni terminov.",
+    "time": "{day} od {from} do {to}",
+    "weekday": "Dan",
+    "start": "Začetek",
+    "end": "Konec",
+    "addTime": "Dodaj termin",
+    "removeTime": "Odstrani",
+    "wrongTime": "Konec mora biti po začetku. Termin ni dodan.",
+    "day": {
+      "mon": "ponedeljek",
+      "tue": "torek",
+      "wed": "sreda",
+      "thu": "četrtek",
+      "fri": "petek",
+      "sat": "sobota",
+      "sun": "nedelja"
+    }
   },
   "Push": {
     "title": "Obvestila",
