@@ -20,3 +20,4 @@ The agent writes here what it learned the hard way. Each line must save time in 
 - A layout `metadata.icons` replaces the icon of `src/app/icon.png`: give it an `icon` too, or the browser asks `/favicon.ico` (404, console error; #71).
 - `merge_main.py --push` of a PR whose quick CI is green lets Automerge merge it in about a minute: run the browser tests of the PR on the merged tree before that push, not after (#60 merged with a broken passkey test, #83).
 - The browser tests add rows to `out/e2e/tumach.db` and never clear it: delete `out/e2e` before a second `npx playwright test`, or `book.spec.ts` fails (#5).
+- sharp: `withExif({ IFD0: { Orientation } })` does not set the orientation of a test photo; `withMetadata({ orientation: 6 })` does (`tests/photos.test.ts`, #171).
