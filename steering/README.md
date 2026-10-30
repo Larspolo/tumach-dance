@@ -2,7 +2,8 @@
 
 The owner steers tumach-dance with the files in this directory. `system/` holds the preferences for the agent system
 (how the runs work). `project/` holds the preferences for the project (what the site becomes). The project
-principles are P1 to P4, the system principles P5 and up: the numbers do not repeat.
+principles are P1 to P4 and P11, the system principles P5 to P10: the numbers do not repeat (a new principle takes
+the next free number).
 
 | File | Who writes it | Kind |
 |---|---|---|

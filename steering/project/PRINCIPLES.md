@@ -30,6 +30,15 @@ Development uses free services only. The preview and the live site run on Lars's
 Cloudflare). Each service with a cost (also a fee per payment) gets a decision ticket. Example: email goes through the
 current free Mailgun account.
 
+## P11. Trust the dancers, and use what Nina already uses
+
+Nina chose fewer rules and less machinery than the agents proposed, four times (`steering/project/DECISIONS.md`,
+2026-10-30). So: no booking rule that the studio does not need yet; a rare case is for Nina to handle herself. A tool
+that Nina already uses wins over a new account, an integration or an own system. News for Nina comes as a push on
+her phone, not as an email. Examples: a dancer books any free time that has not started (no minimum time, #35) and
+cancels with the email link at any time before the start, with no refund rule (#163); the payment is a Tikkie that
+Nina sends, and she marks a booking paid herself (no payment provider, #139).
+
 ## Owner involvement
 
 The areas where the owner decides each choice, also when one option is clearly best (a decision ticket). In all
