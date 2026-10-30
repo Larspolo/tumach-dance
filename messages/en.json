@@ -22,5 +22,8 @@
   "LoginEmail": {
     "subject": "Your TUMACH code: {code}",
     "text": "Your code for the TUMACH studio app is {code}.\n\nType it in the app. The code works for {minutes} minutes.\n\nDid you not ask for a code? Then you can ignore this email."
+  },
+  "TestBanner": {
+    "text": "Test site: bookings here are not real"
   }
 }

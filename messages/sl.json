@@ -22,5 +22,8 @@
   "LoginEmail": {
     "subject": "Tvoja koda TUMACH: {code}",
     "text": "Tvoja koda za aplikacijo studia TUMACH je {code}.\n\nVpiši jo v aplikacijo. Koda velja {minutes} minut.\n\nČe ne poznaš te zahteve, lahko to e-pošto prezreš."
+  },
+  "TestBanner": {
+    "text": "Testna stran: rezervacije tukaj niso prave"
   }
 }
