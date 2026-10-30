@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { requestBooking } from "@/db/bookings";
 import { sendRequestEmail } from "@/lib/booking-email";
+import { sendRequestPush } from "@/lib/booking-push";
 
 /** The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. */
 export async function sendRequest(form: FormData): Promise<void> {
@@ -24,6 +25,7 @@ export async function sendRequest(form: FormData): Promise<void> {
   const safeLocale = /^[a-z]{2}$/.test(locale) ? locale : "en";
   if (result.ok) {
     await sendRequestEmail(db, result.booking, safeLocale);
+    await sendRequestPush(db, result.booking);
     redirect(`/${safeLocale}/book?sent=1`);
   }
   const day = text("day");

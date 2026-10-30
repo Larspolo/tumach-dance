@@ -110,3 +110,12 @@ export async function createNinaFeedback(
     return { ok: false, error: "notSent" };
   }
 }
+
+/** The number of open questions for Nina, for the link on the start page (#130); null when GitHub fails. */
+export async function countNinaQuestions(env: NodeJS.ProcessEnv = process.env): Promise<number | null> {
+  try {
+    return (await listNinaQuestions(env)).length;
+  } catch {
+    return null;
+  }
+}

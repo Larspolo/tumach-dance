@@ -32,8 +32,8 @@ export default defineConfig({
     },
   ],
   webServer: [
-    // The GitHub API stub for the feedback test (#108).
-    { command: "node e2e/github-stub.mjs 3199", url: "http://localhost:3199/", reuseExistingServer: !process.env.CI },
+    // The stub of the GitHub API of the page "For Nina" (#68).
+    { command: "node e2e/github-stub.mjs", url: "http://localhost:3101/__comments", reuseExistingServer: false },
     {
       command: "npm run build && npm run start -- -p 3100",
       url: "http://localhost:3100/en",
@@ -50,9 +50,9 @@ export default defineConfig({
         VAPID_PUBLIC_KEY: vapid.publicKey,
         VAPID_PRIVATE_KEY: vapid.privateKey,
         VAPID_SUBJECT: "mailto:test@example.test",
-        GITHUB_TOKEN: "e2e-stub",
-        GITHUB_REPO: "o/r",
-        GITHUB_API_URL: "http://localhost:3199",
+        GITHUB_API_URL: "http://localhost:3101",
+        GITHUB_TOKEN: "e2e-only-token",
+        GITHUB_REPO: "owner/repo",
       },
     },
   ],

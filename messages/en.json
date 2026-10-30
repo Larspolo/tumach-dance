@@ -27,6 +27,10 @@
     "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
     "calendarRenew": "Make a new address",
     "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
+    "week": "This week",
+    "questions": "For Nina",
+    "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
+    "classes": "Classes",
     "feedback": "Feedback"
   },
   "PasskeyOffer": {
@@ -96,6 +100,44 @@
     "add": "Add an offer",
     "addSave": "Add"
   },
+  "StudioClasses": {
+    "title": "Classes",
+    "back": "Back",
+    "none": "No classes yet.",
+    "hidden": "hidden",
+    "name": "Name",
+    "text": "Text",
+    "forWhom": "For whom",
+    "nameIn": "Name in {language}",
+    "textIn": "Text in {language}",
+    "forWhomIn": "For whom in {language}",
+    "nl": "Dutch",
+    "sl": "Slovenian",
+    "translations": "Translations",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add a class",
+    "addSave": "Add",
+    "times": "Weekly times",
+    "noTimes": "No times yet.",
+    "time": "{day} {from} to {to}",
+    "weekday": "Day",
+    "start": "Start",
+    "end": "End",
+    "addTime": "Add the time",
+    "removeTime": "Remove",
+    "wrongTime": "The end must be after the start. The time was not added.",
+    "day": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    }
+  },
   "Push": {
     "title": "Notifications",
     "turnOn": "Turn on notifications",
@@ -159,6 +201,10 @@
     "soon": "Nina will look at it and answer you soon.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "New booking request",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Bookings",
     "back": "Back",
@@ -167,6 +213,27 @@
     "decline": "Decline",
     "approved": "Approved.",
     "declined": "Declined."
+  },
+  "StudioQuestions": {
+    "title": "For Nina",
+    "back": "Back",
+    "none": "No questions for you now. Enjoy your day!",
+    "try": "Try it on the site",
+    "choose": "Your choice",
+    "text": "Anything to add? (optional)",
+    "send": "Send",
+    "thanks": "Thank you! Your answer is sent.",
+    "error": "Your answer was not sent. Please try again in a moment.",
+    "loadError": "The questions could not be loaded. Please try again later."
+  },
+  "StudioWeek": {
+    "title": "This week",
+    "back": "Back",
+    "previous": "Previous week",
+    "next": "Next week",
+    "free": "No bookings.",
+    "request": "request",
+    "approved": "approved"
   },
   "StudioFeedback": {
     "back": "Back",

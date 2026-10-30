@@ -27,6 +27,10 @@
     "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
     "calendarRenew": "Maak een nieuw adres",
     "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
+    "week": "Deze week",
+    "questions": "Voor Nina",
+    "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
+    "classes": "Lessen",
     "feedback": "Feedback"
   },
   "PasskeyOffer": {
@@ -96,6 +100,44 @@
     "add": "Aanbod toevoegen",
     "addSave": "Toevoegen"
   },
+  "StudioClasses": {
+    "title": "Lessen",
+    "back": "Terug",
+    "none": "Nog geen lessen.",
+    "hidden": "verborgen",
+    "name": "Naam",
+    "text": "Tekst",
+    "forWhom": "Voor wie",
+    "nameIn": "Naam in het {language}",
+    "textIn": "Tekst in het {language}",
+    "forWhomIn": "Voor wie in het {language}",
+    "nl": "Nederlands",
+    "sl": "Sloveens",
+    "translations": "Vertalingen",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Les toevoegen",
+    "addSave": "Toevoegen",
+    "times": "Vaste tijden",
+    "noTimes": "Nog geen tijden.",
+    "time": "{day} {from} tot {to}",
+    "weekday": "Dag",
+    "start": "Begin",
+    "end": "Einde",
+    "addTime": "Tijd toevoegen",
+    "removeTime": "Verwijderen",
+    "wrongTime": "Het einde moet na het begin zijn. De tijd is niet toegevoegd.",
+    "day": {
+      "mon": "maandag",
+      "tue": "dinsdag",
+      "wed": "woensdag",
+      "thu": "donderdag",
+      "fri": "vrijdag",
+      "sat": "zaterdag",
+      "sun": "zondag"
+    }
+  },
   "Push": {
     "title": "Meldingen",
     "turnOn": "Meldingen aanzetten",
@@ -159,6 +201,10 @@
     "soon": "Nina kijkt ernaar en antwoordt je snel.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "Nieuwe aanvraag",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Boekingen",
     "back": "Terug",
@@ -167,6 +213,27 @@
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen."
+  },
+  "StudioQuestions": {
+    "title": "Voor Nina",
+    "back": "Terug",
+    "none": "Er zijn nu geen vragen voor je. Fijne dag!",
+    "try": "Probeer het op de site",
+    "choose": "Jouw keuze",
+    "text": "Iets toe te voegen? (optioneel)",
+    "send": "Versturen",
+    "thanks": "Dank je! Je antwoord is verstuurd.",
+    "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",
+    "loadError": "De vragen konden niet worden geladen. Probeer het later nog eens."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd"
   },
   "StudioFeedback": {
     "back": "Terug",

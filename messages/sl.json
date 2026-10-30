@@ -27,6 +27,10 @@
     "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
     "calendarRenew": "Naredi nov naslov",
     "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
+    "week": "Ta teden",
+    "questions": "Za Nino",
+    "questionsCount": "Za Nino ({count, plural, one {# vprašanje} two {# vprašanji} few {# vprašanja} other {# vprašanj}})",
+    "classes": "Tečaji",
     "feedback": "Povratne informacije"
   },
   "PasskeyOffer": {
@@ -96,6 +100,44 @@
     "add": "Dodaj ponudbo",
     "addSave": "Dodaj"
   },
+  "StudioClasses": {
+    "title": "Tečaji",
+    "back": "Nazaj",
+    "none": "Še ni tečajev.",
+    "hidden": "skrito",
+    "name": "Ime",
+    "text": "Besedilo",
+    "forWhom": "Za koga",
+    "nameIn": "Ime ({language})",
+    "textIn": "Besedilo ({language})",
+    "forWhomIn": "Za koga ({language})",
+    "nl": "nizozemščina",
+    "sl": "slovenščina",
+    "translations": "Prevodi",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj tečaj",
+    "addSave": "Dodaj",
+    "times": "Tedenski termini",
+    "noTimes": "Še ni terminov.",
+    "time": "{day} od {from} do {to}",
+    "weekday": "Dan",
+    "start": "Začetek",
+    "end": "Konec",
+    "addTime": "Dodaj termin",
+    "removeTime": "Odstrani",
+    "wrongTime": "Konec mora biti po začetku. Termin ni dodan.",
+    "day": {
+      "mon": "ponedeljek",
+      "tue": "torek",
+      "wed": "sreda",
+      "thu": "četrtek",
+      "fri": "petek",
+      "sat": "sobota",
+      "sun": "nedelja"
+    }
+  },
   "Push": {
     "title": "Obvestila",
     "turnOn": "Vklopi obvestila",
@@ -159,6 +201,10 @@
     "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "Nova prošnja za rezervacijo",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Rezervacije",
     "back": "Nazaj",
@@ -167,6 +213,27 @@
     "decline": "Zavrni",
     "approved": "Potrjeno.",
     "declined": "Zavrnjeno."
+  },
+  "StudioQuestions": {
+    "title": "Za Nino",
+    "back": "Nazaj",
+    "none": "Trenutno ni vprašanj zate. Lep dan!",
+    "try": "Preizkusi na strani",
+    "choose": "Tvoja izbira",
+    "text": "Želiš kaj dodati? (neobvezno)",
+    "send": "Pošlji",
+    "thanks": "Hvala! Tvoj odgovor je poslan.",
+    "error": "Tvoj odgovor ni bil poslan. Poskusi znova čez trenutek.",
+    "loadError": "Vprašanj ni bilo mogoče naložiti. Poskusi znova pozneje."
+  },
+  "StudioWeek": {
+    "title": "Ta teden",
+    "back": "Nazaj",
+    "previous": "Prejšnji teden",
+    "next": "Naslednji teden",
+    "free": "Ni rezervacij.",
+    "request": "prošnja",
+    "approved": "potrjeno"
   },
   "StudioFeedback": {
     "back": "Nazaj",
