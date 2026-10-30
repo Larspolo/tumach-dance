@@ -129,3 +129,32 @@ export const pushSubscriptions = sqliteTable("push_subscriptions", {
   /** UTC, epoch milliseconds. */
   createdAt: integer("created_at").notNull(),
 });
+
+/** A booking request of a dancer (#34). A `requested` or `approved` booking holds its time: no other may overlap it. */
+export const bookings = sqliteTable(
+  "bookings",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    offerId: integer("offer_id")
+      .notNull()
+      .references(() => offers.id),
+    /** UTC, epoch milliseconds; `end` is exclusive. */
+    start: integer("start").notNull(),
+    end: integer("end").notNull(),
+    status: text("status", { enum: ["requested", "approved", "declined", "cancelled"] })
+      .notNull()
+      .default("requested"),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    /** The language of the dancer, for the emails. */
+    locale: text("locale").notNull(),
+    /** UTC, epoch milliseconds. */
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [
+    index("bookings_start_idx").on(t.start),
+    check("bookings_status", sql`${t.status} IN ('requested', 'approved', 'declined', 'cancelled')`),
+    check("bookings_range", sql`${t.end} > ${t.start}`),
+  ],
+);
