@@ -4,7 +4,9 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
 /** `replyTo`: the address that Nina's Reply button of Gmail answers (the contact form, #150). */
-export type Email = { to: string; subject: string; text: string; replyTo?: string };
+/** `attachments`: files of the email, for example the calendar file of a reminder (#166). */
+export type Attachment = { filename: string; contentType: string; content: string };
+export type Email = { to: string; subject: string; text: string; replyTo?: string; attachments?: Attachment[] };
 
 /**
  * "mailgun" with `MAILGUN_API_KEY` and `MAILGUN_DOMAIN`. "log" in development and tests, and with `EMAIL_TRANSPORT=log`
@@ -20,7 +22,8 @@ export function emailTransport(env: NodeJS.ProcessEnv = process.env): "mailgun" 
 export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.env): Promise<void> {
   if (emailTransport(env) === "log") {
     const replyTo = email.replyTo ? ` (reply to ${email.replyTo})` : "";
-    console.info(`[email] to ${email.to}${replyTo}: ${email.subject}\n${email.text}`);
+    const files = email.attachments?.length ? ` [${email.attachments.map((a) => a.filename).join(", ")}]` : "";
+    console.info(`[email] to ${email.to}${replyTo}: ${email.subject}${files}\n${email.text}`);
     // EMAIL_LOG_FILE: one JSON line per email, so that a browser test can read the code.
     if (env.EMAIL_LOG_FILE) {
       mkdirSync(dirname(env.EMAIL_LOG_FILE), { recursive: true });
@@ -31,13 +34,23 @@ export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.e
   const domain = env.MAILGUN_DOMAIN as string;
   // The EU account uses https://api.eu.mailgun.net.
   const url = `${env.MAILGUN_API_URL || "https://api.mailgun.net"}/v3/${domain}/messages`;
-  const body = new URLSearchParams({
+  const fields = {
     from: env.EMAIL_FROM || `TUMACH <hello@${domain}>`,
     to: email.to,
     subject: email.subject,
     text: email.text,
     ...(email.replyTo ? { "h:Reply-To": email.replyTo } : {}),
-  });
+  };
+  let body: URLSearchParams | FormData = new URLSearchParams(fields);
+  // A file needs a multipart form: Mailgun reads each `attachment` field as one file.
+  if (email.attachments?.length) {
+    const form = new FormData();
+    for (const [name, value] of Object.entries(fields)) form.append(name, value);
+    for (const a of email.attachments) {
+      form.append("attachment", new Blob([a.content], { type: a.contentType }), a.filename);
+    }
+    body = form;
+  }
   const response = await fetch(url, {
     method: "POST",
     headers: { Authorization: `Basic ${Buffer.from(`api:${env.MAILGUN_API_KEY}`).toString("base64")}` },
