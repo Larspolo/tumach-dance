@@ -217,6 +217,8 @@
     "declinedOther": "You can pick another time on the booking page.",
     "cancelledSubject": "Your booking at TUMACH is cancelled",
     "cancelled": "Nina cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
+    "reminderSubject": "Reminder: your booking at TUMACH",
+    "reminder": "A reminder of your booking: {offer}, {when}.",
     "sign": "TUMACH"
   },
   "bookingPush": {

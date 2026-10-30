@@ -177,6 +177,8 @@ export const bookings = sqliteTable(
     createdAt: integer("created_at").notNull(),
     /** UTC, epoch milliseconds; `null` = not paid. A paid booking stays `approved`. */
     paidAt: integer("paid_at"),
+    /** UTC, epoch milliseconds; `null` = no reminder email yet (#165). Set before the send: one reminder only. */
+    remindedAt: integer("reminded_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),

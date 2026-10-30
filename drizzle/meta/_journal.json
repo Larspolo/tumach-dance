@@ -71,6 +71,13 @@
       "when": 1793396689820,
       "tag": "0009_wealthy_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1793397031029,
+      "tag": "0010_fancy_prowler",
+      "breakpoints": true
     }
   ]
 }
