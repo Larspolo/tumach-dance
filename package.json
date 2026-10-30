@@ -1,0 +1,18 @@
+{
+  "name": "tumach-dance",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The website of the TUMACH dance studio: show the studio, book a lesson or the studio, and Nina's studio app.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "vitest": "5.0.5"
+  }
+}

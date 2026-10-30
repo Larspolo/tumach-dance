@@ -1,0 +1,16 @@
+# Decisions: the project
+
+The log of the owner's decisions: one line per decision, the newest at the end. `steering/project/PRINCIPLES.md` generalizes
+them. Runs only add lines here (`merge=union` in `.gitattributes`).
+
+Columns: date · ticket · decision · recommendation (`taken`, `changed`: the owner combined or changed it, `other`:
+the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or `new` when no principle predicts it).
+
+- 2026-10-30 · - · Stack: TypeScript and Next.js, not Python and Django · other · new
+- 2026-10-30 · - · Dancers book private lessons and studio rental (no group classes yet) · - · new
+- 2026-10-30 · - · Simple and phone first wins over full control · taken · P1
+- 2026-10-30 · - · Languages: English, Dutch and Slovenian · other · new
+- 2026-10-30 · - · The look of the current tumach.dance ("simple and chill") · - · P2
+- 2026-10-30 · - · Nina gets push notifications on her phone, not email · other · new
+- 2026-10-30 · - · Nina tries each feature on a preview with no step by Lars, and answers on a page for her; technical questions go to Lars · - · new
+- 2026-10-30 · - · Free services only; the live site runs on Lars's home server · taken · P4
