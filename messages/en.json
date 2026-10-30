@@ -260,5 +260,16 @@
     "send": "Send",
     "thanks": "Thank you, we received your feedback",
     "failed": "Sending failed, please try again later"
+  },
+  "Contact": {
+    "subject": "Message from {name} via the website",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "errors": {
+      "name": "Write your name: 1 to 100 characters, on one line.",
+      "email": "Write a valid email address.",
+      "message": "Write a message: 1 to 5000 characters."
+    }
   }
 }

@@ -260,5 +260,16 @@
     "send": "Versturen",
     "thanks": "Dank je, we hebben je feedback ontvangen",
     "failed": "Versturen is mislukt, probeer het later nog eens"
+  },
+  "Contact": {
+    "subject": "Bericht van {name} via de website",
+    "name": "Naam",
+    "email": "E-mail",
+    "message": "Bericht",
+    "errors": {
+      "name": "Vul je naam in: 1 tot 100 tekens, op één regel.",
+      "email": "Vul een geldig e-mailadres in.",
+      "message": "Schrijf een bericht: 1 tot 5000 tekens."
+    }
   }
 }
