@@ -249,7 +249,8 @@
     "next": "Next week",
     "free": "No bookings.",
     "request": "request",
-    "approved": "approved"
+    "approved": "approved",
+    "paid": "paid"
   },
   "StudioFeedback": {
     "back": "Back",

@@ -53,7 +53,7 @@ export default async function WeekPage({ searchParams }: { searchParams: Promise
                       {t("request")}
                     </Link>
                   ) : (
-                    <span className={styles.mark}>{t("approved")}</span>
+                    <span className={styles.mark}>{t(booking.paidAt === null ? "approved" : "paid")}</span>
                   )}
                 </li>
               ))}

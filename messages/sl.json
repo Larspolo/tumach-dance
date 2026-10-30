@@ -249,7 +249,8 @@
     "next": "Naslednji teden",
     "free": "Ni rezervacij.",
     "request": "prošnja",
-    "approved": "potrjeno"
+    "approved": "potrjeno",
+    "paid": "plačano"
   },
   "StudioFeedback": {
     "back": "Nazaj",
