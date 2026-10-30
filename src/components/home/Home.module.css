@@ -355,6 +355,12 @@
   }
 }
 
+.contact .fieldError {
+  color: var(--rust);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .none {
   font-style: italic;
   color: #6a6358;

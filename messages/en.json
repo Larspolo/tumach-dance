@@ -45,7 +45,9 @@
       "send": "[Placeholder (en): send]",
       "placeLabel": "[Placeholder (en): place]",
       "place": "[Placeholder (en): address of the studio]",
-      "closing": "[Placeholder (en): closing line]"
+      "closing": "[Placeholder (en): closing line]",
+      "thanks": "[Placeholder (en): Thank you, your message is sent]",
+      "failed": "Sending failed, please try again later"
     }
   },
   "Nav": {
