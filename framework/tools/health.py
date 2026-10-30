@@ -32,7 +32,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 CI_JOB_RUNS = 20                          # read the step times of this many CI runs (one API call each)
 DENY = (".log", ".mca", ".png")           # suffixes that do not belong in git ...
-DENY_OK = ("docs/", "samples/")           # ... except .png in these folders
+DENY_OK = ("docs/", "samples/", "public/", "src/app/")   # ... except .png in these folders (web images and app icons)
 BIG = 1 << 20
 OWNER = CONFIG["owner"]                   # a reopen by an owner is rework (#899)
 OWNERS = owners(CONFIG)                   # each login of `owners` (#4241)
