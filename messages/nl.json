@@ -3,6 +3,16 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (nl): the welcome of Nina]"
   },
+  "Nav": {
+    "label": "Hoofdmenu",
+    "logo": "TUMACH"
+  },
+  "Footer": {
+    "copyright": "© {year}",
+    "domain": "tumach.dance",
+    "tagline": "[Placeholder (nl): the tagline of Nina]",
+    "place": "[Placeholder (nl): the place]"
+  },
   "StudioLogin": {
     "title": "Studio",
     "emailLabel": "Je e-mailadres",

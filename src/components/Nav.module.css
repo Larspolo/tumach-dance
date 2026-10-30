@@ -1,0 +1,30 @@
+.nav {
+  position: fixed;
+  top: var(--test-banner, 0);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem clamp(1.2rem, 4vw, 3.5rem);
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+.logo {
+  font-weight: 900;
+  font-size: 1.35rem;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: baseline;
+  gap: 0.1rem;
+}
+
+.dot {
+  color: var(--rust);
+  mix-blend-mode: normal;
+}
