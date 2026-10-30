@@ -3,7 +3,8 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 
-export type Email = { to: string; subject: string; text: string };
+/** `replyTo`: the address that Nina's Reply button of Gmail answers (the contact form, #150). */
+export type Email = { to: string; subject: string; text: string; replyTo?: string };
 
 /**
  * "mailgun" with `MAILGUN_API_KEY` and `MAILGUN_DOMAIN`. "log" in development and tests, and with `EMAIL_TRANSPORT=log`
@@ -18,7 +19,8 @@ export function emailTransport(env: NodeJS.ProcessEnv = process.env): "mailgun" 
 
 export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.env): Promise<void> {
   if (emailTransport(env) === "log") {
-    console.info(`[email] to ${email.to}: ${email.subject}\n${email.text}`);
+    const replyTo = email.replyTo ? ` (reply to ${email.replyTo})` : "";
+    console.info(`[email] to ${email.to}${replyTo}: ${email.subject}\n${email.text}`);
     // EMAIL_LOG_FILE: one JSON line per email, so that a browser test can read the code.
     if (env.EMAIL_LOG_FILE) {
       mkdirSync(dirname(env.EMAIL_LOG_FILE), { recursive: true });
@@ -34,6 +36,7 @@ export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.e
     to: email.to,
     subject: email.subject,
     text: email.text,
+    ...(email.replyTo ? { "h:Reply-To": email.replyTo } : {}),
   });
   const response = await fetch(url, {
     method: "POST",

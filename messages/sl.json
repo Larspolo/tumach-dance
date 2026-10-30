@@ -259,5 +259,16 @@
     "send": "Pošlji",
     "thanks": "Hvala, prejeli smo tvoje povratne informacije",
     "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
+  },
+  "Contact": {
+    "subject": "Sporočilo od {name} prek spletne strani",
+    "name": "Ime",
+    "email": "E-pošta",
+    "message": "Sporočilo",
+    "errors": {
+      "name": "Vpišite ime: od 1 do 100 znakov, v eni vrstici.",
+      "email": "Vpišite veljaven e-naslov.",
+      "message": "Napišite sporočilo: od 1 do 5000 znakov."
+    }
   }
 }
