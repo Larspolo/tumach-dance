@@ -25,6 +25,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
 - `src/app/[locale]/` – the public pages (home, classes, book) in each language.
 - `src/app/studio/` – Nina's studio app: login, bookings, hours, offers, the page "For Nina".
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
+- `src/components/` – shared page parts (the "test site" banner).
 - `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
   (`npm run db:generate` after a change of `src/db/schema.ts`); `src/instrumentation.ts` applies them at the start.

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import TestBanner from "@/components/TestBanner";
 import { routing } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -23,6 +24,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body>
+        <TestBanner />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

@@ -2,5 +2,8 @@
   "HomePage": {
     "title": "TUMACH",
     "welcome": "[Placeholder (sl): the welcome of Nina]"
+  },
+  "TestBanner": {
+    "text": "Testna stran: rezervacije tukaj niso prave"
   }
 }
