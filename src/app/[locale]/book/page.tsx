@@ -15,7 +15,7 @@ type Search = { offer?: string; day?: string; start?: string; error?: string; se
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/book");
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/book", locale);
 }
 
 export default async function BookPage({

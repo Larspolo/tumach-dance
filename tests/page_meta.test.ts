@@ -17,7 +17,7 @@ test("each key of Meta is in English, Dutch and Slovenian", () => {
 test.each(Object.entries(all))("%s: each public page has a title and a description", (locale, messages) => {
   const t = createTranslator({ locale, messages, namespace: "Meta" });
   for (const page of PUBLIC_PAGES) {
-    const meta = pageMetadata(t, page);
+    const meta = pageMetadata(t, page, locale);
     expect(meta.title).toBeTruthy();
     expect(meta.description).toBeTruthy();
   }
@@ -28,7 +28,7 @@ test("pageMetadata gives a metadataBase of siteOrigin()", () => {
   process.env.BETTER_AUTH_URL = "https://tumach.dance/api/auth";
   try {
     const t = createTranslator({ locale: "en", messages: en, namespace: "Meta" });
-    expect(pageMetadata(t, "/book").metadataBase?.toString()).toBe("https://tumach.dance/");
+    expect(pageMetadata(t, "/book", "en").metadataBase?.toString()).toBe("https://tumach.dance/");
   } finally {
     process.env.BETTER_AUTH_URL = before;
   }

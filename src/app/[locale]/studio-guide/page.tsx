@@ -9,7 +9,7 @@ type Step = { text: string; image?: string };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/studio-guide");
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/studio-guide", locale);
 }
 
 export default async function StudioGuidePage({ params }: { params: Promise<{ locale: string }> }) {
