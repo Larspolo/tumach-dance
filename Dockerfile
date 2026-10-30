@@ -2,6 +2,8 @@
 # site: the settings of each site come from environment variables at run time (`deploy/`).
 # Debian slim, not Alpine: better-sqlite3 has prebuilt binaries for glibc.
 FROM node:24-slim AS deps
+# npm ci builds better-sqlite3 from source (the lockfile does not record its gypfile: false), so it needs the tools.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci

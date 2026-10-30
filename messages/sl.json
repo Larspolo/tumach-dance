@@ -22,7 +22,9 @@
     "logIn": "Prijava",
     "wrongCode": "Ta koda ni pravilna ali je prestara. Poskusi znova ali zahtevaj novo kodo.",
     "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
-    "otherEmail": "Zahtevaj novo kodo"
+    "otherEmail": "Zahtevaj novo kodo",
+    "passkey": "Prijava s ključem za dostop",
+    "passkeyFailed": "Ključ za dostop ni deloval. Prijavi se s kodo po e-pošti."
   },
   "StudioHome": {
     "title": "Studio",
@@ -30,6 +32,13 @@
     "logOut": "Odjava",
     "offers": "Ponudba",
     "hours": "Ure"
+  },
+  "PasskeyOffer": {
+    "title": "Naslednjič se prijavi hitreje",
+    "text": "Dodaj ključ za dostop na ta telefon. Naslednjič se prijaviš s Face ID ali prstnim odtisom, brez kode.",
+    "add": "Dodaj ključ za dostop",
+    "notNow": "Ne zdaj",
+    "failed": "Ključ za dostop ni bil dodan. Še vedno se lahko prijaviš s kodo po e-pošti."
   },
   "LoginEmail": {
     "subject": "Tvoja koda TUMACH: {code}",
@@ -57,7 +66,20 @@
       "wed": "sre",
       "thu": "čet",
       "fri": "pet"
-    }
+    },
+    "closedDates": "Zaprto",
+    "closedFrom": "Od",
+    "closedTo": "Do (za obdobje)",
+    "close": "Zapri",
+    "extraDays": "Dodatni odprti dnevi",
+    "extraDate": "Datum",
+    "openDay": "Odpri",
+    "remove": "Odstrani",
+    "none": "Nič.",
+    "wrongPeriod": "Konec obdobja je pred začetkom.",
+    "wrongDate": "Tega datuma ni mogoče shraniti. Preverite datum in uro.",
+    "allDayShort": "ves dan",
+    "fromShort": "od {time}"
   },
   "StudioOffers": {
     "title": "Ponudba",
@@ -110,5 +132,26 @@
     "pushAllow": "Telefon vpraša, ali aplikacija sme pošiljati obvestila. Tapni \"Dovoli\".",
     "pushTest": "Tapni \"Pošlji preizkus\". Na telefon pride obvestilo.",
     "link": "Kako deluje aplikacija? Preberi navodila"
+  },
+  "Book": {
+    "title": "Rezervacija",
+    "offer": "1. Izberi ponudbo",
+    "day": "2. Izberi dan",
+    "time": "3. Izberi uro",
+    "details": "4. Tvoji podatki",
+    "lesson": "Zasebna ura, {minutes} min",
+    "rental": "Najem studia, {minutes} min",
+    "noOffers": "Trenutno ni ničesar za rezervacijo.",
+    "noTimes": "V naslednjih 4 tednih ni prostega termina.",
+    "name": "Ime",
+    "email": "E-pošta",
+    "phone": "Telefon",
+    "send": "Pošlji prošnjo",
+    "sent": "Prošnja poslana",
+    "sentText": "Nina bo pregledala tvojo prošnjo in ti odgovorila po e-pošti.",
+    "again": "Rezerviraj še en termin",
+    "taken": "Nekdo drug je pravkar vzel ta termin. Izberi drug termin.",
+    "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
+    "notSlot": "Ta termin ni prost. Izberi drug termin."
   }
 }

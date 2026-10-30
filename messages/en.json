@@ -22,7 +22,9 @@
     "logIn": "Log in",
     "wrongCode": "This code is not correct or it is too old. Try again, or ask for a new code.",
     "failed": "Something went wrong. Try again in a minute.",
-    "otherEmail": "Ask for a new code"
+    "otherEmail": "Ask for a new code",
+    "passkey": "Log in with passkey",
+    "passkeyFailed": "The passkey did not work. Log in with a code by email."
   },
   "StudioHome": {
     "title": "Studio",
@@ -30,6 +32,13 @@
     "logOut": "Log out",
     "offers": "Offers",
     "hours": "Hours"
+  },
+  "PasskeyOffer": {
+    "title": "Log in faster next time",
+    "text": "Add a passkey on this phone. Next time you log in with Face ID or your fingerprint, with no code.",
+    "add": "Add a passkey",
+    "notNow": "Not now",
+    "failed": "The passkey was not added. You can still log in with a code by email."
   },
   "LoginEmail": {
     "subject": "Your TUMACH code: {code}",
@@ -57,7 +66,20 @@
       "wed": "Wed",
       "thu": "Thu",
       "fri": "Fri"
-    }
+    },
+    "closedDates": "Closed",
+    "closedFrom": "From",
+    "closedTo": "To (for a period)",
+    "close": "Close",
+    "extraDays": "Extra open days",
+    "extraDate": "Date",
+    "openDay": "Open",
+    "remove": "Remove",
+    "none": "None.",
+    "wrongPeriod": "The end of the period is before its start.",
+    "wrongDate": "This date cannot be saved. Check the date and the time.",
+    "allDayShort": "all day",
+    "fromShort": "from {time}"
   },
   "StudioOffers": {
     "title": "Offers",
@@ -110,5 +132,26 @@
     "pushAllow": "Your phone asks if the app may send notifications. Tap \"Allow\".",
     "pushTest": "Tap \"Send a test\". A notification comes on your phone.",
     "link": "How does the app work? Read the guide"
+  },
+  "Book": {
+    "title": "Book",
+    "offer": "1. Choose an offer",
+    "day": "2. Choose a day",
+    "time": "3. Choose a time",
+    "details": "4. Your details",
+    "lesson": "Private lesson, {minutes} min",
+    "rental": "Studio rental, {minutes} min",
+    "noOffers": "There is nothing to book at the moment.",
+    "noTimes": "No free time in the next 4 weeks.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "send": "Send the request",
+    "sent": "Request sent",
+    "sentText": "Nina will look at your request and answer you by email.",
+    "again": "Book another time",
+    "taken": "Someone else just took this time. Choose another time.",
+    "invalid": "Please check your name, email and phone number.",
+    "notSlot": "This time is not free. Choose another time."
   }
 }

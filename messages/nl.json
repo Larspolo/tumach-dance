@@ -22,7 +22,9 @@
     "logIn": "Inloggen",
     "wrongCode": "Deze code klopt niet of is te oud. Probeer het opnieuw, of vraag een nieuwe code.",
     "failed": "Er ging iets mis. Probeer het over een minuut opnieuw.",
-    "otherEmail": "Vraag een nieuwe code"
+    "otherEmail": "Vraag een nieuwe code",
+    "passkey": "Inloggen met passkey",
+    "passkeyFailed": "De passkey werkte niet. Log in met een code per e-mail."
   },
   "StudioHome": {
     "title": "Studio",
@@ -30,6 +32,13 @@
     "logOut": "Uitloggen",
     "offers": "Aanbod",
     "hours": "Uren"
+  },
+  "PasskeyOffer": {
+    "title": "Volgende keer sneller inloggen",
+    "text": "Voeg een passkey toe op deze telefoon. Volgende keer log je in met Face ID of je vingerafdruk, zonder code.",
+    "add": "Passkey toevoegen",
+    "notNow": "Nu niet",
+    "failed": "De passkey is niet toegevoegd. Je kunt nog steeds inloggen met een code per e-mail."
   },
   "LoginEmail": {
     "subject": "Je TUMACH-code: {code}",
@@ -57,7 +66,20 @@
       "wed": "wo",
       "thu": "do",
       "fri": "vr"
-    }
+    },
+    "closedDates": "Gesloten",
+    "closedFrom": "Van",
+    "closedTo": "Tot (voor een periode)",
+    "close": "Sluiten",
+    "extraDays": "Extra open dagen",
+    "extraDate": "Datum",
+    "openDay": "Openen",
+    "remove": "Verwijderen",
+    "none": "Geen.",
+    "wrongPeriod": "Het einde van de periode ligt voor het begin.",
+    "wrongDate": "Deze datum kan niet worden opgeslagen. Controleer de datum en de tijd.",
+    "allDayShort": "hele dag",
+    "fromShort": "vanaf {time}"
   },
   "StudioOffers": {
     "title": "Aanbod",
@@ -110,5 +132,26 @@
     "pushAllow": "Je telefoon vraagt of de app meldingen mag sturen. Tik op \"Sta toe\".",
     "pushTest": "Tik op \"Stuur een test\". Er komt een melding op je telefoon.",
     "link": "Hoe werkt de app? Lees de uitleg"
+  },
+  "Book": {
+    "title": "Boeken",
+    "offer": "1. Kies een aanbod",
+    "day": "2. Kies een dag",
+    "time": "3. Kies een tijd",
+    "details": "4. Jouw gegevens",
+    "lesson": "Privéles, {minutes} min",
+    "rental": "Studio huren, {minutes} min",
+    "noOffers": "Er is op dit moment niets te boeken.",
+    "noTimes": "Geen vrije tijd in de komende 4 weken.",
+    "name": "Naam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "send": "Verstuur de aanvraag",
+    "sent": "Aanvraag verstuurd",
+    "sentText": "Nina bekijkt je aanvraag en antwoordt je per e-mail.",
+    "again": "Nog een tijd boeken",
+    "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
+    "invalid": "Controleer je naam, e-mail en telefoonnummer.",
+    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
   }
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { savePasskeyChoice } from "@/lib/passkey-offer";
 import styles from "../studio.module.css";
 
 // Step 1: Nina types her email and gets a code. Step 2: she types the code (#19).
@@ -13,7 +14,7 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [step, setStep] = useState<"email" | "code">("email");
-  const [error, setError] = useState<"wrongCode" | "failed" | null>(null);
+  const [error, setError] = useState<"wrongCode" | "failed" | "passkeyFailed" | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function sendCode(event: FormEvent) {
@@ -39,6 +40,20 @@ export function LoginForm() {
     router.refresh();
   }
 
+  // A passkey of this device (#26): no email and no code. The code by email stays the fallback.
+  async function logInWithPasskey() {
+    setBusy(true);
+    setError(null);
+    const result = await authClient.signIn.passkey();
+    if (result?.error) {
+      setBusy(false);
+      return setError("passkeyFailed");
+    }
+    savePasskeyChoice(localStorage, "added");
+    router.replace("/studio");
+    router.refresh();
+  }
+
   if (step === "email") {
     return (
       <form className={styles.form} onSubmit={sendCode}>
@@ -57,6 +72,9 @@ export function LoginForm() {
         />
         <button className={styles.button} type="submit" disabled={busy}>
           {t("sendCode")}
+        </button>
+        <button className={styles.link} type="button" disabled={busy} onClick={logInWithPasskey}>
+          {t("passkey")}
         </button>
         {error && (
           <p className={styles.error} role="alert">

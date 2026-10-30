@@ -7,6 +7,7 @@ import { getStudioSession } from "@/lib/auth";
 import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { LogOutButton } from "./log-out-button";
+import { PasskeyOffer } from "./passkey-offer";
 import { PushButtons } from "./push-buttons";
 import styles from "./studio.module.css";
 
@@ -21,6 +22,7 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
+      <PasskeyOffer />
       <p>
         <Link className={styles.link} href="/studio/hours">
           {t("hours")}

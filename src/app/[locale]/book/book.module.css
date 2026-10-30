@@ -1,0 +1,103 @@
+/* The booking page (#36): the look of the current site (P2), big tap targets for a phone. */
+.main {
+  box-sizing: border-box;
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  color: #141210;
+  font-family: "Fraunces", Georgia, serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin: 0 0 1rem;
+}
+
+.note {
+  color: #3a352e;
+}
+
+.error {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #f6e3dc;
+  color: #7c3527;
+}
+
+.step {
+  margin-top: 2rem;
+}
+
+.heading {
+  font-family: "Space Mono", monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7c3527;
+}
+
+.choices {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  gap: 0.5rem;
+}
+
+.choice,
+.chosen,
+.disabled {
+  display: block;
+  padding: 0.75rem;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.chosen {
+  background: #141210;
+  border-color: #141210;
+  color: #f4efe6;
+}
+
+.disabled {
+  color: #a59d8e;
+  border-style: dashed;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.input {
+  font: inherit;
+  padding: 0.75rem;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.75rem;
+}
+
+.button {
+  font: inherit;
+  padding: 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: #7c3527;
+  color: #f4efe6;
+}
+
+.link {
+  color: #7c3527;
+}
