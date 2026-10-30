@@ -198,6 +198,9 @@ def due_checks():
     planning gap must not stop the run start."""
     try:
         import release
+    except ImportError:                                     # a project with no tools/release.py has no release checks (#153)
+        return []
+    try:
         features, _, rows, epics = release.load()
         return release.due_lines(release.due(features, rows, epics))
     except Exception as e:                                  # a GitHub or file error: the other sections still print
