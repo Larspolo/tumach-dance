@@ -27,6 +27,11 @@
   gap: 0.75rem;
 }
 
+/* A section of the start page above another section (the passkey above the notifications). */
+.section {
+  margin-bottom: 1.5rem;
+}
+
 .label {
   font-family: "Space Mono", monospace;
   font-size: 0.8rem;

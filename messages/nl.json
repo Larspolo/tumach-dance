@@ -25,8 +25,10 @@
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
+    "buttonTitle": "Passkey",
     "text": "Voeg een passkey toe op deze telefoon. Volgende keer log je in met Face ID of je vingerafdruk, zonder code.",
     "add": "Passkey toevoegen",
+    "added": "De passkey is toegevoegd. Volgende keer log je in zonder code.",
     "notNow": "Nu niet",
     "failed": "De passkey is niet toegevoegd. Je kunt nog steeds inloggen met een code per e-mail."
   },
