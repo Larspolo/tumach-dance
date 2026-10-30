@@ -4,8 +4,10 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { LogOutButton } from "./log-out-button";
+import { PushButtons } from "./push-buttons";
 import styles from "./studio.module.css";
 
 // The start page of the studio app. The bookings and the hours come here later.
@@ -24,6 +26,7 @@ export default async function StudioPage() {
           {t("offers")}
         </Link>
       </p>
+      <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>
   );
