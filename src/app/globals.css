@@ -1,0 +1,70 @@
+/* The base look of the reference docs/design/current-site.html (P2). */
+:root {
+  --ink: #141210;
+  --paper: #f4efe6;
+  --paper-2: #ece5d6;
+  --rust: #a8503a;
+  --rust-deep: #7c3527;
+  --cream: #fbf8f1;
+  --line: #d8cfbd;
+  --shadow: rgba(20, 18, 16, 0.18);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-fraunces), Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > main {
+  flex: 1;
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.4rem, 4vw, 4rem) 3rem;
+}
+
+::selection {
+  background: var(--rust);
+  color: var(--cream);
+}
+
+.mono {
+  font-family: var(--font-space-mono), monospace;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+/* grain + texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}

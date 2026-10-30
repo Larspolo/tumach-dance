@@ -2,5 +2,15 @@
   "HomePage": {
     "title": "TUMACH",
     "welcome": "[Placeholder (en): the welcome of Nina]"
+  },
+  "Nav": {
+    "label": "Main",
+    "logo": "TUMACH"
+  },
+  "Footer": {
+    "copyright": "© {year}",
+    "domain": "tumach.dance",
+    "tagline": "[Placeholder (en): the tagline of Nina]",
+    "place": "[Placeholder (en): the place]"
   }
 }

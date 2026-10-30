@@ -1,8 +1,25 @@
+import { Fraunces, Space_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import { Footer } from "@/components/Footer";
+import { Nav } from "@/components/Nav";
 import { routing } from "@/i18n/routing";
+import "../globals.css";
+
+// next/font serves the fonts from the site itself: no request to Google from the browser (P3).
+const fraunces = Fraunces({
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz"],
+  style: ["normal", "italic"],
+  variable: "--font-fraunces",
+});
+const spaceMono = Space_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -21,9 +38,13 @@ export default async function LocaleLayout({
   }
   setRequestLocale(locale);
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${fraunces.variable} ${spaceMono.variable}`}>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
