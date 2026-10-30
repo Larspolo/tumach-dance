@@ -17,3 +17,4 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-10-30 · - · Take only the look (UI) of the current tumach.dance, not its texts: they are not the content · - · P2
 - 2026-10-30 · #12 · Nina logs in with a code by email on a new device; then the app offers a passkey for the later logins (#19, #26) · changed · P1
 - 2026-10-30 · #35 · No minimum time before a lesson: a dancer books any free slot that has not started (0 hours) · other · new
+- 2026-10-30 · #133 · Example data of a question for Nina only on the preview: a "## For Nina" line "Example: <name>" loads a fixed seed when Nina taps "Try" · - · P1

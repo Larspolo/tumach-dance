@@ -2,7 +2,7 @@
 // Times: each instant is an integer of epoch milliseconds in UTC (as `OpenRange` of `src/lib/hours.ts`), one form
 // for all tables. The site shows it in Europe/Amsterdam time.
 import { sql } from "drizzle-orm";
-import { check, index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { check, index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 /** The settings of the site: one row per key, the value as JSON text. */
 export const settings = sqliteTable("settings", {
@@ -138,6 +138,21 @@ export const notifiedQuestions = sqliteTable("notified_questions", {
   /** UTC, epoch milliseconds. */
   notifiedAt: integer("notified_at").notNull(),
 });
+
+/**
+ * The example data of a question for Nina that the preview loaded (#146). The row comes before the seed: two taps,
+ * two devices or a restart load a seed once for one question.
+ */
+export const loadedExamples = sqliteTable(
+  "loaded_examples",
+  {
+    question: integer("question").notNull(),
+    name: text("name").notNull(),
+    /** UTC, epoch milliseconds. */
+    loadedAt: integer("loaded_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.question, t.name] })],
+);
 
 /** A booking request of a dancer (#34). A `requested` or `approved` booking holds its time: no other may overlap it. */
 export const bookings = sqliteTable(

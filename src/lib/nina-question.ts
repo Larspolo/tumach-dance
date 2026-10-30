@@ -1,6 +1,10 @@
 // A question for Nina in a ticket (#66): read the fixed form of its body, for the page "For Nina".
 // A pure function, so that a test runs it with no issue, database or request.
 
+/** The names of the example data that a question can load on the preview (#146; the seeds: `examples.ts`). */
+export const EXAMPLE_NAMES = ["bookings", "offers"] as const;
+export type ExampleName = (typeof EXAMPLE_NAMES)[number];
+
 export type NinaChoice = { key: string; text: string };
 
 export type NinaQuestion = {
@@ -8,6 +12,8 @@ export type NinaQuestion = {
   title: string;
   text: string;
   tryPath: string | null;
+  /** The example data of the line `Example: <name>`; an unknown name is `null`. */
+  example: ExampleName | null;
   choices: NinaChoice[];
 };
 
@@ -25,6 +31,7 @@ export function parseNinaQuestion(issue: { number: number; title: string; body: 
   const choices: NinaChoice[] = [];
   const textLines: string[] = [];
   let tryPath: string | null = null;
+  let example: ExampleName | null = null;
   let textDone = false;
   for (const line of section) {
     const choice = CHOICE.exec(line);
@@ -34,6 +41,10 @@ export function parseNinaQuestion(issue: { number: number; title: string; body: 
     } else if (line.startsWith("Try:")) {
       const path = line.slice("Try:".length).trim();
       tryPath = path.startsWith("/") && !path.startsWith("//") ? path : null;
+      textDone = true;
+    } else if (line.startsWith("Example:")) {
+      const name = line.slice("Example:".length).trim();
+      example = (EXAMPLE_NAMES as readonly string[]).includes(name) ? (name as ExampleName) : null;
       textDone = true;
     } else if (!textDone && line !== "") {
       textLines.push(line);
@@ -45,6 +56,7 @@ export function parseNinaQuestion(issue: { number: number; title: string; body: 
     title: issue.title.startsWith(TITLE_PREFIX) ? issue.title.slice(TITLE_PREFIX.length) : issue.title,
     text: textLines.join("\n"),
     tryPath,
+    example,
     choices,
   };
 }
