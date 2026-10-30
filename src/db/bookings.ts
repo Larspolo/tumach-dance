@@ -1,5 +1,5 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, lt } from "drizzle-orm";
+import { and, eq, gt, inArray, isNull, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
@@ -116,6 +116,28 @@ export function decideBooking(db: Db, id: number, decision: "approved" | "declin
   if (booking) return { ok: true, booking };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-requested" : "not-found" };
+}
+
+export type MarkPaidResult =
+  | { ok: true; booking: Booking }
+  | { ok: false; reason: "not-found" | "not-approved" | "already-paid" };
+
+/**
+ * Store that an `approved` booking is paid (#140). One `UPDATE` sets `paidAt` only while the booking is `approved` and
+ * not yet paid: a second call (a provider can call its webhook twice) gets `already-paid` and keeps the first time.
+ */
+export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
+  const booking = db
+    .update(bookings)
+    .set({ paidAt: now })
+    .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select().from(bookings).where(eq(bookings.id, id)).get();
+  if (!exists) return { ok: false, reason: "not-found" };
+  if (exists.status !== "approved") return { ok: false, reason: "not-approved" };
+  return { ok: false, reason: "already-paid" };
 }
 
 /** The bookings with one of `statuses` that overlap `from`..`to`, with their offer, by start: the week page and the calendar. */

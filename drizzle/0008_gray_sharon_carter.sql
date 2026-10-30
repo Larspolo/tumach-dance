@@ -1,0 +1,1 @@
+ALTER TABLE `bookings` ADD `paid_at` integer;
