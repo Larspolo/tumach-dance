@@ -6,6 +6,7 @@ import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
 import type { Db } from "./index";
+import type { Offer } from "./offers";
 import { bookings, offers } from "./schema";
 
 export type Booking = typeof bookings.$inferSelect;
@@ -91,4 +92,33 @@ export function requestBooking(
     },
     { behavior: "immediate" },
   );
+}
+
+export type DecideResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-requested" };
+
+/**
+ * Nina approves or declines a `requested` booking. One `UPDATE` changes the status only while it is `requested`: a
+ * second decision gets `not-requested` and changes nothing. A declined booking no longer holds its time.
+ */
+export function decideBooking(db: Db, id: number, decision: "approved" | "declined"): DecideResult {
+  const booking = db
+    .update(bookings)
+    .set({ status: decision })
+    .where(and(eq(bookings.id, id), eq(bookings.status, "requested")))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+  return { ok: false, reason: exists ? "not-requested" : "not-found" };
+}
+
+/** The `requested` bookings with their offer, by start: the requests that wait for Nina. */
+export function listOpenRequests(db: Db): { booking: Booking; offer: Offer }[] {
+  return db
+    .select({ booking: bookings, offer: offers })
+    .from(bookings)
+    .innerJoin(offers, eq(offers.id, bookings.offerId))
+    .where(eq(bookings.status, "requested"))
+    .orderBy(bookings.start)
+    .all();
 }
