@@ -98,6 +98,17 @@ the `human` skill gives them to `game/watch.py` (#1123). The place is `chopper`,
     Task: Right click the ender pearl, then click a jump in the menu | Is the wait with "Jump to ..." acceptable?
     Watch: end | building:TOWN_CENTER | Is the end clear?
 
+A question for Nina (`steering/project/PRINCIPLES.md`, "Owner involvement") has the title "Question for Nina: <the question>",
+the section `## For Nina` with 2 to 4 choices, and the label `for-nina`. Its `## For the owner` steps stay for Lars until the
+page "For Nina" works. The form (`src/lib/nina-question.ts` reads it):
+
+    ## For Nina
+    <The question in plain words, no technical word.>
+    Try: /studio/offers
+    - A. <choice>
+    - B. <choice>
+
+
 A check ticket ("check X in the game") starts without `needs-human`: an agent runs the check first (`verify`, level 4),
 comments the results and screenshots with the list of what only a person can check (#580, #1707): sound, the feel of a control (delay, how hard it is to aim), "is it fun".
 The agent judges the clicks (`mc_shot.Client`) and the look (screenshot next to the image of the original) itself; a look point
