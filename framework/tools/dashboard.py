@@ -445,7 +445,8 @@ def main(argv=None):
     status = api(f"issues/{status['number']}")
     body = render(status["body"], open_all, comments, open_prs, closed, closed_prs, now, owner, nxt, accounts=accounts,
                   insights=insights)
-    if a.out:
+    if a.out:                                   # out/ is not in git: a fresh checkout (the workflow) has no folder
+        os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
         with open(a.out, "w", encoding="utf-8") as f:
             f.write(body)
     if a.dry_run:
