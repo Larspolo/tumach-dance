@@ -145,6 +145,13 @@
     "invalid": "Please check your name, email and phone number.",
     "notSlot": "This time is not free. Choose another time."
   },
+  "bookingEmail": {
+    "subject": "Your booking request at TUMACH",
+    "greeting": "Hi {name},",
+    "body": "Thank you for your request: {offer}, {when}.",
+    "soon": "Nina will look at it and answer you soon.",
+    "sign": "TUMACH"
+  },
   "StudioBookings": {
     "title": "Bookings",
     "back": "Back",

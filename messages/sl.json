@@ -145,6 +145,13 @@
     "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
     "notSlot": "Ta termin ni prost. Izberi drug termin."
   },
+  "bookingEmail": {
+    "subject": "Tvoja prošnja za rezervacijo pri TUMACH",
+    "greeting": "Živjo, {name},",
+    "body": "Hvala za prošnjo: {offer}, {when}.",
+    "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
+    "sign": "TUMACH"
+  },
   "StudioBookings": {
     "title": "Rezervacije",
     "back": "Nazaj",
