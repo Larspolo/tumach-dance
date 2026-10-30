@@ -31,6 +31,18 @@ export type OpenRange = { start: number; end: number };
 /** The hours of "all day" until Nina gives the real ones. */
 export const ALL_DAY = { from: "10:00", to: "22:00" };
 
+/** The rule until Nina sets hers: the example of P1, "weekends all day, weekdays from 17:00, not on Thursday". */
+export const DEFAULT_RULE: HoursRule = {
+  weekly: {
+    mon: { from: "17:00" },
+    tue: { from: "17:00" },
+    wed: { from: "17:00" },
+    fri: { from: "17:00" },
+    sat: "allDay",
+    sun: "allDay",
+  },
+};
+
 const WEEKDAYS: Weekday[] = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$|^24:00$/;
