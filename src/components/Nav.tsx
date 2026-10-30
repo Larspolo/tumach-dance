@@ -3,8 +3,9 @@ import { Link } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import styles from "./Nav.module.css";
 
-// The reference has only the logo in its nav (its links are commented out), so there is no phone menu.
-// The language switcher takes the place of the links at the right: the fixed bar covers the top of the page.
+// The links go to the sections of the home page; as in the reference, a phone shows only the logo.
+const SECTIONS = ["about", "classes", "schedule", "contact"] as const;
+
 export function Nav() {
   const t = useTranslations("Nav");
   return (
@@ -14,6 +15,13 @@ export function Nav() {
           {t("logo")}
           <span className={styles.dot}>.</span>
         </Link>
+        <ul className={styles.links}>
+          {SECTIONS.map((id) => (
+            <li key={id}>
+              <Link href={{ pathname: "/", hash: id }}>{t(id)}</Link>
+            </li>
+          ))}
+        </ul>
       </nav>
       <LanguageSwitcher />
     </div>

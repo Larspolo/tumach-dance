@@ -11,7 +11,9 @@ test("each page has the nav, the footer and the fonts of the site, with no reque
   });
 
   await page.goto("/en");
-  await expect(page.getByRole("navigation", { name: en.Nav.label }).getByRole("link")).toHaveText(`${en.Nav.logo}.`);
+  await expect(page.getByRole("navigation", { name: en.Nav.label }).getByRole("link").first()).toHaveText(
+    `${en.Nav.logo}.`,
+  );
   const footer = page.locator("footer");
   await expect(footer).toContainText(en.Footer.domain);
   await expect(footer).toContainText(en.Footer.tagline);

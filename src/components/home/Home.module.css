@@ -1,0 +1,357 @@
+/* The home sections of the reference docs/design/current-site.html (P2). */
+.main {
+  padding: 0;
+}
+
+.hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  border-bottom: 1px solid var(--ink);
+}
+
+.heroText {
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.4rem, 4vw, 4rem) 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--rust-deep);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 38px;
+  height: 1px;
+  background: var(--rust);
+}
+
+.title {
+  font-size: clamp(3.4rem, 12vw, 9.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.045em;
+  margin-bottom: 1.4rem;
+}
+
+.heroSub {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  max-width: 34ch;
+  line-height: 1.45;
+  color: #3a352e;
+  font-weight: 300;
+  margin-bottom: 2.4rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1rem 1.8rem;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--rust);
+  border-color: var(--rust);
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.heroImg {
+  min-height: 50svh;
+  background: linear-gradient(110deg, var(--ink) 0%, var(--rust-deep) 100%);
+}
+
+.section {
+  padding: clamp(4rem, 9vw, 8rem) clamp(1.4rem, 5vw, 5rem);
+  scroll-margin-top: var(--test-banner, 0);
+}
+
+.secHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 3.2rem;
+}
+
+.secHead h2 {
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+}
+
+.secNum {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--rust-deep);
+  text-transform: uppercase;
+}
+
+.about {
+  background: var(--cream);
+  border-bottom: 1px solid var(--ink);
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.about p {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  line-height: 1.55;
+  font-weight: 300;
+  margin-bottom: 1.3rem;
+  color: #2c2823;
+}
+
+.pull {
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-style: italic;
+  line-height: 1.2;
+  border-left: 3px solid var(--rust);
+  padding-left: 1.4rem;
+}
+
+.pullBy {
+  display: block;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rust-deep);
+  margin-top: 1.2rem;
+  font-style: normal;
+}
+
+.classGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.card {
+  background: var(--paper);
+  padding: 2.2rem 1.8rem;
+  transition: 0.4s;
+}
+
+.card:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.kind,
+.level {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.card h3 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin: 0.8rem 0 0.9rem;
+  letter-spacing: -0.02em;
+}
+
+.card p {
+  font-size: 0.98rem;
+  line-height: 1.5;
+  font-weight: 300;
+  color: #4a443c;
+}
+
+.card:hover p {
+  color: #cfc7b8;
+}
+
+.level {
+  margin-top: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--rust-deep);
+}
+
+.schedule {
+  background: var(--paper-2);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.sched {
+  border: 1px solid var(--ink);
+  background: var(--cream);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 130px 1fr auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.3rem 1.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.day {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rust-deep);
+}
+
+.cls {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.time {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #4a443c;
+}
+
+.who {
+  font-style: italic;
+  font-size: 0.92rem;
+  color: #6a6358;
+}
+
+.contact {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.contact p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 300;
+  color: #d8d0c2;
+  margin-bottom: 1.4rem;
+}
+
+.contact .twoCols {
+  align-items: start;
+}
+
+.field {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label,
+.lbl {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.field input,
+.field textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #4a443c;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 1.05rem;
+  padding: 0.6rem 0;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--rust);
+}
+
+.contact .btn {
+  border: none;
+}
+
+.lbl {
+  display: block;
+  color: #8a8276;
+  margin-bottom: 0.2rem;
+}
+
+.line {
+  margin-bottom: 0.8rem;
+  font-size: 1.05rem;
+}
+
+.contact .closing {
+  margin-top: 2.5rem;
+  font-style: italic;
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .twoCols {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.3rem;
+  }
+
+  .who {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,15 +1,22 @@
-import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
+import { About } from "@/components/home/About";
+import { Classes } from "@/components/home/Classes";
+import { Contact } from "@/components/home/Contact";
+import { Hero } from "@/components/home/Hero";
+import styles from "@/components/home/Home.module.css";
+import { Schedule } from "@/components/home/Schedule";
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   setRequestLocale(locale);
-  const t = useTranslations("HomePage");
   return (
-    <main>
-      <h1>{t("title")}</h1>
-      <p>{t("welcome")}</p>
+    <main className={styles.main}>
+      <Hero />
+      <About />
+      <Classes />
+      <Schedule />
+      <Contact />
     </main>
   );
 }
