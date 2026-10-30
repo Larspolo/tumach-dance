@@ -97,7 +97,8 @@
     "questions": "Voor Nina",
     "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
     "classes": "Lessen",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "photos": "Foto's"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -345,5 +346,19 @@
       "email": "Vul een geldig e-mailadres in.",
       "message": "Schrijf een bericht: 1 tot 5000 tekens."
     }
+  },
+  "StudioPhotos": {
+    "title": "Foto's",
+    "back": "Terug",
+    "none": "Nog geen foto's.",
+    "choose": "Foto's van je telefoon",
+    "add": "Foto's toevoegen",
+    "adding": "Bezig…",
+    "remove": "Verwijderen",
+    "removeConfirm": "Ja, verwijder deze foto",
+    "alt": "Foto {number}",
+    "not-image": "{name} is geen foto. Er is niets toegevoegd.",
+    "too-large": "{name} is groter dan 15 MB. Er is niets toegevoegd.",
+    "failed": "{name} kon niet worden toegevoegd. Probeer het opnieuw."
   }
 }

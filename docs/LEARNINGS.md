@@ -22,3 +22,4 @@ The agent writes here what it learned the hard way. Each line must save time in 
 - sharp: `withExif({ IFD0: { Orientation } })` does not set the orientation of a test photo; `withMetadata({ orientation: 6 })` does (`tests/photos.test.ts`, #171).
 - `PRAGMA journal_mode = WAL` ignores the busy timeout: two starts on a new database get `SQLITE_BUSY`. Use `setWalMode` of `src/db/wal.ts`; a race test of processes waits for one start instant, else it passes by chance (#180).
 - The headless shell of Playwright gives `Notification.permission` "denied" after `grantPermissions` (`permissions.query`: "granted"). A test of a permission uses `test.use({ channel: "chromium" })` (#188).
+- Next.js 16 `src/proxy.ts` cuts a request body at 10 MB (`experimental.proxyClientMaxBodySize`), also when `serverActions.bodySizeLimit` is larger: set both (`next.config.ts`, #173).

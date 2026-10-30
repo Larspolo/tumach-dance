@@ -97,7 +97,8 @@
     "questions": "For Nina",
     "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
     "classes": "Classes",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "photos": "Photos"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -345,5 +346,19 @@
       "email": "Write a valid email address.",
       "message": "Write a message: 1 to 5000 characters."
     }
+  },
+  "StudioPhotos": {
+    "title": "Photos",
+    "back": "Back",
+    "none": "No photos yet.",
+    "choose": "Photos from your phone",
+    "add": "Add photos",
+    "adding": "Adding…",
+    "remove": "Remove",
+    "removeConfirm": "Yes, remove this photo",
+    "alt": "Photo {number}",
+    "not-image": "{name} is not a photo. Nothing was added for it.",
+    "too-large": "{name} is larger than 15 MB. Nothing was added for it.",
+    "failed": "{name} could not be added. Try again."
   }
 }
