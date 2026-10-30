@@ -30,7 +30,8 @@
     "week": "Ta teden",
     "questions": "Za Nino",
     "questionsCount": "Za Nino ({count, plural, one {# vprašanje} two {# vprašanji} few {# vprašanja} other {# vprašanj}})",
-    "classes": "Tečaji"
+    "classes": "Tečaji",
+    "feedback": "Povratne informacije"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -233,5 +234,14 @@
     "free": "Ni rezervacij.",
     "request": "prošnja",
     "approved": "potrjeno"
+  },
+  "StudioFeedback": {
+    "back": "Nazaj",
+    "title": "Povratne informacije",
+    "intro": "Želja, težava ali ideja za stran ali aplikacijo? Napiši jo tukaj.",
+    "label": "Tvoje povratne informacije",
+    "send": "Pošlji",
+    "thanks": "Hvala, prejeli smo tvoje povratne informacije",
+    "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
   }
 }

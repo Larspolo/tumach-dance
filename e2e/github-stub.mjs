@@ -1,5 +1,6 @@
 // A stub of the GitHub API for the page "For Nina" (#68): one open `for-nina` question. A comment closes it, as a
-// run does after it reads the answer. `GET /__comments` gives the comments to the test.
+// run does after it reads the answer. `GET /__comments` gives the comments to the test. A new issue (the feedback of
+// Nina, #108) gets a number; no data is kept.
 import { createServer } from "node:http";
 
 const issue = {
@@ -19,6 +20,7 @@ createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
   if (url.pathname === "/__comments") return json(200, comments);
   if (url.pathname.endsWith("/issues") && req.method === "GET") return json(200, open ? [issue] : []);
+  if (url.pathname.endsWith("/issues") && req.method === "POST") return json(201, { number: 902 });
   if (url.pathname.endsWith(`/issues/${issue.number}`)) return json(200, issue);
   if (url.pathname.endsWith(`/issues/${issue.number}/comments`) && req.method === "POST") {
     let body = "";

@@ -30,7 +30,8 @@
     "week": "Deze week",
     "questions": "Voor Nina",
     "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
-    "classes": "Lessen"
+    "classes": "Lessen",
+    "feedback": "Feedback"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -233,5 +234,14 @@
     "free": "Geen boekingen.",
     "request": "aanvraag",
     "approved": "goedgekeurd"
+  },
+  "StudioFeedback": {
+    "back": "Terug",
+    "title": "Feedback",
+    "intro": "Een wens, een probleem of een idee voor de site of de app? Schrijf het hier.",
+    "label": "Jouw feedback",
+    "send": "Versturen",
+    "thanks": "Dank je, we hebben je feedback ontvangen",
+    "failed": "Versturen is mislukt, probeer het later nog eens"
   }
 }

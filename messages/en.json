@@ -30,7 +30,8 @@
     "week": "This week",
     "questions": "For Nina",
     "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
-    "classes": "Classes"
+    "classes": "Classes",
+    "feedback": "Feedback"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -233,5 +234,14 @@
     "free": "No bookings.",
     "request": "request",
     "approved": "approved"
+  },
+  "StudioFeedback": {
+    "back": "Back",
+    "title": "Feedback",
+    "intro": "A wish, a problem or an idea for the site or the app? Write it here.",
+    "label": "Your feedback",
+    "send": "Send",
+    "thanks": "Thank you, we received your feedback",
+    "failed": "Sending failed, please try again later"
   }
 }
