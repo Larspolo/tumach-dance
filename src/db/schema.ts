@@ -193,6 +193,8 @@ export const bookings = sqliteTable(
     cancelToken: text("cancel_token")
       .notNull()
       .$defaultFn(() => randomBytes(32).toString("base64url")),
+    /** UTC, epoch milliseconds; the removal of the name, email and phone (#224), `null` = not removed. */
+    forgottenAt: integer("forgotten_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
