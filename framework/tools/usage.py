@@ -12,7 +12,7 @@ reset, so that each window reaches the limit (#587).
 
 The flow brake (owner, 2026-10-27): the quota is not the only bottleneck. When CI, merge conflicts or anything else
 stops the merges, the agent PRs build up, and a night of new PRs gives many conflicts. So `--fire` counts the open
-agent PRs older than `pr_minutes` (they wait for something that is not the quota) and the queued CI runs. At
+agent PRs older than `pr_minutes` (they wait for something that is not the quota) and the queued runs of the quick CI (`ci.yml` only, #106). At
 `max_waiting_prs` it starts at most 1 run per cycle, and that run only repairs PRs (autopilot step 2). At
 `max_ci_queue` it starts no run: a run cannot make CI faster. While the brake is on, the pacer keeps one open `tooling` issue that
 asks for a faster CI (`pacer.brake_ticket`, #4301). The limits are in `[pacing]` of `steering/system/system.toml`.
@@ -291,11 +291,16 @@ def flow_cap(waiting, queued, max_waiting=WAIT, max_queue=QUEUE):
     return None, f"flow ok: {waiting} waiting PRs, CI queue {queued}"
 
 
+QUEUE_PATH = "actions/workflows/ci.yml/runs?status=queued&per_page=1"   # the flow brake counts only the quick CI (#106)
+
+
 def read_flow(now):
-    """(cap, reason) from GitHub: the open PRs and the queued workflow runs."""
+    """(cap, reason) from GitHub: the open PRs and the queued runs of the quick CI. Only ci.yml: the cron runs of
+    the other workflows wait in their concurrency groups and counted as a CI queue of 31 while the quick CI started
+    each run at once (#106)."""
     import dashboard
     prs = dashboard.pages("pulls?state=open")
-    queued = dashboard.api("actions/runs?status=queued&per_page=1")["total_count"]
+    queued = dashboard.api(QUEUE_PATH)["total_count"]
     return flow_cap(len(waiting_prs(prs, now)), queued)
 
 
