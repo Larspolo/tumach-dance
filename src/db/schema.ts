@@ -179,6 +179,8 @@ export const bookings = sqliteTable(
     paidAt: integer("paid_at"),
     /** UTC, epoch milliseconds; `null` = no reminder email yet (#165). Set before the send: one reminder only. */
     remindedAt: integer("reminded_at"),
+    /** The Tikkie link that Nina pasted at the approval (#142), an `https://` URL; `null` = she sends the Tikkie herself. */
+    tikkieUrl: text("tikkie_url"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),

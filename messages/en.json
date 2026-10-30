@@ -270,7 +270,9 @@
     "cancelled": "Nina cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "reminderSubject": "Reminder: your booking at TUMACH",
     "reminder": "A reminder of your booking: {offer}, {when}.",
-    "sign": "TUMACH"
+    "sign": "TUMACH",
+    "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
+    "payLater": "The price is {price}. Nina sends you a Tikkie to pay."
   },
   "bookingPush": {
     "title": "New booking request",
@@ -284,6 +286,8 @@
     "decline": "Decline",
     "approved": "Approved.",
     "declined": "Declined.",
+    "tikkie": "Tikkie link (optional)",
+    "badLink": "The Tikkie link must start with https://.",
     "toPay": "Approved bookings",
     "markPaid": "Paid",
     "paidOn": "Paid on {date}",

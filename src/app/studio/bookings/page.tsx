@@ -15,13 +15,17 @@ const DAY = 24 * 60 * 60_000;
 
 // The open booking requests (#76): Nina approves or declines each with one tap. One form and one server action.
 // The approved bookings of 30 days back to 90 days ahead (#143): Nina marks each paid with one tap, or undoes it.
-export default async function BookingsPage({ searchParams }: { searchParams: Promise<{ done?: string }> }) {
+export default async function BookingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ done?: string; error?: string }>;
+}) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
   const locale = await setStudioLocale();
   const t = await getTranslations("StudioBookings");
   const offerName = await getTranslations("StudioOffers");
-  const { done } = await searchParams;
+  const { done, error } = await searchParams;
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
     weekday: "short",
@@ -44,6 +48,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
       <h1 className={styles.title}>{t("title")}</h1>
       {done === "approved" && <p className={styles.note}>{t("approved")}</p>}
       {done === "declined" && <p className={styles.note}>{t("declined")}</p>}
+      {error === "link" && <p className={styles.note}>{t("badLink")}</p>}
       {requests.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list}>
         {requests.map(({ booking, offer }) => (
@@ -63,6 +68,10 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
             </p>
             <form className={styles.form} action={decide}>
               <input type="hidden" name="id" value={booking.id} />
+              <label className={styles.label}>
+                {t("tikkie")}
+                <input className={styles.input} type="url" name="tikkie" />
+              </label>
               <button className={styles.button} type="submit" name="decision" value="approved">
                 {t("approve")}
               </button>
