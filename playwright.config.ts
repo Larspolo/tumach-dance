@@ -11,8 +11,6 @@ export default defineConfig({
   testDir: "e2e",
   outputDir: "test-results",
   reporter: "list",
-  // One test at a time: each login of the studio sends a new code that replaces the last one (#23).
-  workers: 1,
   // One worker: two studio logins at once replace the code of each other (#31).
   workers: 1,
   use: {
@@ -20,11 +18,18 @@ export default defineConfig({
     launchOptions: { executablePath },
   },
   projects: [
+    // One login for all tests that need a session (`e2e/studio-session.ts`, #23).
+    { name: "setup", testMatch: /\.setup\.ts$/ },
     {
       name: "phone",
       use: { ...devices["Desktop Chrome"], viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true },
+      dependencies: ["setup"],
     },
-    { name: "laptop", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } } },
+    {
+      name: "laptop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } },
+      dependencies: ["setup"],
+    },
   ],
   webServer: {
     command: "npm run build && npm run start -- -p 3100",
