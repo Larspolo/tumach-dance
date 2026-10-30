@@ -28,7 +28,8 @@
     "calendarRenew": "Make a new address",
     "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
     "week": "This week",
-    "questions": "For Nina"
+    "questions": "For Nina",
+    "classes": "Classes"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -95,6 +96,26 @@
     "hide": "Hide",
     "show": "Show",
     "add": "Add an offer",
+    "addSave": "Add"
+  },
+  "StudioClasses": {
+    "title": "Classes",
+    "back": "Back",
+    "none": "No classes yet.",
+    "hidden": "hidden",
+    "name": "Name",
+    "text": "Text",
+    "forWhom": "For whom",
+    "nameIn": "Name in {language}",
+    "textIn": "Text in {language}",
+    "forWhomIn": "For whom in {language}",
+    "nl": "Dutch",
+    "sl": "Slovenian",
+    "translations": "Translations",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add a class",
     "addSave": "Add"
   },
   "Push": {

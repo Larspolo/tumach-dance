@@ -28,7 +28,8 @@
     "calendarRenew": "Naredi nov naslov",
     "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
     "week": "Ta teden",
-    "questions": "Za Nino"
+    "questions": "Za Nino",
+    "classes": "Tečaji"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -95,6 +96,26 @@
     "hide": "Skrij",
     "show": "Prikaži",
     "add": "Dodaj ponudbo",
+    "addSave": "Dodaj"
+  },
+  "StudioClasses": {
+    "title": "Tečaji",
+    "back": "Nazaj",
+    "none": "Še ni tečajev.",
+    "hidden": "skrito",
+    "name": "Ime",
+    "text": "Besedilo",
+    "forWhom": "Za koga",
+    "nameIn": "Ime ({language})",
+    "textIn": "Besedilo ({language})",
+    "forWhomIn": "Za koga ({language})",
+    "nl": "nizozemščina",
+    "sl": "slovenščina",
+    "translations": "Prevodi",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj tečaj",
     "addSave": "Dodaj"
   },
   "Push": {
