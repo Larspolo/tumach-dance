@@ -5,20 +5,27 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 const contact = vi.hoisted(() => ({ sendContactMessage: vi.fn() }));
 vi.mock("../src/lib/contact", async (orig) => ({ ...(await orig<object>()), ...contact }));
 vi.mock("../src/db", async (orig) => ({ ...(await orig<object>()), getDb: () => ({}) }));
+vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
 
 const { sendContact } = await import("../src/app/[locale]/contact-action");
+const { contactStamp, resetContactLimit } = await import("../src/lib/contact-spam");
 
 const IDLE = { status: "idle" as const, errors: {}, values: { name: "", email: "", message: "" } };
 const good = { name: "Ana", email: "ana@example.com", message: "Can I come on Sunday?" };
 
 function form(fields: Record<string, string>): FormData {
   const data = new FormData();
+  // A page of 5 seconds ago: a person, not a bot (#151).
+  data.set("stamp", contactStamp(Date.now() - 5000));
   for (const [key, value] of Object.entries(fields)) data.set(key, value);
   return data;
 }
 
 describe("sendContact", () => {
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    resetContactLimit();
+  });
 
   test("a good form is sent", async () => {
     contact.sendContactMessage.mockResolvedValueOnce(undefined);

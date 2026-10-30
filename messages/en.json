@@ -15,6 +15,11 @@
       "quote": "[Placeholder (en): a short quote of Nina]",
       "quoteBy": "[Placeholder (en): who said the quote]"
     },
+    "photos": {
+      "title": "[Placeholder (en): title of the photos]",
+      "label": "[Placeholder (en): (02) photos]",
+      "alt": "[Placeholder (en): a photo of the studio]"
+    },
     "classes": {
       "title": "[Placeholder (en): title of the classes]",
       "label": "[Placeholder (en): (02) classes]",
@@ -274,7 +279,9 @@
     "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
     "payLater": "The price is {price}. Nina sends you a Tikkie to pay.",
     "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
-    "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page."
+    "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
+    "payReminderSubject": "Payment of your booking at TUMACH",
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
   },
   "bookingPush": {
     "title": "New booking request",

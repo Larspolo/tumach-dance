@@ -15,6 +15,11 @@
       "quote": "[Placeholder (sl): a short quote of Nina]",
       "quoteBy": "[Placeholder (sl): who said the quote]"
     },
+    "photos": {
+      "title": "[Placeholder (sl): title of the photos]",
+      "label": "[Placeholder (sl): (02) photos]",
+      "alt": "[Placeholder (sl): a photo of the studio]"
+    },
     "classes": {
       "title": "[Placeholder (sl): title of the classes]",
       "label": "[Placeholder (sl): (02) classes]",
@@ -274,7 +279,9 @@
     "payLink": "Cena je {price}. Plačaj s tem Tikkiejem: {url}",
     "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo.",
     "cancelLink": "Ne moreš priti? Rezervacijo prekliči s to povezavo, kadar koli pred začetkom: {url}",
-    "cancelledByYou": "Preklical si svojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin."
+    "cancelledByYou": "Preklical si svojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin.",
+    "payReminderSubject": "Plačilo tvoje rezervacije pri TUMACH",
+    "payReminder": "Nina še ni prejela tvojega plačila za: {offer}, {when}. Je plačilo že poslano? Potem je vse v redu."
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",

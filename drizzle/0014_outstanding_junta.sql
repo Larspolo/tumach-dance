@@ -14,13 +14,15 @@ CREATE TABLE `__new_bookings` (
 	`paid_at` integer,
 	`reminded_at` integer,
 	`tikkie_url` text,
+	`approved_at` integer,
+	`payment_reminded_at` integer,
 	`cancel_token` text NOT NULL,
 	FOREIGN KEY (`offer_id`) REFERENCES `offers`(`id`) ON UPDATE no action ON DELETE no action,
 	CONSTRAINT "bookings_status" CHECK("__new_bookings"."status" IN ('requested', 'approved', 'declined', 'cancelled')),
 	CONSTRAINT "bookings_range" CHECK("__new_bookings"."end" > "__new_bookings"."start")
 );
 --> statement-breakpoint
-INSERT INTO `__new_bookings`("id", "offer_id", "start", "end", "status", "name", "email", "phone", "locale", "created_at", "paid_at", "reminded_at", "tikkie_url", "cancel_token") SELECT "id", "offer_id", "start", "end", "status", "name", "email", "phone", "locale", "created_at", "paid_at", "reminded_at", "tikkie_url", lower(hex(randomblob(32))) FROM `bookings`;--> statement-breakpoint
+INSERT INTO `__new_bookings`("id", "offer_id", "start", "end", "status", "name", "email", "phone", "locale", "created_at", "paid_at", "reminded_at", "tikkie_url", "approved_at", "payment_reminded_at", "cancel_token") SELECT "id", "offer_id", "start", "end", "status", "name", "email", "phone", "locale", "created_at", "paid_at", "reminded_at", "tikkie_url", "approved_at", "payment_reminded_at", lower(hex(randomblob(32))) FROM `bookings`;--> statement-breakpoint
 DROP TABLE `bookings`;--> statement-breakpoint
 ALTER TABLE `__new_bookings` RENAME TO `bookings`;--> statement-breakpoint
 CREATE INDEX `bookings_start_idx` ON `bookings` (`start`);--> statement-breakpoint

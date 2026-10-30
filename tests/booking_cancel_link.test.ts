@@ -129,7 +129,7 @@ test("the migration gives each old row its own token, and the unique index refus
     cpSync(MIGRATIONS_FOLDER, dir, { recursive: true });
     const journalPath = join(dir, "meta/_journal.json");
     const journal = JSON.parse(readFileSync(journalPath, "utf8"));
-    const last = journal.entries.findIndex((e: { tag: string }) => e.tag.startsWith("0013_"));
+    const last = journal.entries.findIndex((e: { tag: string }) => e.tag.startsWith("0014_"));
     writeFileSync(journalPath, JSON.stringify({ ...journal, entries: journal.entries.slice(0, last) }));
     const sqlite = new Database(":memory:");
     runMigrations(sqlite, dir);

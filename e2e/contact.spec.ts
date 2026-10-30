@@ -28,6 +28,8 @@ test("a visitor sends a message and sees the thank-you text", async ({ page }, t
   await section.getByLabel(t.name).fill("Ana");
   await section.getByLabel(t.email).fill("ana@example.com");
   await section.getByLabel(t.message).fill(message);
+  // A send less than 3 seconds after the page is a bot (#151).
+  await page.waitForTimeout(3000);
   await section.getByRole("button", { name: t.send }).click();
   await expect(section.getByText(t.thanks)).toBeVisible();
   await expect(section.getByLabel(t.name)).toHaveCount(0);

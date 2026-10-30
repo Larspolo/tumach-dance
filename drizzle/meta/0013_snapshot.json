@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "568114e4-6aed-450c-8dfe-9205084ed639",
+  "id": "f7fa37d4-069a-4570-bc38-d9790b1857da",
   "prevId": "fe538403-aba3-4c36-a472-9f39071cb254",
   "tables": {
     "account": {
@@ -216,11 +216,18 @@
           "notNull": false,
           "autoincrement": false
         },
-        "cancel_token": {
-          "name": "cancel_token",
-          "type": "text",
+        "approved_at": {
+          "name": "approved_at",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payment_reminded_at": {
+          "name": "payment_reminded_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },
@@ -229,11 +236,6 @@
           "name": "bookings_start_idx",
           "columns": ["start"],
           "isUnique": false
-        },
-        "bookings_cancel_token_idx": {
-          "name": "bookings_cancel_token_idx",
-          "columns": ["cancel_token"],
-          "isUnique": true
         }
       },
       "foreignKeys": {

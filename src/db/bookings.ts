@@ -115,7 +115,11 @@ export function decideBooking(
 ): DecideResult {
   const booking = db
     .update(bookings)
-    .set({ status: decision, tikkieUrl: decision === "approved" ? tikkieUrl : null })
+    .set({
+      status: decision,
+      tikkieUrl: decision === "approved" ? tikkieUrl : null,
+      approvedAt: decision === "approved" ? Date.now() : null,
+    })
     .where(and(eq(bookings.id, id), eq(bookings.status, "requested")))
     .returning()
     .get();

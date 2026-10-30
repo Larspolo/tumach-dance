@@ -365,3 +365,44 @@
   font-style: italic;
   color: #6a6358;
 }
+
+/* The photos of the studio (#174): the dark frame and the color of the photo of the current site. */
+.photos {
+  background: var(--cream);
+  border-bottom: 1px solid var(--ink);
+}
+
+.photoGrid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.photo {
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  overflow: hidden;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: contrast(1.05) saturate(0.92);
+}
+
+@media (max-width: 760px) {
+  .photoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The field that only a bot fills (#151): out of view, not `display: none` (some bots skip such fields). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

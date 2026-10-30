@@ -182,6 +182,10 @@ export const bookings = sqliteTable(
     remindedAt: integer("reminded_at"),
     /** The Tikkie link that Nina pasted at the approval (#142), an `https://` URL; `null` = she sends the Tikkie herself. */
     tikkieUrl: text("tikkie_url"),
+    /** UTC, epoch milliseconds; the time of Nina's approval (#167), `null` before it (or for an older booking). */
+    approvedAt: integer("approved_at"),
+    /** UTC, epoch milliseconds; `null` = no payment reminder yet (#167). Set before the send: one reminder only. */
+    paymentRemindedAt: integer("payment_reminded_at"),
     /**
      * The secret of the cancel link of the dancer (#164): 32 random bytes, base64url, made at each insert. Never put
      * the id alone in a link.

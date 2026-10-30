@@ -15,6 +15,11 @@
       "quote": "[Placeholder (nl): a short quote of Nina]",
       "quoteBy": "[Placeholder (nl): who said the quote]"
     },
+    "photos": {
+      "title": "[Placeholder (nl): title of the photos]",
+      "label": "[Placeholder (nl): (02) photos]",
+      "alt": "[Placeholder (nl): a photo of the studio]"
+    },
     "classes": {
       "title": "[Placeholder (nl): title of the classes]",
       "label": "[Placeholder (nl): (02) classes]",
@@ -274,7 +279,9 @@
     "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
     "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen.",
     "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
-    "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina."
+    "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
+    "payReminderSubject": "Betaling van je boeking bij TUMACH",
+    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",
