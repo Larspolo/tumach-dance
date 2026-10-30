@@ -160,6 +160,8 @@ export const bookings = sqliteTable(
     locale: text("locale").notNull(),
     /** UTC, epoch milliseconds. */
     createdAt: integer("created_at").notNull(),
+    /** UTC, epoch milliseconds; `null` = not paid. A paid booking stays `approved`. */
+    paidAt: integer("paid_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
