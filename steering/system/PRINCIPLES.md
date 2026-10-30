@@ -2,7 +2,7 @@
 
 The direction of tumach-dance for the agent system (how the runs work): what the owner prefers when two good options
 compete. They come from the owner's decisions in Larspolo/aoe2mc (its `steering/system/PRINCIPLES.md`, until
-2026-10-30). `steering/system/DECISIONS.md` is the log of the new decisions. The project principles are P1 to P4 in
+2026-10-30). `steering/system/DECISIONS.md` is the log of the new decisions. The project principles are P1 to P4 and P11 in
 `steering/project/PRINCIPLES.md`; the numbers do not repeat.
 
 How to use it:
