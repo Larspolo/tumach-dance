@@ -99,3 +99,12 @@ export const offers = sqliteTable(
     check("offers_price", sql`${t.priceCents} >= 0`),
   ],
 );
+
+/** A device of Nina that gets push notifications (#25). A device that subscribes again replaces its row. */
+export const pushSubscriptions = sqliteTable("push_subscriptions", {
+  endpoint: text("endpoint").primaryKey(),
+  p256dh: text("p256dh").notNull(),
+  auth: text("auth").notNull(),
+  /** UTC, epoch milliseconds. */
+  createdAt: integer("created_at").notNull(),
+});

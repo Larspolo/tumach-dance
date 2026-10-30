@@ -1,0 +1,43 @@
+# The preview site on the home server (#9). The server pulls each new `preview` image by itself: nothing pushes to it.
+# Steps for Lars: deploy/README.md.
+name: tumach-preview
+
+services:
+  site:
+    image: ghcr.io/larspolo/tumach-dance:preview
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SITE_ENV: preview
+    volumes:
+      - data:/app/data
+    # Only this computer can open the port; the tunnel reaches the site over the Docker network.
+    ports:
+      - "127.0.0.1:3000:3000"
+    labels:
+      # The updater watches only the containers with this label (never Home Assistant).
+      - com.centurylinklabs.watchtower.enable=true
+
+  # Polls the registry every 5 minutes and restarts `site` on a new image. A maintained fork of the archived
+  # containrrr/watchtower, with the same labels and settings.
+  updater:
+    image: nickfedor/watchtower:latest
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: "300"
+      WATCHTOWER_CLEANUP: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # The Cloudflare Tunnel: the server opens no port. Start it with `--profile tunnel`.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+
+volumes:
+  data:
