@@ -42,8 +42,10 @@ def test_the_time_goes_to_the_ticket_of_the_last_won_claim():
             call(1140, "i", "Bash", command="python3 framework/tools/report.py --post")]
     got = tokens.phases(recs)
     assert list(got) == [7, 9]
-    assert got[7] == {"read": 0, "claim": 3, "code": 3, "verify": 5, "ci": 5, "conflict": 0, "report": 0}
-    assert got[9] == {"read": 2, "claim": 1, "code": 0, "verify": 0, "ci": 0, "conflict": 0, "report": 0}
+    seconds = lambda m: {k: round(v * 60) for k, v in m.items()}
+    # b ran 1 s, then the model wrote the Edit c for 59 s: that time is code (#189)
+    assert seconds(got[7]) == {"read": 0, "claim": 62, "code": 239, "verify": 300, "ci": 300, "conflict": 0, "report": 0}
+    assert seconds(got[9]) == {"read": 179, "claim": 60, "code": 0, "verify": 0, "ci": 0, "conflict": 0, "report": 0}
 
 
 def test_the_report_uses_the_measured_phases(monkeypatch):
