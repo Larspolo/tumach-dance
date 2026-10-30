@@ -15,8 +15,8 @@ import { PushButtons } from "./push-buttons";
 import { RenewCalendarButton } from "./renew-calendar-button";
 import styles from "./studio.module.css";
 
-// The start page of the studio app: the links to the bookings (#76), the hours (#23), the offers, the questions (#68)
-// and the classes (#96).
+// The start page of the studio app: the links to the bookings (#76), the hours (#23), the offers, the questions (#68),
+// the classes (#96) and the photos (#173).
 export default async function StudioPage() {
   // The proxy guards each studio page; this check also keeps the data of a page behind the login.
   const requestHeaders = await headers();
@@ -51,6 +51,11 @@ export default async function StudioPage() {
       <p>
         <Link className={styles.link} href="/studio/offers">
           {t("offers")}
+        </Link>
+      </p>
+      <p>
+        <Link className={styles.link} href="/studio/photos">
+          {t("photos")}
         </Link>
       </p>
       <p>

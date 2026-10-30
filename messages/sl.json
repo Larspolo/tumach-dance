@@ -97,7 +97,8 @@
     "questions": "Za Nino",
     "questionsCount": "Za Nino ({count, plural, one {# vprašanje} two {# vprašanji} few {# vprašanja} other {# vprašanj}})",
     "classes": "Tečaji",
-    "feedback": "Povratne informacije"
+    "feedback": "Povratne informacije",
+    "photos": "Fotografije"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -285,7 +286,8 @@
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",
-    "body": "{name}: {offer}, {when}"
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Rezervacija preklicana"
   },
   "StudioBookings": {
     "title": "Rezervacije",
@@ -347,6 +349,20 @@
       "email": "Vpišite veljaven e-naslov.",
       "message": "Napišite sporočilo: od 1 do 5000 znakov."
     }
+  },
+  "StudioPhotos": {
+    "title": "Fotografije",
+    "back": "Nazaj",
+    "none": "Še ni fotografij.",
+    "choose": "Fotografije s telefona",
+    "add": "Dodaj fotografije",
+    "adding": "Dodajam…",
+    "remove": "Odstrani",
+    "removeConfirm": "Da, odstrani to fotografijo",
+    "alt": "Fotografija {number}",
+    "not-image": "{name} ni fotografija. Nič ni bilo dodano.",
+    "too-large": "{name} je večja od 15 MB. Nič ni bilo dodano.",
+    "failed": "{name} ni bilo mogoče dodati. Poskusi znova."
   },
   "CancelBooking": {
     "title": "Prekliči rezervacijo",
