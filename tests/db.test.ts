@@ -57,8 +57,9 @@ test("four server starts at the same time apply each migration once", async () =
   const script = `
     import Database from "better-sqlite3";
     import { runMigrations } from ${JSON.stringify(join(process.cwd(), "src/db/migrate.ts"))};
+    import { setWalMode } from ${JSON.stringify(join(process.cwd(), "src/db/wal.ts"))};
     const sqlite = new Database(process.argv[1], { timeout: 10000 });
-    sqlite.pragma("journal_mode = WAL");
+    setWalMode(sqlite);
     runMigrations(sqlite, process.argv[2]);
   `;
   const start = () =>
