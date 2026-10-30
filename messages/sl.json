@@ -63,7 +63,9 @@
       "send": "[Placeholder (sl): send]",
       "placeLabel": "[Placeholder (sl): place]",
       "place": "[Placeholder (sl): address of the studio]",
-      "closing": "[Placeholder (sl): closing line]"
+      "closing": "[Placeholder (sl): closing line]",
+      "thanks": "[Placeholder (sl): Hvala, tvoje sporočilo je poslano]",
+      "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
     }
   },
   "Nav": {

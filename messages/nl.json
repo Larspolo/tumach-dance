@@ -63,7 +63,9 @@
       "send": "[Placeholder (nl): send]",
       "placeLabel": "[Placeholder (nl): place]",
       "place": "[Placeholder (nl): address of the studio]",
-      "closing": "[Placeholder (nl): closing line]"
+      "closing": "[Placeholder (nl): closing line]",
+      "thanks": "[Placeholder (nl): Dank je, je bericht is verstuurd]",
+      "failed": "Versturen mislukt, probeer het later opnieuw"
     }
   },
   "Nav": {
