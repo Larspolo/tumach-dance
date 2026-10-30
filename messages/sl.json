@@ -102,7 +102,9 @@
     "unsupported": "Ta brskalnik ne more prikazati obvestil.",
     "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
     "testTitle": "TUMACH studio",
-    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
+    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu.",
+    "questionTitle": "Novo vprašanje zate",
+    "questionBody": "Odpri ga v aplikaciji studia in odgovori."
   },
   "LanguageSwitcher": {
     "label": "Jezik"

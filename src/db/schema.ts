@@ -128,6 +128,15 @@ export const pushSubscriptions = sqliteTable("push_subscriptions", {
   auth: text("auth").notNull(),
   /** UTC, epoch milliseconds. */
   createdAt: integer("created_at").notNull(),
+  /** The language of the studio app on the device (#69): the push texts of a timer have no request. */
+  locale: text("locale").notNull().default("en"),
+});
+
+/** A question for Nina (a GitHub issue) that has had its push (#69). The row comes before the push: one push only. */
+export const notifiedQuestions = sqliteTable("notified_questions", {
+  number: integer("number").primaryKey(),
+  /** UTC, epoch milliseconds. */
+  notifiedAt: integer("notified_at").notNull(),
 });
 
 /** A booking request of a dancer (#34). A `requested` or `approved` booking holds its time: no other may overlap it. */
