@@ -6,11 +6,11 @@ The first push of a ticket took 2 to 6 tool calls in each run on 2026-10-28, and
     python3 framework/tools/ship_pr.py N --message MSG.txt --title "Title" --body BODY.md   # the first push of ticket N
     python3 framework/tools/ship_pr.py N --message MSG.txt                                  # a later push to the open PR
 
-Steps: `git commit -F MSG.txt` of the staged files (without `--message`: the commits that are there), `ruff check .`,
+Steps: `git commit -F MSG.txt` of the staged files (without `--message`: the commits that are there), the lint command of `agent.toml` (also with `--tested`),
 the tests (the test files of the branch and the test files that import its changed modules, never the full
 suite: the quick CI runs it, owner #4187; `--tested`: you ran them on this tree), `claim.py N --guard` and the push (`merge_main.push`), the PR (a new
 one with `Closes #N` in its body; or the open PR of the branch), and `mergeable_state` (`dirty`: run
-`python3 framework/tools/merge_main.py --push N`). Exit 0: shipped. Exit 2: ruff or a test fails, or a change of data
+`python3 framework/tools/merge_main.py --push N`). Exit 0: shipped. Exit 2: the lint or a test fails, or a change of data
 files only adds a test (`docs/extend.md`; nothing pushed). Exit 3: the
 guard or the push fails (do not push by hand). Exit 4: no commit to ship, or the PR call fails.
 """
@@ -46,13 +46,22 @@ def data_only_tests(changed):
 DATA_TESTS = ("tests/test_data_files.py", "tests/test_data_format.py")
 
 
-def checks():
-    """ruff, then the test files of the branch and of its changed modules (more than `MAX_TESTS`: only the branch's).
-    Never the full fast suite: the quick CI runs it on each push (owner, #4187). True when all pass."""
-    r = subprocess.run(["ruff", "check", "."], capture_output=True, text=True)
+LINT = CONFIG.get("commands", {}).get("lint") or "ruff check ."
+
+
+def lint():
+    """The lint command of the project (`[commands] lint` of agent.toml), also with `--tested`: it takes seconds, and
+    with only `ruff` a run pushed a Biome error of a TypeScript change: red CI, a stalled PR and a takeover (#69)."""
+    r = subprocess.run(LINT, shell=True, capture_output=True, text=True)
     if r.returncode:
-        print(r.stdout[-3000:])
+        print((r.stdout + r.stderr)[-3000:])
         return False
+    return True
+
+
+def checks():
+    """The test files of the branch and of its changed modules (more than `MAX_TESTS`: only the branch's).
+    Never the full fast suite: the quick CI runs it on each push (owner, #4187). True when all pass."""
     changed = git("diff", "--name-only", f"origin/{CONFIG['branch']}...HEAD").stdout.split()
     tests = {f: open(f, encoding="utf-8").read() for f in glob.glob("tests/test_*.py") + glob.glob("framework/tests/test_*.py")}
     run = merge_main.test_files(changed, changed, tests)[0]
@@ -111,7 +120,7 @@ def main(argv=None):
     if bad := data_only_tests(changed):                  # also with --tested
         print(f"a change of data files only must not add or change tests: remove {' '.join(bad)} (docs/extend.md)")
         return 2
-    if not a.tested and not checks():
+    if not lint() or (not a.tested and not checks()):
         return 2
     if not push(a.number):
         return 3
