@@ -18,6 +18,7 @@
     "title": "Studio",
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
     "logOut": "Odjava",
+    "offers": "Ponudba",
     "hours": "Ure"
   },
   "LoginEmail": {
@@ -47,5 +48,40 @@
       "thu": "čet",
       "fri": "pet"
     }
+  },
+  "StudioOffers": {
+    "title": "Ponudba",
+    "back": "Nazaj",
+    "none": "Še ni ponudbe.",
+    "lesson": "Zasebna ura, {minutes} min",
+    "rental": "Najem studia, {minutes} min",
+    "lessonKind": "Zasebna ura",
+    "rentalKind": "Najem studia",
+    "hidden": "skrito",
+    "kind": "Vrsta",
+    "length": "Trajanje",
+    "minutes": "{minutes} minut",
+    "price": "Cena v evrih",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj ponudbo",
+    "addSave": "Dodaj"
+  },
+  "Push": {
+    "title": "Obvestila",
+    "turnOn": "Vklopi obvestila",
+    "on": "Obvestila so vklopljena na tem telefonu.",
+    "sendTest": "Pošlji preizkus",
+    "testSent": "Preizkus je na poti. Poglej telefon.",
+    "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
+    "denied": "Obvestila so blokirana. Dovoli jih za to aplikacijo v nastavitvah telefona.",
+    "unsupported": "Ta brskalnik ne more prikazati obvestil.",
+    "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
+    "testTitle": "TUMACH studio",
+    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
   }
 }

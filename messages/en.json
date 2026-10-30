@@ -18,6 +18,7 @@
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
+    "offers": "Offers",
     "hours": "Hours"
   },
   "LoginEmail": {
@@ -47,5 +48,40 @@
       "thu": "Thu",
       "fri": "Fri"
     }
+  },
+  "StudioOffers": {
+    "title": "Offers",
+    "back": "Back",
+    "none": "No offers yet.",
+    "lesson": "Private lesson, {minutes} min",
+    "rental": "Studio rental, {minutes} min",
+    "lessonKind": "Private lesson",
+    "rentalKind": "Studio rental",
+    "hidden": "hidden",
+    "kind": "Kind",
+    "length": "Length",
+    "minutes": "{minutes} minutes",
+    "price": "Price in euro",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add an offer",
+    "addSave": "Add"
+  },
+  "Push": {
+    "title": "Notifications",
+    "turnOn": "Turn on notifications",
+    "on": "Notifications are on for this phone.",
+    "sendTest": "Send a test",
+    "testSent": "The test is on its way. Look at your phone.",
+    "failed": "Something went wrong. Try again in a minute.",
+    "denied": "Notifications are blocked. Allow them for this app in the settings of your phone.",
+    "unsupported": "This browser cannot show notifications.",
+    "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
+    "testTitle": "TUMACH studio",
+    "testBody": "This is a test. Notifications work on this phone."
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
   }
 }

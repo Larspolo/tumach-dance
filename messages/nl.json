@@ -18,6 +18,7 @@
     "title": "Studio",
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
+    "offers": "Aanbod",
     "hours": "Uren"
   },
   "LoginEmail": {
@@ -47,5 +48,40 @@
       "thu": "do",
       "fri": "vr"
     }
+  },
+  "StudioOffers": {
+    "title": "Aanbod",
+    "back": "Terug",
+    "none": "Nog geen aanbod.",
+    "lesson": "Privéles, {minutes} min",
+    "rental": "Studiohuur, {minutes} min",
+    "lessonKind": "Privéles",
+    "rentalKind": "Studiohuur",
+    "hidden": "verborgen",
+    "kind": "Soort",
+    "length": "Duur",
+    "minutes": "{minutes} minuten",
+    "price": "Prijs in euro",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Aanbod toevoegen",
+    "addSave": "Toevoegen"
+  },
+  "Push": {
+    "title": "Meldingen",
+    "turnOn": "Meldingen aanzetten",
+    "on": "Meldingen staan aan op deze telefoon.",
+    "sendTest": "Stuur een test",
+    "testSent": "De test is onderweg. Kijk op je telefoon.",
+    "failed": "Er ging iets mis. Probeer het over een minuut opnieuw.",
+    "denied": "Meldingen zijn geblokkeerd. Sta ze toe voor deze app in de instellingen van je telefoon.",
+    "unsupported": "Deze browser kan geen meldingen tonen.",
+    "installFirst": "Op een iPhone: tik op Deel en dan op \"Zet op beginscherm\". Open de app vanaf je beginscherm en zet daar de meldingen aan.",
+    "testTitle": "TUMACH studio",
+    "testBody": "Dit is een test. Meldingen werken op deze telefoon."
+  },
+  "LanguageSwitcher": {
+    "label": "Taal"
   }
 }
