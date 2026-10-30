@@ -21,7 +21,8 @@
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
     "offers": "Offers",
-    "hours": "Hours"
+    "hours": "Hours",
+    "bookings": "Bookings"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -143,5 +144,14 @@
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
     "notSlot": "This time is not free. Choose another time."
+  },
+  "StudioBookings": {
+    "title": "Bookings",
+    "back": "Back",
+    "none": "No open requests. All is calm.",
+    "approve": "Approve",
+    "decline": "Decline",
+    "approved": "Approved.",
+    "declined": "Declined."
   }
 }
