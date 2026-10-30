@@ -396,5 +396,23 @@
     "askTitle": "Your data",
     "ask": "To get a copy of your data or to have it removed, write to Nina with the contact form.",
     "askLink": "Go to the contact form"
+  },
+  "Meta": {
+    "home": {
+      "title": "[Placeholder (en): title of the site in a search result]",
+      "description": "[Placeholder (en): description of the site in a search result]"
+    },
+    "book": {
+      "title": "Book a lesson · TUMACH",
+      "description": "Book a private lesson or the studio of TUMACH in Amsterdam."
+    },
+    "privacy": {
+      "title": "Privacy · TUMACH",
+      "description": "What the site of TUMACH keeps of you, why, who sees it and for how long."
+    },
+    "guide": {
+      "title": "How to use the studio app · TUMACH",
+      "description": "Log in, add the studio app to your home screen and turn on notifications."
+    }
   }
 }

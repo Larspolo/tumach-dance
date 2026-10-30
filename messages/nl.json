@@ -396,5 +396,23 @@
     "askTitle": "Je gegevens",
     "ask": "Wil je een kopie van je gegevens, of wil je dat ze verwijderd worden? Schrijf Nina via het contactformulier.",
     "askLink": "Naar het contactformulier"
+  },
+  "Meta": {
+    "home": {
+      "title": "[Placeholder (nl): titel van de site in een zoekresultaat]",
+      "description": "[Placeholder (nl): beschrijving van de site in een zoekresultaat]"
+    },
+    "book": {
+      "title": "Les boeken · TUMACH",
+      "description": "Boek een privéles of de studio van TUMACH in Amsterdam."
+    },
+    "privacy": {
+      "title": "Privacy · TUMACH",
+      "description": "Wat de site van TUMACH van je bewaart, waarom, wie het ziet en hoe lang."
+    },
+    "guide": {
+      "title": "Zo gebruik je de studio-app · TUMACH",
+      "description": "Log in, zet de studio-app op je beginscherm en zet meldingen aan."
+    }
   }
 }

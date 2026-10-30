@@ -396,5 +396,23 @@
     "askTitle": "Tvoji podatki",
     "ask": "Za kopijo svojih podatkov ali za njihov izbris piši Nini prek kontaktnega obrazca.",
     "askLink": "Na kontaktni obrazec"
+  },
+  "Meta": {
+    "home": {
+      "title": "[Placeholder (sl): naslov strani v rezultatu iskanja]",
+      "description": "[Placeholder (sl): opis strani v rezultatu iskanja]"
+    },
+    "book": {
+      "title": "Rezervacija ure · TUMACH",
+      "description": "Rezerviraj zasebno uro ali studio TUMACH v Amsterdamu."
+    },
+    "privacy": {
+      "title": "Zasebnost · TUMACH",
+      "description": "Kaj spletna stran TUMACH hrani o tebi, zakaj, kdo to vidi in kako dolgo."
+    },
+    "guide": {
+      "title": "Kako uporabljaš studijsko aplikacijo · TUMACH",
+      "description": "Prijavi se, dodaj studijsko aplikacijo na začetni zaslon in vklopi obvestila."
+    }
   }
 }

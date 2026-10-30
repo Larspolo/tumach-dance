@@ -1,10 +1,16 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { KEEP_MONTHS } from "@/lib/booking-privacy";
+import { pageMetadata } from "@/lib/page-meta";
 import styles from "./privacy.module.css";
 
 // The privacy page (#226, epic #222): what the site keeps of a booking and of a contact message. The months come
 // from `KEEP_MONTHS`, so the page and the removal of old bookings never differ.
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/privacy");
+}
+
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
