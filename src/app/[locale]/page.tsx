@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "");
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "", locale);
 }
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
