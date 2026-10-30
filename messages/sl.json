@@ -272,7 +272,9 @@
     "reminder": "Opomnik za tvojo rezervacijo: {offer}, {when}.",
     "sign": "TUMACH",
     "payLink": "Cena je {price}. Plačaj s tem Tikkiejem: {url}",
-    "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo."
+    "payLater": "Cena je {price}. Nina ti pošlje Tikkie za plačilo.",
+    "cancelLink": "Ne moreš priti? Rezervacijo prekliči s to povezavo, kadar koli pred začetkom: {url}",
+    "cancelledByYou": "Preklical si svojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin."
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",
@@ -338,5 +340,18 @@
       "email": "Vpišite veljaven e-naslov.",
       "message": "Napišite sporočilo: od 1 do 5000 znakov."
     }
+  },
+  "CancelBooking": {
+    "title": "Prekliči rezervacijo",
+    "booking": "Tvoja rezervacija: {offer}, {when}.",
+    "noRefund": "Za preklicano rezervacijo ni vračila denarja.",
+    "button": "Prekliči rezervacijo",
+    "done": "Tvoja rezervacija je preklicana. Dobiš e-pošto.",
+    "notFound": "Ta povezava ne deluje. Morda ni popolna.",
+    "cancelled": "Ta rezervacija je že preklicana.",
+    "declined": "Nina te prošnje ni sprejela: ničesar ni treba preklicati.",
+    "started": "Ta rezervacija se je že začela: s povezavo je ne moreš več preklicati.",
+    "contact": "Piši Nini",
+    "contactText": "Imaš vprašanje ali ne moreš priti?"
   }
 }
