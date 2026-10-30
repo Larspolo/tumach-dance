@@ -199,6 +199,12 @@
     "greeting": "Hi {name},",
     "body": "Thank you for your request: {offer}, {when}.",
     "soon": "Nina will look at it and answer you soon.",
+    "approvedSubject": "Your booking at TUMACH is confirmed",
+    "approvedBody": "Nina approved your request: {offer}, {when}.",
+    "approvedSee": "See you at the studio!",
+    "declinedSubject": "Your booking request at TUMACH",
+    "declinedBody": "Sorry, Nina cannot take your request: {offer}, {when}.",
+    "declinedOther": "You can pick another time on the booking page.",
     "sign": "TUMACH"
   },
   "bookingPush": {

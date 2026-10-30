@@ -199,6 +199,12 @@
     "greeting": "Hoi {name},",
     "body": "Bedankt voor je aanvraag: {offer}, {when}.",
     "soon": "Nina kijkt ernaar en antwoordt je snel.",
+    "approvedSubject": "Je boeking bij TUMACH is bevestigd",
+    "approvedBody": "Nina heeft je aanvraag goedgekeurd: {offer}, {when}.",
+    "approvedSee": "Tot in de studio!",
+    "declinedSubject": "Je aanvraag bij TUMACH",
+    "declinedBody": "Sorry, Nina kan je aanvraag niet aannemen: {offer}, {when}.",
+    "declinedOther": "Je kunt een andere tijd kiezen op de boekingspagina.",
     "sign": "TUMACH"
   },
   "bookingPush": {

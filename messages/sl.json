@@ -199,6 +199,12 @@
     "greeting": "Živjo, {name},",
     "body": "Hvala za prošnjo: {offer}, {when}.",
     "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
+    "approvedSubject": "Tvoja rezervacija pri TUMACH je potrjena",
+    "approvedBody": "Nina je potrdila tvojo prošnjo: {offer}, {when}.",
+    "approvedSee": "Se vidimo v studiu!",
+    "declinedSubject": "Tvoja prošnja za rezervacijo pri TUMACH",
+    "declinedBody": "Žal Nina ne more sprejeti tvoje prošnje: {offer}, {when}.",
+    "declinedOther": "Na strani za rezervacije lahko izbereš drug termin.",
     "sign": "TUMACH"
   },
   "bookingPush": {
