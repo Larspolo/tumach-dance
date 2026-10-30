@@ -23,6 +23,12 @@
     "offers": "Aanbod",
     "hours": "Uren",
     "bookings": "Boekingen",
+    "calendarAdd": "Zet in mijn agenda",
+    "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
+    "calendarRenew": "Maak een nieuw adres",
+    "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
+    "week": "Deze week",
+    "questions": "Voor Nina",
     "classes": "Lessen"
   },
   "PasskeyOffer": {
@@ -175,6 +181,10 @@
     "soon": "Nina kijkt ernaar en antwoordt je snel.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "Nieuwe aanvraag",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Boekingen",
     "back": "Terug",
@@ -183,5 +193,26 @@
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen."
+  },
+  "StudioQuestions": {
+    "title": "Voor Nina",
+    "back": "Terug",
+    "none": "Er zijn nu geen vragen voor je. Fijne dag!",
+    "try": "Probeer het op de site",
+    "choose": "Jouw keuze",
+    "text": "Iets toe te voegen? (optioneel)",
+    "send": "Versturen",
+    "thanks": "Dank je! Je antwoord is verstuurd.",
+    "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",
+    "loadError": "De vragen konden niet worden geladen. Probeer het later nog eens."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd"
   }
 }
