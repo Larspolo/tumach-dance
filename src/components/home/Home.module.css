@@ -178,7 +178,6 @@
   color: var(--cream);
 }
 
-.kind,
 .level {
   font-family: var(--font-space-mono), monospace;
   font-size: 0.7rem;
@@ -354,4 +353,9 @@
   .who {
     grid-column: 1 / -1;
   }
+}
+
+.none {
+  font-style: italic;
+  color: #6a6358;
 }

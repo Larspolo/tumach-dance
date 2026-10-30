@@ -18,40 +18,22 @@
     "classes": {
       "title": "[Placeholder (sl): title of the classes]",
       "label": "[Placeholder (sl): (02) classes]",
-      "items": {
-        "one": {
-          "kind": "[Placeholder (sl): kind of class one]",
-          "name": "[Placeholder (sl): name of class one]",
-          "text": "[Placeholder (sl): text of class one]",
-          "level": "[Placeholder (sl): level and length of class one]"
-        },
-        "two": {
-          "kind": "[Placeholder (sl): kind of class two]",
-          "name": "[Placeholder (sl): name of class two]",
-          "text": "[Placeholder (sl): text of class two]",
-          "level": "[Placeholder (sl): level and length of class two]"
-        },
-        "three": {
-          "kind": "[Placeholder (sl): kind of class three]",
-          "name": "[Placeholder (sl): name of class three]",
-          "text": "[Placeholder (sl): text of class three]",
-          "level": "[Placeholder (sl): level and length of class three]"
-        },
-        "four": {
-          "kind": "[Placeholder (sl): kind of class four]",
-          "name": "[Placeholder (sl): name of class four]",
-          "text": "[Placeholder (sl): text of class four]",
-          "level": "[Placeholder (sl): level and length of class four]"
-        }
-      }
+      "none": "Tečajev še ni."
     },
     "schedule": {
       "title": "[Placeholder (sl): title of the schedule]",
       "label": "[Placeholder (sl): (03) schedule]",
-      "day": "[Placeholder (sl): day]",
-      "class": "[Placeholder (sl): class]",
-      "time": "[Placeholder (sl): time]",
-      "who": "[Placeholder (sl): for whom]"
+      "none": "Urnika še ni.",
+      "days": {
+        "mon": "ponedeljek",
+        "tue": "torek",
+        "wed": "sreda",
+        "thu": "četrtek",
+        "fri": "petek",
+        "sat": "sobota",
+        "sun": "nedelja"
+      },
+      "time": "{from}–{to}"
     },
     "contact": {
       "title": "[Placeholder (sl): title of the contact]",
