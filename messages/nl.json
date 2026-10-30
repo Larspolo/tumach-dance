@@ -122,5 +122,26 @@
     "pushAllow": "Je telefoon vraagt of de app meldingen mag sturen. Tik op \"Sta toe\".",
     "pushTest": "Tik op \"Stuur een test\". Er komt een melding op je telefoon.",
     "link": "Hoe werkt de app? Lees de uitleg"
+  },
+  "Book": {
+    "title": "Boeken",
+    "offer": "1. Kies een aanbod",
+    "day": "2. Kies een dag",
+    "time": "3. Kies een tijd",
+    "details": "4. Jouw gegevens",
+    "lesson": "Privéles, {minutes} min",
+    "rental": "Studio huren, {minutes} min",
+    "noOffers": "Er is op dit moment niets te boeken.",
+    "noTimes": "Geen vrije tijd in de komende 4 weken.",
+    "name": "Naam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "send": "Verstuur de aanvraag",
+    "sent": "Aanvraag verstuurd",
+    "sentText": "Nina bekijkt je aanvraag en antwoordt je per e-mail.",
+    "again": "Nog een tijd boeken",
+    "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
+    "invalid": "Controleer je naam, e-mail en telefoonnummer.",
+    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
   }
 }
