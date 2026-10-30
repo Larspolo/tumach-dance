@@ -29,6 +29,7 @@
     "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
     "week": "This week",
     "questions": "For Nina",
+    "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
     "classes": "Classes"
   },
   "PasskeyOffer": {

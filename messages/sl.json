@@ -29,6 +29,7 @@
     "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
     "week": "Ta teden",
     "questions": "Za Nino",
+    "questionsCount": "Za Nino ({count, plural, one {# vprašanje} two {# vprašanji} few {# vprašanja} other {# vprašanj}})",
     "classes": "Tečaji"
   },
   "PasskeyOffer": {
