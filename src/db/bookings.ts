@@ -113,6 +113,23 @@ export function decideBooking(db: Db, id: number, decision: "approved" | "declin
   return { ok: false, reason: exists ? "not-requested" : "not-found" };
 }
 
+/** The bookings with one of `statuses` that overlap `from`..`to`, with their offer, by start: the week page and the calendar. */
+export function listBookings(
+  db: Db,
+  from: number,
+  to: number,
+  statuses: readonly Booking["status"][],
+): { booking: Booking; offer: Offer }[] {
+  if (statuses.length === 0) return [];
+  return db
+    .select({ booking: bookings, offer: offers })
+    .from(bookings)
+    .innerJoin(offers, eq(offers.id, bookings.offerId))
+    .where(and(inArray(bookings.status, statuses), lt(bookings.start, to), gt(bookings.end, from)))
+    .orderBy(bookings.start)
+    .all();
+}
+
 /** The `requested` bookings with their offer, by start: the requests that wait for Nina. */
 export function listOpenRequests(db: Db): { booking: Booking; offer: Offer }[] {
   return db
