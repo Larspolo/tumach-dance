@@ -25,5 +25,8 @@
   },
   "TestBanner": {
     "text": "Test site: bookings here are not real"
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
   }
 }

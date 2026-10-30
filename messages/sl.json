@@ -25,5 +25,8 @@
   },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
   }
 }

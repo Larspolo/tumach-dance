@@ -25,5 +25,8 @@
   },
   "TestBanner": {
     "text": "Testsite: boekingen hier zijn niet echt"
+  },
+  "LanguageSwitcher": {
+    "label": "Taal"
   }
 }
