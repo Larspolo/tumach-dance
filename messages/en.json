@@ -215,6 +215,8 @@
     "declinedSubject": "Your booking request at TUMACH",
     "declinedBody": "Sorry, Nina cannot take your request: {offer}, {when}.",
     "declinedOther": "You can pick another time on the booking page.",
+    "cancelledSubject": "Your booking at TUMACH is cancelled",
+    "cancelled": "Nina cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "sign": "TUMACH"
   },
   "bookingPush": {

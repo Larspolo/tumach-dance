@@ -215,6 +215,8 @@
     "declinedSubject": "Je aanvraag bij TUMACH",
     "declinedBody": "Sorry, Nina kan je aanvraag niet aannemen: {offer}, {when}.",
     "declinedOther": "Je kunt een andere tijd kiezen op de boekingspagina.",
+    "cancelledSubject": "Je boeking bij TUMACH is geannuleerd",
+    "cancelled": "Nina heeft je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "sign": "TUMACH"
   },
   "bookingPush": {

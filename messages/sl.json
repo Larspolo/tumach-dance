@@ -215,6 +215,8 @@
     "declinedSubject": "Tvoja prošnja za rezervacijo pri TUMACH",
     "declinedBody": "Žal Nina ne more sprejeti tvoje prošnje: {offer}, {when}.",
     "declinedOther": "Na strani za rezervacije lahko izbereš drug termin.",
+    "cancelledSubject": "Tvoja rezervacija pri TUMACH je preklicana",
+    "cancelled": "Nina je preklicala tvojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin.",
     "sign": "TUMACH"
   },
   "bookingPush": {
