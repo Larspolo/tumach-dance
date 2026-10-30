@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import styles from "./Footer.module.css";
 
 export function Footer() {
@@ -10,6 +11,9 @@ export function Footer() {
       </span>
       <span>{t("tagline")}</span>
       <span>{t("place")}</span>
+      <Link className={styles.link} href="/privacy">
+        {t("privacy")}
+      </Link>
     </footer>
   );
 }

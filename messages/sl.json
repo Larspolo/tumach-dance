@@ -67,7 +67,8 @@
     "copyright": "© {year}",
     "domain": "tumach.dance",
     "tagline": "[Placeholder (sl): the tagline of Nina]",
-    "place": "[Placeholder (sl): the place]"
+    "place": "[Placeholder (sl): the place]",
+    "privacy": "Kako hranimo tvoje podatke"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -259,7 +260,8 @@
     "again": "Rezerviraj še en termin",
     "taken": "Nekdo drug je pravkar vzel ta termin. Izberi drug termin.",
     "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
-    "notSlot": "Ta termin ni prost. Izberi drug termin."
+    "notSlot": "Ta termin ni prost. Izberi drug termin.",
+    "privacy": "Kako hranimo tvoje podatke"
   },
   "bookingEmail": {
     "subject": "Tvoja prošnja za rezervacijo pri TUMACH",
@@ -377,5 +379,22 @@
     "started": "Ta rezervacija se je že začela: s povezavo je ne moreš več preklicati.",
     "contact": "Piši Nini",
     "contactText": "Imaš vprašanje ali ne moreš priti?"
+  },
+  "Privacy": {
+    "title": "Zasebnost",
+    "intro": "Kaj ta stran hrani o tebi, zakaj, kdo to vidi in kako dolgo.",
+    "bookingTitle": "Rezervacija",
+    "bookingWhat": "Ko rezerviraš, stran hrani tvoje ime, e-poštni naslov, telefonsko številko in jezik strani.",
+    "bookingWhy": "Nina jih uporabi, da odgovori na tvojo prošnjo, ti pošlje e-pošto o rezervaciji (odgovor, opomnik in povezavo za plačilo) in te doseže glede ure.",
+    "bookingWho": "Vidi jih samo Nina. E-pošta gre prek naše e-poštne storitve Mailgun.",
+    "keep": "{months, plural, one {# mesec} two {# meseca} few {# mesece} other {# mesecev}} po tvoji uri stran sama izbriše tvoje ime, e-poštni naslov in telefonsko številko.",
+    "contactTitle": "Sporočilo prek obrazca",
+    "contactWhat": "Stran ne hrani kopije tvojega sporočila: Nini pošlje eno e-pošto.",
+    "contactSpam": "Proti neželeni pošti stran hrani internetni naslov tvoje naprave v pomnilniku največ eno uro.",
+    "cookiesTitle": "Piškotki",
+    "cookies": "Računa ne potrebuješ. Stran ne uporablja piškotkov za sledenje ali oglaševanje.",
+    "askTitle": "Tvoji podatki",
+    "ask": "Za kopijo svojih podatkov ali za njihov izbris piši Nini prek kontaktnega obrazca.",
+    "askLink": "Na kontaktni obrazec"
   }
 }

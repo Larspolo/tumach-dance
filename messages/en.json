@@ -67,7 +67,8 @@
     "copyright": "© {year}",
     "domain": "tumach.dance",
     "tagline": "[Placeholder (en): the tagline of Nina]",
-    "place": "[Placeholder (en): the place]"
+    "place": "[Placeholder (en): the place]",
+    "privacy": "How we keep your data"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -259,7 +260,8 @@
     "again": "Book another time",
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
-    "notSlot": "This time is not free. Choose another time."
+    "notSlot": "This time is not free. Choose another time.",
+    "privacy": "How we keep your data"
   },
   "bookingEmail": {
     "subject": "Your booking request at TUMACH",
@@ -377,5 +379,22 @@
     "started": "This booking has started: you cannot cancel it with the link any more.",
     "contact": "Write to Nina",
     "contactText": "A question, or you cannot come?"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "intro": "What this site keeps of you, why, who sees it and for how long.",
+    "bookingTitle": "A booking",
+    "bookingWhat": "When you book, the site keeps your name, email address, phone number and the language of the site.",
+    "bookingWhy": "Nina uses them to answer your request, to send you the emails about your booking (the answer, the reminder and the payment link) and to reach you about the lesson.",
+    "bookingWho": "Only Nina sees them. The emails go through our email service, Mailgun.",
+    "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address and phone number by itself.",
+    "contactTitle": "A contact message",
+    "contactWhat": "The site keeps no copy of your message: it sends one email to Nina.",
+    "contactSpam": "Against spam, the site keeps the internet address of your device in its memory for at most one hour.",
+    "cookiesTitle": "Cookies",
+    "cookies": "You need no account. The site uses no tracking and no advertising cookies.",
+    "askTitle": "Your data",
+    "ask": "To get a copy of your data or to have it removed, write to Nina with the contact form.",
+    "askLink": "Go to the contact form"
   }
 }

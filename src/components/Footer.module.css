@@ -16,3 +16,7 @@
 .domain {
   color: var(--rust);
 }
+
+.link {
+  color: inherit;
+}
