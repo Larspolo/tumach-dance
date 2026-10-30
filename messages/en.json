@@ -279,6 +279,8 @@
     "sign": "TUMACH",
     "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
     "payLater": "The price is {price}. Nina sends you a Tikkie to pay.",
+    "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
+    "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "payReminderSubject": "Payment of your booking at TUMACH",
     "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
   },
@@ -360,5 +362,18 @@
     "not-image": "{name} is not a photo. Nothing was added for it.",
     "too-large": "{name} is larger than 15 MB. Nothing was added for it.",
     "failed": "{name} could not be added. Try again."
+  },
+  "CancelBooking": {
+    "title": "Cancel your booking",
+    "booking": "Your booking: {offer}, {when}.",
+    "noRefund": "A cancelled booking gets no refund.",
+    "button": "Cancel the booking",
+    "done": "Your booking is cancelled. You get an email.",
+    "notFound": "This link does not work. Maybe it is not complete.",
+    "cancelled": "This booking is already cancelled.",
+    "declined": "Nina did not take this request: there is nothing to cancel.",
+    "started": "This booking has started: you cannot cancel it with the link any more.",
+    "contact": "Write to Nina",
+    "contactText": "A question, or you cannot come?"
   }
 }

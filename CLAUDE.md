@@ -22,12 +22,12 @@ Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.
 
 Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy `src/proxy.ts`). Keep this map up to date.
 
-- `src/app/[locale]/` – the public pages (home, classes, book) in each language.
+- `src/app/[locale]/` – the public pages (home, classes, book, the cancel link of a dancer `booking/cancel`) in each language.
 - `src/app/studio/` – Nina's studio app: login, bookings, the week (`week.ts`), hours, offers, photos, the page "For Nina". No locale in its
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
 - `src/components/` – shared page parts (the "test site" banner).
-- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the questions for Nina of a ticket (`nina-question.ts`).
+- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the questions for Nina of a ticket (`nina-question.ts`).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
