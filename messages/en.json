@@ -38,5 +38,8 @@
     "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
     "testTitle": "TUMACH studio",
     "testBody": "This is a test. Notifications work on this phone."
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
   }
 }

@@ -38,5 +38,8 @@
     "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
     "testTitle": "TUMACH studio",
     "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
   }
 }

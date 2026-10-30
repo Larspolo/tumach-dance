@@ -38,5 +38,8 @@
     "installFirst": "Op een iPhone: tik op Deel en dan op \"Zet op beginscherm\". Open de app vanaf je beginscherm en zet daar de meldingen aan.",
     "testTitle": "TUMACH studio",
     "testBody": "Dit is een test. Meldingen werken op deze telefoon."
+  },
+  "LanguageSwitcher": {
+    "label": "Taal"
   }
 }
