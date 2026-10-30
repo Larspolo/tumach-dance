@@ -12,7 +12,9 @@
     "logIn": "Inloggen",
     "wrongCode": "Deze code klopt niet of is te oud. Probeer het opnieuw, of vraag een nieuwe code.",
     "failed": "Er ging iets mis. Probeer het over een minuut opnieuw.",
-    "otherEmail": "Vraag een nieuwe code"
+    "otherEmail": "Vraag een nieuwe code",
+    "passkey": "Inloggen met passkey",
+    "passkeyFailed": "De passkey werkte niet. Log in met een code per e-mail."
   },
   "StudioHome": {
     "title": "Studio",
@@ -20,6 +22,13 @@
     "logOut": "Uitloggen",
     "offers": "Aanbod",
     "hours": "Uren"
+  },
+  "PasskeyOffer": {
+    "title": "Volgende keer sneller inloggen",
+    "text": "Voeg een passkey toe op deze telefoon. Volgende keer log je in met Face ID of je vingerafdruk, zonder code.",
+    "add": "Passkey toevoegen",
+    "notNow": "Nu niet",
+    "failed": "De passkey is niet toegevoegd. Je kunt nog steeds inloggen met een code per e-mail."
   },
   "LoginEmail": {
     "subject": "Je TUMACH-code: {code}",

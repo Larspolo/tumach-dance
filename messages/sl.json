@@ -12,7 +12,9 @@
     "logIn": "Prijava",
     "wrongCode": "Ta koda ni pravilna ali je prestara. Poskusi znova ali zahtevaj novo kodo.",
     "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
-    "otherEmail": "Zahtevaj novo kodo"
+    "otherEmail": "Zahtevaj novo kodo",
+    "passkey": "Prijava s ključem za dostop",
+    "passkeyFailed": "Ključ za dostop ni deloval. Prijavi se s kodo po e-pošti."
   },
   "StudioHome": {
     "title": "Studio",
@@ -20,6 +22,13 @@
     "logOut": "Odjava",
     "offers": "Ponudba",
     "hours": "Ure"
+  },
+  "PasskeyOffer": {
+    "title": "Naslednjič se prijavi hitreje",
+    "text": "Dodaj ključ za dostop na ta telefon. Naslednjič se prijaviš s Face ID ali prstnim odtisom, brez kode.",
+    "add": "Dodaj ključ za dostop",
+    "notNow": "Ne zdaj",
+    "failed": "Ključ za dostop ni bil dodan. Še vedno se lahko prijaviš s kodo po e-pošti."
   },
   "LoginEmail": {
     "subject": "Tvoja koda TUMACH: {code}",

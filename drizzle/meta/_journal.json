@@ -29,6 +29,13 @@
       "when": 1793387937328,
       "tag": "0003_push",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1793389238467,
+      "tag": "0004_passkey",
+      "breakpoints": true
     }
   ]
 }

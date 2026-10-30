@@ -1,6 +1,9 @@
 // The login of the studio app (#19): Better Auth with its email OTP plugin. Nina types her email, gets a code of
 // 6 digits by email (`src/lib/email.ts`) and types it; the session then lasts 180 days and renews when she uses the
-// app. Only `STUDIO_EMAIL` of the `.env` logs in. Better Auth also has the passkey plugin of #26.
+// app. Only `STUDIO_EMAIL` of the `.env` logs in. After a code login, Nina can add a passkey on the device (#26):
+// the passkey plugin of Better Auth (SimpleWebAuthn). Its relying party ID is the host of `baseURL`, so the preview
+// and the live site have separate passkeys.
+import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError, createAuthMiddleware } from "better-auth/api";
@@ -72,6 +75,8 @@ export function createAuth(db: Db, baseURL = process.env.BETTER_AUTH_URL) {
           if (type === "sign-in" && isStudioEmail(email)) await sendCode(email, otp, ctx?.headers);
         },
       }),
+      // Only a logged-in session adds a passkey (the default `requireSession`). The origin is the site, not a header.
+      passkey({ rpName: "TUMACH studio", origin: baseURL ? new URL(baseURL).origin : null }),
       nextCookies(),
     ],
   });
