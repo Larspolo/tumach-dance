@@ -12,6 +12,7 @@ import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
+import { bookingEvent } from "./booking-ics";
 import { type Email, sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
 
@@ -92,7 +93,12 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text };
+  const ics = {
+    filename: "tumach.ics",
+    contentType: "text/calendar",
+    content: bookingEvent(booking, offer, booking.locale),
+  };
+  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics] };
 }
 
 /**
