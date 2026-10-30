@@ -1,11 +1,78 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (nl): the welcome of Nina]"
+    "welcome": "[Placeholder (nl): the welcome of Nina]",
+    "eyebrow": "[Placeholder (nl): short line above the title]",
+    "primaryAction": "[Placeholder (nl): button to the schedule]",
+    "secondaryAction": "[Placeholder (nl): button to the studio]",
+    "imageBlock": "[Placeholder (nl): photo of the studio]",
+    "about": {
+      "title": "[Placeholder (nl): title about the studio]",
+      "label": "[Placeholder (nl): (01) about]",
+      "text1": "[Placeholder (nl): first paragraph about the studio]",
+      "text2": "[Placeholder (nl): second paragraph about Nina]",
+      "text3": "[Placeholder (nl): third paragraph about the dancers]",
+      "quote": "[Placeholder (nl): a short quote of Nina]",
+      "quoteBy": "[Placeholder (nl): who said the quote]"
+    },
+    "classes": {
+      "title": "[Placeholder (nl): title of the classes]",
+      "label": "[Placeholder (nl): (02) classes]",
+      "items": {
+        "one": {
+          "kind": "[Placeholder (nl): kind of class one]",
+          "name": "[Placeholder (nl): name of class one]",
+          "text": "[Placeholder (nl): text of class one]",
+          "level": "[Placeholder (nl): level and length of class one]"
+        },
+        "two": {
+          "kind": "[Placeholder (nl): kind of class two]",
+          "name": "[Placeholder (nl): name of class two]",
+          "text": "[Placeholder (nl): text of class two]",
+          "level": "[Placeholder (nl): level and length of class two]"
+        },
+        "three": {
+          "kind": "[Placeholder (nl): kind of class three]",
+          "name": "[Placeholder (nl): name of class three]",
+          "text": "[Placeholder (nl): text of class three]",
+          "level": "[Placeholder (nl): level and length of class three]"
+        },
+        "four": {
+          "kind": "[Placeholder (nl): kind of class four]",
+          "name": "[Placeholder (nl): name of class four]",
+          "text": "[Placeholder (nl): text of class four]",
+          "level": "[Placeholder (nl): level and length of class four]"
+        }
+      }
+    },
+    "schedule": {
+      "title": "[Placeholder (nl): title of the schedule]",
+      "label": "[Placeholder (nl): (03) schedule]",
+      "day": "[Placeholder (nl): day]",
+      "class": "[Placeholder (nl): class]",
+      "time": "[Placeholder (nl): time]",
+      "who": "[Placeholder (nl): for whom]"
+    },
+    "contact": {
+      "title": "[Placeholder (nl): title of the contact]",
+      "label": "[Placeholder (nl): (04) contact]",
+      "text": "[Placeholder (nl): invitation to write to Nina]",
+      "name": "[Placeholder (nl): name]",
+      "email": "[Placeholder (nl): email]",
+      "message": "[Placeholder (nl): message]",
+      "send": "[Placeholder (nl): send]",
+      "placeLabel": "[Placeholder (nl): place]",
+      "place": "[Placeholder (nl): address of the studio]",
+      "closing": "[Placeholder (nl): closing line]"
+    }
   },
   "Nav": {
     "label": "Hoofdmenu",
-    "logo": "TUMACH"
+    "logo": "TUMACH",
+    "about": "[Placeholder (nl): about]",
+    "classes": "[Placeholder (nl): classes]",
+    "schedule": "[Placeholder (nl): schedule]",
+    "contact": "[Placeholder (nl): contact]"
   },
   "Footer": {
     "copyright": "© {year}",

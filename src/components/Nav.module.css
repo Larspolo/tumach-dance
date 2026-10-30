@@ -28,3 +28,32 @@
   color: var(--rust);
   mix-blend-mode: normal;
 }
+
+.nav nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 3rem);
+}
+
+.links {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2.4rem);
+  list-style: none;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.links a {
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .links {
+    display: none;
+  }
+}
