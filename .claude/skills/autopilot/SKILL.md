@@ -68,10 +68,10 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
    Exit 3: do not push: `claim.py N --release` (when the claim is yours; it removes `in-progress`), comment the reason
    in one line on the ticket and pick the next ticket.
 8. It prints `mergeable_state`. `dirty`: run `python3 framework/tools/merge_main.py --push N` (`conflict.md`).
-   Do not wait for CI and do not merge by hand: CI runs only the quick checks on each PR (lint and fast tests,
-   about 1 minute), and the Automerge workflow merges the PR when CI is green, removes `in-progress` and deletes the
-   branch. The slow and server tests run only each night on main: do the levels of the `verify` skill that the
-   change needs (slow tests, server check) before the push. Continue with step 7 and the next ticket. Step 2 of a
+   Do not wait for CI and do not merge by hand: CI runs the quick checks (lint and fast tests, about 1 minute) and
+   the browser tests (the build and Playwright, job `browser`, about 5 minutes) on each PR, and the Automerge workflow
+   merges the PR when CI is green, removes `in-progress` and deletes the branch. Still do the levels of the `verify`
+   skill that the change needs (browser tests, screenshots) before the push. Continue with step 7 and the next ticket. Step 2 of a
    later cycle finds a red or conflicted PR.
 9. CI red → find the cause, fix, push. After 3 failed attempts stop: comment the cause on the ticket,
    add `blocked` or `needs-human` and `hold`, run `claim.py N --release` (it removes `in-progress`), and go to step 8 of the skill (report).

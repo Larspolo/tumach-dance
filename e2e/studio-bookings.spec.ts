@@ -41,7 +41,8 @@ test.describe("with a session", () => {
     await page.goto("/studio");
     await page.getByRole("link", { name: en.StudioHome.bookings }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioBookings.title);
-    const item = (name: string) => page.locator("li", { hasText: name });
+    // The first list holds the open requests; an approved booking moves to the list "Approved bookings" (#203).
+    const item = (name: string) => page.getByRole("list").first().locator("li", { hasText: name });
     await expect(item("Approve Me").getByRole("link", { name: "dancer@example.test" })).toHaveAttribute(
       "href",
       "mailto:dancer@example.test",
@@ -55,6 +56,7 @@ test.describe("with a session", () => {
     await item("Approve Me").getByRole("button", { name: en.StudioBookings.approve }).click();
     await expect(page.getByText(en.StudioBookings.approved)).toBeVisible();
     await expect(item("Approve Me")).toHaveCount(0);
+    await expect(page.getByRole("listitem").filter({ hasText: "Approve Me" })).toHaveCount(1);
     await item("Decline Me").getByRole("button", { name: en.StudioBookings.decline }).click();
     await expect(page.getByText(en.StudioBookings.declined)).toBeVisible();
     await expect(item("Decline Me")).toHaveCount(0);

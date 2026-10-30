@@ -163,17 +163,17 @@ jobs:
             if [ -n "$pr" ]; then merge "$pr" "$SHA"; else echo "no open PR for $BRANCH"; fi
           else
             # The sweep: each open agent PR without `conflict` (the runs and Unconflict solve those) whose head has a
-            # green `quick` check and no failed check.
+            # green `quick` check, a green `browser` check (a check that still runs is no failure) and no failed check.
             gh api "repos/$R/pulls?state=open&per_page=100" --jq ".[] | select(.head.repo.full_name == \"$R\")
               | select($AGENT) | select([.labels[].name] | index(\"conflict\") | not)
               | @json" > prs.txt
             while read -r pr; do
               sha=$(jq -r .head.sha <<<"$pr")
               if gh api "repos/$R/commits/$sha/check-runs?per_page=100" --jq '.check_runs' | jq -e \
-                   'any(.[]; .name == "quick" and .conclusion == "success") and all(.[]; .conclusion != "failure")' >/dev/null; then
+                   'any(.[]; .name == "quick" and .conclusion == "success") and any(.[]; .name == "browser" and .conclusion == "success") and all(.[]; .conclusion != "failure")' >/dev/null; then
                 merge "$pr" "$sha"
               else
-                echo "#$(jq -r .number <<<"$pr"): no green quick check on $sha"
+                echo "#$(jq -r .number <<<"$pr"): no green quick and browser checks on $sha"
               fi
             done < prs.txt
           fi
