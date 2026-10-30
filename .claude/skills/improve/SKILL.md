@@ -126,7 +126,8 @@ with all work in progress), add the label `paused` to the status issue and comme
 ## 5. Clean up
 
 - `docs/LEARNINGS.md` at 3000 bytes or less (lines for some tickets go to `docs/PITFALLS.md`, #4454) (only this skill merges and removes lines there; ticket runs only add),
-  `CLAUDE.md` below 150 lines. Remove lines that are no longer true.
+  `CLAUDE.md` below 150 lines. Remove lines that are no longer true. `merge=union` (`.gitattributes`) keeps a removed line
+  when main added lines next to it: after each merge of main, check that the removed lines stay out (#186).
 - Turn a learning line into a check when you can (a rule of `.claude/hooks/guard-shell.sh`, a fast test, a clear
   assert message, a setting of the start hook), then remove the line.
 - Read the skills for instructions that contradict each other. Correct them.
