@@ -19,7 +19,9 @@ __pycache__/
 !.env.example
 *.db
 *.db-journal
-data/local/
+*.db-wal
+*.db-shm
+data/
 # Scratch output and agent worktrees
 out/
 .claude/worktrees/

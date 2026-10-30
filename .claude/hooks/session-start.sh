@@ -23,6 +23,17 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
 fi
 
 cd "${CLAUDE_PROJECT_DIR:-.}"
+
+# scripts/cloud-setup.sh puts Node 24 in /usr/local/bin, but the PATH of the image has /opt/node22/bin first: the npm 10
+# of Node 22 drops the `libc` fields of package-lock.json (2026-10-30). Put /usr/local/bin first, also for the agent.
+if [ -x /usr/local/bin/node ] && [ "$(command -v node)" != /usr/local/bin/node ] &&
+   /usr/local/bin/node -e 'process.exit(process.versions.node.split(".")[0] >= 24 ? 0 : 1)' 2>/dev/null; then
+  export PATH="/usr/local/bin:$PATH"
+  if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+    echo 'export PATH="/usr/local/bin:$PATH"' >> "$CLAUDE_ENV_FILE"
+  fi
+fi
+
 PIP="python3 -m pip install --quiet --disable-pip-version-check --root-user-action=ignore"
 $PIP -r requirements-dev.txt
 
