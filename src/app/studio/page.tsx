@@ -35,6 +35,11 @@ export default async function StudioPage() {
         </Link>
       </p>
       <p>
+        <Link className={styles.link} href="/studio/week">
+          {t("week")}
+        </Link>
+      </p>
+      <p>
         <Link className={styles.link} href="/studio/hours">
           {t("hours")}
         </Link>

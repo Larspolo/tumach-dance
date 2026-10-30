@@ -26,7 +26,8 @@
     "calendarAdd": "Zet in mijn agenda",
     "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
     "calendarRenew": "Maak een nieuw adres",
-    "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon."
+    "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
+    "week": "Deze week"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -170,5 +171,14 @@
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd"
   }
 }
