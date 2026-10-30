@@ -1,8 +1,9 @@
 // The database schema (#14). Drizzle Kit makes the migrations in `drizzle/` from this file: `npm run db:generate`.
 // Times: each instant is an integer of epoch milliseconds in UTC (as `OpenRange` of `src/lib/hours.ts`), one form
 // for all tables. The site shows it in Europe/Amsterdam time.
+import { randomBytes } from "node:crypto";
 import { sql } from "drizzle-orm";
-import { check, index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { check, index, integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 /** The settings of the site: one row per key, the value as JSON text. */
 export const settings = sqliteTable("settings", {
@@ -185,9 +186,17 @@ export const bookings = sqliteTable(
     approvedAt: integer("approved_at"),
     /** UTC, epoch milliseconds; `null` = no payment reminder yet (#167). Set before the send: one reminder only. */
     paymentRemindedAt: integer("payment_reminded_at"),
+    /**
+     * The secret of the cancel link of the dancer (#164): 32 random bytes, base64url, made at each insert. Never put
+     * the id alone in a link.
+     */
+    cancelToken: text("cancel_token")
+      .notNull()
+      .$defaultFn(() => randomBytes(32).toString("base64url")),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
+    uniqueIndex("bookings_cancel_token_idx").on(t.cancelToken),
     check("bookings_status", sql`${t.status} IN ('requested', 'approved', 'declined', 'cancelled')`),
     check("bookings_range", sql`${t.end} > ${t.start}`),
   ],

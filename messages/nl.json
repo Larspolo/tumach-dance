@@ -278,6 +278,8 @@
     "sign": "TUMACH",
     "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
     "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen.",
+    "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
+    "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "payReminderSubject": "Betaling van je boeking bij TUMACH",
     "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
   },
@@ -345,5 +347,18 @@
       "email": "Vul een geldig e-mailadres in.",
       "message": "Schrijf een bericht: 1 tot 5000 tekens."
     }
+  },
+  "CancelBooking": {
+    "title": "Je boeking annuleren",
+    "booking": "Je boeking: {offer}, {when}.",
+    "noRefund": "Een geannuleerde boeking krijgt geen terugbetaling.",
+    "button": "Annuleer de boeking",
+    "done": "Je boeking is geannuleerd. Je krijgt een e-mail.",
+    "notFound": "Deze link werkt niet. Misschien is hij niet compleet.",
+    "cancelled": "Deze boeking is al geannuleerd.",
+    "declined": "Nina heeft deze aanvraag niet aangenomen: er is niets te annuleren.",
+    "started": "Deze boeking is begonnen: je kunt hem niet meer annuleren met de link.",
+    "contact": "Schrijf Nina",
+    "contactText": "Een vraag, of kun je niet komen?"
   }
 }

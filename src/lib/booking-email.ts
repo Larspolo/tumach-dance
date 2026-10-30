@@ -1,6 +1,6 @@
 // The email to a dancer after a booking request (#37): the offer, the time, and that Nina answers soon.
 // The email after Nina's decision (#77): approved or declined, with the same offer and time.
-// The reminder the day before an approved booking (#165).
+// The reminder the day before an approved booking (#165). The request and the approval email have the cancel link (#164).
 // The texts are in `messages/` under `bookingEmail`; the time is in Europe/Amsterdam time, as Nina sees it.
 
 import { eq } from "drizzle-orm";
@@ -12,9 +12,11 @@ import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
+import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { type Email, sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
+import { siteOrigin } from "./site";
 
 const MESSAGES = { en, nl, sl } as const;
 
@@ -39,7 +41,7 @@ function priceText(offer: Offer, locale: string): string {
 }
 
 /** The email to the dancer of a `requested` booking, in the language of the page (`locale`). */
-export function requestEmail(booking: Booking, offer: Offer, locale: string): Email {
+export function requestEmail(booking: Booking, offer: Offer, locale: string, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -47,6 +49,8 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string): Em
     t("bookingEmail.body", { offer: offerLabel, when }),
     "",
     t("bookingEmail.soon"),
+    "",
+    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -56,7 +60,7 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string): Em
 export type Decision = "approved" | "declined";
 
 /** The email to the dancer after Nina's decision, in the language of the booking (`booking.locale`). */
-export function decisionEmail(booking: Booking, offer: Offer, decision: Decision): Email {
+export function decisionEmail(booking: Booking, offer: Offer, decision: Decision, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const lines =
     decision === "approved"
@@ -68,6 +72,8 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
             ? t("bookingEmail.payLink", { price: priceText(offer, booking.locale), url: booking.tikkieUrl })
             : t("bookingEmail.payLater", { price: priceText(offer, booking.locale) }),
           "",
+          t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+          "",
           t("bookingEmail.approvedSee"),
         ]
       : [t("bookingEmail.declinedBody", { offer: offerLabel, when }), "", t("bookingEmail.declinedOther")];
@@ -78,13 +84,16 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
   return { to: booking.email, subject, text };
 }
 
-/** The email to the dancer after Nina cancelled a booking (#160), in the language of the booking. */
-export function cancelEmail(booking: Booking, offer: Offer): Email {
+/** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
+export type CancelledBy = "nina" | "dancer";
+
+/** The email to the dancer after a booking is cancelled (#160), in the language of the booking. */
+export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina"): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
     "",
-    t("bookingEmail.cancelled", { offer: offerLabel, when }),
+    t(by === "dancer" ? "bookingEmail.cancelledByYou" : "bookingEmail.cancelled", { offer: offerLabel, when }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -161,11 +170,11 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
  * Send the cancel email after a booking is cancelled. A failed email does not undo the cancellation: the error is
  * logged, and the cancelled booking stays.
  */
-export async function sendCancelEmail(db: Db, booking: Booking): Promise<void> {
+export async function sendCancelEmail(db: Db, booking: Booking, by: CancelledBy = "nina"): Promise<void> {
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(cancelEmail(booking, offer));
+    await sendEmail(cancelEmail(booking, offer, by));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
   }
