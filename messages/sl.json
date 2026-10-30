@@ -15,6 +15,11 @@
       "quote": "[Placeholder (sl): a short quote of Nina]",
       "quoteBy": "[Placeholder (sl): who said the quote]"
     },
+    "photos": {
+      "title": "[Placeholder (sl): title of the photos]",
+      "label": "[Placeholder (sl): (02) photos]",
+      "alt": "[Placeholder (sl): a photo of the studio]"
+    },
     "classes": {
       "title": "[Placeholder (sl): title of the classes]",
       "label": "[Placeholder (sl): (02) classes]",
