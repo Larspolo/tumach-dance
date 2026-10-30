@@ -178,7 +178,6 @@
   color: var(--cream);
 }
 
-.kind,
 .level {
   font-family: var(--font-space-mono), monospace;
   font-size: 0.7rem;
@@ -360,4 +359,9 @@
   color: var(--rust);
   font-size: 0.9rem;
   margin: 0;
+}
+
+.none {
+  font-style: italic;
+  color: #6a6358;
 }

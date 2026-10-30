@@ -18,7 +18,6 @@ test("the home page shows the header and each section with no console error", as
     await expect(section).toBeAttached();
     await expect(section.getByRole("heading", { level: 2 })).toHaveText(en.HomePage[id].title);
   }
-  await expect(page.locator("#classes article")).toHaveCount(4);
   await expect(page.getByRole("button", { name: en.HomePage.contact.send })).toBeEnabled();
   expect(errors).toEqual([]);
 

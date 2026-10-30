@@ -18,40 +18,22 @@
     "classes": {
       "title": "[Placeholder (en): title of the classes]",
       "label": "[Placeholder (en): (02) classes]",
-      "items": {
-        "one": {
-          "kind": "[Placeholder (en): kind of class one]",
-          "name": "[Placeholder (en): name of class one]",
-          "text": "[Placeholder (en): text of class one]",
-          "level": "[Placeholder (en): level and length of class one]"
-        },
-        "two": {
-          "kind": "[Placeholder (en): kind of class two]",
-          "name": "[Placeholder (en): name of class two]",
-          "text": "[Placeholder (en): text of class two]",
-          "level": "[Placeholder (en): level and length of class two]"
-        },
-        "three": {
-          "kind": "[Placeholder (en): kind of class three]",
-          "name": "[Placeholder (en): name of class three]",
-          "text": "[Placeholder (en): text of class three]",
-          "level": "[Placeholder (en): level and length of class three]"
-        },
-        "four": {
-          "kind": "[Placeholder (en): kind of class four]",
-          "name": "[Placeholder (en): name of class four]",
-          "text": "[Placeholder (en): text of class four]",
-          "level": "[Placeholder (en): level and length of class four]"
-        }
-      }
+      "none": "No classes yet."
     },
     "schedule": {
       "title": "[Placeholder (en): title of the schedule]",
       "label": "[Placeholder (en): (03) schedule]",
-      "day": "[Placeholder (en): day]",
-      "class": "[Placeholder (en): class]",
-      "time": "[Placeholder (en): time]",
-      "who": "[Placeholder (en): for whom]"
+      "none": "No class times yet.",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      },
+      "time": "{from}–{to}"
     },
     "contact": {
       "title": "[Placeholder (en): title of the contact]",
@@ -323,7 +305,11 @@
     "free": "No bookings.",
     "request": "request",
     "approved": "approved",
-    "paid": "paid"
+    "paid": "paid",
+    "cancel": "Cancel",
+    "cancelAsk": "Cancel this booking?",
+    "cancelYes": "Yes, cancel",
+    "cancelNo": "No"
   },
   "StudioFeedback": {
     "back": "Back",

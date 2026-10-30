@@ -35,7 +35,8 @@ export default defineConfig({
     // The stub of the GitHub API of the page "For Nina" (#68).
     { command: "node e2e/github-stub.mjs", url: "http://localhost:3101/__comments", reuseExistingServer: false },
     {
-      command: "npm run build && npm run start -- -p 3100",
+      // A new server starts on an empty out/e2e: the rows of the last run made book.spec.ts fail (#5, 3 takeovers).
+      command: `node -e "require('node:fs').rmSync('out/e2e', { recursive: true, force: true })" && npm run build && npm run start -- -p 3100`,
       url: "http://localhost:3100/en",
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
