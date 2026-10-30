@@ -17,7 +17,8 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
-    "logOut": "Odjava"
+    "logOut": "Odjava",
+    "offers": "Ponudba"
   },
   "LoginEmail": {
     "subject": "Tvoja koda TUMACH: {code}",
@@ -25,6 +26,25 @@
   },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
+  },
+  "StudioOffers": {
+    "title": "Ponudba",
+    "back": "Nazaj",
+    "none": "Še ni ponudbe.",
+    "lesson": "Zasebna ura, {minutes} min",
+    "rental": "Najem studia, {minutes} min",
+    "lessonKind": "Zasebna ura",
+    "rentalKind": "Najem studia",
+    "hidden": "skrito",
+    "kind": "Vrsta",
+    "length": "Trajanje",
+    "minutes": "{minutes} minut",
+    "price": "Cena v evrih",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj ponudbo",
+    "addSave": "Dodaj"
   },
   "Push": {
     "title": "Obvestila",

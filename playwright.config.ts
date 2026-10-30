@@ -11,6 +11,8 @@ export default defineConfig({
   testDir: "e2e",
   outputDir: "test-results",
   reporter: "list",
+  // One worker: two studio logins at once replace the code of each other (#31).
+  workers: 1,
   use: {
     baseURL: "http://localhost:3100",
     launchOptions: { executablePath },

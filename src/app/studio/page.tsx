@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { setStudioLocale } from "@/i18n/studio";
@@ -20,6 +21,11 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
+      <p>
+        <Link className={styles.link} href="/studio/offers">
+          {t("offers")}
+        </Link>
+      </p>
       <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>
