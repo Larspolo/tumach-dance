@@ -2,7 +2,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { listNinaQuestions, postNinaAnswer } from "../src/lib/github";
 
-const env = { GITHUB_TOKEN: "t", GITHUB_REPO: "o/r", GITHUB_API_URL: "https://stub.test" } as unknown as NodeJS.ProcessEnv;
+const env = {
+  GITHUB_TOKEN: "t",
+  GITHUB_REPO: "o/r",
+  GITHUB_API_URL: "https://stub.test",
+} as unknown as NodeJS.ProcessEnv;
 const body = "## For Nina\nWhich color?\n- A. Red\n- B. Blue\n";
 
 function stub(responses: Record<string, unknown>) {
