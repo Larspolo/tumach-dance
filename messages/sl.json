@@ -22,7 +22,8 @@
     "logOut": "Odjava",
     "offers": "Ponudba",
     "hours": "Ure",
-    "bookings": "Rezervacije"
+    "bookings": "Rezervacije",
+    "classes": "Tečaji"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -89,6 +90,26 @@
     "hide": "Skrij",
     "show": "Prikaži",
     "add": "Dodaj ponudbo",
+    "addSave": "Dodaj"
+  },
+  "StudioClasses": {
+    "title": "Tečaji",
+    "back": "Nazaj",
+    "none": "Še ni tečajev.",
+    "hidden": "skrito",
+    "name": "Ime",
+    "text": "Besedilo",
+    "forWhom": "Za koga",
+    "nameIn": "Ime ({language})",
+    "textIn": "Besedilo ({language})",
+    "forWhomIn": "Za koga ({language})",
+    "nl": "nizozemščina",
+    "sl": "slovenščina",
+    "translations": "Prevodi",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj tečaj",
     "addSave": "Dodaj"
   },
   "Push": {

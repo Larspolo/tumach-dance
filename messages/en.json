@@ -22,7 +22,8 @@
     "logOut": "Log out",
     "offers": "Offers",
     "hours": "Hours",
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "classes": "Classes"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -89,6 +90,26 @@
     "hide": "Hide",
     "show": "Show",
     "add": "Add an offer",
+    "addSave": "Add"
+  },
+  "StudioClasses": {
+    "title": "Classes",
+    "back": "Back",
+    "none": "No classes yet.",
+    "hidden": "hidden",
+    "name": "Name",
+    "text": "Text",
+    "forWhom": "For whom",
+    "nameIn": "Name in {language}",
+    "textIn": "Text in {language}",
+    "forWhomIn": "For whom in {language}",
+    "nl": "Dutch",
+    "sl": "Slovenian",
+    "translations": "Translations",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add a class",
     "addSave": "Add"
   },
   "Push": {

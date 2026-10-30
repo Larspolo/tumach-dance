@@ -22,7 +22,8 @@
     "logOut": "Uitloggen",
     "offers": "Aanbod",
     "hours": "Uren",
-    "bookings": "Boekingen"
+    "bookings": "Boekingen",
+    "classes": "Lessen"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -89,6 +90,26 @@
     "hide": "Verbergen",
     "show": "Tonen",
     "add": "Aanbod toevoegen",
+    "addSave": "Toevoegen"
+  },
+  "StudioClasses": {
+    "title": "Lessen",
+    "back": "Terug",
+    "none": "Nog geen lessen.",
+    "hidden": "verborgen",
+    "name": "Naam",
+    "text": "Tekst",
+    "forWhom": "Voor wie",
+    "nameIn": "Naam in het {language}",
+    "textIn": "Tekst in het {language}",
+    "forWhomIn": "Voor wie in het {language}",
+    "nl": "Nederlands",
+    "sl": "Sloveens",
+    "translations": "Vertalingen",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Les toevoegen",
     "addSave": "Toevoegen"
   },
   "Push": {
