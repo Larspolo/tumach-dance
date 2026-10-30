@@ -5,6 +5,7 @@ import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { LogOutButton } from "./log-out-button";
+import { PasskeyOffer } from "./passkey-offer";
 import styles from "./studio.module.css";
 
 // The start page of the studio app. The bookings and the hours come here later.
@@ -18,6 +19,7 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
+      <PasskeyOffer />
       <LogOutButton />
     </main>
   );

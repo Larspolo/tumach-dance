@@ -12,12 +12,21 @@
     "logIn": "Log in",
     "wrongCode": "This code is not correct or it is too old. Try again, or ask for a new code.",
     "failed": "Something went wrong. Try again in a minute.",
-    "otherEmail": "Ask for a new code"
+    "otherEmail": "Ask for a new code",
+    "passkey": "Log in with passkey",
+    "passkeyFailed": "The passkey did not work. Log in with a code by email."
   },
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out"
+  },
+  "PasskeyOffer": {
+    "title": "Log in faster next time",
+    "text": "Add a passkey on this phone. Next time you log in with Face ID or your fingerprint, with no code.",
+    "add": "Add a passkey",
+    "notNow": "Not now",
+    "failed": "The passkey was not added. You can still log in with a code by email."
   },
   "LoginEmail": {
     "subject": "Your TUMACH code: {code}",
