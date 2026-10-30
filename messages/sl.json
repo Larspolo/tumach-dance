@@ -3,6 +3,9 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (sl): the welcome of Nina]"
   },
+  "StudioPage": {
+    "placeholder": "Aplikacija za studio prihaja kmalu."
+  },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
   }

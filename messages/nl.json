@@ -3,6 +3,9 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (nl): the welcome of Nina]"
   },
+  "StudioPage": {
+    "placeholder": "De studio-app komt binnenkort."
+  },
   "TestBanner": {
     "text": "Testsite: boekingen hier zijn niet echt"
   }
