@@ -1,12 +1,13 @@
 .nav {
   position: fixed;
-  top: 0;
+  top: var(--test-banner, 0);
   left: 0;
   right: 0;
   z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   padding: 1.1rem clamp(1.2rem, 4vw, 3.5rem);
   mix-blend-mode: difference;
   color: #fff;

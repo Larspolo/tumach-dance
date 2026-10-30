@@ -1,0 +1,26 @@
+/* The look of the .nav-links of docs/design/current-site.html, also on a phone. */
+.switcher {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2.4rem);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 0.3em;
+}
+
+.link[aria-current="true"] {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .switcher {
+    gap: 0.8rem;
+    font-size: 0.68rem;
+  }
+}

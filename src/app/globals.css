@@ -31,6 +31,12 @@ body {
   flex-direction: column;
 }
 
+/* The "test site" bar of the preview (TestBanner) is fixed at the top: the page and the nav start below it. */
+body:has(.test-banner) {
+  --test-banner: 1.9rem;
+  padding-top: var(--test-banner);
+}
+
 body > main {
   flex: 1;
   padding: clamp(5rem, 9vw, 8rem) clamp(1.4rem, 4vw, 4rem) 3rem;
