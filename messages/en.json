@@ -277,7 +277,9 @@
     "reminder": "A reminder of your booking: {offer}, {when}.",
     "sign": "TUMACH",
     "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
-    "payLater": "The price is {price}. Nina sends you a Tikkie to pay."
+    "payLater": "The price is {price}. Nina sends you a Tikkie to pay.",
+    "payReminderSubject": "Payment of your booking at TUMACH",
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
   },
   "bookingPush": {
     "title": "New booking request",
