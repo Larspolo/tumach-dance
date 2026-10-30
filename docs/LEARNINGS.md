@@ -15,3 +15,5 @@ The agent writes here what it learned the hard way. Each line must save time in 
 - The browser tests fail at random on a console error for `/favicon.ico` when a site has no icon: `src/app/icon.png` (#19).
 - Better Auth limits `/sign-in/*` to 3 tries per 10 seconds: one code login per Playwright test, or the next login gets "Something went wrong" (429, #26).
 - Next.js adds an empty `role="alert"` (the route announcer): check an error by its text, not by `getByRole("alert")` (#26).
+- Headless Chromium has no push service: `pushManager.subscribe` fails. A browser test stubs `PushManager.prototype.subscribe` (`e2e/push.spec.ts`, #25).
+- Better Auth email-otp sends at most 3 codes a minute: a browser test that needs a session uses `storageState: STUDIO_SESSION` of `e2e/studio.setup.ts`, not its own login (#23).

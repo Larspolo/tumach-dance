@@ -19,7 +19,9 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "offers": "Offers",
+    "hours": "Hours"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -34,5 +36,78 @@
   },
   "TestBanner": {
     "text": "Test site: bookings here are not real"
+  },
+  "StudioHours": {
+    "title": "Hours",
+    "weekdays": "Weekdays",
+    "weekend": "Weekend",
+    "closed": "Closed",
+    "allDay": "All day",
+    "from": "From a time",
+    "fromTime": "From",
+    "save": "Save",
+    "saved": "Saved.",
+    "wrong": "These hours cannot be saved. Check the times.",
+    "nextWeek": "Open in the next 7 days",
+    "noOpenTimes": "Closed all week.",
+    "day": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri"
+    }
+  },
+  "StudioOffers": {
+    "title": "Offers",
+    "back": "Back",
+    "none": "No offers yet.",
+    "lesson": "Private lesson, {minutes} min",
+    "rental": "Studio rental, {minutes} min",
+    "lessonKind": "Private lesson",
+    "rentalKind": "Studio rental",
+    "hidden": "hidden",
+    "kind": "Kind",
+    "length": "Length",
+    "minutes": "{minutes} minutes",
+    "price": "Price in euro",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add an offer",
+    "addSave": "Add"
+  },
+  "Push": {
+    "title": "Notifications",
+    "turnOn": "Turn on notifications",
+    "on": "Notifications are on for this phone.",
+    "sendTest": "Send a test",
+    "testSent": "The test is on its way. Look at your phone.",
+    "failed": "Something went wrong. Try again in a minute.",
+    "denied": "Notifications are blocked. Allow them for this app in the settings of your phone.",
+    "unsupported": "This browser cannot show notifications.",
+    "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
+    "testTitle": "TUMACH studio",
+    "testBody": "This is a test. Notifications work on this phone."
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
+  },
+  "StudioGuide": {
+    "title": "How to use the studio app",
+    "intro": "Three short steps. You do them once on your phone.",
+    "loginTitle": "Log in",
+    "loginOpen": "Open tumach.dance/studio on your phone.",
+    "loginEmail": "Type your email and tap \"Send me a code\".",
+    "loginCode": "Look in your email. Type the code of 6 numbers and tap \"Log in\".",
+    "installTitle": "Put the app on your home screen",
+    "installIphone": "iPhone (Safari): tap the Share button (the square with an arrow up), then \"Add to Home Screen\", then \"Add\".",
+    "installAndroid": "Android (Chrome): tap the menu (three dots at the top right), then \"Install app\" or \"Add to Home screen\".",
+    "installOpen": "From now on, open the app with the TUMACH icon on your home screen.",
+    "pushTitle": "Turn on notifications",
+    "pushTurnOn": "Open the app from your home screen and tap \"Turn on notifications\".",
+    "pushAllow": "Your phone asks if the app may send notifications. Tap \"Allow\".",
+    "pushTest": "Tap \"Send a test\". A notification comes on your phone.",
+    "link": "How does the app work? Read the guide"
   }
 }

@@ -19,7 +19,9 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
-    "logOut": "Odjava"
+    "logOut": "Odjava",
+    "offers": "Ponudba",
+    "hours": "Ure"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -34,5 +36,78 @@
   },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
+  },
+  "StudioHours": {
+    "title": "Ure",
+    "weekdays": "Delavniki",
+    "weekend": "Vikend",
+    "closed": "Zaprto",
+    "allDay": "Ves dan",
+    "from": "Od ure",
+    "fromTime": "Od",
+    "save": "Shrani",
+    "saved": "Shranjeno.",
+    "wrong": "Teh ur ni mogoče shraniti. Preverite čase.",
+    "nextWeek": "Odprto v naslednjih 7 dneh",
+    "noOpenTimes": "Ves teden zaprto.",
+    "day": {
+      "mon": "pon",
+      "tue": "tor",
+      "wed": "sre",
+      "thu": "čet",
+      "fri": "pet"
+    }
+  },
+  "StudioOffers": {
+    "title": "Ponudba",
+    "back": "Nazaj",
+    "none": "Še ni ponudbe.",
+    "lesson": "Zasebna ura, {minutes} min",
+    "rental": "Najem studia, {minutes} min",
+    "lessonKind": "Zasebna ura",
+    "rentalKind": "Najem studia",
+    "hidden": "skrito",
+    "kind": "Vrsta",
+    "length": "Trajanje",
+    "minutes": "{minutes} minut",
+    "price": "Cena v evrih",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj ponudbo",
+    "addSave": "Dodaj"
+  },
+  "Push": {
+    "title": "Obvestila",
+    "turnOn": "Vklopi obvestila",
+    "on": "Obvestila so vklopljena na tem telefonu.",
+    "sendTest": "Pošlji preizkus",
+    "testSent": "Preizkus je na poti. Poglej telefon.",
+    "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
+    "denied": "Obvestila so blokirana. Dovoli jih za to aplikacijo v nastavitvah telefona.",
+    "unsupported": "Ta brskalnik ne more prikazati obvestil.",
+    "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
+    "testTitle": "TUMACH studio",
+    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
+  },
+  "StudioGuide": {
+    "title": "Kako uporabljaš studijsko aplikacijo",
+    "intro": "Trije kratki koraki. Narediš jih enkrat na telefonu.",
+    "loginTitle": "Prijava",
+    "loginOpen": "Na telefonu odpri tumach.dance/studio.",
+    "loginEmail": "Vpiši svoj e-poštni naslov in tapni \"Pošlji mi kodo\".",
+    "loginCode": "Poglej v e-pošto. Vpiši kodo s 6 številkami in tapni \"Prijava\".",
+    "installTitle": "Dodaj aplikacijo na začetni zaslon",
+    "installIphone": "iPhone (Safari): tapni gumb Deli (kvadrat s puščico navzgor), nato \"Dodaj na začetni zaslon\" in nato \"Dodaj\".",
+    "installAndroid": "Android (Chrome): tapni meni (tri pike zgoraj desno), nato \"Namesti aplikacijo\" ali \"Dodaj na začetni zaslon\".",
+    "installOpen": "Od zdaj aplikacijo odpiraj z ikono TUMACH na začetnem zaslonu.",
+    "pushTitle": "Vklopi obvestila",
+    "pushTurnOn": "Odpri aplikacijo z začetnega zaslona in tapni \"Vklopi obvestila\".",
+    "pushAllow": "Telefon vpraša, ali aplikacija sme pošiljati obvestila. Tapni \"Dovoli\".",
+    "pushTest": "Tapni \"Pošlji preizkus\". Na telefon pride obvestilo.",
+    "link": "Kako deluje aplikacija? Preberi navodila"
   }
 }
