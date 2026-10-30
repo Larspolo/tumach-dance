@@ -17,7 +17,8 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "Je bent ingelogd als {email}.",
-    "logOut": "Uitloggen"
+    "logOut": "Uitloggen",
+    "offers": "Aanbod"
   },
   "LoginEmail": {
     "subject": "Je TUMACH-code: {code}",
@@ -25,5 +26,24 @@
   },
   "TestBanner": {
     "text": "Testsite: boekingen hier zijn niet echt"
+  },
+  "StudioOffers": {
+    "title": "Aanbod",
+    "back": "Terug",
+    "none": "Nog geen aanbod.",
+    "lesson": "Privéles, {minutes} min",
+    "rental": "Studiohuur, {minutes} min",
+    "lessonKind": "Privéles",
+    "rentalKind": "Studiohuur",
+    "hidden": "verborgen",
+    "kind": "Soort",
+    "length": "Duur",
+    "minutes": "{minutes} minuten",
+    "price": "Prijs in euro",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Aanbod toevoegen",
+    "addSave": "Toevoegen"
   }
 }
