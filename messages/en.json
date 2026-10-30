@@ -102,7 +102,9 @@
     "unsupported": "This browser cannot show notifications.",
     "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
     "testTitle": "TUMACH studio",
-    "testBody": "This is a test. Notifications work on this phone."
+    "testBody": "This is a test. Notifications work on this phone.",
+    "questionTitle": "A new question for you",
+    "questionBody": "Open it in the studio app and give your answer."
   },
   "LanguageSwitcher": {
     "label": "Language"

@@ -102,7 +102,9 @@
     "unsupported": "Deze browser kan geen meldingen tonen.",
     "installFirst": "Op een iPhone: tik op Deel en dan op \"Zet op beginscherm\". Open de app vanaf je beginscherm en zet daar de meldingen aan.",
     "testTitle": "TUMACH studio",
-    "testBody": "Dit is een test. Meldingen werken op deze telefoon."
+    "testBody": "Dit is een test. Meldingen werken op deze telefoon.",
+    "questionTitle": "Een nieuwe vraag voor jou",
+    "questionBody": "Open hem in de studio-app en geef je antwoord."
   },
   "LanguageSwitcher": {
     "label": "Taal"
