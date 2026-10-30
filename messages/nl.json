@@ -283,7 +283,11 @@
     "approve": "Goedkeuren",
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
-    "declined": "Afgewezen."
+    "declined": "Afgewezen.",
+    "toPay": "Goedgekeurde boekingen",
+    "markPaid": "Betaald",
+    "paidOn": "Betaald op {date}",
+    "undo": "Ongedaan maken"
   },
   "StudioQuestions": {
     "title": "Voor Nina",

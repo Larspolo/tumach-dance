@@ -283,7 +283,11 @@
     "approve": "Potrdi",
     "decline": "Zavrni",
     "approved": "Potrjeno.",
-    "declined": "Zavrnjeno."
+    "declined": "Zavrnjeno.",
+    "toPay": "Potrjene rezervacije",
+    "markPaid": "Plačano",
+    "paidOn": "Plačano {date}",
+    "undo": "Razveljavi"
   },
   "StudioQuestions": {
     "title": "Za Nino",

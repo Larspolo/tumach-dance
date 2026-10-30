@@ -1,5 +1,5 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, isNull, lt } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
@@ -156,6 +156,21 @@ export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
   if (!exists) return { ok: false, reason: "not-found" };
   if (exists.status !== "approved") return { ok: false, reason: "not-approved" };
   return { ok: false, reason: "already-paid" };
+}
+
+export type UnmarkPaidResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-paid" };
+
+/** Clear `paidAt` after a wrong tap on "Paid" (#143). A second call gets `not-paid` and changes nothing. */
+export function unmarkPaid(db: Db, id: number): UnmarkPaidResult {
+  const booking = db
+    .update(bookings)
+    .set({ paidAt: null })
+    .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+  return { ok: false, reason: exists ? "not-paid" : "not-found" };
 }
 
 /** The bookings with one of `statuses` that overlap `from`..`to`, with their offer, by start: the week page and the calendar. */
