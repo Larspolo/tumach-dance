@@ -56,7 +56,20 @@
       "wed": "wo",
       "thu": "do",
       "fri": "vr"
-    }
+    },
+    "closedDates": "Gesloten",
+    "closedFrom": "Van",
+    "closedTo": "Tot (voor een periode)",
+    "close": "Sluiten",
+    "extraDays": "Extra open dagen",
+    "extraDate": "Datum",
+    "openDay": "Openen",
+    "remove": "Verwijderen",
+    "none": "Geen.",
+    "wrongPeriod": "Het einde van de periode ligt voor het begin.",
+    "wrongDate": "Deze datum kan niet worden opgeslagen. Controleer de datum en de tijd.",
+    "allDayShort": "hele dag",
+    "fromShort": "vanaf {time}"
   },
   "StudioOffers": {
     "title": "Aanbod",
