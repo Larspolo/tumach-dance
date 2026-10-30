@@ -61,5 +61,22 @@
   },
   "LanguageSwitcher": {
     "label": "Taal"
+  },
+  "StudioGuide": {
+    "title": "Zo gebruik je de studio-app",
+    "intro": "Drie korte stappen. Je doet ze één keer op je telefoon.",
+    "loginTitle": "Inloggen",
+    "loginOpen": "Open tumach.dance/studio op je telefoon.",
+    "loginEmail": "Typ je e-mailadres en tik op \"Stuur me een code\".",
+    "loginCode": "Kijk in je e-mail. Typ de code van 6 cijfers en tik op \"Inloggen\".",
+    "installTitle": "Zet de app op je beginscherm",
+    "installIphone": "iPhone (Safari): tik op de Deel-knop (het vierkantje met een pijl omhoog), dan op \"Zet op beginscherm\" en dan op \"Voeg toe\".",
+    "installAndroid": "Android (Chrome): tik op het menu (drie puntjes rechtsboven), dan op \"App installeren\" of \"Toevoegen aan startscherm\".",
+    "installOpen": "Open de app vanaf nu met het TUMACH-icoon op je beginscherm.",
+    "pushTitle": "Zet meldingen aan",
+    "pushTurnOn": "Open de app vanaf je beginscherm en tik op \"Meldingen aanzetten\".",
+    "pushAllow": "Je telefoon vraagt of de app meldingen mag sturen. Tik op \"Sta toe\".",
+    "pushTest": "Tik op \"Stuur een test\". Er komt een melding op je telefoon.",
+    "link": "Hoe werkt de app? Lees de uitleg"
   }
 }
