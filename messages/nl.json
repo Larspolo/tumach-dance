@@ -67,7 +67,8 @@
     "copyright": "© {year}",
     "domain": "tumach.dance",
     "tagline": "[Placeholder (nl): the tagline of Nina]",
-    "place": "[Placeholder (nl): the place]"
+    "place": "[Placeholder (nl): the place]",
+    "privacy": "Hoe we je gegevens bewaren"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -259,7 +260,8 @@
     "again": "Nog een tijd boeken",
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
-    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
+    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd.",
+    "privacy": "Hoe we je gegevens bewaren"
   },
   "bookingEmail": {
     "subject": "Je aanvraag bij TUMACH",
@@ -376,5 +378,22 @@
     "started": "Deze boeking is begonnen: je kunt hem niet meer annuleren met de link.",
     "contact": "Schrijf Nina",
     "contactText": "Een vraag, of kun je niet komen?"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "intro": "Wat deze site van je bewaart, waarom, wie het ziet en hoe lang.",
+    "bookingTitle": "Een boeking",
+    "bookingWhat": "Als je boekt, bewaart de site je naam, e-mailadres, telefoonnummer en de taal van de site.",
+    "bookingWhy": "Nina gebruikt ze om je aanvraag te beantwoorden, om je de e-mails over je boeking te sturen (het antwoord, de herinnering en de betaallink) en om je te bereiken over de les.",
+    "bookingWho": "Alleen Nina ziet ze. De e-mails gaan via onze e-maildienst, Mailgun.",
+    "keep": "{months, plural, one {# maand} other {# maanden}} na je les verwijdert de site vanzelf je naam, e-mailadres en telefoonnummer.",
+    "contactTitle": "Een contactbericht",
+    "contactWhat": "De site bewaart geen kopie van je bericht: hij stuurt één e-mail naar Nina.",
+    "contactSpam": "Tegen spam houdt de site het internetadres van je apparaat hoogstens één uur in zijn geheugen.",
+    "cookiesTitle": "Cookies",
+    "cookies": "Je hebt geen account nodig. De site gebruikt geen tracking- en geen advertentiecookies.",
+    "askTitle": "Je gegevens",
+    "ask": "Wil je een kopie van je gegevens, of wil je dat ze verwijderd worden? Schrijf Nina via het contactformulier.",
+    "askLink": "Naar het contactformulier"
   }
 }

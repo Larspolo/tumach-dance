@@ -22,7 +22,7 @@ Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.
 
 Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy `src/proxy.ts`). Keep this map up to date.
 
-- `src/app/[locale]/` – the public pages (home, classes, book, the cancel link of a dancer `booking/cancel`) in each language.
+- `src/app/[locale]/` – the public pages (home, classes, book, the cancel link of a dancer `booking/cancel`, privacy) in each language.
 - `src/app/studio/` – Nina's studio app: login, bookings, the week (`week.ts`), hours, offers, photos, the page "For Nina". No locale in its
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).

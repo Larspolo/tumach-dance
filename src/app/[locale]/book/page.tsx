@@ -152,6 +152,9 @@ export default async function BookPage({
             <button className={styles.button} type="submit">
               {t("send")}
             </button>
+            <a className={styles.link} href={`/${locale}/privacy`}>
+              {t("privacy")}
+            </a>
           </form>
         </section>
       )}
