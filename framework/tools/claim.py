@@ -453,6 +453,9 @@ def foreign(number, base=f"origin/{CONFIG['branch']}"):
     if git("rev-parse", "--is-shallow-repository", check=False).stdout.strip() == "true":
         # A shallow clone cuts off the merge bases: the commits of main then show as own commits (#4604).
         git("fetch", "--quiet", "--unshallow", base.split("/")[0], check=False)
+    # A stale local ref of main shows the newer commits of main as own commits (#183): fetch it first.
+    remote, _, branch = base.partition("/")
+    git("fetch", "--quiet", remote, f"+refs/heads/{branch}:refs/remotes/{base}", check=False)
     out = []
     for commit in filter(None, git("log", "--no-merges", "--format=%h %B%x00", f"{base}..HEAD", check=False).stdout.split("\0")):
         for m in re.findall(r"\b(?:close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s+#(\d+)", commit, re.I):
