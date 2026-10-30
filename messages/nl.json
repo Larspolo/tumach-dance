@@ -29,6 +29,7 @@
     "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
     "week": "Deze week",
     "questions": "Voor Nina",
+    "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
     "classes": "Lessen"
   },
   "PasskeyOffer": {

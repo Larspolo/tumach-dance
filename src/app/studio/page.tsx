@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { getCalendarToken } from "@/lib/calendar-token";
+import { countNinaQuestions } from "@/lib/github";
 import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { LogOutButton } from "./log-out-button";
@@ -25,6 +26,8 @@ export default async function StudioPage() {
   const t = await getTranslations("StudioHome");
   // The calendar app of the phone opens a `webcal://` address and polls the feed of #103 by itself.
   const calendarUrl = `webcal://${requestHeaders.get("host")}/api/calendar/${getCalendarToken(getDb())}.ics`;
+  // The number of open questions shows Nina at once that a question waits (#130).
+  const questionCount = await countNinaQuestions();
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
@@ -57,7 +60,7 @@ export default async function StudioPage() {
       </p>
       <p>
         <Link className={styles.link} href="/studio/questions">
-          {t("questions")}
+          {questionCount ? t("questionsCount", { count: questionCount }) : t("questions")}
         </Link>
       </p>
       <p>

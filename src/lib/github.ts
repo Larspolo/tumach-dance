@@ -65,3 +65,12 @@ export async function postNinaAnswer(
   const body = answer.text.trim() ? `${head}\n\n${answer.text.trim()}` : head;
   await call(s, `/issues/${number}/comments`, { method: "POST", body: JSON.stringify({ body }) });
 }
+
+/** The number of open questions for Nina, for the link on the start page (#130); null when GitHub fails. */
+export async function countNinaQuestions(env: NodeJS.ProcessEnv = process.env): Promise<number | null> {
+  try {
+    return (await listNinaQuestions(env)).length;
+  } catch {
+    return null;
+  }
+}
