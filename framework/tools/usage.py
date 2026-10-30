@@ -393,13 +393,35 @@ def sample_line(usage, now, claims, release=None, lanes=None, account=None):
     return line + (f" · account {account}" if account else "")
 
 
-def release_percent():
-    """The percent of milestone C over all goals (tools/release.py), or None without GitHub access."""
+def release_percent(root=None, epics=None):
+    """The percent of milestone C over all goals (tools/release.py), or None without GitHub access. A project with no
+    tools/release.py: `roadmap_release` (the release per quota of `health.py` was always "-" without it)."""
     try:
         import release
+    except ImportError:
+        return roadmap_release(root, epics)
+    try:
         return release.total(release.current())
     except Exception:
         return None
+
+
+def roadmap_release(root=None, epics=None):
+    """The percent of the features of the goals 1 to 3 of the roadmap that are done: "[x]", or a closed epic with its
+    key ("Roadmap: `key`") or named on the line. None on a read error. `epics`: a test stub of the GitHub list."""
+    try:
+        with open(os.path.join(root or agent_config.ROOT, CONFIG["docs"]["roadmap"])) as f:
+            features = {k: v for k, v in roadmap_features(f.read()).items() if v[0] < 4}
+        if epics is None:
+            import dashboard
+            epics = lambda: dashboard.pages("issues?labels=epic&state=all")   # noqa: E731
+        closed = [e for e in epics() if e.get("state") == "closed"]
+    except Exception as e:                                  # a GitHub or file error: no release field
+        print(f"release: {e}", file=sys.stderr)
+        return None
+    keys, numbers = {epic_key(e.get("body")) for e in closed}, {e["number"] for e in closed}
+    done = sum(d or k in keys or bool(named & numbers) for k, (_, d, named) in features.items())
+    return 100 * done / len(features) if features else None
 
 
 def describe(usage, now, burn=BURN, burn7=None):
