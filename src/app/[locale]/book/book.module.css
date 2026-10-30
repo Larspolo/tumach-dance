@@ -3,7 +3,8 @@
   box-sizing: border-box;
   max-width: 32rem;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  /* The top space of `body > main` (globals.css): the fixed nav covers no title (#211). */
+  padding: clamp(5rem, 9vw, 8rem) 1.25rem 4rem;
   color: #141210;
   font-family: "Fraunces", Georgia, serif;
 }
