@@ -25,5 +25,18 @@
   },
   "TestBanner": {
     "text": "Test site: bookings here are not real"
+  },
+  "Push": {
+    "title": "Notifications",
+    "turnOn": "Turn on notifications",
+    "on": "Notifications are on for this phone.",
+    "sendTest": "Send a test",
+    "testSent": "The test is on its way. Look at your phone.",
+    "failed": "Something went wrong. Try again in a minute.",
+    "denied": "Notifications are blocked. Allow them for this app in the settings of your phone.",
+    "unsupported": "This browser cannot show notifications.",
+    "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
+    "testTitle": "TUMACH studio",
+    "testBody": "This is a test. Notifications work on this phone."
   }
 }

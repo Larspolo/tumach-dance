@@ -25,5 +25,18 @@
   },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
+  },
+  "Push": {
+    "title": "Obvestila",
+    "turnOn": "Vklopi obvestila",
+    "on": "Obvestila so vklopljena na tem telefonu.",
+    "sendTest": "Pošlji preizkus",
+    "testSent": "Preizkus je na poti. Poglej telefon.",
+    "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
+    "denied": "Obvestila so blokirana. Dovoli jih za to aplikacijo v nastavitvah telefona.",
+    "unsupported": "Ta brskalnik ne more prikazati obvestil.",
+    "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
+    "testTitle": "TUMACH studio",
+    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
   }
 }

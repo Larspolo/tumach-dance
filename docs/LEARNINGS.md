@@ -13,3 +13,4 @@ The agent writes here what it learned the hard way. Each line must save time in 
 - next-intl ESM imports `next/server` with no extension: Vitest needs `server.deps.inline: ["next-intl"]` (#19).
 - A `headers()` call in `src/i18n/request.ts` gives a 500 on each not-found page (static to dynamic). Read the request in the page (`setStudioLocale`, #19).
 - The browser tests fail at random on a console error for `/favicon.ico` when a site has no icon: `src/app/icon.png` (#19).
+- Headless Chromium has no push service: `pushManager.subscribe` fails. A browser test stubs `PushManager.prototype.subscribe` (`e2e/push.spec.ts`, #25).
