@@ -20,7 +20,7 @@ or a test fails: fix it, commit, and run it again. Exit 3: the guard or the push
 Do not write an own resolver script, and do not run `git merge` or the full suite by hand for a merge of main.
 
 Also run the `mc` tests of the files of your ticket after a merge, but only those. Do not run other `mc` tests for a merge: while they run, main moves again and the PR stays without CI
-(#604 waited an hour, #669). The quick CI checks the PR, the night CI runs the full suite. A test failure after the
+(#604 waited an hour, #669). CI checks the PR: the full fast suite and the browser tests. A test failure after the
 push: fix it in the next push. Do not rebase or force-push a branch that has an open PR.
 A conflict in the column "Used today in" of `docs/DESIGN.md`: take main's side (`coverage.yml` writes it).
 Two new rows of the feature table at the same place: keep both.

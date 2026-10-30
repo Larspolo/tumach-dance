@@ -1,6 +1,8 @@
 name: CI
 
-# Quick checks on each PR and on main: Automerge merges a green agent PR (workflow name "CI", job "quick").
+# Checks on each PR and on main: Automerge merges an agent PR when the workflow "CI" is green (the jobs "quick" and
+# "browser"). Before the job "browser", the browser tests ran only in the sessions: main broke 4 times in 90 merged PRs
+# (#83, #134, #188; #203 left two red tests that no run saw), and each run that ran them met the break of another PR.
 on:
   push:
     branches: [main]
@@ -29,3 +31,27 @@ jobs:
         run: ruff check . && npx @biomejs/biome check .
       - name: Fast tests
         run: python3 -m pytest -q && npx vitest run
+
+  browser:
+    # The build and the browser tests (verify level 3) on the merged tree of the PR (pull_request checks out the merge
+    # with main). The repository is public: the minutes are free.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser tests
+        run: npx playwright test
+      - name: Keep the report of a failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7

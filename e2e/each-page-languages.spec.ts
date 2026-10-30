@@ -44,6 +44,8 @@ async function check(browser: Browser, locale: string, path: string, session: bo
 test("each page in each language shows no missing text", async ({ browser }) => {
   const pages = pagePaths();
   expect(pages.length).toBeGreaterThan(0);
+  // Each page in each language: the default 30 s ran out at 13 pages (a few seconds per page and language).
+  test.setTimeout(pages.length * Object.keys(LOCALES).length * 5_000);
   for (const { file, path } of pages) {
     const local = path.replace(/^\/\[locale\]/, "");
     let sample = local;

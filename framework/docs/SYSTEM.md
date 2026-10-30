@@ -63,7 +63,8 @@ session task tools `mcp__ccd_session` ...) from each session of the repository: 
 6. It does the ticket on its session branch (a later ticket of the run: on `<session branch>-<k>`, `more.md`): a failing test first for a bug, the change, the checks of the skill
    `verify`, and the process improvements (autopilot step 9) in the same PR.
 7. It runs `framework/tools/claim.py N --guard`, pushes and opens a PR with `Closes #N`. It does not wait for CI.
-8. CI runs the quick checks. Automerge merges the PR when they are green. The merge closes the ticket. Claims
+8. CI runs the quick checks and the browser tests (`ci.yml`, jobs `quick` and `browser`). Automerge merges the PR
+   when they are green. The merge closes the ticket. Claims
    deletes the claim ref. Dashboard updates the status issue.
 9. The run adds its report to the branch `metrics` (`report.py --post`: a `Usage:` line and a `Metrics:` line per ticket) and takes
    the next ticket. It stops when no ticket is ready, a usage limit stops it, or its context is 120k tokens or more.
