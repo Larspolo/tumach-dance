@@ -3,22 +3,25 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
-import { type Class, listClasses } from "@/db/classes";
+import { type Class, listClasses, listClassTimes } from "@/db/classes";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { CLASS_FIELDS } from "@/lib/class-form";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
-import { changeClass } from "./actions";
+import { changeClass, removeTime } from "./actions";
+import { ClassTimeForm } from "./class-time-form";
 
 // The classes of the studio (#96): Nina adds, changes and hides them. Plain HTML forms and one server action.
-// Each text has an English box; the Dutch and Slovenian boxes are behind "Translations" (P1: a short form).
+// Each class shows its weekly times (#97). Each text has an English box; the Dutch and Slovenian boxes are behind "Translations" (P1: a short form).
 export default async function ClassesPage() {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
   await setStudioLocale();
   const t = await getTranslations("StudioClasses");
-  const classes = listClasses(getDb());
+  const db = getDb();
+  const classes = listClasses(db);
+  const times = listClassTimes(db);
 
   const box = (field: string, lang: string, label: string, value?: string, required = false) => {
     const props = { className: styles.input, name: `${field}_${lang}`, required, defaultValue: value ?? "" };
@@ -69,6 +72,24 @@ export default async function ClassesPage() {
                   {t("save")}
                 </button>
               </form>
+              <h2 className={styles.label}>{t("times")}</h2>
+              {!times.some((time) => time.classId === cls.id) && <p className={styles.note}>{t("noTimes")}</p>}
+              <ul className={styles.list}>
+                {times
+                  .filter((time) => time.classId === cls.id)
+                  .map((time) => (
+                    <li key={time.id} className={styles.summary}>
+                      <span>{t("time", { day: t(`day.${time.weekday}`), from: time.from, to: time.to })}</span>
+                      <form action={removeTime}>
+                        <input type="hidden" name="id" value={time.id} />
+                        <button className={styles.link} type="submit" name="intent" value="removeTime">
+                          {t("removeTime")}
+                        </button>
+                      </form>
+                    </li>
+                  ))}
+              </ul>
+              <ClassTimeForm classId={cls.id} />
               <form className={styles.form} action={changeClass}>
                 <input type="hidden" name="id" value={cls.id} />
                 <button className={styles.link} type="submit" name="intent" value={cls.visible ? "hide" : "show"}>
