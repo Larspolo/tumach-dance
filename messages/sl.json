@@ -321,7 +321,11 @@
     "free": "Ni rezervacij.",
     "request": "prošnja",
     "approved": "potrjeno",
-    "paid": "plačano"
+    "paid": "plačano",
+    "cancel": "Prekliči",
+    "cancelAsk": "Prekličem to rezervacijo?",
+    "cancelYes": "Da, prekliči",
+    "cancelNo": "Ne"
   },
   "StudioFeedback": {
     "back": "Nazaj",
