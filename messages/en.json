@@ -22,7 +22,11 @@
     "logOut": "Log out",
     "offers": "Offers",
     "hours": "Hours",
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "calendarAdd": "Add to my calendar",
+    "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
+    "calendarRenew": "Make a new address",
+    "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone."
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
