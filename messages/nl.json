@@ -22,7 +22,8 @@
     "logOut": "Uitloggen",
     "offers": "Aanbod",
     "hours": "Uren",
-    "bookings": "Boekingen"
+    "bookings": "Boekingen",
+    "week": "Deze week"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -162,5 +163,14 @@
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd"
   }
 }

@@ -22,7 +22,8 @@
     "logOut": "Log out",
     "offers": "Offers",
     "hours": "Hours",
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "week": "This week"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -162,5 +163,14 @@
     "decline": "Decline",
     "approved": "Approved.",
     "declined": "Declined."
+  },
+  "StudioWeek": {
+    "title": "This week",
+    "back": "Back",
+    "previous": "Previous week",
+    "next": "Next week",
+    "free": "No bookings.",
+    "request": "request",
+    "approved": "approved"
   }
 }

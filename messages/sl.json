@@ -22,7 +22,8 @@
     "logOut": "Odjava",
     "offers": "Ponudba",
     "hours": "Ure",
-    "bookings": "Rezervacije"
+    "bookings": "Rezervacije",
+    "week": "Ta teden"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -162,5 +163,14 @@
     "decline": "Zavrni",
     "approved": "Potrjeno.",
     "declined": "Zavrnjeno."
+  },
+  "StudioWeek": {
+    "title": "Ta teden",
+    "back": "Nazaj",
+    "previous": "Prejšnji teden",
+    "next": "Naslednji teden",
+    "free": "Ni rezervacij.",
+    "request": "prošnja",
+    "approved": "potrjeno"
   }
 }
