@@ -21,7 +21,8 @@
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
     "offers": "Aanbod",
-    "hours": "Uren"
+    "hours": "Uren",
+    "bookings": "Boekingen"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -143,5 +144,14 @@
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
+  },
+  "StudioBookings": {
+    "title": "Boekingen",
+    "back": "Terug",
+    "none": "Geen open aanvragen. Alles is rustig.",
+    "approve": "Goedkeuren",
+    "decline": "Afwijzen",
+    "approved": "Goedgekeurd.",
+    "declined": "Afgewezen."
   }
 }

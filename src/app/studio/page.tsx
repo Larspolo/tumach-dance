@@ -11,7 +11,7 @@ import { PasskeyOffer } from "./passkey-offer";
 import { PushButtons } from "./push-buttons";
 import styles from "./studio.module.css";
 
-// The start page of the studio app: the link to the hours (#23). The bookings come here later.
+// The start page of the studio app: the links to the bookings (#76), the hours (#23) and the offers.
 export default async function StudioPage() {
   // The proxy guards each studio page; this check also keeps the data of a page behind the login.
   const session = await getStudioSession(await headers());
@@ -23,6 +23,11 @@ export default async function StudioPage() {
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
       <PasskeyOffer />
+      <p>
+        <Link className={styles.link} href="/studio/bookings">
+          {t("bookings")}
+        </Link>
+      </p>
       <p>
         <Link className={styles.link} href="/studio/hours">
           {t("hours")}
