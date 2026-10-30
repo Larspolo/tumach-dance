@@ -18,7 +18,8 @@
     "title": "Studio",
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
-    "offers": "Aanbod"
+    "offers": "Aanbod",
+    "hours": "Uren"
   },
   "LoginEmail": {
     "subject": "Je TUMACH-code: {code}",
@@ -26,6 +27,27 @@
   },
   "TestBanner": {
     "text": "Testsite: boekingen hier zijn niet echt"
+  },
+  "StudioHours": {
+    "title": "Uren",
+    "weekdays": "Doordeweeks",
+    "weekend": "Weekend",
+    "closed": "Dicht",
+    "allDay": "Hele dag",
+    "from": "Vanaf een tijd",
+    "fromTime": "Vanaf",
+    "save": "Opslaan",
+    "saved": "Opgeslagen.",
+    "wrong": "Deze uren kunnen niet worden opgeslagen. Controleer de tijden.",
+    "nextWeek": "Open in de komende 7 dagen",
+    "noOpenTimes": "De hele week dicht.",
+    "day": {
+      "mon": "ma",
+      "tue": "di",
+      "wed": "wo",
+      "thu": "do",
+      "fri": "vr"
+    }
   },
   "StudioOffers": {
     "title": "Aanbod",
