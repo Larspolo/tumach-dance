@@ -580,6 +580,14 @@ RUN = re.compile(r"^(?:Started|Taken over) by `([^`]+)`")
 CAUSES = ("quota", "merge conflict", "long mc test", "no report", "after the report")
 
 
+def by_run(report, run):
+    """True when `report` is a report of the run `run`: its name in backticks (a comment of the status issue), or the
+    `branch` of a run record of the branch `metrics`, also with the suffix `-k` of a later ticket of the same session
+    (the Run: line has no backticks: each takeover counted as "no report" before)."""
+    base = lambda b: re.sub(r"-\d+$", "", b or "")
+    return f"`{run}`" in (report.get("body") or "") or (bool(report.get("branch")) and base(report["branch"]) == base(run))
+
+
 def takeovers(comments, status_comments, prs=(), since=None, full=0.95):
     """[(time, item, old run, minutes since its last report or None, cause)] of the "Taken over by" comments (#1703).
     The old run: the last other "Started by" or "Taken over by" branch on the item, its ticket or its PR, else the
@@ -601,7 +609,7 @@ def takeovers(comments, status_comments, prs=(), since=None, full=0.95):
                  for m in [RUN.match((c.get("body") or "").lstrip())] if m and m[1] != new]
         start, old = max(prior) if prior else (None, by_pr.get(item, {}).get("head", {}).get("ref", "?"))
         after = lambda c: c["created_at"] < when and (start is None or c["created_at"] >= start)
-        reports = sorted((c for c in status_comments if after(c) and f"`{old}`" in (c.get("body") or "")),
+        reports = sorted((c for c in status_comments if after(c) and by_run(c, old)),
                          key=lambda c: c["created_at"])
         last = reports[-1] if reports else None
         if any(s[1] >= full for s in raw_samples([c for c in status_comments if after(c)])):
