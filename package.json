@@ -29,6 +29,7 @@
     "vitest": "5.0.5"
   },
   "dependencies": {
+    "better-auth": "1.7.14",
     "better-sqlite3": "13.0.3",
     "drizzle-orm": "0.45.4",
     "luxon": "3.7.2",

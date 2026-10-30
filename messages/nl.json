@@ -3,8 +3,25 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (nl): the welcome of Nina]"
   },
-  "StudioPage": {
-    "placeholder": "De studio-app komt binnenkort."
+  "StudioLogin": {
+    "title": "Studio",
+    "emailLabel": "Je e-mailadres",
+    "sendCode": "Stuur me een code",
+    "codeSent": "Als {email} het e-mailadres van de studio is, komt er een code van 6 cijfers naar je toe. Kijk in je e-mail.",
+    "codeLabel": "De code",
+    "logIn": "Inloggen",
+    "wrongCode": "Deze code klopt niet of is te oud. Probeer het opnieuw, of vraag een nieuwe code.",
+    "failed": "Er ging iets mis. Probeer het over een minuut opnieuw.",
+    "otherEmail": "Vraag een nieuwe code"
+  },
+  "StudioHome": {
+    "title": "Studio",
+    "loggedInAs": "Je bent ingelogd als {email}.",
+    "logOut": "Uitloggen"
+  },
+  "LoginEmail": {
+    "subject": "Je TUMACH-code: {code}",
+    "text": "Je code voor de TUMACH-studio-app is {code}.\n\nTyp hem in de app. De code werkt {minutes} minuten.\n\nHeb je geen code gevraagd? Dan kun je deze e-mail negeren."
   },
   "TestBanner": {
     "text": "Testsite: boekingen hier zijn niet echt"

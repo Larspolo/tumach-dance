@@ -19,10 +19,11 @@ test("the manifest makes /studio an installable app with icons of the right size
   }
 });
 
-test("/studio answers 200 and links the manifest", async ({ page }) => {
-  const response = await page.goto("/studio");
+// /studio needs a login (#19): its login page has the layout of the studio app.
+test("the login page of /studio answers 200 and links the manifest", async ({ page }) => {
+  const response = await page.goto("/studio/login");
   expect(response?.status()).toBe(200);
-  await expect(page.getByText(en.StudioPage.placeholder)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioLogin.title);
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/manifest.webmanifest");
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute("href", "/icons/apple-touch-icon.png");
 });
