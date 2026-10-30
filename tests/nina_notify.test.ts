@@ -18,7 +18,14 @@ const dir = mkdtempSync(join(tmpdir(), "nina-notify-"));
 let n = 0;
 const tempDb = () => join(dir, `${++n}.db`);
 
-const question = (number: number): NinaQuestion => ({ number, title: "Q", text: "Which?", tryPath: null, choices: [] });
+const question = (number: number): NinaQuestion => ({
+  number,
+  title: "Q",
+  text: "Which?",
+  tryPath: null,
+  example: null,
+  choices: [],
+});
 
 beforeEach(() => {
   listNinaQuestions.mockReset();

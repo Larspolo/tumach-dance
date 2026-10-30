@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { tryHref } from "@/lib/examples";
 import { listNinaQuestions } from "@/lib/github";
 import type { NinaQuestion } from "@/lib/nina-question";
 import { LOGIN_PATH } from "@/lib/studio-paths";
@@ -46,7 +47,7 @@ export default async function QuestionsPage({ searchParams }: { searchParams: Pr
             {question.text && <p className={styles.note}>{question.text}</p>}
             {question.tryPath && (
               <p>
-                <a className={styles.link} href={question.tryPath}>
+                <a className={styles.link} href={tryHref(question) ?? question.tryPath}>
                   {t("try")}
                 </a>
               </p>
