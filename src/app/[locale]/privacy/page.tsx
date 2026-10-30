@@ -8,7 +8,7 @@ import styles from "./privacy.module.css";
 // from `KEEP_MONTHS`, so the page and the removal of old bookings never differ.
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/privacy");
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/privacy", locale);
 }
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
