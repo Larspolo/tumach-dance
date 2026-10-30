@@ -321,7 +321,11 @@
     "free": "No bookings.",
     "request": "request",
     "approved": "approved",
-    "paid": "paid"
+    "paid": "paid",
+    "cancel": "Cancel",
+    "cancelAsk": "Cancel this booking?",
+    "cancelYes": "Yes, cancel",
+    "cancelNo": "No"
   },
   "StudioFeedback": {
     "back": "Back",

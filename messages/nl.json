@@ -321,7 +321,11 @@
     "free": "Geen boekingen.",
     "request": "aanvraag",
     "approved": "goedgekeurd",
-    "paid": "betaald"
+    "paid": "betaald",
+    "cancel": "Annuleren",
+    "cancelAsk": "Deze boeking annuleren?",
+    "cancelYes": "Ja, annuleren",
+    "cancelNo": "Nee"
   },
   "StudioFeedback": {
     "back": "Terug",
