@@ -657,6 +657,12 @@ def main(argv=None):
                     help="a claim: when another run has the ticket, try these tickets in this order (one call)")
     ap.add_argument("--remote", default="origin")
     a = ap.parse_args(argv)
+    # A claim on a detached HEAD would be named `unknown`: the next beat of the run then calls its own claim a takeover (#155).
+    writes = a.comment or a.refill or a.review or a.roadmap or not (
+        a.release or a.show or a.beat or a.stale or a.stuck or a.guard or a.adopt or a.prune or a.fixmain or a.reviewed)
+    if writes and who() == "unknown":
+        print("detached HEAD: check out your branch first (`git checkout -B <branch> origin/main`)")
+        return 2
     if a.prune:
         gone = prune(a.remote)
         print("\n".join(f"deleted claim/{n}" for n in gone) or "nothing to delete")

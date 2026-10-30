@@ -77,6 +77,7 @@ framework/tests/test_claim.py
 framework/tests/test_claim_active_pr.py
 framework/tests/test_claim_code_span.py
 framework/tests/test_claim_conflict.py
+framework/tests/test_claim_detached.py
 framework/tests/test_claim_exit.py
 framework/tests/test_claim_first.py
 framework/tests/test_claim_refill.py
