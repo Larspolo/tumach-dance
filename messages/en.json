@@ -286,7 +286,8 @@
   },
   "bookingPush": {
     "title": "New booking request",
-    "body": "{name}: {offer}, {when}"
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Booking cancelled"
   },
   "StudioBookings": {
     "title": "Bookings",

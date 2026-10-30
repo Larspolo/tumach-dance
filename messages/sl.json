@@ -286,7 +286,8 @@
   },
   "bookingPush": {
     "title": "Nova prošnja za rezervacijo",
-    "body": "{name}: {offer}, {when}"
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Rezervacija preklicana"
   },
   "StudioBookings": {
     "title": "Rezervacije",

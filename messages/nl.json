@@ -286,7 +286,8 @@
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",
-    "body": "{name}: {offer}, {when}"
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Boeking geannuleerd"
   },
   "StudioBookings": {
     "title": "Boekingen",
