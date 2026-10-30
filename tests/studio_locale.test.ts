@@ -9,3 +9,14 @@ test("the studio app takes the language of the public site, else of the browser,
   expect(studioLocale(new Headers({ "accept-language": "fr" }))).toBe("en");
   expect(studioLocale(new Headers())).toBe("en");
 });
+
+test("the studio app takes the best language of the browser by its q values (#43)", () => {
+  const locale = (accept: string, cookie?: string) =>
+    studioLocale(new Headers({ "accept-language": accept, ...(cookie ? { cookie } : {}) }));
+  expect(locale("nl-NL,nl;q=0.9")).toBe("nl");
+  expect(locale("sl")).toBe("sl");
+  expect(locale("de-DE")).toBe("en");
+  expect(locale("")).toBe("en");
+  expect(locale("sl", "NEXT_LOCALE=nl")).toBe("nl");
+  expect(locale("en;q=0.2,nl;q=0.8")).toBe("nl");
+});
