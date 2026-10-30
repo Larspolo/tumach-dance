@@ -23,6 +23,10 @@
     "offers": "Ponudba",
     "hours": "Ure",
     "bookings": "Rezervacije",
+    "calendarAdd": "Dodaj v moj koledar",
+    "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
+    "calendarRenew": "Naredi nov naslov",
+    "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
     "week": "Ta teden"
   },
   "PasskeyOffer": {
