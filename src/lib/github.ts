@@ -12,6 +12,7 @@ type Issue = {
   title: string;
   body: string | null;
   pull_request?: unknown;
+  comments?: number;
   labels: (string | { name?: string })[];
 };
 
@@ -36,15 +37,33 @@ async function call(s: NonNullable<ReturnType<typeof settings>>, path: string, i
   return response.json();
 }
 
-/** The open questions for Nina, parsed. No pull requests and no tickets without `## For Nina`. */
+const ANSWER_HEAD = "Nina's answer:";
+
+/** True when the last comment of the issue is an answer of Nina (#178): a newer comment of a run asks again. */
+async function answered(s: NonNullable<ReturnType<typeof settings>>, issue: Issue): Promise<boolean> {
+  if (!issue.comments) return false;
+  const page = Math.ceil(issue.comments / 100);
+  const comments = (await call(
+    s,
+    `/issues/${issue.number}/comments?per_page=100${page > 1 ? `&page=${page}` : ""}`,
+  )) as { body?: string | null }[];
+  return (comments.at(-1)?.body ?? "").startsWith(ANSWER_HEAD);
+}
+
+/**
+ * The open questions for Nina, parsed. No pull requests, no tickets without `## For Nina`, and no question that
+ * Nina answered last (#178).
+ */
 export async function listNinaQuestions(env: NodeJS.ProcessEnv = process.env): Promise<NinaQuestion[]> {
   const s = settings(env);
   if (!s) return [];
   const issues = (await call(s, `/issues?labels=${LABEL}&state=open&per_page=100`)) as Issue[];
-  return issues
+  const questions = issues
     .filter((issue) => !issue.pull_request)
-    .map(parseNinaQuestion)
-    .filter((question): question is NinaQuestion => question !== null);
+    .map((issue) => ({ issue, question: parseNinaQuestion(issue) }))
+    .filter((q): q is { issue: Issue; question: NinaQuestion } => q.question !== null);
+  const done = await Promise.all(questions.map((q) => answered(s, q.issue)));
+  return questions.filter((_, i) => !done[i]).map((q) => q.question);
 }
 
 /**
@@ -63,7 +82,7 @@ export async function postNinaAnswer(
   if (!labels.includes(LABEL)) throw new Error(`GitHub: issue ${number} is not a question for Nina`);
   const question = parseNinaQuestion(issue);
   const choice = question?.choices.find((c) => c.key === answer.choice);
-  const head = choice ? `Nina's answer: ${choice.key}. ${choice.text}` : "Nina's answer:";
+  const head = choice ? `${ANSWER_HEAD} ${choice.key}. ${choice.text}` : ANSWER_HEAD;
   const body = answer.text.trim() ? `${head}\n\n${answer.text.trim()}` : head;
   await call(s, `/issues/${number}/comments`, { method: "POST", body: JSON.stringify({ body }) });
 }
