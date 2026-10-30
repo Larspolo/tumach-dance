@@ -8,4 +8,3 @@ playwright.download.prss.microsoft.com
 playwright.azureedge.net
 fonts.googleapis.com
 fonts.gstatic.com
-tumach.dance

@@ -10,7 +10,9 @@ The project part of the cloud environment of tumach-dance (`framework/docs/STEER
 - `nodejs.org`: Node 24 for the setup script, when the image has an older Node.
 - `cdn.playwright.dev`, `playwright.download.prss.microsoft.com`, `playwright.azureedge.net`: the Playwright browser.
 - `fonts.googleapis.com`, `fonts.gstatic.com`: the fonts of the site (`next/font` gets them at build time).
-- `tumach.dance`: the current site, the reference of the look (a copy: `docs/design/current-site.html`).
+
+The current site `tumach.dance` is not on the list on purpose: its texts are not the content (P2). The reference of
+its look is the copy with placeholder texts, `docs/design/current-site.html`.
 
 An agent that needs another host adds it to the file and opens a `needs-human` ticket for the owner.
 

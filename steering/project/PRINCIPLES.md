@@ -11,10 +11,12 @@ When ease and control pull apart, ease wins: few settings with good defaults. Ni
 request, set her hours) in a few taps on her phone. Dancers book with no account. Example: the open hours are one
 rule such as "weekends all day, weekdays from 17:00, not on Thursday", not a grid of settings per day.
 
-## P2. The look of the current site
+## P2. The look of the current site, not its texts
 
-Nina likes the current tumach.dance and calls it "simple and chill". Each page keeps its colors, fonts and calm
-layout (a copy: `docs/design/current-site.html`). Example: Nina's studio app uses the same fonts and colors.
+Nina likes the look of the current tumach.dance and calls it "simple and chill". Each page keeps its colors, fonts,
+space and calm layout (a copy with placeholder texts: `docs/design/current-site.html`). Its texts are not the content
+of the site: never copy a text, a class, a time or a claim from it. Each real text comes from Nina (a question for
+Nina); until then, a page shows a clear placeholder. Example: Nina's studio app uses the same fonts and colors.
 
 ## P3. Ready features first
 

@@ -5,7 +5,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 ## 1. Show the studio
 
 - [ ] `site:skeleton` The current home page of tumach.dance as a Next.js site, live on a preview address
-  - The home page has the look ("simple and chill"), the texts and the sections of the current site, on a phone and a laptop
+  - The home page has the look ("simple and chill") and the layout of the current site, on a phone and a laptop; its texts are placeholders until Nina gives the real ones
   - Each merge to main updates the preview site on the home server, with no step by Lars (after one setup)
   - `npm run dev` starts the site on the owner's computer (`/try`)
 - [ ] `site:languages` English, Dutch and Slovenian

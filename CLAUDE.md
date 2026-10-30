@@ -37,8 +37,8 @@ Next.js (App Router) in TypeScript. The `site:skeleton` feature makes the first 
 
 - **P1, simple and phone first:** few settings with good defaults; Nina does each daily task in a few taps on her
   phone; dancers book with no account (`steering/project/PRINCIPLES.md`).
-- The look is the look of the current tumach.dance ("simple and chill"): its colors, fonts and calm layout. A copy
-  of that page: `docs/design/current-site.html`.
+- **P2:** take only the look of the current tumach.dance ("simple and chill"): its colors, fonts, space and layout
+  (a copy with placeholder texts: `docs/design/current-site.html`). Never copy its texts: real texts come from Nina.
 - Each text the user sees is in `messages/` in English, Dutch and Slovenian. Never put a text in the code.
 - All times are Europe/Amsterdam time. Store an instant in UTC; test the change to and from summer time.
 - The preview and the live site have separate data and keys. The preview shows a "test site" banner and sends
