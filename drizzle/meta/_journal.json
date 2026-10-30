@@ -43,6 +43,13 @@
       "when": 1793389775856,
       "tag": "0005_bookings",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1793392232487,
+      "tag": "0006_high_black_cat",
+      "breakpoints": true
     }
   ]
 }

@@ -21,7 +21,8 @@
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
     "logOut": "Odjava",
     "offers": "Ponudba",
-    "hours": "Ure"
+    "hours": "Ure",
+    "bookings": "Rezervacije"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -150,5 +151,14 @@
     "body": "Hvala za prošnjo: {offer}, {when}.",
     "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
     "sign": "TUMACH"
+  },
+  "StudioBookings": {
+    "title": "Rezervacije",
+    "back": "Nazaj",
+    "none": "Ni odprtih prošenj. Vse je mirno.",
+    "approve": "Potrdi",
+    "decline": "Zavrni",
+    "approved": "Potrjeno.",
+    "declined": "Zavrnjeno."
   }
 }

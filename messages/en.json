@@ -21,7 +21,8 @@
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
     "offers": "Offers",
-    "hours": "Hours"
+    "hours": "Hours",
+    "bookings": "Bookings"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -150,5 +151,14 @@
     "body": "Thank you for your request: {offer}, {when}.",
     "soon": "Nina will look at it and answer you soon.",
     "sign": "TUMACH"
+  },
+  "StudioBookings": {
+    "title": "Bookings",
+    "back": "Back",
+    "none": "No open requests. All is calm.",
+    "approve": "Approve",
+    "decline": "Decline",
+    "approved": "Approved.",
+    "declined": "Declined."
   }
 }
