@@ -45,9 +45,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config merge.conflictStyle diff3     # framework/tools/unconflict.py needs the base of each hunk
-          cp framework/tools/unconflict.py framework/tools/merge_jsonl.py "$RUNNER_TEMP/"   # main's copy: the job checks out PR branches
+          cp framework/tools/unconflict.py framework/tools/merge_jsonl.py framework/tools/merge_json.py "$RUNNER_TEMP/"   # main's copy: the job checks out PR branches
           mkdir -p "$RUNNER_TEMP/gate" && cp framework/tools/owner_gate.py framework/tools/agent_config.py agent.toml "$RUNNER_TEMP/gate/"   # main's owners (#4241)
           git config merge.jsonl.driver "python3 $RUNNER_TEMP/merge_jsonl.py %O %A %B"   # game/data/*.jsonl (#2004)
+          git config merge.json.driver "python3 $RUNNER_TEMP/merge_json.py %O %A %B"   # messages/*.json (#131)
           python3 -m pip install -q "$(grep '^ruff' requirements-dev.txt)"
       - name: Merge the green agent PRs
         env:

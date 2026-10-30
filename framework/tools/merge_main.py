@@ -150,9 +150,10 @@ def main(argv=None):
     ap.add_argument("--no-test", action="store_true", help="no ruff and no tests")
     a = ap.parse_args(argv)
     gd = git("rev-parse", "--git-common-dir", check=True).stdout.strip()
-    driver = git("show", "origin/main:framework/tools/merge_jsonl.py").stdout
-    if driver:
-        open(os.path.join(gd, "merge_jsonl.py"), "w").write(driver)
+    for name in ("merge_jsonl.py", "merge_json.py"):                   # merge_json.py: messages/*.json (#131)
+        driver = git("show", f"origin/main:framework/tools/{name}").stdout
+        if driver:
+            open(os.path.join(gd, name), "w").write(driver)
     if not git("config", "--get", "merge.jsonl.driver").stdout.strip():
         print("warning: no merge.jsonl.driver: run .claude/hooks/session-start.sh (game/data lines can double)")
     if git("rev-parse", "-q", "--verify", "MERGE_HEAD").returncode:          # no merge in progress: start one
