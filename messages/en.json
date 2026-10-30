@@ -5,5 +5,8 @@
   },
   "StudioPage": {
     "placeholder": "The studio app comes soon."
+  },
+  "TestBanner": {
+    "text": "Test site: bookings here are not real"
   }
 }
