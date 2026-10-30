@@ -22,7 +22,8 @@
     "logOut": "Log out",
     "offers": "Offers",
     "hours": "Hours",
-    "bookings": "Bookings"
+    "bookings": "Bookings",
+    "questions": "For Nina"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -162,5 +163,17 @@
     "decline": "Decline",
     "approved": "Approved.",
     "declined": "Declined."
+  },
+  "StudioQuestions": {
+    "title": "For Nina",
+    "back": "Back",
+    "none": "No questions for you now. Enjoy your day!",
+    "try": "Try it on the site",
+    "choose": "Your choice",
+    "text": "Anything to add? (optional)",
+    "send": "Send",
+    "thanks": "Thank you! Your answer is sent.",
+    "error": "Your answer was not sent. Please try again in a moment.",
+    "loadError": "The questions could not be loaded. Please try again later."
   }
 }

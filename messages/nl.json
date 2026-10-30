@@ -22,7 +22,8 @@
     "logOut": "Uitloggen",
     "offers": "Aanbod",
     "hours": "Uren",
-    "bookings": "Boekingen"
+    "bookings": "Boekingen",
+    "questions": "Voor Nina"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -162,5 +163,17 @@
     "decline": "Afwijzen",
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen."
+  },
+  "StudioQuestions": {
+    "title": "Voor Nina",
+    "back": "Terug",
+    "none": "Er zijn nu geen vragen voor je. Fijne dag!",
+    "try": "Probeer het op de site",
+    "choose": "Jouw keuze",
+    "text": "Iets toe te voegen? (optioneel)",
+    "send": "Versturen",
+    "thanks": "Dank je! Je antwoord is verstuurd.",
+    "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",
+    "loadError": "De vragen konden niet worden geladen. Probeer het later nog eens."
   }
 }
