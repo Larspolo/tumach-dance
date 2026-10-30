@@ -18,9 +18,9 @@ The owner is **Larspolo**. Nina is the user of the studio app; she is not techni
 
 Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.env` file or the data of a dancer.
 
-## Code map (planned)
+## Code map
 
-Next.js (App Router) in TypeScript. The `site:skeleton` feature makes the first files; keep this map up to date.
+Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy `src/proxy.ts`). Keep this map up to date.
 
 - `src/app/[locale]/` – the public pages (home, classes, book) in each language.
 - `src/app/studio/` – Nina's studio app: login, bookings, hours, offers, the page "For Nina".
