@@ -249,7 +249,8 @@
     "next": "Volgende week",
     "free": "Geen boekingen.",
     "request": "aanvraag",
-    "approved": "goedgekeurd"
+    "approved": "goedgekeurd",
+    "paid": "betaald"
   },
   "StudioFeedback": {
     "back": "Terug",
