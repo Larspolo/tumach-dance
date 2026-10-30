@@ -284,6 +284,8 @@
     "declinedOther": "Na strani za rezervacije lahko izbereš drug termin.",
     "cancelledSubject": "Tvoja rezervacija pri TUMACH je preklicana",
     "cancelled": "Nina je preklicala tvojo rezervacijo: {offer}, {when}. Na strani za rezervacije lahko izbereš drug termin.",
+    "reminderSubject": "Opomnik: tvoja rezervacija pri TUMACH",
+    "reminder": "Opomnik za tvojo rezervacijo: {offer}, {when}.",
     "sign": "TUMACH"
   },
   "bookingPush": {

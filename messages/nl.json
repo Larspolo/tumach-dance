@@ -284,6 +284,8 @@
     "declinedOther": "Je kunt een andere tijd kiezen op de boekingspagina.",
     "cancelledSubject": "Je boeking bij TUMACH is geannuleerd",
     "cancelled": "Nina heeft je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
+    "reminderSubject": "Herinnering: je boeking bij TUMACH",
+    "reminder": "Een herinnering aan je boeking: {offer}, {when}.",
     "sign": "TUMACH"
   },
   "bookingPush": {

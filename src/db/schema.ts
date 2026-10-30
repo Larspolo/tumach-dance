@@ -177,6 +177,8 @@ export const bookings = sqliteTable(
     createdAt: integer("created_at").notNull(),
     /** UTC, epoch milliseconds; `null` = not paid. A paid booking stays `approved`. */
     paidAt: integer("paid_at"),
+    /** UTC, epoch milliseconds; `null` = no reminder email yet (#165). Set before the send: one reminder only. */
+    remindedAt: integer("reminded_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
@@ -215,3 +217,19 @@ export const classTimes = sqliteTable(
   },
   (t) => [index("class_times_class_id_idx").on(t.classId), check("class_times_range", sql`${t.to} > ${t.from}`)],
 );
+
+/**
+ * A photo of the studio (#171). The files are in `PHOTOS_DIR` (`src/db/photos.ts`): `<file>-large.webp` and
+ * `<file>-small.webp`. `width` and `height` are the size of the large version.
+ */
+export const photos = sqliteTable("photos", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  /** The base name of the files: random, so that nobody can guess it. */
+  file: text("file").notNull().unique(),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  /** The order on the page: low first. */
+  position: integer("position").notNull(),
+  /** UTC, epoch milliseconds. */
+  createdAt: integer("created_at").notNull(),
+});
