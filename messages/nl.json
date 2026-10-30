@@ -158,6 +158,10 @@
     "soon": "Nina kijkt ernaar en antwoordt je snel.",
     "sign": "TUMACH"
   },
+  "bookingPush": {
+    "title": "Nieuwe aanvraag",
+    "body": "{name}: {offer}, {when}"
+  },
   "StudioBookings": {
     "title": "Boekingen",
     "back": "Terug",
