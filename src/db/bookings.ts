@@ -118,6 +118,24 @@ export function decideBooking(db: Db, id: number, decision: "approved" | "declin
   return { ok: false, reason: exists ? "not-requested" : "not-found" };
 }
 
+export type CancelResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-active" };
+
+/**
+ * Cancel a `requested` or `approved` booking (#159): it gets `cancelled` and frees its time, as `busyRanges()` counts
+ * only the holding statuses. A paid booking keeps `paidAt` (the refund waits for #139).
+ */
+export function cancelBooking(db: Db, id: number): CancelResult {
+  const booking = db
+    .update(bookings)
+    .set({ status: "cancelled" })
+    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+  return { ok: false, reason: exists ? "not-active" : "not-found" };
+}
+
 export type MarkPaidResult =
   | { ok: true; booking: Booking }
   | { ok: false; reason: "not-found" | "not-approved" | "already-paid" };
