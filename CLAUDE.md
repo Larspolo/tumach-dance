@@ -23,11 +23,11 @@ Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.
 Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy `src/proxy.ts`). Keep this map up to date.
 
 - `src/app/[locale]/` – the public pages (home, classes, book) in each language.
-- `src/app/studio/` – Nina's studio app: login, bookings, hours, offers, the page "For Nina". No locale in its
+- `src/app/studio/` – Nina's studio app: login, bookings, the week (`week.ts`), hours, offers, the page "For Nina". No locale in its
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
 - `src/components/` – shared page parts (the "test site" banner).
-- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the questions for Nina of a ticket (`nina-question.ts`).
+- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, route `src/app/api/calendar/`), the questions for Nina of a ticket (`nina-question.ts`).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
@@ -37,6 +37,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   (push). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
 - `Dockerfile`, `deploy/` – the image and the compose files of the home server (preview and live).
+- `tools/` – the specific agent tools: `dashboard_site.py` builds the owner's dashboard page (GitHub Pages).
 - `framework/`, `.claude/`, `steering/` – the agent system.
 
 ## Rules of the domain

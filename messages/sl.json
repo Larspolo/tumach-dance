@@ -31,7 +31,15 @@
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
     "logOut": "Odjava",
     "offers": "Ponudba",
-    "hours": "Ure"
+    "hours": "Ure",
+    "bookings": "Rezervacije",
+    "calendarAdd": "Dodaj v moj koledar",
+    "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
+    "calendarRenew": "Naredi nov naslov",
+    "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
+    "week": "Ta teden",
+    "questions": "Za Nino",
+    "classes": "Tečaji"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -100,6 +108,26 @@
     "add": "Dodaj ponudbo",
     "addSave": "Dodaj"
   },
+  "StudioClasses": {
+    "title": "Tečaji",
+    "back": "Nazaj",
+    "none": "Še ni tečajev.",
+    "hidden": "skrito",
+    "name": "Ime",
+    "text": "Besedilo",
+    "forWhom": "Za koga",
+    "nameIn": "Ime ({language})",
+    "textIn": "Besedilo ({language})",
+    "forWhomIn": "Za koga ({language})",
+    "nl": "nizozemščina",
+    "sl": "slovenščina",
+    "translations": "Prevodi",
+    "save": "Shrani",
+    "hide": "Skrij",
+    "show": "Prikaži",
+    "add": "Dodaj tečaj",
+    "addSave": "Dodaj"
+  },
   "Push": {
     "title": "Obvestila",
     "turnOn": "Vklopi obvestila",
@@ -111,7 +139,9 @@
     "unsupported": "Ta brskalnik ne more prikazati obvestil.",
     "installFirst": "Na iPhonu: tapni Deli in nato \"Dodaj na začetni zaslon\". Odpri aplikacijo z začetnega zaslona in tam vklopi obvestila.",
     "testTitle": "TUMACH studio",
-    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu."
+    "testBody": "To je preizkus. Obvestila delujejo na tem telefonu.",
+    "questionTitle": "Novo vprašanje zate",
+    "questionBody": "Odpri ga v aplikaciji studia in odgovori."
   },
   "LanguageSwitcher": {
     "label": "Jezik"
@@ -153,5 +183,46 @@
     "taken": "Nekdo drug je pravkar vzel ta termin. Izberi drug termin.",
     "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
     "notSlot": "Ta termin ni prost. Izberi drug termin."
+  },
+  "bookingEmail": {
+    "subject": "Tvoja prošnja za rezervacijo pri TUMACH",
+    "greeting": "Živjo, {name},",
+    "body": "Hvala za prošnjo: {offer}, {when}.",
+    "soon": "Nina bo pregledala prošnjo in ti kmalu odgovorila.",
+    "sign": "TUMACH"
+  },
+  "bookingPush": {
+    "title": "Nova prošnja za rezervacijo",
+    "body": "{name}: {offer}, {when}"
+  },
+  "StudioBookings": {
+    "title": "Rezervacije",
+    "back": "Nazaj",
+    "none": "Ni odprtih prošenj. Vse je mirno.",
+    "approve": "Potrdi",
+    "decline": "Zavrni",
+    "approved": "Potrjeno.",
+    "declined": "Zavrnjeno."
+  },
+  "StudioQuestions": {
+    "title": "Za Nino",
+    "back": "Nazaj",
+    "none": "Trenutno ni vprašanj zate. Lep dan!",
+    "try": "Preizkusi na strani",
+    "choose": "Tvoja izbira",
+    "text": "Želiš kaj dodati? (neobvezno)",
+    "send": "Pošlji",
+    "thanks": "Hvala! Tvoj odgovor je poslan.",
+    "error": "Tvoj odgovor ni bil poslan. Poskusi znova čez trenutek.",
+    "loadError": "Vprašanj ni bilo mogoče naložiti. Poskusi znova pozneje."
+  },
+  "StudioWeek": {
+    "title": "Ta teden",
+    "back": "Nazaj",
+    "previous": "Prejšnji teden",
+    "next": "Naslednji teden",
+    "free": "Ni rezervacij.",
+    "request": "prošnja",
+    "approved": "potrjeno"
   }
 }

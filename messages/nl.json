@@ -31,7 +31,15 @@
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
     "offers": "Aanbod",
-    "hours": "Uren"
+    "hours": "Uren",
+    "bookings": "Boekingen",
+    "calendarAdd": "Zet in mijn agenda",
+    "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
+    "calendarRenew": "Maak een nieuw adres",
+    "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
+    "week": "Deze week",
+    "questions": "Voor Nina",
+    "classes": "Lessen"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -100,6 +108,26 @@
     "add": "Aanbod toevoegen",
     "addSave": "Toevoegen"
   },
+  "StudioClasses": {
+    "title": "Lessen",
+    "back": "Terug",
+    "none": "Nog geen lessen.",
+    "hidden": "verborgen",
+    "name": "Naam",
+    "text": "Tekst",
+    "forWhom": "Voor wie",
+    "nameIn": "Naam in het {language}",
+    "textIn": "Tekst in het {language}",
+    "forWhomIn": "Voor wie in het {language}",
+    "nl": "Nederlands",
+    "sl": "Sloveens",
+    "translations": "Vertalingen",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Les toevoegen",
+    "addSave": "Toevoegen"
+  },
   "Push": {
     "title": "Meldingen",
     "turnOn": "Meldingen aanzetten",
@@ -111,7 +139,9 @@
     "unsupported": "Deze browser kan geen meldingen tonen.",
     "installFirst": "Op een iPhone: tik op Deel en dan op \"Zet op beginscherm\". Open de app vanaf je beginscherm en zet daar de meldingen aan.",
     "testTitle": "TUMACH studio",
-    "testBody": "Dit is een test. Meldingen werken op deze telefoon."
+    "testBody": "Dit is een test. Meldingen werken op deze telefoon.",
+    "questionTitle": "Een nieuwe vraag voor jou",
+    "questionBody": "Open hem in de studio-app en geef je antwoord."
   },
   "LanguageSwitcher": {
     "label": "Taal"
@@ -153,5 +183,46 @@
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
+  },
+  "bookingEmail": {
+    "subject": "Je aanvraag bij TUMACH",
+    "greeting": "Hoi {name},",
+    "body": "Bedankt voor je aanvraag: {offer}, {when}.",
+    "soon": "Nina kijkt ernaar en antwoordt je snel.",
+    "sign": "TUMACH"
+  },
+  "bookingPush": {
+    "title": "Nieuwe aanvraag",
+    "body": "{name}: {offer}, {when}"
+  },
+  "StudioBookings": {
+    "title": "Boekingen",
+    "back": "Terug",
+    "none": "Geen open aanvragen. Alles is rustig.",
+    "approve": "Goedkeuren",
+    "decline": "Afwijzen",
+    "approved": "Goedgekeurd.",
+    "declined": "Afgewezen."
+  },
+  "StudioQuestions": {
+    "title": "Voor Nina",
+    "back": "Terug",
+    "none": "Er zijn nu geen vragen voor je. Fijne dag!",
+    "try": "Probeer het op de site",
+    "choose": "Jouw keuze",
+    "text": "Iets toe te voegen? (optioneel)",
+    "send": "Versturen",
+    "thanks": "Dank je! Je antwoord is verstuurd.",
+    "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",
+    "loadError": "De vragen konden niet worden geladen. Probeer het later nog eens."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd"
   }
 }

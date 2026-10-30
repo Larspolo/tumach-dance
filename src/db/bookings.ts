@@ -3,9 +3,11 @@ import { and, eq, gt, inArray, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
+import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
+import { listClassTimes } from "./classes";
 import type { Db } from "./index";
 import type { Offer } from "./offers";
 import { bookings, offers } from "./schema";
@@ -83,7 +85,10 @@ export function requestBooking(
       const open = openRanges(getHoursRule(db), date, date);
       const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
       if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
-      if (busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      // A class uses the room: a request never takes its time (#99).
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
         .insert(bookings)
         .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })
@@ -111,6 +116,23 @@ export function decideBooking(db: Db, id: number, decision: "approved" | "declin
   if (booking) return { ok: true, booking };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-requested" : "not-found" };
+}
+
+/** The bookings with one of `statuses` that overlap `from`..`to`, with their offer, by start: the week page and the calendar. */
+export function listBookings(
+  db: Db,
+  from: number,
+  to: number,
+  statuses: readonly Booking["status"][],
+): { booking: Booking; offer: Offer }[] {
+  if (statuses.length === 0) return [];
+  return db
+    .select({ booking: bookings, offer: offers })
+    .from(bookings)
+    .innerJoin(offers, eq(offers.id, bookings.offerId))
+    .where(and(inArray(bookings.status, statuses), lt(bookings.start, to), gt(bookings.end, from)))
+    .orderBy(bookings.start)
+    .all();
 }
 
 /** The `requested` bookings with their offer, by start: the requests that wait for Nina. */

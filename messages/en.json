@@ -31,7 +31,15 @@
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
     "offers": "Offers",
-    "hours": "Hours"
+    "hours": "Hours",
+    "bookings": "Bookings",
+    "calendarAdd": "Add to my calendar",
+    "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
+    "calendarRenew": "Make a new address",
+    "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
+    "week": "This week",
+    "questions": "For Nina",
+    "classes": "Classes"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -100,6 +108,26 @@
     "add": "Add an offer",
     "addSave": "Add"
   },
+  "StudioClasses": {
+    "title": "Classes",
+    "back": "Back",
+    "none": "No classes yet.",
+    "hidden": "hidden",
+    "name": "Name",
+    "text": "Text",
+    "forWhom": "For whom",
+    "nameIn": "Name in {language}",
+    "textIn": "Text in {language}",
+    "forWhomIn": "For whom in {language}",
+    "nl": "Dutch",
+    "sl": "Slovenian",
+    "translations": "Translations",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add a class",
+    "addSave": "Add"
+  },
   "Push": {
     "title": "Notifications",
     "turnOn": "Turn on notifications",
@@ -111,7 +139,9 @@
     "unsupported": "This browser cannot show notifications.",
     "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
     "testTitle": "TUMACH studio",
-    "testBody": "This is a test. Notifications work on this phone."
+    "testBody": "This is a test. Notifications work on this phone.",
+    "questionTitle": "A new question for you",
+    "questionBody": "Open it in the studio app and give your answer."
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -153,5 +183,46 @@
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
     "notSlot": "This time is not free. Choose another time."
+  },
+  "bookingEmail": {
+    "subject": "Your booking request at TUMACH",
+    "greeting": "Hi {name},",
+    "body": "Thank you for your request: {offer}, {when}.",
+    "soon": "Nina will look at it and answer you soon.",
+    "sign": "TUMACH"
+  },
+  "bookingPush": {
+    "title": "New booking request",
+    "body": "{name}: {offer}, {when}"
+  },
+  "StudioBookings": {
+    "title": "Bookings",
+    "back": "Back",
+    "none": "No open requests. All is calm.",
+    "approve": "Approve",
+    "decline": "Decline",
+    "approved": "Approved.",
+    "declined": "Declined."
+  },
+  "StudioQuestions": {
+    "title": "For Nina",
+    "back": "Back",
+    "none": "No questions for you now. Enjoy your day!",
+    "try": "Try it on the site",
+    "choose": "Your choice",
+    "text": "Anything to add? (optional)",
+    "send": "Send",
+    "thanks": "Thank you! Your answer is sent.",
+    "error": "Your answer was not sent. Please try again in a moment.",
+    "loadError": "The questions could not be loaded. Please try again later."
+  },
+  "StudioWeek": {
+    "title": "This week",
+    "back": "Back",
+    "previous": "Previous week",
+    "next": "Next week",
+    "free": "No bookings.",
+    "request": "request",
+    "approved": "approved"
   }
 }

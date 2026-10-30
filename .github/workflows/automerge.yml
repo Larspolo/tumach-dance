@@ -1,7 +1,8 @@
 name: Automerge
 
 # Merges an agent PR (branch agent/*, claude/* or ccr-*, #3382, or any branch with the label automerge, #3383) when its CI is green, so that the runs do not wait for CI (#232).
-# A merge with GITHUB_TOKEN starts no workflows, so this job starts CI on main, the dashboard and the claim clean-up.
+# A merge with GITHUB_TOKEN starts no workflows, so this job starts CI on main, the dashboard, the claim clean-up and
+# the site image.
 # CI runs on a head that Unconflict pushed with GITHUB_TOKEN start no workflow_run event, also not after a re-run:
 # the sweep merges those PRs. The job `sweep` of ci.yml starts it (#734): GitHub drops the cron runs (#581).
 on:
@@ -56,7 +57,7 @@ jobs:
           BRANCH: ${{ github.event.workflow_run.head_branch }}
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
-          merged=0 conflict=0 labels=0
+          merged=0 conflict=0 labels=0 image=0
           # An agent branch, or any branch with the label automerge (the owner's opt-in, #3383).
           AGENT='(.head.ref | test("^(agent/|claude/|ccr-)")) or ([.labels[].name] | index("automerge") != null)'
           # GitHub computes "mergeable" without merge=jsonl and merge=union. A PR that only our drivers can merge
@@ -144,8 +145,12 @@ jobs:
               fi
             fi
             echo "merged #$n"; merged=1
-            if gh api "repos/$R/pulls/$n/files?per_page=100" --jq '.[].filename' | grep -Fqx .github/labels.txt; then
+            files=$(gh api "repos/$R/pulls/$n/files?per_page=100" --jq '.[].filename' || true)
+            if grep -Fqx .github/labels.txt <<<"$files"; then
               labels=1
+            fi
+            if grep -qvE '^(framework|\.claude|steering|docs|logs)/' <<<"$files"; then   # the paths-ignore of image.yml
+              image=1
             fi
             gh api "repos/$R/git/refs/heads/$branch" -X DELETE || true
             if [ -n "$ticket" ]; then
@@ -181,6 +186,11 @@ jobs:
           # 50 merges per hour uses much of the token limit (1,000 calls per hour per repository).
           if [ "$labels" = 1 ]; then
             gh workflow run labels.yml --repo "$R" --ref main || true
+          fi
+          # The same for image.yml: the home server pulls each new site image (deploy/README.md). Before this start, the
+          # merges of 2026-10-30 made no image, and the site of Nina stayed at the merge of #90 (a push of the owner).
+          if [ "$image" = 1 ]; then
+            gh workflow run image.yml --repo "$R" --ref main || true
           fi
           if [ "$merged" = 1 ] || [ "$conflict" = 1 ]; then              # GitHub ignores merge=union: do not wait 20 min
             gh workflow run unconflict.yml --repo "$R" || true             # main moved: merge it into conflicted PRs (#280)

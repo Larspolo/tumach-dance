@@ -62,7 +62,7 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
 7. Ship in one call: `python3 framework/tools/ship_pr.py N --message MSG.txt --title "<ticket title>" --body BODY.md`
    (MSG.txt: subject in STE imperative, what and why, `Closes #<number>`; BODY.md: what changed, how you verified,
    and all that a later run needs to fix a red CI with no other context, #4187).
-   It runs ruff and the test files of the change (`--tested`: you ran them on this tree), commits, runs the guard (hard rule before each
+   It commits, runs the lint of `agent.toml` (always) and the test files of the change (`--tested`: you ran them on this tree), runs the guard (hard rule before each
    push: it fails when the claim is not yours or another branch has a PR that closes #N, #288), pushes and opens the
    PR. A PR that changes `packaging/` or a workflow with its own PR checks: add `--hold` (the label `hold` at once).
    Exit 3: do not push: `claim.py N --release` (when the claim is yours; it removes `in-progress`), comment the reason
