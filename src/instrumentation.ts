@@ -7,6 +7,8 @@ export async function register(): Promise<void> {
   const db = getDb();
   const { startBookingTimer } = await import("./lib/booking-timer");
   startBookingTimer(db);
+  const { startBackupTimer } = await import("./lib/backup");
+  startBackupTimer(db);
   if (!process.env.GITHUB_TOKEN) return;
   const { startQuestionTimer } = await import("./lib/nina-notify");
   startQuestionTimer(db);
