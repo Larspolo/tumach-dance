@@ -27,7 +27,8 @@
     "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
     "calendarRenew": "Naredi nov naslov",
     "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
-    "week": "Ta teden"
+    "week": "Ta teden",
+    "questions": "Za Nino"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -171,6 +172,18 @@
     "decline": "Zavrni",
     "approved": "Potrjeno.",
     "declined": "Zavrnjeno."
+  },
+  "StudioQuestions": {
+    "title": "Za Nino",
+    "back": "Nazaj",
+    "none": "Trenutno ni vprašanj zate. Lep dan!",
+    "try": "Preizkusi na strani",
+    "choose": "Tvoja izbira",
+    "text": "Želiš kaj dodati? (neobvezno)",
+    "send": "Pošlji",
+    "thanks": "Hvala! Tvoj odgovor je poslan.",
+    "error": "Tvoj odgovor ni bil poslan. Poskusi znova čez trenutek.",
+    "loadError": "Vprašanj ni bilo mogoče naložiti. Poskusi znova pozneje."
   },
   "StudioWeek": {
     "title": "Ta teden",
