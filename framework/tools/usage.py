@@ -205,6 +205,9 @@ def release_due():
     """The release checks with no ticket (`release.due`), or [] when the read fails: the pacer must still start runs."""
     try:
         import release                                      # not in a bootstrap copy (`framework/tools/bootstrap.py`)
+    except ImportError:                                     # a project with no release tool has no release checks (#153)
+        return []
+    try:
         features, _, rows, epics = release.load()
         return release.due(features, rows, epics)
     except Exception as e:                                  # a GitHub or file error
@@ -228,17 +231,49 @@ def due_reviews(remote="origin", starved=None):
     return out
 
 
-def free_sources(root=None):
+def roadmap_features(text):
+    """{key: (goal, done, named)} of the feature lines "- [ ] `key` ..." under the "## N." goals of a roadmap (the
+    `roadmap` skill): done for "[x]", named = the issue numbers on the line. A project with no tools/release.py (#153)."""
+    out, goal = {}, 0
+    for line in text.splitlines():
+        if m := re.match(r"## (\d+)\.", line):
+            goal = int(m[1])
+        elif goal and (m := re.match(r"- \[([ xX])\] `([^`]+)`(.*)", line)):
+            out[m[2]] = (goal, m[1] != " ", {int(n) for n in re.findall(r"#(\d+)", m[3])})
+    return out
+
+
+def epic_key(body):
+    """The roadmap key of an epic body ("Roadmap: `key`", the `roadmap` skill), or None."""
+    m = re.search(r"^Roadmap: `([^`]+)`", body or "", re.M)
+    return m and m[1]
+
+
+def free_sources(root=None, epics=None):
     """The refill sources of R < N besides the checks and reviews (#3560): the `[ ]` features of the goals 1 to 3 with
-    no epic (the `roadmap` skill) and the fallbacks of docs/coverage.md. A read error counts as a source."""
+    no epic (the `roadmap` skill) and the fallbacks of docs/coverage.md (none without the file). A read error counts as
+    a source. Without tools/release.py the roadmap of `agent.toml` and the epics of GitHub (`epics`: a test stub, #153)."""
     try:
-        import release
-        features, _, _, epics = release.load()
-        keys, numbers = {release.epic_key(e.get("body")) for e in epics}, {e["number"] for e in epics}
+        try:
+            import release
+            features, _, _, found = release.load()
+            key, root = release.epic_key, root or release.ROOT
+        except ImportError:
+            root = root or agent_config.ROOT
+            with open(os.path.join(root, CONFIG["docs"]["roadmap"])) as f:
+                features = roadmap_features(f.read())
+            if epics is None:
+                import dashboard
+                epics = lambda: dashboard.pages("issues?labels=epic&state=all")   # noqa: E731
+            found, key = epics(), epic_key
+        keys, numbers = {key(e.get("body")) for e in found}, {e["number"] for e in found}
         free = [k for k, (goal, done, named) in features.items() if goal < 4 and not done and k not in keys
                 and not named & numbers]
-        with open(os.path.join(root or release.ROOT, "docs", "coverage.md")) as f:   # the totals: | Group | types | own | infantry | fallback |
-            fallbacks = sum(int(m[1]) for m in re.finditer(r"^\| [A-Z][a-z ]+ \| \d+ \| \d+ \| \d+ \| (\d+) \|$", f.read(), re.M))
+        coverage = os.path.join(root, "docs", "coverage.md")
+        fallbacks = 0
+        if os.path.exists(coverage):
+            with open(coverage) as f:   # the totals: | Group | types | own | infantry | fallback |
+                fallbacks = sum(int(m[1]) for m in re.finditer(r"^\| [A-Z][a-z ]+ \| \d+ \| \d+ \| \d+ \| (\d+) \|$", f.read(), re.M))
     except Exception as e:                                  # a GitHub or file error
         print(f"refill sources: {e}", file=sys.stderr)
         return ["read error"]

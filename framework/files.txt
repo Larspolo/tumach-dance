@@ -132,6 +132,7 @@ framework/tests/test_pacer.py
 framework/tests/test_pacer_script.py
 framework/tests/test_pacer_restart.py
 framework/tests/test_usage.py
+framework/tests/test_usage_roadmap_sources.py
 framework/tests/test_usage_status_once.py
 framework/tests/test_usage_week.py
 framework/tests/test_new_repo.py
