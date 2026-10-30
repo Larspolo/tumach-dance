@@ -51,6 +51,11 @@ export default async function StudioPage() {
       </p>
       <p className={styles.note}>{t("calendarNote")}</p>
       <RenewCalendarButton />
+      <p>
+        <Link className={styles.link} href="/studio/feedback">
+          {t("feedback")}
+        </Link>
+      </p>
       <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>

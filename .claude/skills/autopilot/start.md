@@ -58,6 +58,7 @@ For each issue of section `Triage` (no priority label):
 - Read the issue form. Use the priority that the owner selected, else `P2`. Add a kind label and a size label.
 - If the goal is not clear, ask one precise question, add `needs-human` and continue (`owner.md`).
 - If the size is L, split it (`queue.md`).
+- An issue with the label `from-nina` is feedback of Nina: write it as a ticket (`ticket` skill), and keep her words in a quote.
 
 ## 5. Pick and claim one ticket
 

@@ -26,7 +26,8 @@
     "calendarAdd": "Add to my calendar",
     "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
     "calendarRenew": "Make a new address",
-    "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone."
+    "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
+    "feedback": "Feedback"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -166,5 +167,14 @@
     "decline": "Decline",
     "approved": "Approved.",
     "declined": "Declined."
+  },
+  "StudioFeedback": {
+    "back": "Back",
+    "title": "Feedback",
+    "intro": "A wish, a problem or an idea for the site or the app? Write it here.",
+    "label": "Your feedback",
+    "send": "Send",
+    "thanks": "Thank you, we received your feedback",
+    "failed": "Sending failed, please try again later"
   }
 }

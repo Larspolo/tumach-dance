@@ -26,7 +26,8 @@
     "calendarAdd": "Dodaj v moj koledar",
     "calendarNote": "Aplikacija za koledar nato pokaže rezervacije in jih sama posodablja.",
     "calendarRenew": "Naredi nov naslov",
-    "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu."
+    "calendarRenewConfirm": "Narediti nov naslov koledarja? Stari naslov ne bo več deloval; koledar znova dodaj na vsakem telefonu.",
+    "feedback": "Povratne informacije"
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
@@ -166,5 +167,14 @@
     "decline": "Zavrni",
     "approved": "Potrjeno.",
     "declined": "Zavrnjeno."
+  },
+  "StudioFeedback": {
+    "back": "Nazaj",
+    "title": "Povratne informacije",
+    "intro": "Želja, težava ali ideja za stran ali aplikacijo? Napiši jo tukaj.",
+    "label": "Tvoje povratne informacije",
+    "send": "Pošlji",
+    "thanks": "Hvala, prejeli smo tvoje povratne informacije",
+    "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
   }
 }

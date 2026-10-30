@@ -31,22 +31,29 @@ export default defineConfig({
       dependencies: ["setup"],
     },
   ],
-  webServer: {
-    command: "npm run build && npm run start -- -p 3100",
-    url: "http://localhost:3100/en",
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-    // The login test (#19): a test email, the emails in a file (the code), and a throwaway database in out/.
-    env: {
-      STUDIO_EMAIL: "nina@example.test",
-      EMAIL_TRANSPORT: "log",
-      EMAIL_LOG_FILE: "out/e2e/email.log",
-      DATABASE_PATH: "out/e2e/tumach.db",
-      BETTER_AUTH_URL: "http://localhost:3100",
-      BETTER_AUTH_SECRET: "e2e-only-secret-of-the-throwaway-test-database",
-      VAPID_PUBLIC_KEY: vapid.publicKey,
-      VAPID_PRIVATE_KEY: vapid.privateKey,
-      VAPID_SUBJECT: "mailto:test@example.test",
+  webServer: [
+    // The GitHub API stub for the feedback test (#108).
+    { command: "node e2e/github-stub.mjs 3199", url: "http://localhost:3199/", reuseExistingServer: !process.env.CI },
+    {
+      command: "npm run build && npm run start -- -p 3100",
+      url: "http://localhost:3100/en",
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+      // The login test (#19): a test email, the emails in a file (the code), and a throwaway database in out/.
+      env: {
+        STUDIO_EMAIL: "nina@example.test",
+        EMAIL_TRANSPORT: "log",
+        EMAIL_LOG_FILE: "out/e2e/email.log",
+        DATABASE_PATH: "out/e2e/tumach.db",
+        BETTER_AUTH_URL: "http://localhost:3100",
+        BETTER_AUTH_SECRET: "e2e-only-secret-of-the-throwaway-test-database",
+        VAPID_PUBLIC_KEY: vapid.publicKey,
+        VAPID_PRIVATE_KEY: vapid.privateKey,
+        VAPID_SUBJECT: "mailto:test@example.test",
+        GITHUB_TOKEN: "e2e-stub",
+        GITHUB_REPO: "o/r",
+        GITHUB_API_URL: "http://localhost:3199",
+      },
     },
-  },
+  ],
 });
