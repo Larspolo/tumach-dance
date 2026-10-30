@@ -47,7 +47,20 @@
       "wed": "sre",
       "thu": "čet",
       "fri": "pet"
-    }
+    },
+    "closedDates": "Zaprto",
+    "closedFrom": "Od",
+    "closedTo": "Do (za obdobje)",
+    "close": "Zapri",
+    "extraDays": "Dodatni odprti dnevi",
+    "extraDate": "Datum",
+    "openDay": "Odpri",
+    "remove": "Odstrani",
+    "none": "Nič.",
+    "wrongPeriod": "Konec obdobja je pred začetkom.",
+    "wrongDate": "Tega datuma ni mogoče shraniti. Preverite datum in uro.",
+    "allDayShort": "ves dan",
+    "fromShort": "od {time}"
   },
   "StudioOffers": {
     "title": "Ponudba",

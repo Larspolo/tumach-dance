@@ -47,7 +47,20 @@
       "wed": "Wed",
       "thu": "Thu",
       "fri": "Fri"
-    }
+    },
+    "closedDates": "Closed",
+    "closedFrom": "From",
+    "closedTo": "To (for a period)",
+    "close": "Close",
+    "extraDays": "Extra open days",
+    "extraDate": "Date",
+    "openDay": "Open",
+    "remove": "Remove",
+    "none": "None.",
+    "wrongPeriod": "The end of the period is before its start.",
+    "wrongDate": "This date cannot be saved. Check the date and the time.",
+    "allDayShort": "all day",
+    "fromShort": "from {time}"
   },
   "StudioOffers": {
     "title": "Offers",
