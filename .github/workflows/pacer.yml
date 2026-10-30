@@ -108,6 +108,8 @@ jobs:
             python3 framework/tools/pacer.py --switch || { rc=$?; [ $rc -eq 3 ] || exit $rc
               echo "pacer is not \"workflow\" in [pacing] (steering/system/system.toml): stop the loop"; exit 0; }
             if ! python3 framework/tools/pacer.py --log "$RUNNER_TEMP/pacer.jsonl"; then   # a failed call (HTTP 401, 500): red now
+              # a run that a person started (a try after a fix) ends at once; the cron restarts the loop
+              [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_ACTOR" != "github-actions[bot]" ] && exit 1
               sleep 600                                # the next cycle waits as usual: no fast loop of red runs
               gh workflow run pacer.yml --repo "$GITHUB_REPOSITORY" --ref main
               exit 1
