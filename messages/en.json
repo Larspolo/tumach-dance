@@ -122,5 +122,26 @@
     "pushAllow": "Your phone asks if the app may send notifications. Tap \"Allow\".",
     "pushTest": "Tap \"Send a test\". A notification comes on your phone.",
     "link": "How does the app work? Read the guide"
+  },
+  "Book": {
+    "title": "Book",
+    "offer": "1. Choose an offer",
+    "day": "2. Choose a day",
+    "time": "3. Choose a time",
+    "details": "4. Your details",
+    "lesson": "Private lesson, {minutes} min",
+    "rental": "Studio rental, {minutes} min",
+    "noOffers": "There is nothing to book at the moment.",
+    "noTimes": "No free time in the next 4 weeks.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "send": "Send the request",
+    "sent": "Request sent",
+    "sentText": "Nina will look at your request and answer you by email.",
+    "again": "Book another time",
+    "taken": "Someone else just took this time. Choose another time.",
+    "invalid": "Please check your name, email and phone number.",
+    "notSlot": "This time is not free. Choose another time."
   }
 }

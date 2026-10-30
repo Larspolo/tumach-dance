@@ -122,5 +122,26 @@
     "pushAllow": "Telefon vpraša, ali aplikacija sme pošiljati obvestila. Tapni \"Dovoli\".",
     "pushTest": "Tapni \"Pošlji preizkus\". Na telefon pride obvestilo.",
     "link": "Kako deluje aplikacija? Preberi navodila"
+  },
+  "Book": {
+    "title": "Rezervacija",
+    "offer": "1. Izberi ponudbo",
+    "day": "2. Izberi dan",
+    "time": "3. Izberi uro",
+    "details": "4. Tvoji podatki",
+    "lesson": "Zasebna ura, {minutes} min",
+    "rental": "Najem studia, {minutes} min",
+    "noOffers": "Trenutno ni ničesar za rezervacijo.",
+    "noTimes": "V naslednjih 4 tednih ni prostega termina.",
+    "name": "Ime",
+    "email": "E-pošta",
+    "phone": "Telefon",
+    "send": "Pošlji prošnjo",
+    "sent": "Prošnja poslana",
+    "sentText": "Nina bo pregledala tvojo prošnjo in ti odgovorila po e-pošti.",
+    "again": "Rezerviraj še en termin",
+    "taken": "Nekdo drug je pravkar vzel ta termin. Izberi drug termin.",
+    "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
+    "notSlot": "Ta termin ni prost. Izberi drug termin."
   }
 }

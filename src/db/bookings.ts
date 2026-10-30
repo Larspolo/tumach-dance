@@ -2,6 +2,7 @@
 import { and, eq, gt, inArray, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
+import { notBefore } from "../lib/booking-notice";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
@@ -59,7 +60,7 @@ export function busyRanges(db: Db, from: number, to: number): OpenRange[] {
 
 /**
  * Store a booking request with status `requested`. The start and the end must be a free slot of a visible offer in
- * Nina's hours, at `now` or later. One `BEGIN IMMEDIATE` transaction checks and inserts, so that two requests at the
+ * Nina's hours, at `notBefore(now)` or later. One `BEGIN IMMEDIATE` transaction checks and inserts, so that two requests at the
  * same moment (also from two connections) never both get an overlapping time: the second gets `taken`.
  */
 export function requestBooking(
@@ -79,7 +80,7 @@ export function requestBooking(
       const date = DateTime.fromMillis(start, { zone: TIME_ZONE }).toISODate();
       if (!date) return { ok: false, reason: "notSlot" };
       const open = openRanges(getHoursRule(db), date, date);
-      const slots = freeSlots(open, [], offer.minutes, { notBefore: now });
+      const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
       if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
       if (busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
