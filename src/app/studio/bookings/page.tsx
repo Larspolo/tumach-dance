@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { listBookings, listOpenRequests } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { shownName } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
@@ -25,6 +26,7 @@ export default async function BookingsPage({
   const locale = await setStudioLocale();
   const t = await getTranslations("StudioBookings");
   const offerName = await getTranslations("StudioOffers");
+  const weekName = await getTranslations("StudioWeek");
   const { done, error } = await searchParams;
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
@@ -55,7 +57,7 @@ export default async function BookingsPage({
           <li key={booking.id} className={styles.item}>
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
-            <p>{booking.name}</p>
+            <p>{shownName(booking, weekName("removed"))}</p>
             <p>
               <a className={styles.link} href={`mailto:${booking.email}`}>
                 {booking.email}
@@ -88,7 +90,7 @@ export default async function BookingsPage({
           <li key={booking.id} className={styles.item}>
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
-            <p>{booking.name}</p>
+            <p>{shownName(booking, weekName("removed"))}</p>
             <form className={styles.form} action={pay}>
               <input type="hidden" name="id" value={booking.id} />
               {booking.paidAt === null ? (

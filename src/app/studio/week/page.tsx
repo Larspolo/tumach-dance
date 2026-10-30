@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { listBookings } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { shownName } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
@@ -55,7 +56,8 @@ export default async function WeekPage({
             <ul className={styles.list}>
               {ofDay.map(({ booking, offer }) => (
                 <li key={booking.id}>
-                  {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })}, {booking.name}{" "}
+                  {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
+                  {shownName(booking, t("removed"))}{" "}
                   {booking.status === "requested" ? (
                     <Link className={styles.link} href="/studio/bookings">
                       {t("request")}
