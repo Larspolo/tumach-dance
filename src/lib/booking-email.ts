@@ -1,5 +1,6 @@
 // The email to a dancer after a booking request (#37): the offer, the time, and that Nina answers soon.
 // The email after Nina's decision (#77): approved or declined, with the same offer and time.
+// The reminder the day before an approved booking (#165).
 // The texts are in `messages/` under `bookingEmail`; the time is in Europe/Amsterdam time, as Nina sees it.
 
 import { eq } from "drizzle-orm";
@@ -77,6 +78,21 @@ export function cancelEmail(booking: Booking, offer: Offer): Email {
     t("bookingEmail.sign"),
   ].join("\n");
   return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text };
+}
+
+/** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
+export function reminderEmail(booking: Booking, offer: Offer): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.reminder", { offer: offerLabel, when }),
+    "",
+    t("bookingEmail.approvedSee"),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text };
 }
 
 /**

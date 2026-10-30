@@ -27,7 +27,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
 - `src/components/` – shared page parts (the "test site" banner).
-- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, route `src/app/api/calendar/`), the questions for Nina of a ticket (`nina-question.ts`).
+- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the questions for Nina of a ticket (`nina-question.ts`).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
