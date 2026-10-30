@@ -158,3 +158,34 @@ export const bookings = sqliteTable(
     check("bookings_range", sql`${t.end} > ${t.start}`),
   ],
 );
+
+/**
+ * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "...",
+ * "sl": "..."}`: `en` is required, the other languages are optional (`src/lib/local-text.ts`).
+ */
+export const classes = sqliteTable("classes", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  text: text("text").notNull(),
+  forWhom: text("for_whom").notNull(),
+  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
+  /** The order on the page: low first. */
+  position: integer("position").notNull(),
+});
+
+/** A weekly time of a class (#95): a local wall time in Europe/Amsterdam, as the hours rule, not an instant. */
+export const classTimes = sqliteTable(
+  "class_times",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    classId: integer("class_id")
+      .notNull()
+      .references(() => classes.id, { onDelete: "cascade" }),
+    weekday: text("weekday", { enum: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] }).notNull(),
+    /** "HH:MM", local time. */
+    from: text("from").notNull(),
+    /** "HH:MM", local time, after `from`. */
+    to: text("to").notNull(),
+  },
+  (t) => [index("class_times_class_id_idx").on(t.classId), check("class_times_range", sql`${t.to} > ${t.from}`)],
+);
