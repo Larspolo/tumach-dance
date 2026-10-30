@@ -17,5 +17,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)", "/api/studio/:path*"],
+  matcher: ["/((?!api|_next|_vercel|photos/|.*\\..*).*)", "/api/studio/:path*"],
 };

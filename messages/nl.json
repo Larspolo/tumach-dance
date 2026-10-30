@@ -287,7 +287,11 @@
     "approved": "Goedgekeurd.",
     "declined": "Afgewezen.",
     "tikkie": "Tikkie-link (optioneel)",
-    "badLink": "De Tikkie-link moet beginnen met https://."
+    "badLink": "De Tikkie-link moet beginnen met https://.",
+    "toPay": "Goedgekeurde boekingen",
+    "markPaid": "Betaald",
+    "paidOn": "Betaald op {date}",
+    "undo": "Ongedaan maken"
   },
   "StudioQuestions": {
     "title": "Voor Nina",

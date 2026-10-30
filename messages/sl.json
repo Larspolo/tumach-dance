@@ -287,7 +287,11 @@
     "approved": "Potrjeno.",
     "declined": "Zavrnjeno.",
     "tikkie": "Povezava Tikkie (neobvezno)",
-    "badLink": "Povezava Tikkie se mora začeti s https://."
+    "badLink": "Povezava Tikkie se mora začeti s https://.",
+    "toPay": "Potrjene rezervacije",
+    "markPaid": "Plačano",
+    "paidOn": "Plačano {date}",
+    "undo": "Razveljavi"
   },
   "StudioQuestions": {
     "title": "Za Nino",

@@ -287,7 +287,11 @@
     "approved": "Approved.",
     "declined": "Declined.",
     "tikkie": "Tikkie link (optional)",
-    "badLink": "The Tikkie link must start with https://."
+    "badLink": "The Tikkie link must start with https://.",
+    "toPay": "Approved bookings",
+    "markPaid": "Paid",
+    "paidOn": "Paid on {date}",
+    "undo": "Undo"
   },
   "StudioQuestions": {
     "title": "For Nina",
