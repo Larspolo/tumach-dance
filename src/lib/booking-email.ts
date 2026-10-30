@@ -32,6 +32,12 @@ function parts(booking: Booking, offer: Offer, locale: string) {
   return { t, offerLabel, when };
 }
 
+/** The price of `offer` in euro, in the format of `locale`. */
+function priceText(offer: Offer, locale: string): string {
+  const lang = locale in MESSAGES ? locale : "en";
+  return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
+}
+
 /** The email to the dancer of a `requested` booking, in the language of the page (`locale`). */
 export function requestEmail(booking: Booking, offer: Offer, locale: string): Email {
   const { t, offerLabel, when } = parts(booking, offer, locale);
@@ -56,7 +62,11 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
     decision === "approved"
       ? [
           t("bookingEmail.approvedBody", { offer: offerLabel, when }),
-          // The payment link of `book:pay` (#142) goes here, between the confirmation and the goodbye.
+          "",
+          // The payment of `book:pay` (#142): the price, and Nina's Tikkie link or that she sends a Tikkie.
+          booking.tikkieUrl
+            ? t("bookingEmail.payLink", { price: priceText(offer, booking.locale), url: booking.tikkieUrl })
+            : t("bookingEmail.payLater", { price: priceText(offer, booking.locale) }),
           "",
           t("bookingEmail.approvedSee"),
         ]

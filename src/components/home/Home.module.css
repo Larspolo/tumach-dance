@@ -397,3 +397,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The field that only a bot fills (#151): out of view, not `display: none` (some bots skip such fields). */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

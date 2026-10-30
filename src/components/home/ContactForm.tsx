@@ -3,13 +3,15 @@ import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { type ContactState, sendContact } from "@/app/[locale]/contact-action";
 import type { ContactField } from "@/lib/contact";
+import { HONEYPOT, STAMP } from "@/lib/contact-fields";
 import styles from "./Home.module.css";
 
 const IDLE: ContactState = { status: "idle", errors: {}, values: { name: "", email: "", message: "" } };
 
 // The contact form of the home page (#152). A server action: the form also sends before the JavaScript loads.
 // After a send the thank-you text replaces the fields; after an error the text of the visitor stays.
-export function ContactForm() {
+// `stamp`: the signed time of the page; the honeypot field is out of reach of a person (#151, `contact-spam.ts`).
+export function ContactForm({ stamp }: { stamp: string }) {
   const t = useTranslations("HomePage.contact");
   const tAll = useTranslations();
   const [state, action, pending] = useActionState(sendContact, IDLE);
@@ -44,6 +46,16 @@ export function ContactForm() {
   return (
     <form action={action} noValidate key={key}>
       <p>{t("text")}</p>
+      <input type="hidden" name={STAMP} value={stamp} />
+      <input
+        type="text"
+        name={HONEYPOT}
+        className={styles.honeypot}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        defaultValue=""
+      />
       {state.status === "failed" && <p className={styles.fieldError}>{t("failed")}</p>}
       <div className={styles.field}>
         <label htmlFor={name.id}>{t("name")}</label>
