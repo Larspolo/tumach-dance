@@ -281,7 +281,11 @@
     "approve": "Approve",
     "decline": "Decline",
     "approved": "Approved.",
-    "declined": "Declined."
+    "declined": "Declined.",
+    "toPay": "Approved bookings",
+    "markPaid": "Paid",
+    "paidOn": "Paid on {date}",
+    "undo": "Undo"
   },
   "StudioQuestions": {
     "title": "For Nina",

@@ -3,15 +3,18 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
-import { listOpenRequests } from "@/db/bookings";
+import { listBookings, listOpenRequests } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
-import { decide } from "./actions";
+import { decide, pay } from "./actions";
+
+const DAY = 24 * 60 * 60_000;
 
 // The open booking requests (#76): Nina approves or declines each with one tap. One form and one server action.
+// The approved bookings of 30 days back to 90 days ahead (#143): Nina marks each paid with one tap, or undoes it.
 export default async function BookingsPage({ searchParams }: { searchParams: Promise<{ done?: string }> }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -27,7 +30,11 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
     hour: "2-digit",
     minute: "2-digit",
   });
-  const requests = listOpenRequests(getDb());
+  const day = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, day: "numeric", month: "short" });
+  const db = getDb();
+  const requests = listOpenRequests(db);
+  const now = Date.now();
+  const approved = listBookings(db, now - 30 * DAY, now + 90 * DAY, ["approved"]);
 
   return (
     <main className={styles.main}>
@@ -62,6 +69,31 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
               <button className={styles.link} type="submit" name="decision" value="declined">
                 {t("decline")}
               </button>
+            </form>
+          </li>
+        ))}
+      </ul>
+      {approved.length > 0 && <h2 className={styles.title}>{t("toPay")}</h2>}
+      <ul className={styles.list}>
+        {approved.map(({ booking, offer }) => (
+          <li key={booking.id} className={styles.item}>
+            <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
+            <p>{when.format(booking.start)}</p>
+            <p>{booking.name}</p>
+            <form className={styles.form} action={pay}>
+              <input type="hidden" name="id" value={booking.id} />
+              {booking.paidAt === null ? (
+                <button className={styles.button} type="submit" name="paid" value="paid">
+                  {t("markPaid")}
+                </button>
+              ) : (
+                <>
+                  <p>{t("paidOn", { date: day.format(booking.paidAt) })}</p>
+                  <button className={styles.link} type="submit" name="paid" value="undo">
+                    {t("undo")}
+                  </button>
+                </>
+              )}
             </form>
           </li>
         ))}
