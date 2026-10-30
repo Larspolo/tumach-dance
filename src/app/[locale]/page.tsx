@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { use } from "react";
 import { About } from "@/components/home/About";
 import { Classes } from "@/components/home/Classes";
@@ -10,9 +10,15 @@ import { Schedule } from "@/components/home/Schedule";
 import { getDb } from "@/db";
 import { listClasses, listClassTimes } from "@/db/classes";
 import { listPhotos } from "@/db/photos";
+import { pageMetadata } from "@/lib/page-meta";
 
 // The classes and the photos come from the database at each request, so a change of Nina shows at the next load (#98, #174).
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "");
+}
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);

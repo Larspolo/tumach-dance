@@ -3,6 +3,7 @@ import { getDb } from "@/db";
 import { listOffers, type Offer } from "@/db/offers";
 import { bookingDays } from "@/lib/booking-page";
 import { TIME_ZONE } from "@/lib/hours";
+import { pageMetadata } from "@/lib/page-meta";
 import { sendRequest } from "./actions";
 import styles from "./book.module.css";
 
@@ -11,6 +12,11 @@ import styles from "./book.module.css";
 export const dynamic = "force-dynamic";
 
 type Search = { offer?: string; day?: string; start?: string; error?: string; sent?: string };
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/book");
+}
 
 export default async function BookPage({
   params,
