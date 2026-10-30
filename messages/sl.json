@@ -2,5 +2,25 @@
   "HomePage": {
     "title": "TUMACH",
     "welcome": "[Placeholder (sl): the welcome of Nina]"
+  },
+  "StudioLogin": {
+    "title": "Studio",
+    "emailLabel": "Tvoj e-poštni naslov",
+    "sendCode": "Pošlji mi kodo",
+    "codeSent": "Če je {email} e-poštni naslov studia, je koda s 6 številkami na poti. Poglej v svojo e-pošto.",
+    "codeLabel": "Koda",
+    "logIn": "Prijava",
+    "wrongCode": "Ta koda ni pravilna ali je prestara. Poskusi znova ali zahtevaj novo kodo.",
+    "failed": "Nekaj je šlo narobe. Poskusi znova čez minuto.",
+    "otherEmail": "Zahtevaj novo kodo"
+  },
+  "StudioHome": {
+    "title": "Studio",
+    "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
+    "logOut": "Odjava"
+  },
+  "LoginEmail": {
+    "subject": "Tvoja koda TUMACH: {code}",
+    "text": "Tvoja koda za aplikacijo studia TUMACH je {code}.\n\nVpiši jo v aplikacijo. Koda velja {minutes} minut.\n\nČe ne poznaš te zahteve, lahko to e-pošto prezreš."
   }
 }

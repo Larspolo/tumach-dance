@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// The slow tests: the home page on a phone and a laptop. Screenshots go to out/ (scratch).
+// The slow tests: the home page on a phone and a laptop, the login of the studio app on a phone. Screenshots go to out/ (scratch).
 // PLAYWRIGHT_CHROMIUM: a Chromium that is already installed (the cloud image: /opt/pw-browsers/chromium).
 const executablePath = process.env.PLAYWRIGHT_CHROMIUM || undefined;
 
@@ -24,5 +24,14 @@ export default defineConfig({
     url: "http://localhost:3100/en",
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    // The login test (#19): a test email, the emails in a file (the code), and a throwaway database in out/.
+    env: {
+      STUDIO_EMAIL: "nina@example.test",
+      EMAIL_TRANSPORT: "log",
+      EMAIL_LOG_FILE: "out/e2e/email.log",
+      DATABASE_PATH: "out/e2e/tumach.db",
+      BETTER_AUTH_URL: "http://localhost:3100",
+      BETTER_AUTH_SECRET: "e2e-only-secret-of-the-throwaway-test-database",
+    },
   },
 });
