@@ -18,40 +18,22 @@
     "classes": {
       "title": "[Placeholder (nl): title of the classes]",
       "label": "[Placeholder (nl): (02) classes]",
-      "items": {
-        "one": {
-          "kind": "[Placeholder (nl): kind of class one]",
-          "name": "[Placeholder (nl): name of class one]",
-          "text": "[Placeholder (nl): text of class one]",
-          "level": "[Placeholder (nl): level and length of class one]"
-        },
-        "two": {
-          "kind": "[Placeholder (nl): kind of class two]",
-          "name": "[Placeholder (nl): name of class two]",
-          "text": "[Placeholder (nl): text of class two]",
-          "level": "[Placeholder (nl): level and length of class two]"
-        },
-        "three": {
-          "kind": "[Placeholder (nl): kind of class three]",
-          "name": "[Placeholder (nl): name of class three]",
-          "text": "[Placeholder (nl): text of class three]",
-          "level": "[Placeholder (nl): level and length of class three]"
-        },
-        "four": {
-          "kind": "[Placeholder (nl): kind of class four]",
-          "name": "[Placeholder (nl): name of class four]",
-          "text": "[Placeholder (nl): text of class four]",
-          "level": "[Placeholder (nl): level and length of class four]"
-        }
-      }
+      "none": "Nog geen lessen."
     },
     "schedule": {
       "title": "[Placeholder (nl): title of the schedule]",
       "label": "[Placeholder (nl): (03) schedule]",
-      "day": "[Placeholder (nl): day]",
-      "class": "[Placeholder (nl): class]",
-      "time": "[Placeholder (nl): time]",
-      "who": "[Placeholder (nl): for whom]"
+      "none": "Nog geen lestijden.",
+      "days": {
+        "mon": "maandag",
+        "tue": "dinsdag",
+        "wed": "woensdag",
+        "thu": "donderdag",
+        "fri": "vrijdag",
+        "sat": "zaterdag",
+        "sun": "zondag"
+      },
+      "time": "{from}–{to}"
     },
     "contact": {
       "title": "[Placeholder (nl): title of the contact]",
