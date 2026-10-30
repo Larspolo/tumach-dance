@@ -7,7 +7,8 @@ import styles from "./studio.module.css";
 export const metadata: Metadata = {
   title: "TUMACH studio",
   manifest: "/manifest.webmanifest",
-  icons: { apple: "/icons/apple-touch-icon.png" },
+  // An own `icon` too: the `icons` field replaces the icon of `src/app/icon.png`, and the browser asks `/favicon.ico` (404, #71).
+  icons: { icon: "/icons/icon-192.png", apple: "/icons/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "TUMACH studio" },
 };
 
