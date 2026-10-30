@@ -8,6 +8,8 @@ export default defineConfig({
   testDir: "e2e",
   outputDir: "test-results",
   reporter: "list",
+  // One test at a time: each login of the studio sends a new code that replaces the last one (#23).
+  workers: 1,
   use: {
     baseURL: "http://localhost:3100",
     launchOptions: { executablePath },

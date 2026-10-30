@@ -81,3 +81,54 @@
   margin: 0;
   color: #7c3527;
 }
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.5rem;
+  background: #fbf8f1;
+}
+
+/* A tap target of at least 44 px on a phone (#23). */
+.choice,
+.day {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-size: 1.05rem;
+}
+
+.choice input,
+.day input {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: #a8503a;
+}
+
+.time {
+  min-width: 7rem;
+  min-height: 44px;
+  padding: 0 0.6rem;
+  font: inherit;
+  border: 1px solid #d8cfbd;
+  border-radius: 0.5rem;
+  background: #f4efe6;
+}
+
+.days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+}
+
+.list {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  line-height: 2;
+}

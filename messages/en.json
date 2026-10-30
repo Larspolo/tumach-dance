@@ -17,7 +17,8 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "hours": "Hours"
   },
   "LoginEmail": {
     "subject": "Your TUMACH code: {code}",
@@ -25,5 +26,26 @@
   },
   "TestBanner": {
     "text": "Test site: bookings here are not real"
+  },
+  "StudioHours": {
+    "title": "Hours",
+    "weekdays": "Weekdays",
+    "weekend": "Weekend",
+    "closed": "Closed",
+    "allDay": "All day",
+    "from": "From a time",
+    "fromTime": "From",
+    "save": "Save",
+    "saved": "Saved.",
+    "wrong": "These hours cannot be saved. Check the times.",
+    "nextWeek": "Open in the next 7 days",
+    "noOpenTimes": "Closed all week.",
+    "day": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri"
+    }
   }
 }

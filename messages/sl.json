@@ -17,7 +17,8 @@
   "StudioHome": {
     "title": "Studio",
     "loggedInAs": "Ta naprava je prijavljena z naslovom {email}.",
-    "logOut": "Odjava"
+    "logOut": "Odjava",
+    "hours": "Ure"
   },
   "LoginEmail": {
     "subject": "Tvoja koda TUMACH: {code}",
@@ -25,5 +26,26 @@
   },
   "TestBanner": {
     "text": "Testna stran: rezervacije tukaj niso prave"
+  },
+  "StudioHours": {
+    "title": "Ure",
+    "weekdays": "Delavniki",
+    "weekend": "Vikend",
+    "closed": "Zaprto",
+    "allDay": "Ves dan",
+    "from": "Od ure",
+    "fromTime": "Od",
+    "save": "Shrani",
+    "saved": "Shranjeno.",
+    "wrong": "Teh ur ni mogoče shraniti. Preverite čase.",
+    "nextWeek": "Odprto v naslednjih 7 dneh",
+    "noOpenTimes": "Ves teden zaprto.",
+    "day": {
+      "mon": "pon",
+      "tue": "tor",
+      "wed": "sre",
+      "thu": "čet",
+      "fri": "pet"
+    }
   }
 }
