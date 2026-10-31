@@ -41,17 +41,17 @@
       "time": "{from}–{to}"
     },
     "contact": {
-      "title": "[Placeholder (nl): title of the contact]",
-      "label": "[Placeholder (nl): (04) contact]",
-      "text": "[Placeholder (nl): invitation to write to Nina]",
-      "name": "[Placeholder (nl): name]",
-      "email": "[Placeholder (nl): email]",
-      "message": "[Placeholder (nl): message]",
-      "send": "[Placeholder (nl): send]",
-      "placeLabel": "[Placeholder (nl): place]",
-      "place": "[Placeholder (nl): address of the studio]",
-      "closing": "[Placeholder (nl): closing line]",
-      "thanks": "[Placeholder (nl): Dank je, je bericht is verstuurd]",
+      "title": "Zeg hallo",
+      "label": "(04) Contact",
+      "text": "Een vraag over een les, een groepsles of de studio? Stuur me een bericht, dan antwoord ik snel.",
+      "name": "Je naam",
+      "email": "Je e-mail",
+      "message": "Je bericht",
+      "send": "Versturen",
+      "placeLabel": "Waar",
+      "place": "Amsterdam",
+      "closing": "Tot ziens in de studio.",
+      "thanks": "Dank je! Je bericht is verstuurd.",
       "failed": "Versturen mislukt, probeer het later opnieuw"
     }
   },
