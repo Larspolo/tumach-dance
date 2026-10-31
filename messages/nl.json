@@ -313,6 +313,8 @@
     "try": "Probeer het op de site",
     "choose": "Jouw keuze",
     "text": "Iets toe te voegen? (optioneel)",
+    "textOnly": "Jouw tekst",
+    "empty": "Schrijf eerst je tekst.",
     "send": "Versturen",
     "thanks": "Dank je! Je antwoord is verstuurd.",
     "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",

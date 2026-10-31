@@ -313,6 +313,8 @@
     "try": "Preizkusi na strani",
     "choose": "Tvoja izbira",
     "text": "Želiš kaj dodati? (neobvezno)",
+    "textOnly": "Tvoje besedilo",
+    "empty": "Najprej napiši svoje besedilo.",
     "send": "Pošlji",
     "thanks": "Hvala! Tvoj odgovor je poslan.",
     "error": "Tvoj odgovor ni bil poslan. Poskusi znova čez trenutek.",
