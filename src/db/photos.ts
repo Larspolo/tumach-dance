@@ -4,7 +4,7 @@ import { randomBytes } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { asc, eq, sql } from "drizzle-orm";
-import sharp from "sharp";
+import type Sharp from "sharp";
 import { type Db, DEFAULT_DATABASE_PATH } from "./index";
 import { photos } from "./schema";
 
@@ -41,8 +41,17 @@ export function listPhotos(db: Db): Photo[] {
   return db.select().from(photos).orderBy(asc(photos.position), asc(photos.id)).all();
 }
 
+/**
+ * Load sharp only for a new photo (2026-10-31). Its native binary needs a CPU with x86-64-v2 and its WebAssembly build
+ * needs SSE4.1 (Wasm SIMD); the CPU of the home server has neither. A load at the import of this module stopped the
+ * start of the server and each page that lists the photos.
+ */
+async function loadSharp(): Promise<typeof Sharp> {
+  return (await import("sharp")).default;
+}
+
 /** Resize one version: upright by the EXIF orientation, at most `px` on the long side, WebP with no metadata. */
-function resize(input: Buffer, px: number) {
+function resize(sharp: typeof Sharp, input: Buffer, px: number) {
   return sharp(input)
     .rotate()
     .resize({ width: px, height: px, fit: "inside", withoutEnlargement: true })
@@ -53,12 +62,14 @@ function resize(input: Buffer, px: number) {
 /** Store a photo as the last one. Refuse a file larger than 15 MB and a file that is not an image. */
 export async function addPhoto(db: Db, dir: string, input: Buffer): Promise<Photo> {
   if (input.length > MAX_PHOTO_BYTES) throw new PhotoError("too-large");
+  // Before the try: a CPU that cannot run sharp is a fault of the server, not a file that is not an image.
+  const sharp = await loadSharp();
   let large: Awaited<ReturnType<typeof resize>>;
   let small: Awaited<ReturnType<typeof resize>>;
   try {
     const { format } = await sharp(input).metadata();
     if (!FORMATS.has(format)) throw new PhotoError("not-image");
-    [large, small] = await Promise.all([resize(input, LARGE_PX), resize(input, SMALL_PX)]);
+    [large, small] = await Promise.all([resize(sharp, input, LARGE_PX), resize(sharp, input, SMALL_PX)]);
   } catch (error) {
     if (error instanceof PhotoError) throw error;
     throw new PhotoError("not-image");
