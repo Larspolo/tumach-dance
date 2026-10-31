@@ -156,6 +156,10 @@ jobs:
             gh api "repos/$R/git/refs/heads/$branch" -X DELETE || true
             if [ -n "$ticket" ]; then
               gh api "repos/$R/issues/$ticket/labels/in-progress" -X DELETE >/dev/null 2>&1 || true
+              # GitHub does not always close the ticket of a squash merge: #210 stayed open after PR #213 (#264).
+              if [ "$(gh api "repos/$R/issues/$ticket" --jq .state)" = open ]; then
+                gh api "repos/$R/issues/$ticket" -X PATCH -f state=closed -f state_reason=completed >/dev/null || true
+              fi
             fi
           }
           if [ "$EVENT" = workflow_run ]; then

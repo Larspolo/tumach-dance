@@ -6,7 +6,7 @@ import { getStudioSession } from "@/lib/auth";
 import { postNinaAnswer } from "@/lib/github";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 
-export type AnswerState = { error: boolean; choice: string | null; text: string };
+export type AnswerState = { error: boolean; choice: string | null; text: string; empty?: boolean };
 
 /** Send the answer of Nina to the ticket (#68). A server action is a public endpoint: check the session here. */
 export async function sendAnswer(_state: AnswerState, form: FormData): Promise<AnswerState> {
@@ -15,6 +15,8 @@ export async function sendAnswer(_state: AnswerState, form: FormData): Promise<A
   const number = Number(form.get("number"));
   const choice = typeof form.get("choice") === "string" ? (form.get("choice") as string) : null;
   const text = typeof form.get("text") === "string" ? (form.get("text") as string) : "";
+  // A text question needs a text: the browser check of `required` is not enough (#259).
+  if (choice === null && text.trim() === "") return { error: false, empty: true, choice, text };
   try {
     await postNinaAnswer(number, { choice, text });
   } catch {

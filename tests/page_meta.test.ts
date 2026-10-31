@@ -18,7 +18,7 @@ test("each key of Meta is in English, Dutch and Slovenian", () => {
 test.each(Object.entries(all))("%s: each public page has a title and a description", (locale, messages) => {
   const t = createTranslator({ locale, messages, namespace: "Meta" });
   for (const page of PUBLIC_PAGES) {
-    const meta = pageMetadata(t, page, "en");
+    const meta = pageMetadata(t, page, locale);
     expect(meta.title).toBeTruthy();
     expect(meta.description).toBeTruthy();
   }

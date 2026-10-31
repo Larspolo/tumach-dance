@@ -13,6 +13,7 @@ export function AnswerForm({ question }: { question: NinaQuestion }) {
     choice: null,
     text: "",
   });
+  const textOnly = question.choices.length === 0;
   return (
     <form action={action} className={styles.form}>
       <input type="hidden" name="number" value={question.number} />
@@ -34,9 +35,20 @@ export function AnswerForm({ question }: { question: NinaQuestion }) {
         </fieldset>
       )}
       <label className={styles.form}>
-        <span className={styles.label}>{t("text")}</span>
-        <textarea className={styles.input} name="text" rows={3} defaultValue={state.text} />
+        <span className={styles.label}>{textOnly ? t("textOnly") : t("text")}</span>
+        <textarea
+          className={styles.input}
+          name="text"
+          rows={textOnly ? 8 : 3}
+          required={textOnly}
+          defaultValue={state.text}
+        />
       </label>
+      {state.empty && (
+        <p className={styles.error} role="status">
+          {t("empty")}
+        </p>
+      )}
       {state.error && (
         <p className={styles.error} role="status">
           {t("error")}
