@@ -9,7 +9,8 @@ import { PUBLIC_PAGES, pageMetadata } from "../src/lib/page-meta";
 const all = { en, nl, sl };
 
 test("each key of Meta is in English, Dutch and Slovenian", () => {
-  const keys = (m: typeof en) => Object.entries(m.Meta).flatMap(([k, v]) => Object.keys(v).map((f) => `${k}.${f}`));
+  const keys = (m: typeof en) =>
+    Object.entries(m.Meta).flatMap(([k, v]) => (typeof v === "string" ? [k] : Object.keys(v).map((f) => `${k}.${f}`)));
   expect(keys(nl as typeof en).sort()).toEqual(keys(en).sort());
   expect(keys(sl as typeof en).sort()).toEqual(keys(en).sort());
 });
