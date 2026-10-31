@@ -41,17 +41,17 @@
       "time": "{from}–{to}"
     },
     "contact": {
-      "title": "[Placeholder (sl): title of the contact]",
-      "label": "[Placeholder (sl): (04) contact]",
-      "text": "[Placeholder (sl): invitation to write to Nina]",
-      "name": "[Placeholder (sl): name]",
-      "email": "[Placeholder (sl): email]",
-      "message": "[Placeholder (sl): message]",
-      "send": "[Placeholder (sl): send]",
-      "placeLabel": "[Placeholder (sl): place]",
-      "place": "[Placeholder (sl): address of the studio]",
-      "closing": "[Placeholder (sl): closing line]",
-      "thanks": "[Placeholder (sl): Hvala, tvoje sporočilo je poslano]",
+      "title": "Pozdravljeni",
+      "label": "(04) Kontakt",
+      "text": "Imaš vprašanje o lekciji, tečaju ali studiu? Pošlji mi sporočilo in kmalu ti odgovorim.",
+      "name": "Tvoje ime",
+      "email": "Tvoj e-poštni naslov",
+      "message": "Tvoje sporočilo",
+      "send": "Pošlji",
+      "placeLabel": "Kje",
+      "place": "Amsterdam",
+      "closing": "Se vidiva v studiu.",
+      "thanks": "Hvala! Tvoje sporočilo je poslano.",
       "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
     }
   },
