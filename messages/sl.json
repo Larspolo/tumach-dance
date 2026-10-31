@@ -390,6 +390,7 @@
     "bookingWhy": "Nina jih uporabi, da odgovori na tvojo prošnjo, ti pošlje e-pošto o rezervaciji (odgovor, opomnik in povezavo za plačilo) in te doseže glede ure.",
     "bookingWho": "Vidi jih samo Nina. E-pošta gre prek naše e-poštne storitve Mailgun.",
     "keep": "{months, plural, one {# mesec} two {# meseca} few {# mesece} other {# mesecev}} po tvoji uri stran sama izbriše tvoje ime, e-poštni naslov in telefonsko številko.",
+    "backup": "Vsako noč stran naredi varnostno kopijo podatkov za primer okvare. Varnostna kopija hrani kopijo tvojih podatkov {nights, plural, one {# noč} two {# noči} few {# noči} other {# noči}}, nato jo stran izbriše.",
     "contactTitle": "Sporočilo prek obrazca",
     "contactWhat": "Stran ne hrani kopije tvojega sporočila: Nini pošlje eno e-pošto.",
     "contactSpam": "Proti neželeni pošti stran hrani internetni naslov tvoje naprave v pomnilniku največ eno uro.",
