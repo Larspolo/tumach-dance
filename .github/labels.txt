@@ -27,3 +27,4 @@ lane:deep|5319e7|A hard ticket for a run at the default effort (ticket skill, "M
 lane:haiku|c2e0c6|A clear, templated ticket for a Haiku run (ticket skill, "Model lanes")
 process|5319e7|Improves the agent system itself: the loop, the tools, the setup
 close|0e8a16|The Close workflow closes this issue as completed (#1740)
+site-down|b60205|The Site watch found that the live site does not work (tools/site_watch.py)
