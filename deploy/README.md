@@ -20,27 +20,27 @@ The data of the site is in the Docker volume `tumach-preview_data`.
 
 ## The live site
 
-The live site runs next to the preview, with its own data, keys and updater. Do this once.
+The live site is tumach.dance. It runs the same image as the preview (tag `preview`): each merge to main goes live
+within 5 minutes, with no step by you (owner, 2026-10-31). It has its own data, keys, tunnel and updater, and no
+"test site" banner. Do this once.
 
 1. Copy the folder `deploy/live` to the home server, for example to `~/tumach-live`.
-2. In that folder, copy `.env.example` to `.env` and fill it in as for the preview, with the live values: a new
-   `BETTER_AUTH_SECRET` (`openssl rand -base64 32`), new VAPID keys (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`,
-   `VAPID_SUBJECT`), and the live `BETTER_AUTH_URL`, Mailgun key and domain. Its `TUNNEL_TOKEN` is the one of a new tunnel.
-   Never copy the `.env` of the preview.
+2. In that folder, copy `.env.example` to `.env` and fill it in with new values: a new `BETTER_AUTH_SECRET`
+   (`openssl rand -base64 32`), new VAPID keys (`npx web-push generate-vapid-keys`), the live Mailgun key and domain,
+   and the `TUNNEL_TOKEN` of a new tunnel. Never copy the `.env` of the preview.
 3. Make the folder of the backups, writable by the user of the image (`nextjs`, uid 1001):
    `mkdir backups && sudo chown 1001:1001 backups`.
 4. Run `docker compose --profile tunnel up -d`.
-5. In Cloudflare, at the live tunnel, add a public hostname and service `http://site:3000` (of this project).
+5. In Cloudflare, at the live tunnel, add the public hostname `tumach.dance` with the service `http://site:3000`.
+   When Cloudflare says that a DNS record of `tumach.dance` exists (the old site), remove that record first.
+6. Open https://tumach.dance. You see the site with no "test site" banner.
 
 The live site is on port 3001 of the server, and its updater restarts only its own container (scope `live`).
 Its data is in the Docker volume `tumach-live_data`; the backups are in `~/tumach-live/backups` (14 nights).
-The address tumach.dance is not switched yet: that waits for the texts of Nina (epic #245).
 
-### Put a version live
-
-1. On GitHub, go to Releases > Draft a new release.
-2. Create a new tag `v<n>` (the next number), target `main`, and click Publish.
-3. The server pulls the new `live` image within 5 minutes, and restarts the live site.
+An older copy of `deploy/live/compose.yml` asks for the image tag `live`, which does not exist: the site does not
+start, and tumach.dance shows an error. Change `:live` to `:preview` in the `image:` line of the server copy, then
+run `docker compose --profile tunnel up -d` in `~/tumach-live`.
 
 ### Restore a backup
 

@@ -20,3 +20,4 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-10-30 · #133 · Example data of a question for Nina only on the preview: a "## For Nina" line "Example: <name>" loads a fixed seed when Nina taps "Try" · - · P1
 - 2026-10-30 · #163 · A dancer cancels a booking with the email link at any time before the start; a cancelled paid booking gets no refund · other · new
 - 2026-10-30 · #139 · Nina chose Tikkie for the payment: the dancer gets a Tikkie, and Nina marks a paid booking herself in her app (no payment provider account, no API) · other · new
+- 2026-10-31 · #245 · The live site at tumach.dance runs the image `preview` (each merge to main), with its own data, keys and tunnel; no release tag `v*` · other · new
