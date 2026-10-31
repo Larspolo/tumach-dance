@@ -38,10 +38,6 @@ within 5 minutes, with no step by you (owner, 2026-10-31). It has its own data, 
 The live site is on port 3001 of the server, and its updater restarts only its own container (scope `live`).
 Its data is in the Docker volume `tumach-live_data`; the backups are in `~/tumach-live/backups` (14 nights).
 
-An older copy of `deploy/live/compose.yml` asks for the image tag `live`, which does not exist: the site does not
-start, and tumach.dance shows an error. Change `:live` to `:preview` in the `image:` line of the server copy, then
-run `docker compose --profile tunnel up -d` in `~/tumach-live`.
-
 ### Restore a backup
 
 Use this to go back to the data of one night (the date `YYYY-MM-DD` of a file in `backups/`):
