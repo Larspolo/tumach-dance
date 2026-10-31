@@ -114,6 +114,14 @@ The line `Example: <name>` is optional (#146): when Nina taps "Try" on the previ
 first, once per question (`src/lib/examples.ts`). The names: `bookings` (two requests and two approved bookings in the
 next 7 days), `offers` (one lesson and one rental, when there is no offer). The live site never loads example data.
 
+A question that asks Nina for a text (a placeholder in `messages/`) is never a bare text box (owner, 2026-10-31,
+#269 to #274): give 2 or 3 suggestions as choices, and the last choice "I write my own text in the box." Each suggestion
+names each part (`Title: "..." · Text: "..."`), and `## Context` names the key of each part. A fact that you do not
+know (her dance styles, the address, a time to answer) is a gap in [brackets] that she fills in the box; never invent
+it. The suggestions are new texts: never a text of the current tumach.dance (P2). The line above the choices says:
+"Choose the suggestion that you like most. In the box, fill in the parts in [brackets] and write what you want to
+change. Or choose D and write your own text in the box."
+
 
 A check ticket ("check X in the game") starts without `needs-human`: an agent runs the check first (`verify`, level 4),
 comments the results and screenshots with the list of what only a person can check (#580, #1707): sound, the feel of a control (delay, how hard it is to aim), "is it fun".
