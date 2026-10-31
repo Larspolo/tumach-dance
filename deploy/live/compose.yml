@@ -1,0 +1,49 @@
+# The live site on the home server (#249). The server pulls each new `live` image (a release tag v*) by itself.
+# Steps for Lars: deploy/README.md.
+name: tumach-live
+
+services:
+  site:
+    image: ghcr.io/larspolo/tumach-dance:live
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SITE_ENV: live
+      BACKUP_DIR: /app/backups
+    volumes:
+      - data:/app/data
+      # The nightly backups (#247) on a folder of the host: `mkdir backups && sudo chown 1001:1001 backups`.
+      - ./backups:/app/backups
+    # Only this computer can open the port; the tunnel reaches the site over the Docker network.
+    ports:
+      - "127.0.0.1:3001:3000"
+    labels:
+      # The updater watches only the containers with this label (never Home Assistant).
+      - com.centurylinklabs.watchtower.enable=true
+      # Only the updater of this site (scope live) restarts it: the preview has its own scope.
+      - com.centurylinklabs.watchtower.scope=live
+
+  # Polls the registry every 5 minutes and restarts `site` on a new image. A maintained fork of the archived
+  # containrrr/watchtower, with the same labels and settings.
+  updater:
+    image: nickfedor/watchtower:latest
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_SCOPE: live
+      WATCHTOWER_POLL_INTERVAL: "300"
+      WATCHTOWER_CLEANUP: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # The Cloudflare Tunnel: the server opens no port. Start it with `--profile tunnel`.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+
+volumes:
+  data:
