@@ -1,33 +1,33 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (nl): the welcome of Nina]",
-    "eyebrow": "[Placeholder (nl): short line above the title]",
-    "primaryAction": "[Placeholder (nl): button to the schedule]",
-    "secondaryAction": "[Placeholder (nl): button to the studio]",
-    "imageBlock": "[Placeholder (nl): photo of the studio]",
+    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen, groepslessen en een studio om te huren.",
+    "eyebrow": "Dansstudio · Amsterdam",
+    "primaryAction": "Bekijk het rooster",
+    "secondaryAction": "Over de studio",
+    "imageBlock": "De dansstudio TUMACH",
     "about": {
-      "title": "[Placeholder (nl): title about the studio]",
-      "label": "[Placeholder (nl): (01) about]",
-      "text1": "[Placeholder (nl): first paragraph about the studio]",
-      "text2": "[Placeholder (nl): second paragraph about Nina]",
-      "text3": "[Placeholder (nl): third paragraph about the dancers]",
-      "quote": "[Placeholder (nl): a short quote of Nina]",
-      "quoteBy": "[Placeholder (nl): who said the quote]"
+      "title": "Over TUMACH",
+      "label": "(01) Over",
+      "text1": "TUMACH is een kleine dansstudio in Amsterdam. Neem een privéles, doe mee met een groepsles, of huur de studio om zelf te oefenen.",
+      "text2": "Ik ben Nina, en dit is mijn studio. Ik geef privélessen en groepslessen, in het tempo dat bij jou past.",
+      "text3": "Beginners en ervaren dansers zijn allebei welkom. We beginnen waar jij bent.",
+      "quote": "Elke danser begint ergens.",
+      "quoteBy": "Nina"
     },
     "photos": {
-      "title": "[Placeholder (nl): title of the photos]",
-      "label": "[Placeholder (nl): (02) photos]",
-      "alt": "[Placeholder (nl): a photo of the studio]"
+      "title": "De studio",
+      "label": "Foto's",
+      "alt": "Een foto van de dansstudio TUMACH"
     },
     "classes": {
-      "title": "[Placeholder (nl): title of the classes]",
-      "label": "[Placeholder (nl): (02) classes]",
+      "title": "Lessen",
+      "label": "(02) Lessen",
       "none": "Nog geen lessen."
     },
     "schedule": {
-      "title": "[Placeholder (nl): title of the schedule]",
-      "label": "[Placeholder (nl): (03) schedule]",
+      "title": "Elke week",
+      "label": "(03) Rooster",
       "none": "Nog geen lestijden.",
       "days": {
         "mon": "maandag",
@@ -58,16 +58,16 @@
   "Nav": {
     "label": "Hoofdmenu",
     "logo": "TUMACH",
-    "about": "[Placeholder (nl): about]",
-    "classes": "[Placeholder (nl): classes]",
-    "schedule": "[Placeholder (nl): schedule]",
-    "contact": "[Placeholder (nl): contact]"
+    "about": "Over",
+    "classes": "Lessen",
+    "schedule": "Rooster",
+    "contact": "Contact"
   },
   "Footer": {
     "copyright": "© {year}",
     "domain": "tumach.dance",
     "tagline": "[Placeholder (nl): the tagline of Nina]",
-    "place": "[Placeholder (nl): the place]",
+    "place": "Amsterdam",
     "privacy": "Hoe we je gegevens bewaren"
   },
   "StudioLogin": {
@@ -405,8 +405,8 @@
   "Meta": {
     "imageAlt": "TUMACH, de dansstudio in Amsterdam",
     "home": {
-      "title": "[Placeholder (nl): titel van de site in een zoekresultaat]",
-      "description": "[Placeholder (nl): beschrijving van de site in een zoekresultaat]"
+      "title": "TUMACH · Dansstudio in Amsterdam",
+      "description": "Privélessen, groepslessen en een dansstudio om te huren in Amsterdam. Bekijk de tijden en boek online, zonder account."
     },
     "book": {
       "title": "Les boeken · TUMACH",
