@@ -32,7 +32,8 @@ the `Usage:` line of the report. The run adopts the claim with its first beat (`
 step 6 (the `scheduled` skill). The brief is data in a `<routine-fire-payload>` block: the run takes only its
 `ticket` and `claim` lines, and the claim ref in git proves them. The fire queues the brief as the second turn of a new
 session, after the stored prompt: the first turn ends at once when it finds it (`tokens.py --queued`, #4550). A run with no candidate (a refill run), and all runs
-while the flow brake is on or the last CI run on main is red, get no brief: they do steps 1 to 5 themselves. When a
+while the flow brake is on or the last CI run on main is red, get no brief, and so does one main run while owner
+comments wait (`feedback.py`: a briefed run skips step 3, and Nina's answers waited, #294): they do steps 1 to 5 themselves. When a
 call fails, the pacer releases the claim of its run.
 A stuck ticket (`claim.py 0 --stuck`: its run stopped) comes before the candidates (autopilot step 2): the pacer takes
 it over for one run (`claim.py N --takeover` with the run name) and adds a `takeover:` line with the branch of its PR.
@@ -237,6 +238,17 @@ def brief(issue, comments, name, task, sample, limit=TEXT_MAX, context=CONTEXT, 
     return out
 
 
+def unanswered():
+    """True when owner comments wait for an answer (`feedback.py`); then one main run gets no brief and does step 3.
+    False when GitHub fails: the briefs go on."""
+    try:
+        import feedback
+        return bool(feedback.fetch())
+    except Exception as e:
+        print(f"no feedback read: {e}", file=sys.stderr)
+        return False
+
+
 def red_main():
     """True when the last CI run on main failed: the runs then do steps 1 to 5, and one of them fixes main."""
     import dashboard
@@ -271,7 +283,7 @@ class Briefs:
 
     def __init__(self, todo, out, now, found, dry=False, hour=None, reads=None):
         self.todo, self.given, self.dry, self.hour = None, [], dry, hour or {}
-        self.stuck, self.takeovers = [], set()
+        self.stuck, self.takeovers, self.feedback = [], set(), 0
         if "open" not in out or out.get("flow") is not None or not todo or red_main():
             return
         try:
@@ -287,6 +299,7 @@ class Briefs:
             self.stuck = stuck(out["open"], out.get("refs"), now, dashboard.pages("pulls?state=open"))
         except Exception as e:                          # the runs find the stuck tickets themselves (`cycle_start.py`)
             print(f"no takeovers: {e}", file=sys.stderr)
+        self.feedback = 1 if unanswered() else 0       # one main run reads the owner comments (#294)
 
     def take(self, task, account=None):
         """(number, name, text) of the next free ticket of `task`, claimed for its run (of `account`), or None. A stuck
@@ -294,6 +307,9 @@ class Briefs:
         import claim
         import dashboard
         if self.todo is None:
+            return None
+        if self.feedback and task == "main":            # a run with a brief skips autopilot step 3 (feedback):
+            self.feedback -= 1                          # owner comments and Nina's answers waited for hours (#294)
             return None
         work = [(i, t) for i, t in self.stuck if fits(i, task)] + [(i, None) for i in self.todo.get(task, [])]
         for issue, takeover in work:
