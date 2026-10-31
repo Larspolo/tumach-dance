@@ -145,7 +145,7 @@ test("the booking timer starts once per process, with no GITHUB_TOKEN", async ()
 test("register() starts the booking timer with no GITHUB_TOKEN", async () => {
   vi.resetModules();
   const start = vi.fn();
-  vi.doMock("../src/db", () => ({ getDb: () => db }));
+  vi.doMock("../src/db", async (orig) => ({ ...(await orig<object>()), getDb: () => db }));
   vi.doMock("../src/lib/booking-timer", () => ({ startBookingTimer: start }));
   vi.stubEnv("NEXT_RUNTIME", "nodejs");
   vi.stubEnv("GITHUB_TOKEN", "");
