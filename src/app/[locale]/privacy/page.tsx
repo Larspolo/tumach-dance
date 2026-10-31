@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { BACKUP_KEEP_NIGHTS } from "@/lib/backup";
 import { KEEP_MONTHS } from "@/lib/booking-privacy";
 import { pageMetadata } from "@/lib/page-meta";
 import styles from "./privacy.module.css";
@@ -25,6 +26,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
         <p>{t("bookingWhy")}</p>
         <p>{t("bookingWho")}</p>
         <p>{t("keep", { months: KEEP_MONTHS })}</p>
+        <p>{t("backup", { nights: BACKUP_KEEP_NIGHTS })}</p>
       </section>
       <section className={styles.part}>
         <h2 className={styles.heading}>{t("contactTitle")}</h2>

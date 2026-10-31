@@ -390,6 +390,7 @@
     "bookingWhy": "Nina uses them to answer your request, to send you the emails about your booking (the answer, the reminder and the payment link) and to reach you about the lesson.",
     "bookingWho": "Only Nina sees them. The emails go through our email service, Mailgun.",
     "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address and phone number by itself.",
+    "backup": "Each night the site makes a backup of its data for the case of a fault. A backup keeps a copy of your data for {nights, plural, one {# night} other {# nights}}, then the site removes it.",
     "contactTitle": "A contact message",
     "contactWhat": "The site keeps no copy of your message: it sends one email to Nina.",
     "contactSpam": "Against spam, the site keeps the internet address of your device in its memory for at most one hour.",
