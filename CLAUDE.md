@@ -37,6 +37,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   (push). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
 - `Dockerfile`, `deploy/` – the image and the compose files of the home server (preview and live).
+- `scripts/restore.mjs` – restore the data of one night on the server (`node scripts/restore.mjs <date>`, plain Node: the image has no TypeScript).
 - `tools/` – the specific agent tools: `dashboard_site.py` builds the owner's dashboard page (GitHub Pages).
 - `framework/`, `.claude/`, `steering/` – the agent system.
 
