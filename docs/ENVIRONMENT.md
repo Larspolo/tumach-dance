@@ -34,12 +34,14 @@ ticket for it.
   the live site run there in Docker. The agents cannot reach it: each step on it is a `needs-human` ticket for Lars
   with numbered steps. A merge must update the preview with no step by Lars (for example an image of CI on GitHub
   Container Registry that the server pulls).
-  Its CPU is old (2026-10-31): no x86-64-v2 and no SSE4.1. A prebuilt native module that needs them (sharp) cannot
-  load there, and its WebAssembly build fails too (no Wasm SIMD). Load such a module only where it is used, never at
-  the start (`src/db/photos.ts`). Run the standalone build like the server: `apt-get install -y qemu-user`, the
-  official Node 24 of nodejs.org, then `qemu-x86_64 -cpu core2duo <node> .next/standalone/server.js` (with
-  `.next/static`, `public` and `drizzle` next to it, as in the `Dockerfile`). QEMU stops a native module with
-  "Illegal instruction" where the real CPU gives a clean error.
+  The site runs in the Proxmox VM `docker` (VMID 110) on an Intel N100 (x86-64-v3). Until 2026-10-31 the VM had the
+  CPU type `kvm64` ("Common KVM processor"): no SSSE3, SSE4 or POPCNT. The native binary of sharp (x86-64-v2) and
+  its WebAssembly build (Wasm SIMD needs SSE4.1) failed, and the start of the site with them. Now the type is `host`.
+  A new VM or a restore can bring `kvm64` back: load a native module only where it is used, never at the start
+  (`src/db/photos.ts`). Run the standalone build like a `kvm64` VM: `apt-get install -y qemu-user`, the official
+  Node 24 of nodejs.org, then `qemu-x86_64 -cpu kvm64 <node> .next/standalone/server.js` (with `.next/static`,
+  `public` and `drizzle` next to it, as in the `Dockerfile`). QEMU stops a native module with "Illegal instruction"
+  where a real CPU gives a clean error.
   The Site watch workflow (`tools/site_watch.py`) checks the live site from GitHub and opens a `site-down` ticket with
   the error text of `/api/health` (the agents cannot read the log of the server).
 - **Domain and DNS:** tumach.dance, with the DNS at Cloudflare (Lars). The free Cloudflare features (for example a
