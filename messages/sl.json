@@ -103,8 +103,10 @@
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
+    "buttonTitle": "Ključ za dostop",
     "text": "Dodaj ključ za dostop na ta telefon. Naslednjič se prijaviš s Face ID ali prstnim odtisom, brez kode.",
     "add": "Dodaj ključ za dostop",
+    "added": "Ključ za dostop je dodan. Naslednjič se prijaviš brez kode.",
     "notNow": "Ne zdaj",
     "failed": "Ključ za dostop ni bil dodan. Še vedno se lahko prijaviš s kodo po e-pošti."
   },

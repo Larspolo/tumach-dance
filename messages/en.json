@@ -103,8 +103,10 @@
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
+    "buttonTitle": "Passkey",
     "text": "Add a passkey on this phone. Next time you log in with Face ID or your fingerprint, with no code.",
     "add": "Add a passkey",
+    "added": "The passkey is added. Next time you log in with no code.",
     "notNow": "Not now",
     "failed": "The passkey was not added. You can still log in with a code by email."
   },

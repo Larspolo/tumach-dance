@@ -32,7 +32,6 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
-      <PasskeyOffer />
       <p>
         <Link className={styles.link} href="/studio/bookings">
           {t("bookings")}
@@ -80,6 +79,7 @@ export default async function StudioPage() {
           {t("feedback")}
         </Link>
       </p>
+      <PasskeyOffer />
       <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>
