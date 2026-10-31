@@ -12,11 +12,23 @@ export default async function TestBanner() {
     <div
       role="status"
       data-testid="test-banner"
+      className="test-banner"
+      // Fixed above the fixed nav, with the height --test-banner of globals.css (one line, also in Slovenian).
       style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 101,
+        height: "var(--test-banner)",
+        lineHeight: "1.1rem",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
         background: "#4a443c",
         color: "#fbf8f1",
         fontFamily: '"Space Mono", monospace',
-        fontSize: "0.75rem",
+        fontSize: "min(0.75rem, 3vw)",
         letterSpacing: "0.1em",
         padding: "0.4rem 1rem",
         textAlign: "center",

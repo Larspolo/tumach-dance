@@ -3,6 +3,8 @@ name: Image
 on:
   push:
     branches: [main]
+    # A release tag v* (GitHub does not evaluate paths-ignore for a tag, so each release builds): the image `live`
+    tags: ["v*"]
     paths-ignore:
       - "framework/**"
       - ".claude/**"
@@ -16,7 +18,7 @@ permissions:
   packages: write
 
 concurrency:
-  group: image
+  group: image-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -35,8 +37,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/larspolo/tumach-dance
+          # A tag push has no default branch, so it never moves `preview`; a merge never moves `live`.
           tags: |
-            type=raw,value=preview
+            type=raw,value=preview,enable={{is_default_branch}}
+            type=raw,value=live,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=sha,format=long
       - uses: docker/build-push-action@v6
         with:

@@ -1,9 +1,11 @@
 // The free times of the booking page (#36): the open hours minus the held bookings, from now plus the notice.
 import { DateTime } from "luxon";
 import { busyRanges } from "../db/bookings";
+import { listClassTimes } from "../db/classes";
 import type { Db } from "../db/index";
 import type { Offer } from "../db/offers";
 import { notBefore } from "./booking-notice";
+import { classRanges } from "./class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "./hours";
 import { getHoursRule } from "./hours-store";
 import { freeSlots } from "./slots";
@@ -20,7 +22,11 @@ export function bookingDays(db: Db, offer: Offer, now: number = Date.now()): Boo
   const open = openRanges(getHoursRule(db), dates[0], dates[dates.length - 1]);
   const from = open[0]?.start ?? now;
   const to = open[open.length - 1]?.end ?? now;
-  const slots = freeSlots(open, busyRanges(db, from, to), offer.minutes, { notBefore: notBefore(now) });
+  // A class uses the room: its times of the page are busy too (#99). A hidden class blocks nothing.
+  const classes = classRanges(listClassTimes(db, { visibleOnly: true }), dates[0], dates[dates.length - 1]);
+  const slots = freeSlots(open, [...busyRanges(db, from, to), ...classes], offer.minutes, {
+    notBefore: notBefore(now),
+  });
   return dates.map((date) => ({
     date,
     slots: slots.filter((s) => DateTime.fromMillis(s.start, { zone: TIME_ZONE }).toISODate() === date),

@@ -192,3 +192,20 @@
   border: 1px solid #d8cfbd;
   border-radius: 0.5rem;
 }
+
+/* The grid of the photos (#173): two columns on a phone. */
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}

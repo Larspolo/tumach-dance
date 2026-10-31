@@ -1,2 +1,4 @@
 # Ticket runs only add lines here, so a merge keeps the new lines of both sides.
 docs/LEARNINGS.md merge=union
+# The language files: merge key by key, not line by line (framework/tools/merge_json.py, #131).
+messages/*.json merge=json

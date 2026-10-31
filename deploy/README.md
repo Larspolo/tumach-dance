@@ -17,3 +17,41 @@ You do this once. After it, the server pulls each new preview image by itself (e
 
 The updater (watchtower) restarts only the container `site`: it does not touch Home Assistant or other containers.
 The data of the site is in the Docker volume `tumach-preview_data`.
+
+## The live site
+
+The live site is tumach.dance. It runs the same image as the preview (tag `preview`): each merge to main goes live
+within 5 minutes, with no step by you (owner, 2026-10-31). It has its own data, keys, tunnel and updater, and no
+"test site" banner. Do this once.
+
+1. Copy the folder `deploy/live` to the home server, for example to `~/tumach-live`.
+2. In that folder, copy `.env.example` to `.env` and fill it in with new values: a new `BETTER_AUTH_SECRET`
+   (`openssl rand -base64 32`), new VAPID keys (`npx web-push generate-vapid-keys`), the live Mailgun key and domain,
+   and the `TUNNEL_TOKEN` of a new tunnel. Never copy the `.env` of the preview.
+3. Make the folder of the backups, writable by the user of the image (`nextjs`, uid 1001):
+   `mkdir backups && sudo chown 1001:1001 backups`.
+4. Run `docker compose --profile tunnel up -d`.
+5. In Cloudflare, at the live tunnel, add the public hostname `tumach.dance` with the service `http://site:3000`.
+   When Cloudflare says that a DNS record of `tumach.dance` exists (the old site), remove that record first.
+6. Open https://tumach.dance. You see the site with no "test site" banner.
+
+The live site is on port 3001 of the server, and its updater restarts only its own container (scope `live`).
+Its data is in the Docker volume `tumach-live_data`; the backups are in `~/tumach-live/backups` (14 nights).
+
+### Restore a backup
+
+Use this to go back to the data of one night (the date `YYYY-MM-DD` of a file in `backups/`):
+
+```sh
+docker compose stop site
+docker compose run --rm --no-deps site node scripts/restore.mjs 2026-11-01
+docker compose up -d
+```
+
+The restore copies the database of that night and the photos that are missing. It changes nothing when that night
+has no backup, and it prints the dates that exist.
+
+## Change of the preview (scope)
+
+The preview and the live site each have an updater with its own scope (`preview` and `live`). After this change, run
+`docker compose up -d` once in the folder of the preview (`~/tumach-preview`), so that its updater gets the new scope.

@@ -1,10 +1,16 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { pageMetadata } from "@/lib/page-meta";
 import styles from "./guide.module.css";
 
 // The guide for Nina (#45): log in, add the app to the home screen, turn on notifications. Public: she reads it
 // before she can log in. The pictures come from `e2e/guide-screenshots.spec.ts` (`public/guide/<locale>/`).
 type Step = { text: string; image?: string };
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/studio-guide", locale);
+}
 
 export default async function StudioGuidePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

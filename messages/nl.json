@@ -1,7 +1,74 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (nl): the welcome of Nina]"
+    "welcome": "[Placeholder (nl): the welcome of Nina]",
+    "eyebrow": "[Placeholder (nl): short line above the title]",
+    "primaryAction": "[Placeholder (nl): button to the schedule]",
+    "secondaryAction": "[Placeholder (nl): button to the studio]",
+    "imageBlock": "[Placeholder (nl): photo of the studio]",
+    "about": {
+      "title": "[Placeholder (nl): title about the studio]",
+      "label": "[Placeholder (nl): (01) about]",
+      "text1": "[Placeholder (nl): first paragraph about the studio]",
+      "text2": "[Placeholder (nl): second paragraph about Nina]",
+      "text3": "[Placeholder (nl): third paragraph about the dancers]",
+      "quote": "[Placeholder (nl): a short quote of Nina]",
+      "quoteBy": "[Placeholder (nl): who said the quote]"
+    },
+    "photos": {
+      "title": "[Placeholder (nl): title of the photos]",
+      "label": "[Placeholder (nl): (02) photos]",
+      "alt": "[Placeholder (nl): a photo of the studio]"
+    },
+    "classes": {
+      "title": "[Placeholder (nl): title of the classes]",
+      "label": "[Placeholder (nl): (02) classes]",
+      "none": "Nog geen lessen."
+    },
+    "schedule": {
+      "title": "[Placeholder (nl): title of the schedule]",
+      "label": "[Placeholder (nl): (03) schedule]",
+      "none": "Nog geen lestijden.",
+      "days": {
+        "mon": "maandag",
+        "tue": "dinsdag",
+        "wed": "woensdag",
+        "thu": "donderdag",
+        "fri": "vrijdag",
+        "sat": "zaterdag",
+        "sun": "zondag"
+      },
+      "time": "{from}–{to}"
+    },
+    "contact": {
+      "title": "[Placeholder (nl): title of the contact]",
+      "label": "[Placeholder (nl): (04) contact]",
+      "text": "[Placeholder (nl): invitation to write to Nina]",
+      "name": "[Placeholder (nl): name]",
+      "email": "[Placeholder (nl): email]",
+      "message": "[Placeholder (nl): message]",
+      "send": "[Placeholder (nl): send]",
+      "placeLabel": "[Placeholder (nl): place]",
+      "place": "[Placeholder (nl): address of the studio]",
+      "closing": "[Placeholder (nl): closing line]",
+      "thanks": "[Placeholder (nl): Dank je, je bericht is verstuurd]",
+      "failed": "Versturen mislukt, probeer het later opnieuw"
+    }
+  },
+  "Nav": {
+    "label": "Hoofdmenu",
+    "logo": "TUMACH",
+    "about": "[Placeholder (nl): about]",
+    "classes": "[Placeholder (nl): classes]",
+    "schedule": "[Placeholder (nl): schedule]",
+    "contact": "[Placeholder (nl): contact]"
+  },
+  "Footer": {
+    "copyright": "© {year}",
+    "domain": "tumach.dance",
+    "tagline": "[Placeholder (nl): the tagline of Nina]",
+    "place": "[Placeholder (nl): the place]",
+    "privacy": "Hoe we je gegevens bewaren"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -21,7 +88,18 @@
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
     "offers": "Aanbod",
-    "hours": "Uren"
+    "hours": "Uren",
+    "bookings": "Boekingen",
+    "calendarAdd": "Zet in mijn agenda",
+    "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
+    "calendarRenew": "Maak een nieuw adres",
+    "calendarRenewConfirm": "Een nieuw agenda-adres maken? Het oude adres werkt dan niet meer; zet de agenda opnieuw op elke telefoon.",
+    "week": "Deze week",
+    "questions": "Voor Nina",
+    "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
+    "classes": "Lessen",
+    "feedback": "Feedback",
+    "photos": "Foto's"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -92,6 +170,44 @@
     "add": "Aanbod toevoegen",
     "addSave": "Toevoegen"
   },
+  "StudioClasses": {
+    "title": "Lessen",
+    "back": "Terug",
+    "none": "Nog geen lessen.",
+    "hidden": "verborgen",
+    "name": "Naam",
+    "text": "Tekst",
+    "forWhom": "Voor wie",
+    "nameIn": "Naam in het {language}",
+    "textIn": "Tekst in het {language}",
+    "forWhomIn": "Voor wie in het {language}",
+    "nl": "Nederlands",
+    "sl": "Sloveens",
+    "translations": "Vertalingen",
+    "save": "Opslaan",
+    "hide": "Verbergen",
+    "show": "Tonen",
+    "add": "Les toevoegen",
+    "addSave": "Toevoegen",
+    "times": "Vaste tijden",
+    "noTimes": "Nog geen tijden.",
+    "time": "{day} {from} tot {to}",
+    "weekday": "Dag",
+    "start": "Begin",
+    "end": "Einde",
+    "addTime": "Tijd toevoegen",
+    "removeTime": "Verwijderen",
+    "wrongTime": "Het einde moet na het begin zijn. De tijd is niet toegevoegd.",
+    "day": {
+      "mon": "maandag",
+      "tue": "dinsdag",
+      "wed": "woensdag",
+      "thu": "donderdag",
+      "fri": "vrijdag",
+      "sat": "zaterdag",
+      "sun": "zondag"
+    }
+  },
   "Push": {
     "title": "Meldingen",
     "turnOn": "Meldingen aanzetten",
@@ -103,7 +219,9 @@
     "unsupported": "Deze browser kan geen meldingen tonen.",
     "installFirst": "Op een iPhone: tik op Deel en dan op \"Zet op beginscherm\". Open de app vanaf je beginscherm en zet daar de meldingen aan.",
     "testTitle": "TUMACH studio",
-    "testBody": "Dit is een test. Meldingen werken op deze telefoon."
+    "testBody": "Dit is een test. Meldingen werken op deze telefoon.",
+    "questionTitle": "Een nieuwe vraag voor jou",
+    "questionBody": "Open hem in de studio-app en geef je antwoord."
   },
   "LanguageSwitcher": {
     "label": "Taal"
@@ -144,6 +262,163 @@
     "again": "Nog een tijd boeken",
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
-    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd."
+    "notSlot": "Deze tijd is niet vrij. Kies een andere tijd.",
+    "privacy": "Hoe we je gegevens bewaren"
+  },
+  "bookingEmail": {
+    "subject": "Je aanvraag bij TUMACH",
+    "greeting": "Hoi {name},",
+    "body": "Bedankt voor je aanvraag: {offer}, {when}.",
+    "soon": "Nina kijkt ernaar en antwoordt je snel.",
+    "approvedSubject": "Je boeking bij TUMACH is bevestigd",
+    "approvedBody": "Nina heeft je aanvraag goedgekeurd: {offer}, {when}.",
+    "approvedSee": "Tot in de studio!",
+    "declinedSubject": "Je aanvraag bij TUMACH",
+    "declinedBody": "Sorry, Nina kan je aanvraag niet aannemen: {offer}, {when}.",
+    "declinedOther": "Je kunt een andere tijd kiezen op de boekingspagina.",
+    "cancelledSubject": "Je boeking bij TUMACH is geannuleerd",
+    "cancelled": "Nina heeft je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
+    "reminderSubject": "Herinnering: je boeking bij TUMACH",
+    "reminder": "Een herinnering aan je boeking: {offer}, {when}.",
+    "sign": "TUMACH",
+    "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
+    "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen.",
+    "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
+    "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
+    "payReminderSubject": "Betaling van je boeking bij TUMACH",
+    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
+  },
+  "bookingPush": {
+    "title": "Nieuwe aanvraag",
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Boeking geannuleerd"
+  },
+  "StudioBookings": {
+    "title": "Boekingen",
+    "back": "Terug",
+    "none": "Geen open aanvragen. Alles is rustig.",
+    "approve": "Goedkeuren",
+    "decline": "Afwijzen",
+    "approved": "Goedgekeurd.",
+    "declined": "Afgewezen.",
+    "tikkie": "Tikkie-link (optioneel)",
+    "badLink": "De Tikkie-link moet beginnen met https://.",
+    "toPay": "Goedgekeurde boekingen",
+    "markPaid": "Betaald",
+    "paidOn": "Betaald op {date}",
+    "undo": "Ongedaan maken"
+  },
+  "StudioQuestions": {
+    "title": "Voor Nina",
+    "back": "Terug",
+    "none": "Er zijn nu geen vragen voor je. Fijne dag!",
+    "try": "Probeer het op de site",
+    "choose": "Jouw keuze",
+    "text": "Iets toe te voegen? (optioneel)",
+    "textOnly": "Jouw tekst",
+    "empty": "Schrijf eerst je tekst.",
+    "send": "Versturen",
+    "thanks": "Dank je! Je antwoord is verstuurd.",
+    "error": "Je antwoord is niet verstuurd. Probeer het zo nog eens.",
+    "loadError": "De vragen konden niet worden geladen. Probeer het later nog eens."
+  },
+  "StudioWeek": {
+    "title": "Deze week",
+    "back": "Terug",
+    "previous": "Vorige week",
+    "next": "Volgende week",
+    "free": "Geen boekingen.",
+    "request": "aanvraag",
+    "approved": "goedgekeurd",
+    "paid": "betaald",
+    "cancel": "Annuleren",
+    "cancelAsk": "Deze boeking annuleren?",
+    "cancelYes": "Ja, annuleren",
+    "removed": "Naam verwijderd",
+    "cancelNo": "Nee"
+  },
+  "StudioFeedback": {
+    "back": "Terug",
+    "title": "Feedback",
+    "intro": "Een wens, een probleem of een idee voor de site of de app? Schrijf het hier.",
+    "label": "Jouw feedback",
+    "send": "Versturen",
+    "thanks": "Dank je, we hebben je feedback ontvangen",
+    "failed": "Versturen is mislukt, probeer het later nog eens"
+  },
+  "Contact": {
+    "subject": "Bericht van {name} via de website",
+    "name": "Naam",
+    "email": "E-mail",
+    "message": "Bericht",
+    "errors": {
+      "name": "Vul je naam in: 1 tot 100 tekens, op één regel.",
+      "email": "Vul een geldig e-mailadres in.",
+      "message": "Schrijf een bericht: 1 tot 5000 tekens."
+    }
+  },
+  "StudioPhotos": {
+    "title": "Foto's",
+    "back": "Terug",
+    "none": "Nog geen foto's.",
+    "choose": "Foto's van je telefoon",
+    "add": "Foto's toevoegen",
+    "adding": "Bezig…",
+    "remove": "Verwijderen",
+    "removeConfirm": "Ja, verwijder deze foto",
+    "alt": "Foto {number}",
+    "not-image": "{name} is geen foto. Er is niets toegevoegd.",
+    "too-large": "{name} is groter dan 15 MB. Er is niets toegevoegd.",
+    "failed": "{name} kon niet worden toegevoegd. Probeer het opnieuw."
+  },
+  "CancelBooking": {
+    "title": "Je boeking annuleren",
+    "booking": "Je boeking: {offer}, {when}.",
+    "noRefund": "Een geannuleerde boeking krijgt geen terugbetaling.",
+    "button": "Annuleer de boeking",
+    "done": "Je boeking is geannuleerd. Je krijgt een e-mail.",
+    "notFound": "Deze link werkt niet. Misschien is hij niet compleet.",
+    "cancelled": "Deze boeking is al geannuleerd.",
+    "declined": "Nina heeft deze aanvraag niet aangenomen: er is niets te annuleren.",
+    "started": "Deze boeking is begonnen: je kunt hem niet meer annuleren met de link.",
+    "contact": "Schrijf Nina",
+    "contactText": "Een vraag, of kun je niet komen?"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "intro": "Wat deze site van je bewaart, waarom, wie het ziet en hoe lang.",
+    "bookingTitle": "Een boeking",
+    "bookingWhat": "Als je boekt, bewaart de site je naam, e-mailadres, telefoonnummer en de taal van de site.",
+    "bookingWhy": "Nina gebruikt ze om je aanvraag te beantwoorden, om je de e-mails over je boeking te sturen (het antwoord, de herinnering en de betaallink) en om je te bereiken over de les.",
+    "bookingWho": "Alleen Nina ziet ze. De e-mails gaan via onze e-maildienst, Mailgun.",
+    "keep": "{months, plural, one {# maand} other {# maanden}} na je les verwijdert de site vanzelf je naam, e-mailadres en telefoonnummer.",
+    "backup": "Elke nacht maakt de site een back-up van zijn gegevens voor het geval van een storing. Een back-up bewaart een kopie van je gegevens {nights, plural, one {# nacht} other {# nachten}}, daarna verwijdert de site hem.",
+    "contactTitle": "Een contactbericht",
+    "contactWhat": "De site bewaart geen kopie van je bericht: hij stuurt één e-mail naar Nina.",
+    "contactSpam": "Tegen spam houdt de site het internetadres van je apparaat hoogstens één uur in zijn geheugen.",
+    "cookiesTitle": "Cookies",
+    "cookies": "Je hebt geen account nodig. De site gebruikt geen tracking- en geen advertentiecookies.",
+    "askTitle": "Je gegevens",
+    "ask": "Wil je een kopie van je gegevens, of wil je dat ze verwijderd worden? Schrijf Nina via het contactformulier.",
+    "askLink": "Naar het contactformulier"
+  },
+  "Meta": {
+    "imageAlt": "TUMACH, de dansstudio in Amsterdam",
+    "home": {
+      "title": "[Placeholder (nl): titel van de site in een zoekresultaat]",
+      "description": "[Placeholder (nl): beschrijving van de site in een zoekresultaat]"
+    },
+    "book": {
+      "title": "Les boeken · TUMACH",
+      "description": "Boek een privéles of de studio van TUMACH in Amsterdam."
+    },
+    "privacy": {
+      "title": "Privacy · TUMACH",
+      "description": "Wat de site van TUMACH van je bewaart, waarom, wie het ziet en hoe lang."
+    },
+    "guide": {
+      "title": "Zo gebruik je de studio-app · TUMACH",
+      "description": "Log in, zet de studio-app op je beginscherm en zet meldingen aan."
+    }
   }
 }

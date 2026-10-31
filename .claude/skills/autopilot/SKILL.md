@@ -62,16 +62,16 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
 7. Ship in one call: `python3 framework/tools/ship_pr.py N --message MSG.txt --title "<ticket title>" --body BODY.md`
    (MSG.txt: subject in STE imperative, what and why, `Closes #<number>`; BODY.md: what changed, how you verified,
    and all that a later run needs to fix a red CI with no other context, #4187).
-   It runs ruff and the test files of the change (`--tested`: you ran them on this tree), commits, runs the guard (hard rule before each
+   It commits, runs the lint of `agent.toml` (always) and the test files of the change (`--tested`: you ran them on this tree), runs the guard (hard rule before each
    push: it fails when the claim is not yours or another branch has a PR that closes #N, #288), pushes and opens the
    PR. A PR that changes `packaging/` or a workflow with its own PR checks: add `--hold` (the label `hold` at once).
    Exit 3: do not push: `claim.py N --release` (when the claim is yours; it removes `in-progress`), comment the reason
    in one line on the ticket and pick the next ticket.
 8. It prints `mergeable_state`. `dirty`: run `python3 framework/tools/merge_main.py --push N` (`conflict.md`).
-   Do not wait for CI and do not merge by hand: CI runs only the quick checks on each PR (lint and fast tests,
-   about 1 minute), and the Automerge workflow merges the PR when CI is green, removes `in-progress` and deletes the
-   branch. The slow and server tests run only each night on main: do the levels of the `verify` skill that the
-   change needs (slow tests, server check) before the push. Continue with step 7 and the next ticket. Step 2 of a
+   Do not wait for CI and do not merge by hand: CI runs the quick checks (lint and fast tests, about 1 minute) and
+   the browser tests (the build and Playwright, job `browser`, about 5 minutes) on each PR, and the Automerge workflow
+   merges the PR when CI is green, removes `in-progress` and deletes the branch. Still do the levels of the `verify`
+   skill that the change needs (browser tests, screenshots) before the push. Continue with step 7 and the next ticket. Step 2 of a
    later cycle finds a red or conflicted PR.
 9. CI red → find the cause, fix, push. After 3 failed attempts stop: comment the cause on the ticket,
    add `blocked` or `needs-human` and `hold`, run `claim.py N --release` (it removes `in-progress`), and go to step 8 of the skill (report).

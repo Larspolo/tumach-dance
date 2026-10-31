@@ -22,6 +22,7 @@ describe("parseNinaQuestion", () => {
       title: "Which lesson first?",
       text: "Which lesson should the offers page show first?",
       tryPath: "/studio/offers",
+      example: null,
       choices: [
         { key: "A", text: "The short lesson" },
         { key: "B", text: "The long lesson" },
@@ -46,6 +47,7 @@ describe("parseNinaQuestion", () => {
       title: "x",
       text: "Do you like the new colour?",
       tryPath: "/",
+      example: null,
       choices: [],
     });
   });

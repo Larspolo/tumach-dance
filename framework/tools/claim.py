@@ -453,6 +453,9 @@ def foreign(number, base=f"origin/{CONFIG['branch']}"):
     if git("rev-parse", "--is-shallow-repository", check=False).stdout.strip() == "true":
         # A shallow clone cuts off the merge bases: the commits of main then show as own commits (#4604).
         git("fetch", "--quiet", "--unshallow", base.split("/")[0], check=False)
+    # A stale local ref of main shows the newer commits of main as own commits (#183): fetch it first.
+    remote, _, branch = base.partition("/")
+    git("fetch", "--quiet", remote, f"+refs/heads/{branch}:refs/remotes/{base}", check=False)
     out = []
     for commit in filter(None, git("log", "--no-merges", "--format=%h %B%x00", f"{base}..HEAD", check=False).stdout.split("\0")):
         for m in re.findall(r"\b(?:close[sd]?|fix(?:es|ed)?|resolve[sd]?)\s*:?\s+#(\d+)", commit, re.I):
@@ -657,6 +660,12 @@ def main(argv=None):
                     help="a claim: when another run has the ticket, try these tickets in this order (one call)")
     ap.add_argument("--remote", default="origin")
     a = ap.parse_args(argv)
+    # A claim on a detached HEAD would be named `unknown`: the next beat of the run then calls its own claim a takeover (#155).
+    writes = a.comment or a.refill or a.review or a.roadmap or not (
+        a.release or a.show or a.beat or a.stale or a.stuck or a.guard or a.adopt or a.prune or a.fixmain or a.reviewed)
+    if writes and who() == "unknown":
+        print("detached HEAD: check out your branch first (`git checkout -B <branch> origin/main`)")
+        return 2
     if a.prune:
         gone = prune(a.remote)
         print("\n".join(f"deleted claim/{n}" for n in gone) or "nothing to delete")

@@ -1,11 +1,13 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, lt } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
+import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
+import { listClassTimes } from "./classes";
 import type { Db } from "./index";
 import type { Offer } from "./offers";
 import { bookings, offers } from "./schema";
@@ -83,7 +85,10 @@ export function requestBooking(
       const open = openRanges(getHoursRule(db), date, date);
       const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
       if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
-      if (busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      // A class uses the room: a request never takes its time (#99).
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
         .insert(bookings)
         .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })
@@ -100,17 +105,99 @@ export type DecideResult = { ok: true; booking: Booking } | { ok: false; reason:
 /**
  * Nina approves or declines a `requested` booking. One `UPDATE` changes the status only while it is `requested`: a
  * second decision gets `not-requested` and changes nothing. A declined booking no longer holds its time.
+ * `tikkieUrl`: the payment link of an approval (#142), checked by `tikkieLink()` of `src/lib/tikkie.ts`.
  */
-export function decideBooking(db: Db, id: number, decision: "approved" | "declined"): DecideResult {
+export function decideBooking(
+  db: Db,
+  id: number,
+  decision: "approved" | "declined",
+  tikkieUrl: string | null = null,
+): DecideResult {
   const booking = db
     .update(bookings)
-    .set({ status: decision })
+    .set({
+      status: decision,
+      tikkieUrl: decision === "approved" ? tikkieUrl : null,
+      approvedAt: decision === "approved" ? Date.now() : null,
+    })
     .where(and(eq(bookings.id, id), eq(bookings.status, "requested")))
     .returning()
     .get();
   if (booking) return { ok: true, booking };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-requested" : "not-found" };
+}
+
+export type CancelResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-active" };
+
+/**
+ * Cancel a `requested` or `approved` booking (#159): it gets `cancelled` and frees its time, as `busyRanges()` counts
+ * only the holding statuses. A paid booking keeps `paidAt` (the refund waits for #139).
+ */
+export function cancelBooking(db: Db, id: number): CancelResult {
+  const booking = db
+    .update(bookings)
+    .set({ status: "cancelled" })
+    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+  return { ok: false, reason: exists ? "not-active" : "not-found" };
+}
+
+export type MarkPaidResult =
+  | { ok: true; booking: Booking }
+  | { ok: false; reason: "not-found" | "not-approved" | "already-paid" };
+
+/**
+ * Store that an `approved` booking is paid (#140). One `UPDATE` sets `paidAt` only while the booking is `approved` and
+ * not yet paid: a second call (a provider can call its webhook twice) gets `already-paid` and keeps the first time.
+ */
+export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
+  const booking = db
+    .update(bookings)
+    .set({ paidAt: now })
+    .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select().from(bookings).where(eq(bookings.id, id)).get();
+  if (!exists) return { ok: false, reason: "not-found" };
+  if (exists.status !== "approved") return { ok: false, reason: "not-approved" };
+  return { ok: false, reason: "already-paid" };
+}
+
+export type UnmarkPaidResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-paid" };
+
+/** Clear `paidAt` after a wrong tap on "Paid" (#143). A second call gets `not-paid` and changes nothing. */
+export function unmarkPaid(db: Db, id: number): UnmarkPaidResult {
+  const booking = db
+    .update(bookings)
+    .set({ paidAt: null })
+    .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
+    .returning()
+    .get();
+  if (booking) return { ok: true, booking };
+  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+  return { ok: false, reason: exists ? "not-paid" : "not-found" };
+}
+
+/** The bookings with one of `statuses` that overlap `from`..`to`, with their offer, by start: the week page and the calendar. */
+export function listBookings(
+  db: Db,
+  from: number,
+  to: number,
+  statuses: readonly Booking["status"][],
+): { booking: Booking; offer: Offer }[] {
+  if (statuses.length === 0) return [];
+  return db
+    .select({ booking: bookings, offer: offers })
+    .from(bookings)
+    .innerJoin(offers, eq(offers.id, bookings.offerId))
+    .where(and(inArray(bookings.status, statuses), lt(bookings.start, to), gt(bookings.end, from)))
+    .orderBy(bookings.start)
+    .all();
 }
 
 /** The `requested` bookings with their offer, by start: the requests that wait for Nina. */

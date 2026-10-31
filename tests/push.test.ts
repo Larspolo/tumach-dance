@@ -47,7 +47,7 @@ test("a device that subscribes again replaces its row", () => {
   saveSubscription(db, sub(1), 1000);
   saveSubscription(db, { ...sub(1), keys: { p256dh: "new", auth: "new" } }, 2000);
   expect(db.select().from(pushSubscriptions).all()).toEqual([
-    { endpoint: sub(1).endpoint, p256dh: "new", auth: "new", createdAt: 2000 },
+    { endpoint: sub(1).endpoint, p256dh: "new", auth: "new", createdAt: 2000, locale: "en" },
   ]);
 });
 

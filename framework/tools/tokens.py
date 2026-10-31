@@ -194,8 +194,8 @@ PHASE_RULES = (("conflict", r"merge_main\.py|unconflict\.py|\bgit merge\b"),
                ("report", REPORT_FILE),
                ("code", r"\bsed -i\b|\bcat >|\bpython3 - <<|\btee\b"))
 ORDER = ("conflict", "verify", "ci", "code", "claim", "report", "read")   # a call with several tools: the first here
-# a claim: no option but --takeover, or --or with the next candidates (`claim.py N --or M K`)
-CLAIMED = re.compile(r"claim\.py (\d+)(?:\s+--or((?:\s+\d+)+)|\s+--takeover)?(?=\s*(?:$|[;&|)<>\n]|\d>))")
+# a claim: no option but --takeover or --adopt (a brief of the pacer, #189), or --or with the next candidates
+CLAIMED = re.compile(r"claim\.py (\d+)(?:\s+--or((?:\s+\d+)+)|\s+--takeover|\s+--adopt\s+[\w-]+)?(?=\s*(?:$|[;&|)<>\n]|\d>))")
 PHASES = ("read", "claim", "code", "verify", "ci", "conflict", "report")   # the order of the Metrics: line
 
 
@@ -233,18 +233,30 @@ def calls(records):
     return by_phase, by_label, pairs
 
 
-def calls_line(records, k=5):
-    """The Calls: line of the run report (#3970): the calls per phase and the k most frequent labels of a run."""
+def read_labels(records):
+    """The calls per `label()` of the phase `read` (#189): the reads that repeat."""
+    return Counter(label(b.get("name", ""), b.get("input") or {}) for r in records
+                   if r.get("type") == "assistant" and isinstance((r.get("message") or {}).get("content"), list)
+                   for b in r["message"]["content"] if b.get("type") == "tool_use"
+                   and phase(b.get("name", ""), b.get("input") or {}) == "read")
+
+
+def calls_line(records, k=5, k_read=3):
+    """The Calls: line of the run report (#3970): the calls per phase, the k most frequent labels of a run and the
+    k_read most frequent labels of the phase `read` (#189)."""
     ph, lab, _ = calls(records)
     return (f"Calls: {', '.join(f'{p} {n}' for p, n in ph.most_common())} · "
-            f"top {', '.join(f'{n}x {x}' for x, n in lab.most_common(k))}")
+            f"top {', '.join(f'{n}x {x}' for x, n in lab.most_common(k))} · "
+            f"read top {', '.join(f'{n}x {x}' for x, n in read_labels(records).most_common(k_read)) or '-'}")
 
 
 def phases(records):
     """{ticket: {phase: minutes}} of one chain of records, in the order of the tickets; the time before the first
-    claim counts for the first ticket (key None when no claim won)."""
-    calls = []                                        # (time, phase, claimed ticket or None)
-    claims, done = {}, set()
+    claim counts for the first ticket (key None when no claim won). Each call gets the time from its call to its
+    tool result (the run time of the tool) and the time from the result before it to its call (the model writes the
+    call, #189). A call with no result keeps the time to the next call."""
+    calls = []                                        # [time, phase, claimed ticket or None, time of the last result]
+    claims, done, index = {}, set(), {}
     for r in records:
         msg = r.get("message") or {}
         content = msg.get("content")
@@ -252,26 +264,35 @@ def phases(records):
             tools = [b for b in content if b.get("type") == "tool_use"]
             if tools and when(r) is not None:
                 ps = [phase(b.get("name", ""), b.get("input") or {}) for b in tools]
-                calls.append([when(r), min(ps, key=ORDER.index), None])
+                calls.append([when(r), min(ps, key=ORDER.index), None, None])
                 for b in tools:
+                    index[b.get("id")] = len(calls) - 1
                     ns = claim_numbers((b.get("input") or {}).get("command", "")) if b.get("name") == "Bash" else []
                     if ns:
                         claims[b["id"]] = (len(calls) - 1, ns)
         elif r.get("type") == "user" and isinstance(content, list):
             for b in content:
-                if b.get("type") == "tool_result" and b.get("tool_use_id") in claims:
+                if b.get("type") != "tool_result":
+                    continue
+                i = index.get(b.get("tool_use_id"))
+                if i is not None and when(r) is not None:
+                    calls[i][3] = max(calls[i][3] or when(r), when(r))
+                if b.get("tool_use_id") in claims:
                     i, ns = claims.pop(b["tool_use_id"])
                     n = won(b, ns)
                     if n is not None and n not in done:
                         done.add(n)
                         calls[i][2] = n
-    out, ticket = {}, None
+    out, ticket, last = {}, None, None
     first = next((c[2] for c in calls if c[2] is not None), None)
-    for (t, ph, claimed), nxt in zip(calls, calls[1:] + [None]):
+    for (t, ph, claimed, res), nxt in zip(calls, calls[1:] + [None]):
         ticket = claimed if claimed is not None else ticket
         key = ticket if ticket is not None else first
         m = out.setdefault(key, dict.fromkeys(PHASES, 0.0))
-        m[ph] += ((nxt[0] if nxt else t) - t) / 60
+        end = res if res is not None else nxt[0] if nxt else t      # its result, else the next call
+        end = max(t, min(end, nxt[0]) if nxt else end)                # never after the next call (parallel calls)
+        m[ph] += (end - (t if last is None else min(last, t))) / 60    # from the result before it to its own result
+        last = end
     return out
 
 
@@ -286,7 +307,7 @@ def won(block, numbers):
     or None."""
     c = block.get("content")
     text = c if isinstance(c, str) else " ".join(x.get("text", "") for x in c or [] if isinstance(x, dict))
-    m = re.search(r"claimed claim/(\d+)\b", text or "")
+    m = re.search(r"(?:claimed|adopted) claim/(\d+)\b", text or "")
     return int(m[1]) if m and int(m[1]) in numbers else None
 
 

@@ -1,7 +1,74 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (en): the welcome of Nina]"
+    "welcome": "[Placeholder (en): the welcome of Nina]",
+    "eyebrow": "[Placeholder (en): short line above the title]",
+    "primaryAction": "[Placeholder (en): button to the schedule]",
+    "secondaryAction": "[Placeholder (en): button to the studio]",
+    "imageBlock": "[Placeholder (en): photo of the studio]",
+    "about": {
+      "title": "[Placeholder (en): title about the studio]",
+      "label": "[Placeholder (en): (01) about]",
+      "text1": "[Placeholder (en): first paragraph about the studio]",
+      "text2": "[Placeholder (en): second paragraph about Nina]",
+      "text3": "[Placeholder (en): third paragraph about the dancers]",
+      "quote": "[Placeholder (en): a short quote of Nina]",
+      "quoteBy": "[Placeholder (en): who said the quote]"
+    },
+    "photos": {
+      "title": "[Placeholder (en): title of the photos]",
+      "label": "[Placeholder (en): (02) photos]",
+      "alt": "[Placeholder (en): a photo of the studio]"
+    },
+    "classes": {
+      "title": "[Placeholder (en): title of the classes]",
+      "label": "[Placeholder (en): (02) classes]",
+      "none": "No classes yet."
+    },
+    "schedule": {
+      "title": "[Placeholder (en): title of the schedule]",
+      "label": "[Placeholder (en): (03) schedule]",
+      "none": "No class times yet.",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      },
+      "time": "{from}–{to}"
+    },
+    "contact": {
+      "title": "[Placeholder (en): title of the contact]",
+      "label": "[Placeholder (en): (04) contact]",
+      "text": "[Placeholder (en): invitation to write to Nina]",
+      "name": "[Placeholder (en): name]",
+      "email": "[Placeholder (en): email]",
+      "message": "[Placeholder (en): message]",
+      "send": "[Placeholder (en): send]",
+      "placeLabel": "[Placeholder (en): place]",
+      "place": "[Placeholder (en): address of the studio]",
+      "closing": "[Placeholder (en): closing line]",
+      "thanks": "[Placeholder (en): Thank you, your message is sent]",
+      "failed": "Sending failed, please try again later"
+    }
+  },
+  "Nav": {
+    "label": "Main",
+    "logo": "TUMACH",
+    "about": "[Placeholder (en): about]",
+    "classes": "[Placeholder (en): classes]",
+    "schedule": "[Placeholder (en): schedule]",
+    "contact": "[Placeholder (en): contact]"
+  },
+  "Footer": {
+    "copyright": "© {year}",
+    "domain": "tumach.dance",
+    "tagline": "[Placeholder (en): the tagline of Nina]",
+    "place": "[Placeholder (en): the place]",
+    "privacy": "How we keep your data"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -21,7 +88,18 @@
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
     "offers": "Offers",
-    "hours": "Hours"
+    "hours": "Hours",
+    "bookings": "Bookings",
+    "calendarAdd": "Add to my calendar",
+    "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
+    "calendarRenew": "Make a new address",
+    "calendarRenewConfirm": "Make a new calendar address? The old address stops working; add the calendar again on each phone.",
+    "week": "This week",
+    "questions": "For Nina",
+    "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
+    "classes": "Classes",
+    "feedback": "Feedback",
+    "photos": "Photos"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -92,6 +170,44 @@
     "add": "Add an offer",
     "addSave": "Add"
   },
+  "StudioClasses": {
+    "title": "Classes",
+    "back": "Back",
+    "none": "No classes yet.",
+    "hidden": "hidden",
+    "name": "Name",
+    "text": "Text",
+    "forWhom": "For whom",
+    "nameIn": "Name in {language}",
+    "textIn": "Text in {language}",
+    "forWhomIn": "For whom in {language}",
+    "nl": "Dutch",
+    "sl": "Slovenian",
+    "translations": "Translations",
+    "save": "Save",
+    "hide": "Hide",
+    "show": "Show",
+    "add": "Add a class",
+    "addSave": "Add",
+    "times": "Weekly times",
+    "noTimes": "No times yet.",
+    "time": "{day} {from} to {to}",
+    "weekday": "Day",
+    "start": "Start",
+    "end": "End",
+    "addTime": "Add the time",
+    "removeTime": "Remove",
+    "wrongTime": "The end must be after the start. The time was not added.",
+    "day": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    }
+  },
   "Push": {
     "title": "Notifications",
     "turnOn": "Turn on notifications",
@@ -103,7 +219,9 @@
     "unsupported": "This browser cannot show notifications.",
     "installFirst": "On an iPhone: tap Share, then \"Add to Home Screen\". Open the app from your home screen and turn on notifications there.",
     "testTitle": "TUMACH studio",
-    "testBody": "This is a test. Notifications work on this phone."
+    "testBody": "This is a test. Notifications work on this phone.",
+    "questionTitle": "A new question for you",
+    "questionBody": "Open it in the studio app and give your answer."
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -144,6 +262,163 @@
     "again": "Book another time",
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
-    "notSlot": "This time is not free. Choose another time."
+    "notSlot": "This time is not free. Choose another time.",
+    "privacy": "How we keep your data"
+  },
+  "bookingEmail": {
+    "subject": "Your booking request at TUMACH",
+    "greeting": "Hi {name},",
+    "body": "Thank you for your request: {offer}, {when}.",
+    "soon": "Nina will look at it and answer you soon.",
+    "approvedSubject": "Your booking at TUMACH is confirmed",
+    "approvedBody": "Nina approved your request: {offer}, {when}.",
+    "approvedSee": "See you at the studio!",
+    "declinedSubject": "Your booking request at TUMACH",
+    "declinedBody": "Sorry, Nina cannot take your request: {offer}, {when}.",
+    "declinedOther": "You can pick another time on the booking page.",
+    "cancelledSubject": "Your booking at TUMACH is cancelled",
+    "cancelled": "Nina cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
+    "reminderSubject": "Reminder: your booking at TUMACH",
+    "reminder": "A reminder of your booking: {offer}, {when}.",
+    "sign": "TUMACH",
+    "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
+    "payLater": "The price is {price}. Nina sends you a Tikkie to pay.",
+    "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
+    "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
+    "payReminderSubject": "Payment of your booking at TUMACH",
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
+  },
+  "bookingPush": {
+    "title": "New booking request",
+    "body": "{name}: {offer}, {when}",
+    "cancelTitle": "Booking cancelled"
+  },
+  "StudioBookings": {
+    "title": "Bookings",
+    "back": "Back",
+    "none": "No open requests. All is calm.",
+    "approve": "Approve",
+    "decline": "Decline",
+    "approved": "Approved.",
+    "declined": "Declined.",
+    "tikkie": "Tikkie link (optional)",
+    "badLink": "The Tikkie link must start with https://.",
+    "toPay": "Approved bookings",
+    "markPaid": "Paid",
+    "paidOn": "Paid on {date}",
+    "undo": "Undo"
+  },
+  "StudioQuestions": {
+    "title": "For Nina",
+    "back": "Back",
+    "none": "No questions for you now. Enjoy your day!",
+    "try": "Try it on the site",
+    "choose": "Your choice",
+    "text": "Anything to add? (optional)",
+    "textOnly": "Your text",
+    "empty": "Please write your text first.",
+    "send": "Send",
+    "thanks": "Thank you! Your answer is sent.",
+    "error": "Your answer was not sent. Please try again in a moment.",
+    "loadError": "The questions could not be loaded. Please try again later."
+  },
+  "StudioWeek": {
+    "title": "This week",
+    "back": "Back",
+    "previous": "Previous week",
+    "next": "Next week",
+    "free": "No bookings.",
+    "request": "request",
+    "approved": "approved",
+    "paid": "paid",
+    "cancel": "Cancel",
+    "cancelAsk": "Cancel this booking?",
+    "cancelYes": "Yes, cancel",
+    "removed": "Name removed",
+    "cancelNo": "No"
+  },
+  "StudioFeedback": {
+    "back": "Back",
+    "title": "Feedback",
+    "intro": "A wish, a problem or an idea for the site or the app? Write it here.",
+    "label": "Your feedback",
+    "send": "Send",
+    "thanks": "Thank you, we received your feedback",
+    "failed": "Sending failed, please try again later"
+  },
+  "Contact": {
+    "subject": "Message from {name} via the website",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "errors": {
+      "name": "Write your name: 1 to 100 characters, on one line.",
+      "email": "Write a valid email address.",
+      "message": "Write a message: 1 to 5000 characters."
+    }
+  },
+  "StudioPhotos": {
+    "title": "Photos",
+    "back": "Back",
+    "none": "No photos yet.",
+    "choose": "Photos from your phone",
+    "add": "Add photos",
+    "adding": "Adding…",
+    "remove": "Remove",
+    "removeConfirm": "Yes, remove this photo",
+    "alt": "Photo {number}",
+    "not-image": "{name} is not a photo. Nothing was added for it.",
+    "too-large": "{name} is larger than 15 MB. Nothing was added for it.",
+    "failed": "{name} could not be added. Try again."
+  },
+  "CancelBooking": {
+    "title": "Cancel your booking",
+    "booking": "Your booking: {offer}, {when}.",
+    "noRefund": "A cancelled booking gets no refund.",
+    "button": "Cancel the booking",
+    "done": "Your booking is cancelled. You get an email.",
+    "notFound": "This link does not work. Maybe it is not complete.",
+    "cancelled": "This booking is already cancelled.",
+    "declined": "Nina did not take this request: there is nothing to cancel.",
+    "started": "This booking has started: you cannot cancel it with the link any more.",
+    "contact": "Write to Nina",
+    "contactText": "A question, or you cannot come?"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "intro": "What this site keeps of you, why, who sees it and for how long.",
+    "bookingTitle": "A booking",
+    "bookingWhat": "When you book, the site keeps your name, email address, phone number and the language of the site.",
+    "bookingWhy": "Nina uses them to answer your request, to send you the emails about your booking (the answer, the reminder and the payment link) and to reach you about the lesson.",
+    "bookingWho": "Only Nina sees them. The emails go through our email service, Mailgun.",
+    "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address and phone number by itself.",
+    "backup": "Each night the site makes a backup of its data for the case of a fault. A backup keeps a copy of your data for {nights, plural, one {# night} other {# nights}}, then the site removes it.",
+    "contactTitle": "A contact message",
+    "contactWhat": "The site keeps no copy of your message: it sends one email to Nina.",
+    "contactSpam": "Against spam, the site keeps the internet address of your device in its memory for at most one hour.",
+    "cookiesTitle": "Cookies",
+    "cookies": "You need no account. The site uses no tracking and no advertising cookies.",
+    "askTitle": "Your data",
+    "ask": "To get a copy of your data or to have it removed, write to Nina with the contact form.",
+    "askLink": "Go to the contact form"
+  },
+  "Meta": {
+    "imageAlt": "TUMACH, the dance studio in Amsterdam",
+    "home": {
+      "title": "[Placeholder (en): title of the site in a search result]",
+      "description": "[Placeholder (en): description of the site in a search result]"
+    },
+    "book": {
+      "title": "Book a lesson · TUMACH",
+      "description": "Book a private lesson or the studio of TUMACH in Amsterdam."
+    },
+    "privacy": {
+      "title": "Privacy · TUMACH",
+      "description": "What the site of TUMACH keeps of you, why, who sees it and for how long."
+    },
+    "guide": {
+      "title": "How to use the studio app · TUMACH",
+      "description": "Log in, add the studio app to your home screen and turn on notifications."
+    }
   }
 }

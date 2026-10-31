@@ -4,7 +4,9 @@ import Database from "better-sqlite3";
 import en from "../messages/en.json" with { type: "json" };
 import { STUDIO_SESSION } from "./studio-session";
 
-test.use({ storageState: STUDIO_SESSION });
+// The headless shell of Playwright (the default) gives `Notification.permission` "denied" also after
+// `grantPermissions`, so the page shows "blocked" (#188). The full Chromium in headless mode gives "granted".
+test.use({ storageState: STUDIO_SESSION, channel: "chromium" });
 
 function subscriptions(): number {
   const db = new Database("out/e2e/tumach.db", { readonly: true });

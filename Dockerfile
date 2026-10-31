@@ -25,6 +25,7 @@ COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=build --chown=nextjs:nodejs /app/public ./public
 # `src/instrumentation.ts` applies the migrations at the start.
 COPY --from=build --chown=nextjs:nodejs /app/drizzle ./drizzle
+COPY --from=build --chown=nextjs:nodejs /app/scripts/restore.mjs ./scripts/restore.mjs
 USER nextjs
 VOLUME /app/data
 EXPOSE 3000

@@ -17,6 +17,8 @@ services:
     labels:
       # The updater watches only the containers with this label (never Home Assistant).
       - com.centurylinklabs.watchtower.enable=true
+      # Only the updater of this site (scope preview) restarts it: the live site has its own scope.
+      - com.centurylinklabs.watchtower.scope=preview
 
   # Polls the registry every 5 minutes and restarts `site` on a new image. A maintained fork of the archived
   # containrrr/watchtower, with the same labels and settings.
@@ -25,6 +27,7 @@ services:
     restart: unless-stopped
     environment:
       WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_SCOPE: preview
       WATCHTOWER_POLL_INTERVAL: "300"
       WATCHTOWER_CLEANUP: "true"
     volumes:

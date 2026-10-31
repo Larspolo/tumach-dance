@@ -6,6 +6,7 @@ It keeps the agent-state comment and the "Process changes" section of the curren
 
     python3 framework/tools/dashboard.py            # update the body of the status issue
     python3 framework/tools/dashboard.py --dry-run  # print the body
+    python3 framework/tools/dashboard.py --out F    # also write the body to F (tools/dashboard_site.py)
     python3 framework/tools/dashboard.py --next     # print the ticket candidates in pick order (autopilot step 5), with
                                           # the files and functions that they share with the work in progress
 
@@ -403,6 +404,7 @@ def main(argv=None):
     ap.add_argument("--dry-run", action="store_true", help="print the body, do not change the issue")
     ap.add_argument("--next", action="store_true", help="print the candidates in pick order")
     ap.add_argument("--lane", help="with --next: only the tickets of this lane (haiku, #1715)")
+    ap.add_argument("--out", help="also write the body to this file (the dashboard page, #118)")
     a = ap.parse_args(argv)
     open_all = pages("issues?state=open")                       # issues and PRs
     issues = [i for i in open_all if "pull_request" not in i]
@@ -443,6 +445,10 @@ def main(argv=None):
     status = api(f"issues/{status['number']}")
     body = render(status["body"], open_all, comments, open_prs, closed, closed_prs, now, owner, nxt, accounts=accounts,
                   insights=insights)
+    if a.out:                                   # out/ is not in git: a fresh checkout (the workflow) has no folder
+        os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
+        with open(a.out, "w", encoding="utf-8") as f:
+            f.write(body)
     if a.dry_run:
         print(body)
     elif re.sub(r"_Updated .*?_", "", body) != re.sub(r"_Updated .*?_", "", status["body"] or ""):

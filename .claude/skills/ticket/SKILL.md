@@ -100,13 +100,19 @@ the `human` skill gives them to `game/watch.py` (#1123). The place is `chopper`,
 
 A question for Nina (`steering/project/PRINCIPLES.md`, "Owner involvement") has the title "Question for Nina: <the question>",
 the section `## For Nina` with 2 to 4 choices, and the label `for-nina`. Its `## For the owner` steps stay for Lars until the
-page "For Nina" works. The form (`src/lib/nina-question.ts` reads it):
+page "For Nina" works. After her answer ("Nina's answer: ..."), the page hides the question; a reply of a run does
+not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). The form (`src/lib/nina-question.ts` reads it):
 
     ## For Nina
     <The question in plain words, no technical word.>
     Try: /studio/offers
+    Example: bookings
     - A. <choice>
     - B. <choice>
+
+The line `Example: <name>` is optional (#146): when Nina taps "Try" on the preview, the preview gets that example data
+first, once per question (`src/lib/examples.ts`). The names: `bookings` (two requests and two approved bookings in the
+next 7 days), `offers` (one lesson and one rental, when there is no offer). The live site never loads example data.
 
 
 A check ticket ("check X in the game") starts without `needs-human`: an agent runs the check first (`verify`, level 4),

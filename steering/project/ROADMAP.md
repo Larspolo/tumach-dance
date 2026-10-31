@@ -21,13 +21,18 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:findable` Search engines and link previews find and show the site
   - A shared link shows a picture and a short text in WhatsApp and Instagram
   - Google finds each page in each language
+- [ ] `site:texts` The real texts of Nina on each public page, in each language
+  - Nina gives the text of each section on the page "For Nina", and sees it on the preview before it goes live
+  - Nina checks the Dutch and the Slovenian texts; no page shows a placeholder
 - [ ] `site:live` tumach.dance runs the new site
-  - Lars puts a tested version live with one step; the live site and the preview have separate data
+  - Each merge to main updates the live site, as the preview (one image, owner 2026-10-31); the live site and the preview have separate data
   - A backup of the data each night, and a tested way to restore it
+- [ ] `site:watch` Lars knows when the live site has a problem
+  - Lars gets a message when the live site stops or the nightly backup fails, with no paid service
 
 ## 2. Nina's studio app
 
-- [ ] `nina:app` Nina's login, the app on her phone and push notifications
+- [x] `nina:app` (#11) Nina's login, the app on her phone and push notifications
   - Only Nina logs in, on her phone and her laptop, and stays logged in on each device
   - Nina adds the app to the home screen of her phone and gets a test notification
   - A short guide in her language shows each step, with pictures
@@ -51,7 +56,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A dancer selects a private lesson or studio rental, sees only the free slots, and sends a request with a name, an email and a phone number (no account)
   - The dancer gets an email in the language of the site that the request is in
   - Two dancers never get the same slot: an open request holds its slot until Nina decides
-- [ ] `book:decide` Nina approves or declines each request
+- [x] `book:decide` (#73) Nina approves or declines each request
   - Nina gets a push notification for each new request and approves or declines it with one tap
   - The dancer gets an email with the decision
 - [ ] `book:pay` A payment link after the approval

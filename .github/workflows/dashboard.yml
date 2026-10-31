@@ -14,6 +14,8 @@ permissions:
   contents: read     # checkout needs it
   issues: write
   pull-requests: read   # the pulls API (open PRs, merged PRs) gives 403 without it
+  pages: write          # the dashboard page (#118)
+  id-token: write       # deploy-pages needs it
 
 concurrency:
   group: dashboard
@@ -23,9 +25,33 @@ jobs:
   dashboard:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Update the status issue
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 framework/tools/dashboard.py
+        run: python3 framework/tools/dashboard.py --out out/dashboard.md
+      # The page (https://larspolo.github.io/tumach-dance/, #118): each step after the update of #1, and a failed
+      # page does not make the run red (continue-on-error): issue #1 is the dashboard of record.
+      - name: Build the dashboard page
+        id: site
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/dashboard_site.py out/dashboard.md
+      - uses: actions/configure-pages@v5
+        if: steps.site.outcome == 'success'
+        continue-on-error: true
+      - uses: actions/upload-pages-artifact@v3
+        id: upload
+        if: steps.site.outcome == 'success'
+        continue-on-error: true
+        with:
+          path: out/site
+      - uses: actions/deploy-pages@v4
+        id: deploy
+        if: steps.upload.outcome == 'success'
+        continue-on-error: true
