@@ -313,6 +313,8 @@
     "try": "Try it on the site",
     "choose": "Your choice",
     "text": "Anything to add? (optional)",
+    "textOnly": "Your text",
+    "empty": "Please write your text first.",
     "send": "Send",
     "thanks": "Thank you! Your answer is sent.",
     "error": "Your answer was not sent. Please try again in a moment.",
