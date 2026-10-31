@@ -51,6 +51,25 @@ docker compose up -d
 The restore copies the database of that night and the photos that are missing. It changes nothing when that night
 has no backup, and it prints the dates that exist.
 
+### The site watch
+
+The workflow Site watch of GitHub (`.github/workflows/site-watch.yml`) checks the live site for you. When the site
+is down, you get a ticket and a message on your phone.
+
+1. What it checks: `/api/health` (the database and the age of the newest backup) and the home page `/en` of
+   https://tumach.dance. It checks each 15 minutes, and about 7 minutes after each new image. When one of them does
+   not answer in two checks one minute apart, it opens one `P0` ticket with the label `site-down` and the error text.
+   When the site answers again, the watch closes the ticket.
+2. Get the message on your phone (do this once):
+   1. Install the GitHub app on your phone, tap **Sign in**, and allow notifications when the app asks.
+   2. On the page of the repository (in the app or on github.com), tap **Watch** > **Custom**, select **Issues**, and
+      tap **Apply**. (Or select **All Activity**.)
+3. Try it once (about 20 minutes of downtime):
+   1. In `~/tumach-live`, run `docker compose stop site`.
+   2. Wait up to 20 minutes. You get a push of a new ticket with the label `site-down`.
+   3. Run `docker compose start site`.
+   4. Within 15 minutes, the watch closes the ticket.
+
 ## Change of the preview (scope)
 
 The preview and the live site each have an updater with its own scope (`preview` and `live`). After this change, run
