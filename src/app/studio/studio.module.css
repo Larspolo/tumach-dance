@@ -193,6 +193,20 @@
   border-radius: 0.5rem;
 }
 
+/* The choices of a question for Nina: one below the other, as a suggested text can be long (2026-10-31). The radio
+   button stays at the start of the first line. */
+.answers {
+  flex-direction: column;
+}
+
+.answers .choice {
+  align-items: flex-start;
+}
+
+.answers .choice input {
+  flex: none;
+}
+
 /* The grid of the photos (#173): two columns on a phone. */
 .photos {
   display: grid;
