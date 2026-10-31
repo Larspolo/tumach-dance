@@ -6,7 +6,7 @@ import nl from "../messages/nl.json";
 import sl from "../messages/sl.json";
 
 /** The keys that wait for a text of Nina, with the ticket of the question. Remove a key when her text is in. */
-const WAITING_FOR_NINA: Record<string, number> = { "Footer.tagline": 273 };
+const WAITING_FOR_NINA: Record<string, number> = {};
 
 function placeholders(value: unknown, prefix = ""): string[] {
   if (typeof value === "string") return value.includes("[Placeholder") ? [prefix] : [];
