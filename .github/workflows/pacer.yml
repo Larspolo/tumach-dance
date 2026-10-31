@@ -107,6 +107,9 @@ jobs:
             # exit 3: another value stops the loop; a missing key is red, not a quiet stop (#4349, `pacer.switch`)
             python3 framework/tools/pacer.py --switch || { rc=$?; [ $rc -eq 3 ] || exit $rc
               echo "pacer is not \"workflow\" in [pacing] (steering/system/system.toml): stop the loop"; exit 0; }
+            # the live site (a project with a Site watch, tools/site_watch.py): its cron fires a few times a day, and a run of
+            # Image that Automerge starts with the workflow token starts no workflow_run (2026-10-31)
+            [ -f .github/workflows/site-watch.yml ] && { gh workflow run site-watch.yml --repo "$GITHUB_REPOSITORY" --ref main || true; }
             if ! python3 framework/tools/pacer.py --log "$RUNNER_TEMP/pacer.jsonl"; then   # a failed call (HTTP 401, 500): red now
               # a run that a person started (a try after a fix) ends at once; the cron restarts the loop
               [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "$GITHUB_ACTOR" != "github-actions[bot]" ] && exit 1

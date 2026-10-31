@@ -1,13 +1,10 @@
 name: Site watch
 
-# Checks the live site (tools/site_watch.py, #263 option A): about 7 minutes after each new image (the updater of the
-# home server pulls it within 5 minutes), and each 15 minutes (GitHub starts a cron late or skips it under load).
+# Checks the live site (tools/site_watch.py, #263 option A) in each cycle of the pacer loop (pacer.yml, 10 minutes).
+# No workflow_run of Image: Automerge starts Image with the workflow token, and GitHub then starts no workflow_run
+# (2026-10-31). The cron is the fallback when no pacer loop runs: GitHub fires it only a few times a day.
 # A failure opens one P0 ticket `site-down` with the error text of /api/health; a site that answers again closes it.
 on:
-  workflow_run:
-    workflows: [Image]
-    types: [completed]
-    branches: [main]
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
@@ -27,10 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 50                       # the merges after the version of the image
-      - name: Wait for the updater of the home server
-        if: github.event_name == 'workflow_run'
-        run: sleep 420
+          fetch-depth: 50                       # the merges up to the version of the image
       - name: Check the site
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
