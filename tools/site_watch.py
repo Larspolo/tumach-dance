@@ -1,6 +1,6 @@
 """Watch the live site from GitHub (#263, option A; owner, 2026-10-31) and give the agents the error text.
 
-    python3 tools/site_watch.py     # the Site watch workflow: about 7 minutes after each new image, and each 15 minutes
+    python3 tools/site_watch.py     # the Site watch workflow: each cycle of the pacer loop (10 minutes)
 
 It reads `/api/health` (the database, the backup, the version of the image and the last server errors of
 `src/lib/site-errors.ts`) and the home page `/en`. When one of them does not answer 200 in two checks one minute apart,
