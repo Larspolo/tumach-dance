@@ -42,7 +42,9 @@ whole goal is covered (owner rule, #820: never only "All sub-issues are closed")
 an L ticket"). Check that criterion against the full scope (for "all X": the full list, for example a wiki of the original) and
 name each missing item. When `steering/project/PRINCIPLES.md` has the section "Try a feature", do what it says first
 (for example a `needs-human` test ticket, or a build); the epic waits for it. Close the epic with a comment only when all criteria are met
-(name the evidence for each, then the label `close`: `owner.md`, "Close an issue", #1740). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
+(name the evidence for each, then the label `close`: `owner.md`, "Close an issue", #1740). When an open criterion waits only for an open ticket of another epic (often a question for Nina), add a line
+"Part of #E" to the body of that ticket, outside its section `## For Nina`: else the pacer starts a deep run for the
+epic check of E in each cycle (`usage.refill_need`; 3 empty deep runs for #32 and #158 on 2026-11-01, #318). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
 (E = the epic; exit 1: another run makes its sub-issue, skip the epic, #505). Then make one sub-issue (same priority)
 for the criteria that an agent can do. A criterion that needs the owner stays on the epic. Then pick again (#176, #155 waited while P3 tickets ran).
 Release checks: when `cycle_start.py` prints the section "Release checks (no ticket, make them in the refill)", a deep
