@@ -287,7 +287,10 @@
     "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
     "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "payReminderSubject": "Payment of your booking at TUMACH",
-    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well.",
+    "unansweredSubject": "Your booking request at TUMACH",
+    "unansweredBody": "Nina could not answer your request in time: {offer}, {when}. The request has ended.",
+    "unansweredOther": "You can pick another time on the booking page: {url}"
   },
   "bookingPush": {
     "title": "New booking request",

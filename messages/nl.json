@@ -287,7 +287,10 @@
     "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
     "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "payReminderSubject": "Betaling van je boeking bij TUMACH",
-    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
+    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed.",
+    "unansweredSubject": "Je boekingsaanvraag bij TUMACH",
+    "unansweredBody": "Nina kon je aanvraag niet op tijd beantwoorden: {offer}, {when}. De aanvraag is gestopt.",
+    "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}"
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",

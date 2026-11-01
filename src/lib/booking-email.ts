@@ -99,6 +99,21 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
   return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text };
 }
 
+/** The email to the dancer when Nina did not answer a request before its start (#340), in the language of the booking. */
+export function unansweredEmail(booking: Booking, offer: Offer, origin = siteOrigin()): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.unansweredBody", { offer: offerLabel, when }),
+    "",
+    t("bookingEmail.unansweredOther", { url: `${origin}/${booking.locale}/book` }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  return { to: booking.email, subject: t("bookingEmail.unansweredSubject"), text };
+}
+
 /** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
 export function reminderEmail(booking: Booking, offer: Offer): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
