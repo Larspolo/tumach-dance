@@ -336,7 +336,9 @@
     "cancelAsk": "Deze boeking annuleren?",
     "cancelYes": "Ja, annuleren",
     "removed": "Naam verwijderd",
-    "cancelNo": "Nee"
+    "cancelNo": "Nee",
+    "block": "Vrijgehouden",
+    "blockRemove": "Verwijderen"
   },
   "StudioFeedback": {
     "back": "Terug",

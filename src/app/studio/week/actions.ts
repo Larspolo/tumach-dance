@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
+import { removeBlock as deleteBlock } from "@/db/blocks";
 import { cancelBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { sendCancelEmail } from "@/lib/booking-email";
@@ -21,5 +22,15 @@ export async function cancel(form: FormData): Promise<void> {
     // A second tap (or another device) finds the booking already cancelled: show the week again.
     if (result.ok) await sendCancelEmail(db, result.booking);
   }
+  redirect(`/studio/week?start=${week.start}`);
+}
+
+/** Remove one time that Nina keeps free (#326). One tap: a block has no dancer to tell. */
+export async function removeBlock(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  if (Number.isInteger(id)) deleteBlock(getDb(), id);
   redirect(`/studio/week?start=${week.start}`);
 }
