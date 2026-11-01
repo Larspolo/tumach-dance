@@ -65,18 +65,30 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
    It commits, runs the lint of `agent.toml` (always) and the test files of the change (`--tested`: you ran them on this tree), runs the guard (hard rule before each
    push: it fails when the claim is not yours or another branch has a PR that closes #N, #288), pushes and opens the
    PR. A PR that changes `packaging/` or a workflow with its own PR checks: add `--hold` (the label `hold` at once).
+   Then it waits for the quick CI (about 6 minutes, #4784): give the Bash call `timeout: 600000`.
    Exit 3: do not push: `claim.py N --release` (when the claim is yours; it removes `in-progress`), comment the reason
    in one line on the ticket and pick the next ticket.
-8. It prints `mergeable_state`. `dirty`: run `python3 framework/tools/merge_main.py --push N` (`conflict.md`).
-   Do not wait for CI and do not merge by hand: CI runs the quick checks (lint and fast tests, about 1 minute) and
-   the browser tests (the build and Playwright, job `browser`, about 5 minutes) on each PR, and the Automerge workflow
-   merges the PR when CI is green, removes `in-progress` and deletes the branch. Still do the levels of the `verify`
-   skill that the change needs (browser tests, screenshots) before the push. Continue with step 7 and the next ticket. Step 2 of a
-   later cycle finds a red or conflicted PR.
-9. CI red → find the cause, fix, push. After 3 failed attempts stop: comment the cause on the ticket,
-   add `blocked` or `needs-human` and `hold`, run `claim.py N --release` (it removes `in-progress`), and go to step 8 of the skill (report).
+8. It prints `mergeable_state`. `dirty`, or exit 6 (Automerge found a conflict after the green CI, #5584): run
+   `python3 framework/tools/merge_main.py --push N` (`conflict.md`), then `ship_pr.py N --ci`.
+   Do not merge by hand: CI runs the quick checks (lint and fast tests, about 1 minute) and the browser tests (the build
+   and Playwright, job `browser`, about 5 minutes) on each PR, and the Automerge workflow merges the PR when CI is green, removes `in-progress` and deletes the branch. Exit 5: the quick
+   CI is red, go to 9 now (a red PR after the run ends costs a takeover by a cold run, #4784). The CI still runs at
+   the time limit: `ship_pr.py N --ci` once, then continue. Still do the levels of the `verify` skill that the change needs (browser tests, screenshots) before the push. Continue
+   with step 7 and the next ticket. Step 2 of a later cycle finds a red or conflicted PR.
+9. CI red → find the cause in the printed failed steps and tests, fix, commit, `ship_pr.py N --message MSG.txt`.
+   After 3 failed attempts stop: comment the cause on the ticket, add `blocked` or `needs-human` and `hold`, run
+   `claim.py N --release` (it removes `in-progress`), and go to step 8 of the skill (report).
 10. Merge conflict → as in 8.
 11. CI green → the Automerge workflow merges. Add label `hold` to the PR if it must not merge yet.
+
+**A question for Nina** (label `for-nina`): her answer removed `needs-human` (#294), so it is a candidate. No PR and no
+branch. Read the comments. No "Nina's answer:" after the last section `## For Nina`: add `needs-human` again and pick
+the next ticket. Else act on her answer: a good answer (often A) closes the ticket; a problem or a wish that she names
+gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Make it a sub-issue of the epic of the question
+(`gh api repos/OWNER/NAME/issues/N/parent`; `github.md`, "Add a sub-issue"; a full epic: "Part of #E" in the body):
+an epic with no open sub-issue starts empty refill runs (#309). When another question already has a follow-up for the
+same problem, make no new ticket: name it in a comment on the epic. Then write one evidence comment (her answer, the
+follow-up numbers) and close with the label `close` (`owner.md`, "Close an issue"); `claim.py N --release`.
 
 Ask the owner only with the label `needs-human` and a comment on the issue that needs the answer (owner rule, #862).
 Never ask with PushNotification, in the session, or only in the status report. Details, denied actions, a wrong

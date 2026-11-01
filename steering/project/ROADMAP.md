@@ -21,11 +21,11 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:findable` Search engines and link previews find and show the site
   - A shared link shows a picture and a short text in WhatsApp and Instagram
   - Google finds each page in each language
-- [ ] `site:texts` The real texts of Nina on each public page, in each language
-  - Nina gives the text of each section on the page "For Nina", and sees it on the preview before it goes live
-  - Nina checks the Dutch and the Slovenian texts; no page shows a placeholder
+- [ ] `site:texts` Real texts on each public page, in each language
+  - An agent writes a sensible text for each section; Nina gives only her tagline (owner, 2026-10-31)
+  - No page shows a placeholder
 - [ ] `site:live` tumach.dance runs the new site
-  - Lars puts a tested version live with one step; the live site and the preview have separate data
+  - Each merge to main updates the live site, as the preview (one image, owner 2026-10-31); the live site and the preview have separate data
   - A backup of the data each night, and a tested way to restore it
 - [ ] `site:watch` Lars knows when the live site has a problem
   - Lars gets a message when the live site stops or the nightly backup fails, with no paid service

@@ -13,7 +13,7 @@ import { changeClass, removeTime } from "./actions";
 import { ClassTimeForm } from "./class-time-form";
 
 // The classes of the studio (#96): Nina adds, changes and hides them. Plain HTML forms and one server action.
-// Each class shows its weekly times (#97). Each text has an English box; the Dutch and Slovenian boxes are behind "Translations" (P1: a short form).
+// Each class shows its weekly times (#97). Each text has an English box; the Dutch boxes are behind "Translations" (P1: a short form).
 export default async function ClassesPage() {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -42,10 +42,7 @@ export default async function ClassesPage() {
       {CLASS_FIELDS.map((f) => box(f, "en", t(f), cls?.[f].en, true))}
       <details className={styles.form}>
         <summary className={styles.link}>{t("translations")}</summary>
-        {CLASS_FIELDS.flatMap((f) => [
-          box(f, "nl", t(`${f}In`, { language: t("nl") }), cls?.[f].nl),
-          box(f, "sl", t(`${f}In`, { language: t("sl") }), cls?.[f].sl),
-        ])}
+        {CLASS_FIELDS.flatMap((f) => [box(f, "nl", t(`${f}In`, { language: t("nl") }), cls?.[f].nl)])}
       </details>
     </>
   );

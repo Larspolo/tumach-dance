@@ -2,9 +2,8 @@
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
-import sl from "../messages/sl.json" with { type: "json" };
 
-const MESSAGES = { en, nl, sl };
+const MESSAGES = { en, nl };
 
 for (const [locale, m] of Object.entries(MESSAGES)) {
   test(`/${locale}/studio-guide shows the three parts with their pictures`, async ({ page }) => {

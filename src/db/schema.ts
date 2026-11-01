@@ -205,8 +205,8 @@ export const bookings = sqliteTable(
 );
 
 /**
- * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "...",
- * "sl": "..."}`: `en` is required, the other languages are optional (`src/lib/local-text.ts`).
+ * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "..."}`: `en` is
+ * required, the other language is optional (`src/lib/local-text.ts`).
  */
 export const classes = sqliteTable("classes", {
   id: integer("id").primaryKey({ autoIncrement: true }),

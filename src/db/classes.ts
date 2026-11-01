@@ -6,7 +6,7 @@ import type { Db } from "./index";
 import { classes, classTimes } from "./schema";
 
 /** A text by language: `en` is required, the other languages are optional. */
-export type LocalTexts = { en: string } & Partial<Record<"nl" | "sl", string>>;
+export type LocalTexts = { en: string } & Partial<Record<"nl", string>>;
 
 export type ClassRow = typeof classes.$inferSelect;
 export type Class = Omit<ClassRow, "name" | "text" | "forWhom"> & {

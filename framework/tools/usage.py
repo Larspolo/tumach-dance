@@ -37,6 +37,7 @@ import sys
 
 import agent_config
 from agent_config import CONFIG
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))   # the project tools: release.py (#4195)
 
 BURN = 0.03         # share of the 5-hour quota that one run uses per hour (16 runs used about 50 % per hour, 2026-10-25)
@@ -182,18 +183,24 @@ def pending(started, lines, now, minutes=PENDING, refill_lane="deep"):
 
 def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=lambda: []):
     """The reason of the refill runs, or "" when they have no work (#3547): an open epic with no open sub-issue and no
-    open "Part of #E" ticket (the epic check), a release check with no ticket, a due process or roadmap review (deep
+    open "Part of #E" ticket (the epic check; a release epic with an open ticket in its milestone has work), the tickets with
+    `rank` after a release (release.yml gives it to the next release epic too: the `roadmap` skill, "Release cycle"),
+    a release check with no ticket, a due process or roadmap review (deep
     locks: with no deep run they never run, #3560), and only while R < N (`queue.md`) the other refill sources. 5 deep
     runs in one hour found none with R >= N (2026-10-29), and one with R < N found no source (#3560). issues: the open
     issues and PRs; due, reviews, free: the release checks with no ticket, the due reviews and the other sources
     (free_sources), read only when needed."""
     import dashboard
     work = {int(n) for i in issues if "pull_request" not in i for n in re.findall(r"Part of #(\d+)", i.get("body") or "")}
+    work |= {i["number"] for i in issues if dashboard.RELEASE in dashboard.labels(i)
+             and dashboard.release_scope(i, issues)[2]}             # a release epic with open milestone tickets has work
     subs = lambda i: (s := i.get("sub_issues_summary") or {}).get("total", 0) - s.get("completed", 0)   # open sub-issues
     epics = [i["number"] for i in issues if "epic" in dashboard.labels(i) and i["number"] not in work and not subs(i)
-             and not {dashboard.MUTED, dashboard.AFTER, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)]
+             and not {dashboard.MUTED, dashboard.AFTER, dashboard.RANK, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)]
     if epics:
         return "epic check " + ", ".join(f"#{n}" for n in epics)
+    if rank := sum(dashboard.RANK in dashboard.labels(i) for i in issues if "pull_request" not in i):
+        return f"rank {rank} tickets after the release"                  # and the next release epic (`roadmap` skill)
     if checks := due():
         return f"{len(checks)} release checks"
     if kinds := reviews():
@@ -231,6 +238,14 @@ def due_reviews(remote="origin", starved=None):
     return out
 
 
+def held(numbers):
+    """True when an open issue of `numbers` (of a roadmap line) is `after-release` or `muted`: the owner holds the
+    feature, and the refill leaves it out (#5301: `convert:export` named the held owner ticket #4198, no epic)."""
+    import dashboard
+    return any((i := dashboard.api(f"issues/{n}"))["state"] == "open"
+               and {dashboard.AFTER, dashboard.MUTED} & dashboard.labels(i) for n in sorted(numbers))
+
+
 def roadmap_features(text):
     """{key: (goal, done, named)} of the feature lines "- [ ] `key` ..." under the "## N." goals of a roadmap (the
     `roadmap` skill): done for "[x]", named = the issue numbers on the line. A project with no tools/release.py (#153)."""
@@ -249,15 +264,17 @@ def epic_key(body):
     return m and m[1]
 
 
-def free_sources(root=None, epics=None):
+def free_sources(root=None, epics=None, holds=held):
     """The refill sources of R < N besides the checks and reviews (#3560): the `[ ]` features of the goals 1 to 3 with
-    no epic (the `roadmap` skill) and the fallbacks of docs/coverage.md (none without the file). A read error counts as
-    a source. Without tools/release.py the roadmap of `agent.toml` and the epics of GitHub (`epics`: a test stub, #153)."""
+    no epic (the `roadmap` skill) inside the release focus (`release.focus`), not held by the owner (`held`), and the
+    fallbacks of docs/coverage.md (none without the file). A read error counts as a source. Without tools/release.py
+    the roadmap of `agent.toml` and the epics of GitHub (`epics`: a test stub, #153), and no release focus."""
     try:
         try:
             import release
-            features, _, _, found = release.load()
+            features, _, rows, found = release.load()
             key, root = release.epic_key, root or release.ROOT
+            wait = set(release.waiting(features, rows, release.focus(root)))     # outside the release focus
         except ImportError:
             root = root or agent_config.ROOT
             with open(os.path.join(root, CONFIG["docs"]["roadmap"])) as f:
@@ -265,10 +282,10 @@ def free_sources(root=None, epics=None):
             if epics is None:
                 import dashboard
                 epics = lambda: dashboard.pages("issues?labels=epic&state=all")   # noqa: E731
-            found, key = epics(), epic_key
+            found, key, wait = epics(), epic_key, set()
         keys, numbers = {key(e.get("body")) for e in found}, {e["number"] for e in found}
         free = [k for k, (goal, done, named) in features.items() if goal < 4 and not done and k not in keys
-                and not named & numbers]
+                and k not in wait and not named & numbers and not holds(named)]
         coverage = os.path.join(root, "docs", "coverage.md")
         fallbacks = 0
         if os.path.exists(coverage):

@@ -4,7 +4,7 @@ import { defineRouting } from "next-intl/routing";
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export const routing = defineRouting({
-  locales: ["en", "nl", "sl"],
+  locales: ["en", "nl"],
   defaultLocale: "en",
   localeCookie: { maxAge: LOCALE_COOKIE_MAX_AGE },
 });

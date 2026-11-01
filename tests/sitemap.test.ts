@@ -2,12 +2,12 @@
 import { expect, test } from "vitest";
 import sitemap from "../src/app/sitemap";
 
-test("sitemap() lists 4 pages in 3 languages with the address of siteOrigin()", () => {
+test("sitemap() lists 4 pages in 2 languages with the address of siteOrigin()", () => {
   const before = process.env.BETTER_AUTH_URL;
   process.env.BETTER_AUTH_URL = "https://tumach.dance/api/auth";
   try {
     const entries = sitemap();
-    expect(entries).toHaveLength(12);
+    expect(entries).toHaveLength(8);
     const urls = entries.map((e) => e.url);
     for (const url of urls) expect(url.startsWith("https://tumach.dance/")).toBe(true);
     expect(urls).toContain("https://tumach.dance/nl/book");
@@ -15,7 +15,6 @@ test("sitemap() lists 4 pages in 3 languages with the address of siteOrigin()", 
     expect(nlBook?.alternates?.languages).toEqual({
       en: "https://tumach.dance/en/book",
       nl: "https://tumach.dance/nl/book",
-      sl: "https://tumach.dance/sl/book",
     });
   } finally {
     process.env.BETTER_AUTH_URL = before;
