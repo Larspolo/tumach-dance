@@ -78,6 +78,12 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
 10. Merge conflict → as in 8.
 11. CI green → the Automerge workflow merges. Add label `hold` to the PR if it must not merge yet.
 
+**A question for Nina** (label `for-nina`): her answer removed `needs-human` (#294), so it is a candidate. No PR and no
+branch. Read the comments. No "Nina's answer:" after the last section `## For Nina`: add `needs-human` again and pick
+the next ticket. Else act on her answer: a good answer (often A) closes the ticket; a problem or a wish that she names
+gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Then write one evidence comment (her answer, the
+follow-up numbers) and close with the label `close` (`owner.md`, "Close an issue"); `claim.py N --release`.
+
 Ask the owner only with the label `needs-human` and a comment on the issue that needs the answer (owner rule, #862).
 Never ask with PushNotification, in the session, or only in the status report. Details, denied actions, a wrong
 ticket: `owner.md`.

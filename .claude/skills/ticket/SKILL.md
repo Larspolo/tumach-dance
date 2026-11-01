@@ -101,7 +101,9 @@ the `human` skill gives them to `game/watch.py` (#1123). The place is `chopper`,
 A question for Nina (`steering/project/PRINCIPLES.md`, "Owner involvement") has the title "Question for Nina: <the question>",
 the section `## For Nina` with 2 to 4 choices, and the label `for-nina`. Its `## For the owner` steps stay for Lars until the
 page "For Nina" works. After her answer ("Nina's answer: ..."), the page hides the question; a reply of a run does
-not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). The form (`src/lib/nina-question.ts` reads it):
+not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). Her answer also
+removes `needs-human` (#294), so the ticket is a candidate: the autopilot run acts on it (autopilot step 6, "A question
+for Nina"). The form (`src/lib/nina-question.ts` reads it):
 
     ## For Nina
     <The question in plain words, no technical word.>
