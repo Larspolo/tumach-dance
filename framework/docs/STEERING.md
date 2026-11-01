@@ -39,12 +39,14 @@ The agent takes instructions only from comments and issues by `Larspolo`.
 | Cancel a ticket | Close it as "not planned". |
 | Mute a ticket until later | Add the label `muted`. No agent works on it (also not on a muted epic), and "Waiting for you" hides it. Remove the label to bring it back. |
 | Do a ticket only after the next release | Add the label `after-release`. No agent works on it before the next release. A push of a tag `v*` removes the label from all issues (workflow `after-release.yml`); remove it by hand to bring one ticket back earlier. |
+| Set what the next release holds | Add a ticket to the GitHub milestone "vX.Y.Z" of the open release epic (label `release`) or remove it. For the roadmap features: the line "Release focus: X" or the levels of `steering/project/RELEASE.md`. Until the next release the agents work only inside the focus, and give each ticket outside it the label `after-release`. |
+| Make a release | Close the release epic, or let the agents close it when its criteria are met. The Release workflow tags `vX.Y.Z` when the milestone has no open issue and CI of main is green, makes the GitHub release, closes the milestone, brings the held tickets back with `rank` and opens the next release epic and milestone. |
 | Reject a process change | Comment on the status issue. The agent reverts it and notes why. |
 | Ask for a process review | Comment "process review" on the status issue. A PR of your own session that the runs did not make (no commit with `Agent-Run:`) also makes the next review come soon: the review learns the lever from it. |
 | Check or repair the start of the runs | Follow `framework/docs/OPERATOR.md` (check, repair, a new project, a move to another account), or start a session at claude.ai/code and write "Follow framework/docs/OPERATOR.md, section 1". A long-lived owner session is not necessary. |
 
 Order of work: `P0` → `P1` → `P2` → `P3`. With the same priority, the lowest issue number goes first.
-Tickets with `needs-human`, `blocked`, `muted`, `after-release` or `epic` wait. A ticket that depends on a muted ticket waits too.
+Tickets with `needs-human`, `blocked`, `muted`, `after-release`, `rank` or `epic` wait. A ticket that depends on a muted ticket waits too.
 
 The agent asks you only on GitHub: on the issue that needs the answer, with the label `needs-human` and a
 comment that mentions `@Larspolo` (#862). It does not ask with phone notifications or only in the status report.
@@ -54,7 +56,7 @@ comment that mentions `@Larspolo` (#862). It does not ask with phone notificatio
 - Priority: `P0`, `P1`, `P2`, `P3`
 - Size: `size:S`, `size:M`, `size:L` (L tickets are split before work starts)
 - Kind: `bug`, `feature`, `tooling`, `design`, `docs`, `cleanup`
-- Flow: `needs-human`, `blocked`, `muted`, `after-release`, `in-progress`, `epic`, `agent-status`, `paused`
+- Flow: `needs-human`, `blocked`, `muted`, `after-release`, `rank`, `release`, `in-progress`, `epic`, `agent-status`, `paused`
 
 The file `.github/labels.txt` defines the labels. The Labels workflow creates them on `main`.
 
@@ -99,7 +101,7 @@ ticket with numbered steps.
 The runs are paced without you. `framework/tools/usage.py` reads the usage of your subscription (the 5-hour and 7-day windows,
 as the Claude Code CLI reports them) and computes the number of runs: fast to 90 % of the 5-hour window 2 hours before
 its reset, then slower to 98 % at the reset (your decision, 2026-10-26), and not the week faster than it passes
-when `week_guard` in `agent.toml` is `true` (now `true`, your decision, 2026-10-29).
+when `week_guard` in `agent.toml` is `true` (now `false`: only the 5-hour window counts, your decision, 2026-11-01).
 You do not need to send percentages.
 A run of the scheduled task cannot start other runs (#566). So the workflow `pacer.yml` (#3193, #3194) runs
 `framework/tools/pacer.py` every 10 minutes: it computes the runs that the target misses (`usage.fire`, at most `max_fire` of

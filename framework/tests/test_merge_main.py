@@ -67,8 +67,8 @@ def test_a_real_conflict_stays_and_the_rest_is_solved(tmp_path):
 
 def test_the_tests_of_a_merge():
     tests = {"tests/test_a.py": "import scenario\n", "tests/test_b.py": "from game import train\n",
-             "tests/test_c.py": "import tumach_dance\n", "tests/test_mine.py": "x = 1\n"}
-    run, rest = merge_main.test_files(["game/scenario.py", "docs/X.md"], ["tests/test_mine.py", "tumach_dance.py"], tests)
+             "tests/test_c.py": "import app\n", "tests/test_mine.py": "x = 1\n"}
+    run, rest = merge_main.test_files(["game/scenario.py", "docs/X.md"], ["tests/test_mine.py", "app.py"], tests)
     assert run == ["tests/test_mine.py", "tests/test_a.py"] and rest == []
-    many = {f"tests/test_{i}.py": "import tumach_dance\n" for i in range(40)}
-    assert merge_main.test_files(["tumach_dance.py"], [], many) == ([], sorted(many))     # CI runs them
+    many = {f"tests/test_{i}.py": "import app\n" for i in range(40)}
+    assert merge_main.test_files(["app.py"], [], many) == ([], sorted(many))     # CI runs them
