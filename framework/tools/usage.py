@@ -34,8 +34,11 @@ import os
 import re
 import subprocess
 import sys
+import time
 
 import agent_config
+
+NEW_EPIC_WAIT = 10 * 60   # seconds: an epic made less than this ago is split by its run first (#328)
 from agent_config import CONFIG
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))   # the project tools: release.py (#4195)
@@ -181,7 +184,7 @@ def pending(started, lines, now, minutes=PENDING, refill_lane="deep"):
     return {task: n - made.get(task, 0) for task, n in started.items() if n - made.get(task, 0) > 0}
 
 
-def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=lambda: []):
+def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=lambda: [], now=None):
     """The reason of the refill runs, or "" when they have no work (#3547): an open epic with no open sub-issue and no
     open "Part of #E" ticket (the epic check; a release epic with an open ticket in its milestone has work), the tickets with
     `rank` after a release (release.yml gives it to the next release epic too: the `roadmap` skill, "Release cycle"),
@@ -189,14 +192,18 @@ def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=
     locks: with no deep run they never run, #3560), and only while R < N (`queue.md`) the other refill sources. 5 deep
     runs in one hour found none with R >= N (2026-10-29), and one with R < N found no source (#3560). issues: the open
     issues and PRs; due, reviews, free: the release checks with no ticket, the due reviews and the other sources
-    (free_sources), read only when needed."""
+    (free_sources), read only when needed. An epic made less than 10 minutes ago gets no epic check: its run splits it
+    itself (#328). now: Unix seconds (default: the time now)."""
     import dashboard
     work = {int(n) for i in issues if "pull_request" not in i for n in re.findall(r"Part of #(\d+)", i.get("body") or "")}
     work |= {i["number"] for i in issues if dashboard.RELEASE in dashboard.labels(i)
              and dashboard.release_scope(i, issues)[2]}             # a release epic with open milestone tickets has work
     subs = lambda i: (s := i.get("sub_issues_summary") or {}).get("total", 0) - s.get("completed", 0)   # open sub-issues
+    now = time.time() if now is None else now
+    made = lambda i: datetime.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00")).timestamp()
     epics = [i["number"] for i in issues if "epic" in dashboard.labels(i) and i["number"] not in work and not subs(i)
-             and not {dashboard.MUTED, dashboard.AFTER, dashboard.RANK, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)]
+             and not {dashboard.MUTED, dashboard.AFTER, dashboard.RANK, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)
+             and now - made(i) >= NEW_EPIC_WAIT]
     if epics:
         return "epic check " + ", ".join(f"#{n}" for n in epics)
     if rank := sum(dashboard.RANK in dashboard.labels(i) for i in issues if "pull_request" not in i):
