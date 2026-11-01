@@ -20,12 +20,21 @@ test.beforeAll(() => {
   hideOffer(db, hidden.id);
 });
 
+// The bookings of this test free their slots again, so a repeat finds the same free times (#320).
+test.afterEach(() => {
+  db.delete(bookings).where(eq(bookings.offerId, visible.id)).run();
+});
+
+// Hide the offer of this run, so a repeat finds only its own offer (#320).
+test.afterAll(() => {
+  hideOffer(db, visible.id);
+});
+
+// The last day: no past hours and no bookings of other tests, so the free times do not depend on the clock (#320).
 async function chooseTime(page: Page) {
   await page.goto("/en/book");
   await expect(page.getByText("€43.22")).toHaveCount(0);
   await page.getByRole("link", { name: /€43\.21/ }).click();
-  // The last day, not today: late in the evening today has one or two free times, and the test of a taken time
-  // then shows no time at all (red CI of #316, #317 and #319 at 19:00 local time).
   await page.locator("section", { hasText: en.Book.day }).getByRole("link").last().click();
   const times = page.locator("section", { hasText: en.Book.time }).getByRole("link");
   await times.first().click();
