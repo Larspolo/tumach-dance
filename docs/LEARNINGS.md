@@ -24,3 +24,4 @@ The agent writes here what it learned the hard way. Each line must save time in 
 - Next.js 16 `src/proxy.ts` cuts a request body at 10 MB (`experimental.proxyClientMaxBodySize`), also when `serverActions.bodySizeLimit` is larger: set both (`next.config.ts`, #173).
 - `drizzle-kit generate` of a new `.notNull()` column with no default gives `ALTER TABLE ADD ... NOT NULL`: SQLite refuses it. Rebuild the table in the migration (`drizzle/0014_outstanding_junta.sql`, #164).
 - A Proxmox VM of CPU type `kvm64` has no SSE4 (host: N100): sharp failed at the start. VM 110 is `host` now (`docs/ENVIRONMENT.md`).
+- A browser test that books on the first day of `/book` (today) fails in the evening: today has one or two free times left. Choose the last day (`e2e/book.spec.ts`, #313).
