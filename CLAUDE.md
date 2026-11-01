@@ -32,7 +32,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
   (`npm run db:generate` after a change of `src/db/schema.ts`); `src/instrumentation.ts` applies them at the start.
-- `messages/` – the texts, one file per language (`en`, `nl`, `sl`).
+- `messages/` – the texts, one file per language (`en`, `nl`).
 - `public/` – the images, the app icons (`public/icons/`, made by `scripts/make-icons.ts`) and the service worker
   (push). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
@@ -48,7 +48,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
 - **P2:** take only the look of the current tumach.dance ("simple and chill"): its colors, fonts, space and layout
   (a copy with placeholder texts: `docs/design/current-site.html`). Never copy its texts. Write a sensible text
   yourself; ask Nina only when no text is a good option (her tagline is hers).
-- Each text the user sees is in `messages/` in English, Dutch and Slovenian. Never put a text in the code.
+- Each text the user sees is in `messages/` in English and Dutch (Nina, #299). Never put a text in the code.
 - All times are Europe/Amsterdam time. Store an instant in UTC; test the change to and from summer time.
 - The preview and the live site have separate data and keys. The preview shows a "test site" banner and sends
   email only to Nina and Lars.

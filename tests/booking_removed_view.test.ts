@@ -5,7 +5,6 @@ import { DateTime } from "luxon";
 import { beforeEach, describe, expect, it } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 import { type Db, openDb } from "../src/db";
 import { type BookingInput, decideBooking, requestBooking } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
@@ -93,7 +92,6 @@ describe("the removed text in the messages", () => {
   it.each([
     ["en", en],
     ["nl", nl],
-    ["sl", sl],
   ])("has StudioWeek.removed in %s", (_locale, messages) => {
     expect(messages.StudioWeek.removed.trim().length).toBeGreaterThan(0);
   });

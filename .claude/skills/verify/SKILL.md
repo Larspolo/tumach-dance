@@ -32,7 +32,7 @@ Playwright test exists, the first ticket that needs one adds `@playwright/test` 
 ## Level 4: images in the PR (each change that a user sees)
 
 1. Make screenshots of each changed page with Playwright: a phone (390×844) and a laptop (1280×800). A change of a
-   text: also the pages in Dutch and Slovenian.
+   text: also the pages in Dutch.
 2. Look at each image with the Read tool. Compare it with the look of `docs/design/current-site.html` (P2): the
    colors, the fonts, the space, no text that runs out of its box. No text comes from the old site (P2).
 3. The GitHub API cannot upload images. Push them as an orphan commit (`git mktree`, `git commit-tree`) to

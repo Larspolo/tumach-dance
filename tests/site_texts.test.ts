@@ -3,7 +3,6 @@
 import { describe, expect, it } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 
 /** The keys that wait for a text of Nina, with the ticket of the question. Remove a key when her text is in. */
 const WAITING_FOR_NINA: Record<string, number> = {};
@@ -18,7 +17,6 @@ describe("site texts", () => {
   it.each([
     ["en", en],
     ["nl", nl],
-    ["sl", sl],
   ])("%s has a placeholder only for a key that waits for Nina", (_lang, messages) => {
     expect(placeholders(messages).sort()).toEqual(Object.keys(WAITING_FOR_NINA).sort());
   });
