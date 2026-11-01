@@ -12,12 +12,12 @@ test.use({ storageState: STUDIO_SESSION });
 test("a block shows on its day and one tap removes it", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the week is for the phone");
   const db = openDb("out/e2e/tumach.db");
-  // A Thursday far in the future: no other test uses it.
-  const start = DateTime.fromISO("2032-03-18T10:00", { zone: TIME_ZONE });
+  // A Thursday far in the future that no other test uses: a booking of another test on the day hides "No bookings."
+  const start = DateTime.fromISO("2033-02-10T10:00", { zone: TIME_ZONE });
   const block = addBlock(db, { start: start.toMillis(), end: start.plus({ hours: 2 }).toMillis() });
 
-  await page.goto("/studio/week?start=2032-03-18");
-  const day = page.locator('section[data-day="2032-03-18"]');
+  await page.goto("/studio/week?start=2033-02-10");
+  const day = page.locator('section[data-day="2033-02-10"]');
   const item = day.locator(`li[data-block="${block.id}"]`);
   await expect(item).toContainText("10:00");
   await expect(item).toContainText("12:00");
