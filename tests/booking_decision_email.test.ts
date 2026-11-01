@@ -30,6 +30,12 @@ const NOW = DateTime.fromISO("2026-10-20T12:00", { zone }).toMillis();
 // Sunday 2026-10-25: the day that summer time ends. 10:00 local is 10:00 CET (09:00 UTC).
 const START = DateTime.fromISO("2026-10-25T10:00", { zone }).toMillis();
 
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(NOW);
+});
+afterEach(() => vi.useRealTimers());
+
 function booked(locale: string, db: Db = openDb(":memory:")) {
   saveHoursRule(db, { weekly: { sun: { from: "09:00", to: "13:00" } } });
   const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 6000, position: 0 });

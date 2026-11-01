@@ -59,7 +59,7 @@ function seedBookings(db: Db, now: number): number {
     );
     if (!result.ok) break;
     added++;
-    if (i > EXAMPLE_BOOKINGS / 2) decideBooking(db, result.booking.id, "approved");
+    if (i > EXAMPLE_BOOKINGS / 2) decideBooking(db, result.booking.id, "approved", null, now);
   }
   return added;
 }
