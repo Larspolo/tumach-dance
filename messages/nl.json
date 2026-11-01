@@ -52,7 +52,8 @@
       "place": "[Placeholder (nl): address of the studio]",
       "closing": "[Placeholder (nl): closing line]",
       "thanks": "[Placeholder (nl): Dank je, je bericht is verstuurd]",
-      "failed": "Versturen mislukt, probeer het later opnieuw"
+      "failed": "Versturen mislukt, probeer het later opnieuw",
+      "notSent": "Je bericht is niet verstuurd. Wacht een paar seconden en verstuur het opnieuw."
     }
   },
   "Nav": {

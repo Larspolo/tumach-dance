@@ -52,7 +52,8 @@
       "place": "[Placeholder (en): address of the studio]",
       "closing": "[Placeholder (en): closing line]",
       "thanks": "[Placeholder (en): Thank you, your message is sent]",
-      "failed": "Sending failed, please try again later"
+      "failed": "Sending failed, please try again later",
+      "notSent": "Your message was not sent. Wait a few seconds and send it again."
     }
   },
   "Nav": {
