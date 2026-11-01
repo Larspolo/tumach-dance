@@ -52,7 +52,8 @@
       "place": "Amsterdam",
       "closing": "Se vidiva v studiu.",
       "thanks": "Hvala! Tvoje sporočilo je poslano.",
-      "failed": "Pošiljanje ni uspelo, poskusi znova pozneje"
+      "failed": "Pošiljanje ni uspelo, poskusi znova pozneje",
+      "notSent": "Tvoje sporočilo ni bilo poslano. Počakaj nekaj sekund in ga pošlji znova."
     }
   },
   "Nav": {

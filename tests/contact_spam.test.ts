@@ -30,7 +30,10 @@ function form(extra: Record<string, string> = {}, ageMs = 4000): FormData {
 async function send(data: FormData) {
   contact.sendContactMessage.mockClear();
   const state = await sendContact(IDLE, data);
-  expect(state.status).toBe("sent");
+  // #298: a person always sees the answer; only the honeypot and a real send give the thank-you.
+  const calls = contact.sendContactMessage.mock.calls.length;
+  const honeypot = data.get("website");
+  expect(state.status).toBe(calls === 1 || honeypot ? "sent" : "notSent");
   return contact.sendContactMessage.mock.calls.length;
 }
 

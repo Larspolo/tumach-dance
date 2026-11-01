@@ -52,7 +52,8 @@
       "place": "Amsterdam",
       "closing": "Tot ziens in de studio.",
       "thanks": "Dank je! Je bericht is verstuurd.",
-      "failed": "Versturen mislukt, probeer het later opnieuw"
+      "failed": "Versturen mislukt, probeer het later opnieuw",
+      "notSent": "Je bericht is niet verstuurd. Wacht een paar seconden en verstuur het opnieuw."
     }
   },
   "Nav": {

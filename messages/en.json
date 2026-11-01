@@ -52,7 +52,8 @@
       "place": "Amsterdam",
       "closing": "See you in the studio.",
       "thanks": "Thank you! Your message is sent.",
-      "failed": "Sending failed, please try again later"
+      "failed": "Sending failed, please try again later",
+      "notSent": "Your message was not sent. Wait a few seconds and send it again."
     }
   },
   "Nav": {
