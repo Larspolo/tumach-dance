@@ -26,8 +26,8 @@ The rare cases are in files next to this one (#1700). Read a file only when its 
 ## GitHub access
 
 Use the GitHub MCP tools (`mcp__github__*`) when the session has them. Else use the REST API with `gh api`
-(`github.md`). Cloud sessions block GraphQL and the search API, so `gh issue list`, `gh pr create` and
-`search/issues` fail there. Put long text in a file and pass it with `-F body=@file.md`.
+(`github.md`). Cloud sessions block GraphQL, so `gh issue list` and `gh pr create` fail there; `search/issues` needs
+`is:issue` in `q`. Put long text in a file and pass it with `-F body=@file.md`.
 
 ## Runs can overlap
 

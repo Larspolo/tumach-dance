@@ -24,6 +24,11 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:texts` (#257) Real texts on each public page, in each language
   - An agent writes a sensible text for each section; Nina gives only her tagline (owner, 2026-10-31)
   - No page shows a placeholder
+- [ ] `site:where` Dancers know where the studio is
+  - The home page, the emails of an approved booking and the calendar file of a booking give the address, in the places that Nina chooses; a page has a link that opens the map on the phone
+- [ ] `site:access` Each visitor can read the site and book, also with a screen reader, a large text or only the keyboard
+  - Each page of the site and of the studio app has no serious barrier (a check with axe)
+  - A dancer books a lesson with only the keyboard
 - [ ] `site:live` tumach.dance runs the new site
   - Each merge to main updates the live site, as the preview (one image, owner 2026-10-31); the live site and the preview have separate data
   - A backup of the data each night, and a tested way to restore it
@@ -46,7 +51,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - The times stay correct at the change to and from summer time
 - [x] `nina:offers` (#29) Private lessons and studio rental, each with a length and a price
   - Nina adds, changes or hides an offer; dancers see only the visible offers
-- [ ] `nina:overview` All bookings at a glance
+- [x] `nina:overview` (#100) All bookings at a glance
   - Nina sees the requests, the approved and the paid bookings per day and per week
   - The calendar on her phone shows the bookings (a calendar feed)
 - [ ] `nina:block` Nina keeps a time free of bookings from the site
@@ -68,5 +73,8 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:change` Cancel and remind
   - The dancer cancels with a link in the email, by the cancel rules; Nina cancels from her app
   - The dancer gets a reminder the day before, with a calendar file
+- [ ] `book:unanswered` A request that Nina does not answer in time
+  - A request with no answer at its start ends by itself; the dancer gets one email with a link to book another time
+  - Nina never approves or declines a request whose time has started
 - [x] `book:privacy` (#222) The data of the dancers is safe
   - A privacy page says what the studio keeps and for how long; old data goes away
