@@ -336,7 +336,9 @@
     "cancelAsk": "Cancel this booking?",
     "cancelYes": "Yes, cancel",
     "removed": "Name removed",
-    "cancelNo": "No"
+    "cancelNo": "No",
+    "block": "Kept free",
+    "blockRemove": "Remove"
   },
   "StudioFeedback": {
     "back": "Back",
