@@ -5,7 +5,7 @@ import { type Browser, expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import { STUDIO_SESSION } from "./studio-session";
 
-const LOCALES = { en: "en-GB", nl: "nl-NL", sl: "sl-SI" } as const;
+const LOCALES = { en: "en-GB", nl: "nl-NL" } as const;
 // A sample path for each page with a dynamic segment other than [locale]. A dynamic page not here fails the test.
 const SAMPLES: Record<string, string> = {};
 

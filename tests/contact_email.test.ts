@@ -112,7 +112,6 @@ describe("contact email", () => {
   test.each([
     ["en", "Message from Ana via the website"],
     ["nl", "Bericht van Ana via de website"],
-    ["sl", "Sporočilo od Ana prek spletne strani"],
   ])("the subject is in %s when Nina's newest device is in that language", async (locale, subject) => {
     const db = openDb(":memory:");
     saveSubscription(db, { endpoint: "https://push.example/old", keys: { p256dh: "p", auth: "a" } }, 1, "en");

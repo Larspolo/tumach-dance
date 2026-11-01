@@ -7,7 +7,6 @@ import { eq } from "drizzle-orm";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
@@ -18,7 +17,7 @@ import { type Email, sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
 
-const MESSAGES = { en, nl, sl } as const;
+const MESSAGES = { en, nl } as const;
 
 /** The translator of `locale` (English for another one), the label of the offer and the Amsterdam time of `booking`. */
 function parts(booking: Booking, offer: Offer, locale: string) {

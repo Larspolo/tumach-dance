@@ -24,4 +24,5 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-10-31 · #263 · The site watch: a GitHub workflow checks /api/health and the home page after each new image and each 15 minutes, and opens a P0 ticket `site-down` with the error text of the site · taken · P11
 - 2026-10-31 · #257 · Each question for a text of Nina gives 2 or 3 suggested texts and a choice to write her own (no bare text box) · - · P1
 - 2026-10-31 · #257 · Nina gives only her tagline; an agent writes each other text of the site, and asks her about a text only when no text is a good option · other · new
+- 2026-11-01 · #299 · Languages: English and Dutch only; Slovenian is removed (Nina, #179), and /sl links go to the English page · - · new
 - 2026-11-01 · #223 · The site keeps the name, email and phone of a dancer 1 year after the lesson, then removes them · taken · P1
