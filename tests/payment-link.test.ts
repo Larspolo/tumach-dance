@@ -1,7 +1,7 @@
 // The price and the Tikkie link in the approval email (#142); a link that is not https:// is refused.
 import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { openDb } from "../src/db";
 import { decideBooking, requestBooking } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
@@ -25,6 +25,12 @@ const { decide } = await import("../src/app/studio/bookings/actions");
 const zone = "Europe/Amsterdam";
 const NOW = DateTime.fromISO("2026-10-20T12:00", { zone }).toMillis();
 const START = DateTime.fromISO("2026-10-25T10:00", { zone }).toMillis();
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(NOW);
+});
+afterEach(() => vi.useRealTimers());
 const LINK = "https://tikkie.me/pay/Tumach/abc123";
 
 function booked(locale = "en") {
