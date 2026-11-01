@@ -53,7 +53,8 @@ Parallel runs read the same `runs` counter of the status issue, so "every 5th ru
 the last review (`last_review` in the state comment of #1). A review with no change doubles the gap (50, 100, 200
 merged PRs), a change sets it back to 50 (`--reviewed`). `--roadmap` locks the roadmap review the same way, 100 merged
 PRs after `last_roadmap` or its newest lock ref (#3352: a write of the body can be lost), 30 while the refill has no
-source (#3741). A gap counts merged PRs, not minutes: the speed of the project changes (#2039). The other times of this tool stay in seconds: a run that stopped
+source (#3741), or the merged count after 60 minutes with no merged PR (no ready ticket: no run merges). A gap counts
+merged PRs, not minutes: the speed of the project changes (#2039). The other times of this tool stay in seconds: a run that stopped
 merges nothing, so only the clock finds it.
 
 Exit 2: git failed for another reason (network, permission). The workflow `claims.yml` deletes the refs
@@ -83,6 +84,7 @@ REVIEW_MIN, REVIEW_MAX = REVIEW_CONFIG.get("min_gap", 10), REVIEW_CONFIG.get("ma
 OWNER_GAP = REVIEW_CONFIG.get("owner_gap", 20)   # the gap when an owner session merged a PR since the last review
 ROADMAP = 100               # merged PRs between two reviews of steering/project/ROADMAP.md (#2039)
 ROADMAP_EARLY = 30          # the same while the refill has no source: R < N, each roadmap feature has an epic (#3741)
+ROADMAP_IDLE = 60           # minutes with no merged PR: then the merged count is the gap (no ready ticket, no run merges)
 STATUS = CONFIG["status"]["issue"]   # the status issue: its state comment holds the last reviews
 # The times below find a run that stopped: a stopped run merges nothing, so they stay on the clock (#2039).
 STALE = 30 * 60             # seconds without a claim or beat: the run stopped (usage limit, crash)
@@ -153,7 +155,8 @@ def start(number, by=None, note="", word="Started by"):
     without the claim worked on one ticket with another run (#288, #1749), so only the claim writes them.
     by: the name of the claim (the pacer claims for a run that has no branch yet); note: more text of the comment;
     word: "Taken over by" after a takeover of the pacer (#4356)."""
-    from dashboard import FOOTER, api as call
+    from dashboard import FOOTER
+    from dashboard import api as call
     by = by or who()
     try:
         call(f"issues/{number}/labels", "POST", {"labels": ["in-progress"]})
@@ -308,6 +311,15 @@ def merged_since(last, gap, remote="origin"):
     return len(merge_rows(last))
 
 
+def idle_minutes(last, remote="origin"):
+    """The minutes since the newest PR merged after the ISO time `last` (since `last` with none); 0 without GitHub."""
+    if not last or not on_github(remote):
+        return 0
+    rows = merge_rows(last)
+    newest = rows[0][0] if rows else datetime.datetime.fromisoformat(last.replace("Z", "+00:00"))
+    return (time.time() - newest.timestamp()) / 60
+
+
 def owner_since(last, remote="origin"):
     """[(PR, title)] of the owner work merged after `last` (`dashboard.owner_work`): PRs that no run made. Each one is
     a miss of the improve loop, so the process review comes after OWNER_GAP merged PRs, not after its full gap."""
@@ -373,7 +385,9 @@ def review_slot(kind, remote="origin", starved=None):
     """(lock key, gap) of the process review (`review`) or the roadmap review (`roadmap`); the key is None when the review
     is not due. For `--review`, `--roadmap` and `usage.due_reviews` (a due review is work of a deep run, #3560).
     starved: a function that is True when the refill has no source (default `starved`); the roadmap gap is then
-    ROADMAP_EARLY, so that the queue does not run empty for 100 merged PRs (#3741). It is read only in that window."""
+    ROADMAP_EARLY, so that the queue does not run empty for 100 merged PRs (#3741). After ROADMAP_IDLE minutes with no
+    merged PR the gap is the merged count (at least 1): with no ready ticket no run merges, and the queue stopped at 27
+    of 30 (2026-10-31). It is read only in that window."""
     body = api(f"issues/{STATUS}")["body"] if on_github(remote) else ""
     state = agent_state(body)
     last, gap = (state.get("last_review"), review_gap(state)) if kind == "review" else \
@@ -383,8 +397,9 @@ def review_slot(kind, remote="origin", starved=None):
     if kind == "roadmap" and on_github(remote):
         last = max(filter(None, (last, last_lock(kind, remote))), default=None)
     merged = merged_since(last, gap, remote)
-    if kind == "roadmap" and ROADMAP_EARLY <= merged < gap and (starved or refill_starved)():
-        gap = ROADMAP_EARLY
+    if kind == "roadmap" and merged < gap and (merged >= ROADMAP_EARLY or merged and idle_minutes(last, remote)
+                                               >= ROADMAP_IDLE) and (starved or refill_starved)():
+        gap = min(merged, ROADMAP_EARLY)
     if kind == "review" and OWNER_GAP <= merged < gap and owner_since(last, remote):
         gap = OWNER_GAP
     return pr_slot(last, gap, merged, max(gap, REVIEW) if kind == "review" else None), gap
@@ -393,7 +408,7 @@ def review_slot(kind, remote="origin", starved=None):
 def refill_starved():
     """True when fewer tickets are ready than the target runs and the refill has no source: no epic or release check, no
     roadmap feature with no epic, no fallback (`usage.refill_need`, #3741). Reads the quota and GitHub; an error: False."""
-    import usage                                                   # usage imports this module in due_reviews
+    import usage  # usage imports this module in due_reviews
     try:
         import dashboard
         usage_now, now = usage.read_usage(), time.time()
@@ -513,7 +528,7 @@ def on_github(remote="origin"):
 
 
 def api(path):
-    from dashboard import api as get                    # gh api in cloud sessions, else GITHUB_TOKEN
+    from dashboard import api as get  # gh api in cloud sessions, else GITHUB_TOKEN
     try:
         return get(path)
     except Exception as e:                              # exit 2 like a git error, not 1 ("owned by another run")
@@ -603,6 +618,29 @@ def stuck(tickets, tips, now, limit=STALE):
         line, t = tips.get(n, (None, changed_at))
         if now - t >= limit and (line is None or line.startswith("Release") or stale(line, t, now, limit)):
             out.append((n, f"{(line or 'no claim').split(' by ')[0]}, {(now - t) / 60:.0f} min ago"))
+    return out
+
+
+AGENT_BRANCH = re.compile(r"^(agent/|claude/|ccr-)")   # the prefixes that Automerge merges (`automerge.yml`, #3383)
+
+
+def stuck_lines(found, pulls, checks):
+    """The `--stuck` lines of `stuck()` results. A PR that only waits for its quick CI or for Automerge
+    (`pacer.ci_wait`, the rule of `pacer.stuck`) gives no line; a green PR that Automerge never merges (no agent
+    branch, no label `automerge`) waits for the owner, not for a takeover (#5331). checks: sha -> its check runs."""
+    import pacer
+    out = []
+    for n, reason in found:
+        pr = next((p for p in pulls if closes(n).search(prose(p.get("body")))), None)
+        try:
+            wait = pr and pr["head"].get("sha") and pacer.ci_wait(pr, checks(pr["head"]["sha"]))
+        except Exception:                               # no check runs: a takeover line as before
+            wait = None
+        labels = {lb["name"] for lb in (pr or {}).get("labels") or []}
+        if wait == "green" and not AGENT_BRANCH.match(pr["head"]["ref"]) and "automerge" not in labels:
+            out.append(f"#{n} PR #{pr['number']} waits for the owner (no agent branch, no label automerge)")
+        elif not wait:
+            out.append(f"#{n} {'PR #' + str(pr['number']) if pr else 'no PR'}: {reason}")
     return out
 
 
@@ -724,11 +762,11 @@ def main(argv=None):
         tickets = {i["number"]: datetime.datetime.fromisoformat(i["updated_at"].replace("Z", "+00:00")).timestamp()
                    for i in issues if "pull_request" not in i}
         pulls = api("pulls?state=open&per_page=100")
-        found = stuck(tickets, tips(a.remote), time.time())
-        for n, reason in found:
-            pr = next((p["number"] for p in pulls if closes(n).search(prose(p["body"]))), None)
-            print(f"#{n} {f'PR #{pr}' if pr else 'no PR'}: {reason}")
-        return 0 if found else 1
+        import pacer
+        lines = stuck_lines(stuck(tickets, tips(a.remote), time.time()), pulls, pacer.head_checks)
+        if lines:
+            print("\n".join(lines))
+        return 0 if lines else 1
     if a.show or a.stale:
         found = refs(a.number, a.remote)
         for k in sorted(found):

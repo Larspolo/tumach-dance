@@ -1,33 +1,33 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (sl): the welcome of Nina]",
-    "eyebrow": "[Placeholder (sl): short line above the title]",
-    "primaryAction": "[Placeholder (sl): button to the schedule]",
-    "secondaryAction": "[Placeholder (sl): button to the studio]",
-    "imageBlock": "[Placeholder (sl): photo of the studio]",
+    "welcome": "Pridi in pleši v svojem ritmu: zasebne ure, tečaji in studio za najem.",
+    "eyebrow": "Plesni studio · Amsterdam",
+    "primaryAction": "Poglej urnik",
+    "secondaryAction": "O studiu",
+    "imageBlock": "Plesni studio TUMACH",
     "about": {
-      "title": "[Placeholder (sl): title about the studio]",
-      "label": "[Placeholder (sl): (01) about]",
-      "text1": "[Placeholder (sl): first paragraph about the studio]",
-      "text2": "[Placeholder (sl): second paragraph about Nina]",
-      "text3": "[Placeholder (sl): third paragraph about the dancers]",
-      "quote": "[Placeholder (sl): a short quote of Nina]",
-      "quoteBy": "[Placeholder (sl): who said the quote]"
+      "title": "O studiu TUMACH",
+      "label": "(01) O studiu",
+      "text1": "TUMACH je majhen plesni studio v Amsterdamu. Vzemi zasebno uro, pridruži se tečaju ali najemi studio za svojo vadbo.",
+      "text2": "Sem Nina in to je moj studio. Poučujem zasebne ure in tečaje, v tempu, ki ustreza tebi.",
+      "text3": "Dobrodošli so začetniki in izkušeni plesalci. Začnemo tam, kjer si zdaj.",
+      "quote": "Vsak plesalec nekje začne.",
+      "quoteBy": "Nina"
     },
     "photos": {
-      "title": "[Placeholder (sl): title of the photos]",
-      "label": "[Placeholder (sl): (02) photos]",
-      "alt": "[Placeholder (sl): a photo of the studio]"
+      "title": "Studio",
+      "label": "Fotografije",
+      "alt": "Fotografija plesnega studia TUMACH"
     },
     "classes": {
-      "title": "[Placeholder (sl): title of the classes]",
-      "label": "[Placeholder (sl): (02) classes]",
+      "title": "Tečaji",
+      "label": "(02) Tečaji",
       "none": "Tečajev še ni."
     },
     "schedule": {
-      "title": "[Placeholder (sl): title of the schedule]",
-      "label": "[Placeholder (sl): (03) schedule]",
+      "title": "Vsak teden",
+      "label": "(03) Urnik",
       "none": "Urnika še ni.",
       "days": {
         "mon": "ponedeljek",
@@ -41,17 +41,17 @@
       "time": "{from}–{to}"
     },
     "contact": {
-      "title": "[Placeholder (sl): title of the contact]",
-      "label": "[Placeholder (sl): (04) contact]",
-      "text": "[Placeholder (sl): invitation to write to Nina]",
-      "name": "[Placeholder (sl): name]",
-      "email": "[Placeholder (sl): email]",
-      "message": "[Placeholder (sl): message]",
-      "send": "[Placeholder (sl): send]",
-      "placeLabel": "[Placeholder (sl): place]",
-      "place": "[Placeholder (sl): address of the studio]",
-      "closing": "[Placeholder (sl): closing line]",
-      "thanks": "[Placeholder (sl): Hvala, tvoje sporočilo je poslano]",
+      "title": "Pozdravljeni",
+      "label": "(04) Kontakt",
+      "text": "Imaš vprašanje o lekciji, tečaju ali studiu? Pošlji mi sporočilo in kmalu ti odgovorim.",
+      "name": "Tvoje ime",
+      "email": "Tvoj e-poštni naslov",
+      "message": "Tvoje sporočilo",
+      "send": "Pošlji",
+      "placeLabel": "Kje",
+      "place": "Amsterdam",
+      "closing": "Se vidiva v studiu.",
+      "thanks": "Hvala! Tvoje sporočilo je poslano.",
       "failed": "Pošiljanje ni uspelo, poskusi znova pozneje",
       "notSent": "Tvoje sporočilo ni bilo poslano. Počakaj nekaj sekund in ga pošlji znova."
     }
@@ -59,16 +59,16 @@
   "Nav": {
     "label": "Glavni meni",
     "logo": "TUMACH",
-    "about": "[Placeholder (sl): about]",
-    "classes": "[Placeholder (sl): classes]",
-    "schedule": "[Placeholder (sl): schedule]",
-    "contact": "[Placeholder (sl): contact]"
+    "about": "O studiu",
+    "classes": "Tečaji",
+    "schedule": "Urnik",
+    "contact": "Kontakt"
   },
   "Footer": {
     "copyright": "© {year}",
     "domain": "tumach.dance",
-    "tagline": "[Placeholder (sl): the tagline of Nina]",
-    "place": "[Placeholder (sl): the place]",
+    "tagline": "Tumach Dance? Nikoli dovolj!",
+    "place": "Amsterdam",
     "privacy": "Kako hranimo tvoje podatke"
   },
   "StudioLogin": {
@@ -104,8 +104,10 @@
   },
   "PasskeyOffer": {
     "title": "Naslednjič se prijavi hitreje",
+    "buttonTitle": "Ključ za dostop",
     "text": "Dodaj ključ za dostop na ta telefon. Naslednjič se prijaviš s Face ID ali prstnim odtisom, brez kode.",
     "add": "Dodaj ključ za dostop",
+    "added": "Ključ za dostop je dodan. Naslednjič se prijaviš brez kode.",
     "notNow": "Ne zdaj",
     "failed": "Ključ za dostop ni bil dodan. Še vedno se lahko prijaviš s kodo po e-pošti."
   },
@@ -404,8 +406,8 @@
   "Meta": {
     "imageAlt": "TUMACH, plesni studio v Amsterdamu",
     "home": {
-      "title": "[Placeholder (sl): naslov strani v rezultatu iskanja]",
-      "description": "[Placeholder (sl): opis strani v rezultatu iskanja]"
+      "title": "TUMACH · Plesni studio v Amsterdamu",
+      "description": "Zasebne plesne ure, tečaji in studio za najem v Amsterdamu. Poglej termine in rezerviraj na spletu, brez računa."
     },
     "book": {
       "title": "Rezervacija ure · TUMACH",

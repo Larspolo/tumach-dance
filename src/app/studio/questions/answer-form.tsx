@@ -18,7 +18,7 @@ export function AnswerForm({ question }: { question: NinaQuestion }) {
     <form action={action} className={styles.form}>
       <input type="hidden" name="number" value={question.number} />
       {question.choices.length > 0 && (
-        <fieldset className={styles.choices}>
+        <fieldset className={`${styles.choices} ${styles.answers}`}>
           <legend className={styles.label}>{t("choose")}</legend>
           {question.choices.map((choice) => (
             <label key={choice.key} className={styles.choice}>

@@ -28,8 +28,10 @@ def repo(tmp_path, commit=True):
     return work
 
 
-def fake_github(monkeypatch, open_prs=()):
+def fake_github(monkeypatch, open_prs=(), lint=True):
     calls = []
+    if lint:                                            # the lint command of agent.toml: test_ship_pr_lint.py
+        monkeypatch.setattr(ship, "lint", lambda: True)
 
     def api(path, method="GET", data=None):
         calls.append((path, method, data))
@@ -37,7 +39,9 @@ def fake_github(monkeypatch, open_prs=()):
             return list(open_prs)
         if method == "POST":
             return {"number": 9, "html_url": "https://x/9"}
-        return {"mergeable_state": "clean"}
+        if path.startswith("commits/"):                  # the quick CI (#4784)
+            return {"check_runs": [{"id": 1, "status": "completed", "conclusion": "success"}]}
+        return {"mergeable_state": "clean", "merged": True}   # Automerge merged it after the green CI (#5584)
     monkeypatch.setattr(dashboard, "api", api)
     return calls
 

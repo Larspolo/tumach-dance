@@ -20,3 +20,7 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-10-30 · #133 · Example data of a question for Nina only on the preview: a "## For Nina" line "Example: <name>" loads a fixed seed when Nina taps "Try" · - · P1
 - 2026-10-30 · #163 · A dancer cancels a booking with the email link at any time before the start; a cancelled paid booking gets no refund · other · new
 - 2026-10-30 · #139 · Nina chose Tikkie for the payment: the dancer gets a Tikkie, and Nina marks a paid booking herself in her app (no payment provider account, no API) · other · new
+- 2026-10-31 · #245 · The live site at tumach.dance runs the image `preview` (each merge to main), with its own data, keys and tunnel; no release tag `v*` · other · new
+- 2026-10-31 · #263 · The site watch: a GitHub workflow checks /api/health and the home page after each new image and each 15 minutes, and opens a P0 ticket `site-down` with the error text of the site · taken · P11
+- 2026-10-31 · #257 · Each question for a text of Nina gives 2 or 3 suggested texts and a choice to write her own (no bare text box) · - · P1
+- 2026-10-31 · #257 · Nina gives only her tagline; an agent writes each other text of the site, and asks her about a text only when no text is a good option · other · new
