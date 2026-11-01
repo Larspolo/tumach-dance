@@ -7,6 +7,7 @@ import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
+import { listBlocks } from "./blocks";
 import { listClassTimes } from "./classes";
 import type { Db } from "./index";
 import type { Offer } from "./offers";
@@ -51,14 +52,19 @@ function clean(
   return { name, email, phone };
 }
 
-/** The `start`..`end` ranges of the `requested` and `approved` bookings that overlap `from`..`to`, for `freeSlots()`. */
+/**
+ * The `start`..`end` ranges that overlap `from`..`to`, for `freeSlots()`: the `requested` and `approved` bookings, and
+ * the blocks of Nina (#323, `listBlocks()`). Both the booking page and `requestBooking()` refuse a busy time, so a block
+ * is refused there too; removing a block frees its time again.
+ */
 export function busyRanges(db: Db, from: number, to: number): OpenRange[] {
-  return db
+  const booked = db
     .select({ start: bookings.start, end: bookings.end })
     .from(bookings)
     .where(and(inArray(bookings.status, HOLDING), lt(bookings.start, to), gt(bookings.end, from)))
-    .orderBy(bookings.start)
     .all();
+  const blocked = listBlocks(db, from, to).map((b) => ({ start: b.start, end: b.end }));
+  return [...booked, ...blocked].sort((a, b) => a.start - b.start);
 }
 
 /**
