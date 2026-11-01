@@ -417,6 +417,9 @@
     "guide": {
       "title": "Kako uporabljaš studijsko aplikacijo · TUMACH",
       "description": "Prijavi se, dodaj studijsko aplikacijo na začetni zaslon in vklopi obvestila."
+    },
+    "cancel": {
+      "title": "Preklic rezervacije · TUMACH"
     }
   }
 }

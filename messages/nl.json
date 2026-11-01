@@ -417,6 +417,9 @@
     "guide": {
       "title": "Zo gebruik je de studio-app · TUMACH",
       "description": "Log in, zet de studio-app op je beginscherm en zet meldingen aan."
+    },
+    "cancel": {
+      "title": "Een boeking annuleren · TUMACH"
     }
   }
 }
