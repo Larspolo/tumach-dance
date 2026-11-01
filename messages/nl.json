@@ -59,6 +59,7 @@
     "label": "Hoofdmenu",
     "logo": "TUMACH",
     "about": "Over",
+    "photos": "Foto's",
     "classes": "Lessen",
     "schedule": "Rooster",
     "contact": "Contact"
@@ -361,6 +362,7 @@
     "title": "Foto's",
     "back": "Terug",
     "none": "Nog geen foto's.",
+    "onSite": "Bekijk de foto's op de site",
     "choose": "Foto's van je telefoon",
     "add": "Foto's toevoegen",
     "adding": "Bezig…",

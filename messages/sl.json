@@ -59,6 +59,7 @@
     "label": "Glavni meni",
     "logo": "TUMACH",
     "about": "O studiu",
+    "photos": "Fotografije",
     "classes": "Tečaji",
     "schedule": "Urnik",
     "contact": "Kontakt"
@@ -361,6 +362,7 @@
     "title": "Fotografije",
     "back": "Nazaj",
     "none": "Še ni fotografij.",
+    "onSite": "Poglej fotografije na strani",
     "choose": "Fotografije s telefona",
     "add": "Dodaj fotografije",
     "adding": "Dodajam…",

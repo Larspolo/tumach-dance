@@ -59,6 +59,7 @@
     "label": "Main",
     "logo": "TUMACH",
     "about": "About",
+    "photos": "Photos",
     "classes": "Classes",
     "schedule": "Schedule",
     "contact": "Contact"
@@ -361,6 +362,7 @@
     "title": "Photos",
     "back": "Back",
     "none": "No photos yet.",
+    "onSite": "See the photos on the site",
     "choose": "Photos from your phone",
     "add": "Add photos",
     "adding": "Adding…",
