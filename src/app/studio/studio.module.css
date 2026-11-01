@@ -223,3 +223,14 @@
   aspect-ratio: 1;
   object-fit: cover;
 }
+
+/* The language control of the studio app (#314): buttons with the look of the links of the public control. */
+.languageButton {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
