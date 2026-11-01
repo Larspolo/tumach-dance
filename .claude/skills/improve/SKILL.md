@@ -51,7 +51,8 @@ change of this review. Fewer than 50 merged PRs → too early: keep it and say s
 Run `python3 framework/tools/health.py --prs 100 --compare` (about 2 minutes): the last 100 merged PRs, and under each line that
 differs, the 100 PRs before (`  before: ...`). A change of more than 20 % between the two periods is a finding. It
 prints CI, setup, takeovers, conflicts and their files, phases, quota per merged PR, release points per 1 % of 7-day
-quota (the main number: progress to the goals 1 to 3 of `steering/project/ROADMAP.md` per quota), tokens and their sinks, lanes,
+quota (the main number: progress to the goals 1 to 3 of `steering/project/ROADMAP.md` per quota; during a release
+focus, the closed issues of the release milestone per 1 % of quota, #5552), tokens and their sinks, lanes,
 weak spots, misses, owner work, time waits, data in the code, review slots and files that do not belong in git.
 `--hours N` only for a real clock (the night runs).
 
@@ -73,7 +74,7 @@ A lever with no number is a measurement gap: lever 10.
 
 | # | Lever | Signal | Threshold | Fix, strongest first | Owner PRs |
 |---|---|---|---|---|---|
-| 1 | Context per call | `Tokens:` `base` and its `repo` part, `peak`; size of `CLAUDE.md`, `docs/LEARNINGS.md`, the skills | base above 30 % of eq, or repo part above 10k tokens | Deny unused tools (`.claude/settings.json`); move rows and lines to the topic doc that needs them; a learning line → a check (`guard-shell.sh`, a test); split a skill so that a step reads its own file; a subagent for a wide search | #3425, #3483, #3648, #3734, #3828, #4173 |
+| 1 | Context per call | `Tokens:` `base` and its `repo` part, `peak`; size of `CLAUDE.md`, `docs/LEARNINGS.md`, the skills | base above 30 % of eq, or repo part above 10k tokens | Deny unused tools and agent types, turn off unused skills (`skillOverrides`) in `.claude/settings.json`; move rows and lines to the topic doc that needs them; a learning line → a check (`guard-shell.sh`, a test); split a skill so that a step reads its own file; a subagent for a wide search | #3425, #3483, #3648, #3734, #3828, #4173, #5463 |
 | 2 | Agent work that a tool or workflow can do | `Calls:` top commands; the same 3 or more calls in many runs; phases `read`, `claim`, `report` | a call sequence in 20 % of runs, or a phase above 15 % of the minutes | One-call tool (like `cycle_start.py`, `ship_pr.py`); a workflow (like Pacer, Automerge, Unconflict, Close, Claims); a hook; data written by a tool, not by the agent | #3201, #3211, #3311, #3614, #4172, #4184 |
 | 3 | The cheapest model that does the job well | `Lane` lines (runs, PRs, cost); rework and red CI per lane; the kinds of `size:S` tickets that Opus runs do | a kind of ticket that a cheaper lane does at the same quality; a lane with rework above 10 % | Lane rules of the `ticket` skill ("Model lanes"); `reserved` and `weights` in `agent.toml`; a subagent with a cheap `model` for lists and searches in a run; a new lane (a new scheduled task: owner step) | #2690, #3147, #3392, #3609 |
 | 4 | API calls | `Calls:` count of `gh api` and `mcp`; the REST budget in the pacer log; 403 and 429 in workflow logs | above 10 calls per ticket, or a workflow above half of its budget | Git in place of the API (refs, `merge-tree`, the branch `metrics`); one list call in place of one call per item; a cache; only the needed fields | #4171, #4172, #4178, #4180 |
@@ -81,10 +82,10 @@ A lever with no number is a measurement gap: lever 10.
 | 6 | Data in the code | `Data in the code` | a new place, or the count does not go down | A sub-issue of the data epic per place; `.jsonl` with `merge=jsonl` | #1909, #2100 |
 | 7 | Conflicts that a merge driver can solve | Conflicts that a run solved by hand where both sides only added; `solved by Unconflict` | a file with 2 such conflicts | `merge=union` or `merge=jsonl` in `.gitattributes`; a rule of `framework/tools/unconflict.py`; `land()` of Automerge | #2004, #3199, #3202 |
 | 8 | Clocks that measure work | `Time waits`; constants in minutes or hours in the tools that wait for work | any | `Start after: N PRs after #M`; a gap of merged PRs (`[review]` of `agent.toml`) | #2039, #3865 |
-| 9 | Owner chores | `needs-human` tickets about the environment; owner PRs that paste, test hosts, set secrets | any step that the owner did twice | One file to paste; a check that names exactly what is missing; a workflow or an API that does the step | #1964, #3614, #4181 |
+| 9 | Owner chores | `needs-human` tickets about the environment; owner PRs that paste, test hosts, set secrets; `Runs held by GitHub` and `started again by hand` | any step that the owner did twice | One file to paste; a check that names exactly what is missing; a workflow or an API that does the step | #1964, #3614, #4181 |
 | 10 | Measurement gaps | A lever of this table with no number | any | Add the number to `framework/tools/health.py`, `framework/tools/tokens.py` or the pacer log first | #3819, #3970, #4171 |
 | 11 | Quality | Rework, reopened tickets, bugs of check tickets, red night runs | rework above 5 % of the merged PRs | A check in the `verify` skill or CI; a rule from owner feedback; a fix of the flaky test | - |
-| 12 | Waste of runs | Runs that merge nothing, idle starts, lost claims, takeovers | above 5 % of the runs | Rules of the pacer (`framework/tools/usage.py`) and of the claims (`framework/tools/claim.py`) | #3147, #4173 |
+| 12 | Waste of runs | Runs that merge nothing, idle starts, lost claims, takeovers; `Pacer loop gaps` (no runs start); `Idle queue` (target > 0, no claim, no start, #5199) | above 5 % of the runs, a pacer gap above 1 h, or an idle stretch above 1 h | Rules of the pacer (`framework/tools/usage.py`) and of the claims (`framework/tools/claim.py`) | #3147, #4173 |
 
 The threshold also counts a loss that comes back with its full cost: its quota, the takeovers that it causes, and
 the rule lines that it added to `CLAUDE.md` and `docs/LEARNINGS.md` (each run loads them in each turn).

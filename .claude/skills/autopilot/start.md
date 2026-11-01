@@ -59,6 +59,11 @@ For each issue of section `Triage` (no priority label):
 - If the goal is not clear, ask one precise question, add `needs-human` and continue (`owner.md`).
 - If the size is L, split it (`queue.md`).
 - An issue with the label `from-nina` is feedback of Nina: write it as a ticket (`ticket` skill), and keep her words in a quote.
+- Release focus (`steering/project/RELEASE.md`, "A new feature: in the next release or after it?"; skip this step when
+  the project has no such file): compare each
+  `feature` ticket (also an owner ticket) with the held tickets and the milestone of the release epic. It gets that
+  milestone, or gets `after-release` and a one-line comment that names the rule. The owner removes the label to bring it back. Bugs, play-test and user experience tickets stay, and so does a
+  ticket with `in-progress` or an open PR: let it finish and merge.
 
 ## 5. Pick and claim one ticket
 

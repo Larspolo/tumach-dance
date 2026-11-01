@@ -24,7 +24,7 @@ on (`claim.py N --stale` and `--takeover` use 10 minutes then, #1773). Take it o
 from the current local branch), push with `git push origin HEAD:<branch of the PR>`, and run the guard with
 `--pr-branch <branch of the PR>` (#361). A merge of main: `git checkout -B <session branch> origin/<branch of the PR>` first (the tool merges into the
 current branch: on a session branch at `main` it merges nothing and the push fails, #4175), then
-`python3 framework/tools/merge_main.py --push N --pr-branch <branch of the PR>` does both (#3678).
+`python3 framework/tools/merge_main.py --push N --pr-branch <branch of the PR>` does both (#3678). Then wait for its quick CI: `python3 framework/tools/ship_pr.py N --ci --pr-branch <branch of the PR>` (#5014).
 A PR whose ticket has no `in-progress` label is free: any run can fix it (hand-off).
 If your usage limit stops you, the next run continues your work through this rule.
 
@@ -37,6 +37,10 @@ decides: bots keep the PR of a stopped run busy (#2160 and #2161 stayed red for 
 Take over the first ticket (`python3 framework/tools/claim.py N --takeover`, then comment "Taken over by `<your branch>`: stuck.").
 Exit 1 there: another run was first, take the next line. With a PR: fix it at step 6.8. With no PR: do the ticket
 from step 6 (start from its branch when it has one). That is the work of this cycle.
+A ticket whose PR only waits for its quick CI or for Automerge gets no line (`pacer.ci_wait`). A line
+`PR #M waits for the owner (no agent branch, no label automerge)`: a green PR that Automerge never merges. Do not take it
+over: add `needs-human` and a comment that asks the owner to add the label `automerge` to PR #M or to merge it, then
+`python3 framework/tools/claim.py N --release` (#5331).
 
 ## The flow brake
 
