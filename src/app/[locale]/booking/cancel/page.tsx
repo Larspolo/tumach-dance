@@ -10,8 +10,12 @@ import { cancelWithLink } from "./actions";
 // scanners open links. The button posts the server action, which checks the token and the rule of #163 again.
 export const dynamic = "force-dynamic";
 
-// The token is in the address: no search engine and no referrer gets it.
-export const metadata: Metadata = { robots: { index: false, follow: false }, referrer: "no-referrer" };
+// The token is in the address: no search engine and no referrer gets it. A title names the page for a screen reader (#343).
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Meta" });
+  return { title: t("cancel.title"), robots: { index: false, follow: false }, referrer: "no-referrer" };
+}
 
 type Search = { token?: string; done?: string };
 

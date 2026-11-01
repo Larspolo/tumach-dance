@@ -432,6 +432,9 @@
     "guide": {
       "title": "How to use the studio app · TUMACH",
       "description": "Log in, add the studio app to your home screen and turn on notifications."
+    },
+    "cancel": {
+      "title": "Cancel a booking · TUMACH"
     }
   }
 }

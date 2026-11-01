@@ -406,3 +406,10 @@
   height: 1px;
   overflow: hidden;
 }
+
+/* The rust on the dark ink of the contact part: the lighter rust for the contrast (#343). */
+.contact .secNum,
+.contact .field label,
+.contact .lbl {
+  color: var(--rust-light);
+}
