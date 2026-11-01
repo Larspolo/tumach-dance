@@ -84,7 +84,10 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
 **A question for Nina** (label `for-nina`): her answer removed `needs-human` (#294), so it is a candidate. No PR and no
 branch. Read the comments. No "Nina's answer:" after the last section `## For Nina`: add `needs-human` again and pick
 the next ticket. Else act on her answer: a good answer (often A) closes the ticket; a problem or a wish that she names
-gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Then write one evidence comment (her answer, the
+gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Make it a sub-issue of the epic of the question
+(`gh api repos/OWNER/NAME/issues/N/parent`; `github.md`, "Add a sub-issue"; a full epic: "Part of #E" in the body):
+an epic with no open sub-issue starts empty refill runs (#309). When another question already has a follow-up for the
+same problem, make no new ticket: name it in a comment on the epic. Then write one evidence comment (her answer, the
 follow-up numbers) and close with the label `close` (`owner.md`, "Close an issue"); `claim.py N --release`.
 
 Ask the owner only with the label `needs-human` and a comment on the issue that needs the answer (owner rule, #862).
