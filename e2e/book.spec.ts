@@ -24,7 +24,9 @@ async function chooseTime(page: Page) {
   await page.goto("/en/book");
   await expect(page.getByText("€43.22")).toHaveCount(0);
   await page.getByRole("link", { name: /€43\.21/ }).click();
-  await page.locator("section", { hasText: en.Book.day }).getByRole("link").first().click();
+  // The last day, not today: late in the evening today has one or two free times, and the test of a taken time
+  // then shows no time at all (red CI of #316, #317 and #319 at 19:00 local time).
+  await page.locator("section", { hasText: en.Book.day }).getByRole("link").last().click();
   const times = page.locator("section", { hasText: en.Book.time }).getByRole("link");
   await times.first().click();
   await expect(page.getByLabel(en.Book.name)).toBeVisible();
