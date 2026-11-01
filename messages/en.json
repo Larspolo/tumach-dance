@@ -52,13 +52,15 @@
       "place": "Amsterdam",
       "closing": "See you in the studio.",
       "thanks": "Thank you! Your message is sent.",
-      "failed": "Sending failed, please try again later"
+      "failed": "Sending failed, please try again later",
+      "notSent": "Your message was not sent. Wait a few seconds and send it again."
     }
   },
   "Nav": {
     "label": "Main",
     "logo": "TUMACH",
     "about": "About",
+    "photos": "Photos",
     "classes": "Classes",
     "schedule": "Schedule",
     "contact": "Contact"
@@ -360,6 +362,7 @@
     "title": "Photos",
     "back": "Back",
     "none": "No photos yet.",
+    "onSite": "See the photos on the site",
     "choose": "Photos from your phone",
     "add": "Add photos",
     "adding": "Adding…",
