@@ -12,13 +12,13 @@ import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import styles from "../studio.module.css";
-import { cancel, removeBlock } from "./actions";
+import { addBlock, cancel, removeBlock } from "./actions";
 
 // The bookings of a week, per day (#102): the requests and the approved bookings, Monday to Sunday.
 export default async function WeekPage({
   searchParams,
 }: {
-  searchParams: Promise<{ start?: string; cancel?: string }>;
+  searchParams: Promise<{ start?: string; cancel?: string; add?: string }>;
 }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -32,6 +32,9 @@ export default async function WeekPage({
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
   const blocks = listBlocks(getDb(), week.from, week.to);
+  // The form "Keep a time free" (#327): its date is the first day of the week that is not in the past.
+  const today = localDate(Date.now());
+  const blockDate = week.days.find((day) => day >= today) ?? today;
   const dayName = new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
 
@@ -50,6 +53,33 @@ export default async function WeekPage({
           {t("next")}
         </Link>
       </p>
+      {params.add ? (
+        <form className={`${styles.form} ${styles.section}`} action={addBlock}>
+          <input type="hidden" name="start" value={week.start} />
+          <label className={styles.label}>
+            {t("blockDate")}
+            <input className={styles.input} type="date" name="date" defaultValue={blockDate} required />
+          </label>
+          <label className={styles.label}>
+            {t("blockFrom")}
+            <input className={styles.input} type="time" name="from" step={1800} defaultValue="18:00" required />
+          </label>
+          <label className={styles.label}>
+            {t("blockTo")}
+            <input className={styles.input} type="time" name="to" step={1800} defaultValue="19:00" required />
+          </label>
+          {params.add === "wrong" && <p className={styles.error}>{t("blockWrong")}</p>}
+          <button className={styles.button} type="submit">
+            {t("blockSave")}
+          </button>
+        </form>
+      ) : (
+        <p>
+          <Link className={styles.link} href={`/studio/week?start=${week.start}&add=1`}>
+            {t("blockAdd")}
+          </Link>
+        </p>
+      )}
       {week.days.map((day) => {
         const ofDay = bookings.filter(({ booking }) => localDate(booking.start) === day);
         const blocksOfDay = blocks.filter((block) => localDate(block.start) === day);

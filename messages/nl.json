@@ -338,7 +338,13 @@
     "removed": "Naam verwijderd",
     "cancelNo": "Nee",
     "block": "Vrijgehouden",
-    "blockRemove": "Verwijderen"
+    "blockRemove": "Verwijderen",
+    "blockAdd": "Tijd vrijhouden",
+    "blockDate": "Dag",
+    "blockFrom": "Van",
+    "blockTo": "Tot",
+    "blockSave": "Opslaan",
+    "blockWrong": "Kies een dag, en een eindtijd na de begintijd."
   },
   "StudioFeedback": {
     "back": "Terug",

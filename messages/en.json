@@ -338,7 +338,13 @@
     "removed": "Name removed",
     "cancelNo": "No",
     "block": "Kept free",
-    "blockRemove": "Remove"
+    "blockRemove": "Remove",
+    "blockAdd": "Keep a time free",
+    "blockDate": "Day",
+    "blockFrom": "From",
+    "blockTo": "To",
+    "blockSave": "Save",
+    "blockWrong": "Choose a day, and an end after the start."
   },
   "StudioFeedback": {
     "back": "Back",
