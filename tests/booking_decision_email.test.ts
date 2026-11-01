@@ -84,17 +84,6 @@ describe("decisionEmail", () => {
       "Sorry, Nina kan je aanvraag niet aannemen: Privéles, 60 min, zondag 25 oktober 2026 om 10:00.",
     );
   });
-
-  test("Slovenian: the language of the booking", () => {
-    const { booking, offer } = booked("sl");
-    const approved = decisionEmail(booking, offer, "approved");
-    expect(approved.subject).toBe("Tvoja rezervacija pri TUMACH je potrjena");
-    expect(approved.text).toContain("Živjo, Ana,");
-    expect(approved.text).toContain("nedelja, 25. oktober 2026 ob 10:00");
-    const declined = decisionEmail(booking, offer, "declined");
-    expect(declined.subject).toBe("Tvoja prošnja za rezervacijo pri TUMACH");
-    expect(declined.text).toContain("Na strani za rezervacije lahko izbereš drug termin.");
-  });
 });
 
 describe("the requests page sends the email", () => {

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install the Python and Node dependencies in a Claude Code cloud session, so that tests and lint work.
+# Install the packages of the project (the install command of agent.toml) in a Claude Code cloud session, so that tests and lint work.
 set -euo pipefail
 
 # The merge driver of game/data/*.jsonl (.gitattributes, #2004): merge the lines by "name", not by union. Also local.
@@ -35,13 +35,12 @@ if [ -x /usr/local/bin/node ] && [ "$(command -v node)" != /usr/local/bin/node ]
   fi
 fi
 
-PIP="python3 -m pip install --quiet --disable-pip-version-check --root-user-action=ignore"
-$PIP -r requirements-dev.txt
-
-# The Node packages of package-lock.json: again only when the lock file is newer than the last install.
-if [ -f package-lock.json ] && ! [ node_modules/.package-lock.json -nt package-lock.json ]; then
-  npm ci --no-audit --no-fund --silent || true
-fi
+# The project-specific steps (framework/docs/SYSTEM.md, "Generic and specific files"), then the install command of
+# agent.toml (#4801): the setup script runs before the clone and cannot install the packages of the repository.
+if [ -f scripts/session-setup.sh ]; then bash scripts/session-setup.sh; fi
+install=$(python3 -c 'import tomllib; print(tomllib.load(open("agent.toml", "rb")).get("commands", {}).get("install", ""))' \
+  2>/dev/null || true)
+if [ -n "$install" ]; then bash -c "$install"; fi
 # The Playwright browser of the version in package-lock.json (verify skill, levels 3 and 4); it skips a browser that is there.
 if [ -x node_modules/.bin/playwright ]; then
   npx playwright install chromium >/dev/null 2>&1 || true

@@ -42,7 +42,9 @@ whole goal is covered (owner rule, #820: never only "All sub-issues are closed")
 an L ticket"). Check that criterion against the full scope (for "all X": the full list, for example a wiki of the original) and
 name each missing item. When `steering/project/PRINCIPLES.md` has the section "Try a feature", do what it says first
 (for example a `needs-human` test ticket, or a build); the epic waits for it. Close the epic with a comment only when all criteria are met
-(name the evidence for each, then the label `close`: `owner.md`, "Close an issue", #1740). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
+(name the evidence for each, then the label `close`: `owner.md`, "Close an issue", #1740). When an open criterion waits only for an open ticket of another epic (often a question for Nina), add a line
+"Part of #E" to the body of that ticket, outside its section `## For Nina`: else the pacer starts a deep run for the
+epic check of E in each cycle (`usage.refill_need`; 3 empty deep runs for #32 and #158 on 2026-11-01, #318). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
 (E = the epic; exit 1: another run makes its sub-issue, skip the epic, #505). Then make one sub-issue (same priority)
 for the criteria that an agent can do. A criterion that needs the owner stays on the epic. Then pick again (#176, #155 waited while P3 tickets ran).
 Release checks: when `cycle_start.py` prints the section "Release checks (no ticket, make them in the refill)", a deep
@@ -67,6 +69,17 @@ Give each new ticket its lane (`ticket` skill, "Model lanes").
 Also lock each epic E with `python3 framework/tools/claim.py E --refill` before you make its tickets (exit 1: skip that epic, #505).
 A `muted` or `after-release` ticket or epic (the owner holds it until later, 2026-10-26, #4175) is out of all these steps: no split, no check, no
 new sub-issues, no `needs-human`. Still answer an owner comment on it (step 3).
+Release focus (owner, 2026-11-01, `steering/project/RELEASE.md`; skip it and the release epic rule when the project has
+no such file): before you make tickets for an open epic, check that its
+feature is inside the focus (its section "Release focus" tells how to find the features that wait). An epic outside it gets the
+label `after-release` and a one-line comment ("Waits for the release: release focus of `steering/project/RELEASE.md`"),
+and no new sub-issue. Do not hold a ticket with `in-progress` or an open PR: let it finish and merge. Also each new follow-up ticket of a held epic or of milestone C work gets `after-release`.
+Release epic (label `release`): its scope is the GitHub milestone of its version; a new sub-issue of it gets that
+milestone too. It is done when its criteria are met (`steering/project/RELEASE.md`, "Release cycle");
+close it with the label `close`, and `release.yml` makes the release. Tickets with `rank` (after a release) come first in
+the refill: do the "Release cycle" of the `roadmap` skill, then the other steps.
+When no source is left inside the focus, make tickets from the play test (`docs/PLAYTEST.md`, the comments of the
+play-test tickets, P9 of `steering/project/PRINCIPLES.md`) and stop; do not make work outside the focus.
 1. Split each `size:L` ticket N without open sub-issues (`ticket` skill), also when it is not a candidate yet. Lock it
    first with `python3 framework/tools/claim.py N --refill` (exit 1: skip it).
 2. For each open epic whose sub-issues are all closed: make a sub-issue for each acceptance criterion that is
@@ -74,7 +87,7 @@ new sub-issues, no `needs-human`. Still answer an owner comment on it (step 3).
 3. Make up to 20 new tickets (within the cap) for the remaining goals of the open epics, and for the fallbacks in
    `docs/coverage.md`. When the open epics have no goal left that an agent can do, make the next epic from the
    feature list of `steering/project/ROADMAP.md` with the `roadmap` skill (the goals take turns). Each feature has an epic: run
-   `python3 framework/tools/claim.py 0 --roadmap` (due after 30 merged PRs then, #3741); exit 0: do the roadmap review now. Priority: that of the epic, else `P3`. Never `P0` or `P1`, except for
+   `python3 framework/tools/claim.py 0 --roadmap` (due after 30 merged PRs then, #3741, or after 60 minutes with no merged PR); exit 0: do the roadmap review now. Priority: that of the epic, else `P3`. Never `P0` or `P1`, except for
    a `tooling` ticket that blocks other tickets. Look for duplicates first, and list the open issues again just
    before you make the tickets: parallel runs make the same follow-ups at the same time (#300, #301).
    Run that list in its own tool call and read it before the create calls: a list and the creates in one call made 7 copies (#2778).

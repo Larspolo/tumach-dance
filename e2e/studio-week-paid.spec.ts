@@ -35,15 +35,15 @@ test("a paid booking shows paid, an unpaid approved booking shows approved", asy
       .get();
   };
   // A Thursday and a Friday far in the future: no other test books them.
-  const paid = add("Paid Dancer", "2032-03-11T10:00");
-  add("Unpaid Dancer", "2032-03-12T10:00");
+  const paid = add("Paid Dancer", "2032-04-15T10:00");
+  add("Unpaid Dancer", "2032-04-16T10:00");
   expect(markPaid(db, paid.id).ok).toBe(true);
 
-  await page.goto("/studio/week?start=2032-03-11");
-  const paidDay = page.locator('section[data-day="2032-03-11"]');
+  await page.goto("/studio/week?start=2032-04-15");
+  const paidDay = page.locator('section[data-day="2032-04-15"]');
   await expect(paidDay.getByText("Paid Dancer")).toBeVisible();
   await expect(paidDay.getByText(en.StudioWeek.paid, { exact: true })).toBeVisible();
-  const unpaidDay = page.locator('section[data-day="2032-03-12"]');
+  const unpaidDay = page.locator('section[data-day="2032-04-16"]');
   await expect(unpaidDay.getByText(en.StudioWeek.approved, { exact: true })).toBeVisible();
   await expect(unpaidDay.getByText(en.StudioWeek.paid, { exact: true })).toHaveCount(0);
 });

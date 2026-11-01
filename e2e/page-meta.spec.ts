@@ -2,10 +2,9 @@
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
-import sl from "../messages/sl.json" with { type: "json" };
 import { META_KEY, PUBLIC_PAGES } from "../src/lib/page-meta";
 
-const all = { en, nl, sl };
+const all = { en, nl };
 
 for (const [locale, messages] of Object.entries(all)) {
   for (const page of PUBLIC_PAGES) {

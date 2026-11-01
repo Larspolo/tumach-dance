@@ -68,7 +68,7 @@ describe("requestPush", () => {
       name: "Ana",
       email: "ana@example.com",
       phone: "+31 6 12345678",
-      locale: "sl",
+      locale: "nl",
     },
     { now: NOW },
   );
@@ -78,7 +78,6 @@ describe("requestPush", () => {
   test.each([
     ["en", "New booking request", "Ana: Private lesson, 60 min, Oct 25, 2026, 10:00 AM"],
     ["nl", "Nieuwe aanvraag", "Ana: Privéles, 60 min, 25 okt 2026, 10:00"],
-    ["sl", "Nova prošnja za rezervacijo", "Ana: Zasebna ura, 60 min, 25. okt. 2026, 10:00"],
   ] as const)("%s: the offer and the Amsterdam time on 2026-10-25", (locale, title, body) => {
     const message = requestPush(booking, offer, locale);
     expect(message.title).toBe(title);

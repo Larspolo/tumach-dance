@@ -1,6 +1,7 @@
 """Automerge closes the ticket of a merged PR when GitHub did not: #210 stayed open after the merge of PR #213 (#264)."""
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -19,8 +20,9 @@ def calls(tmp_path, state):
     gh.chmod(0o755)
     (tmp_path / "table.json").write_text(json.dumps({"GET repos/o/r/issues/5": [{"state": state, "labels": []}, 0]}))
     pr = json.dumps({"number": 7, "head": {"ref": "agent/5-x", "sha": "abc"}, "labels": [], "body": "Closes #5"})
-    script = "\n".join(["R=o/r merged=0 conflict=0 labels=0 image=0 AGENT=true", merge_function(), f"merge '{pr}' abc"])
+    script = "\n".join(["R=o/r merged=0 conflict=0 AGENT=true", merge_function(), f"merge '{pr}' abc"])
     gate(tmp_path)
+    shutil.copy(os.path.join(os.path.dirname(__file__), "..", "tools", "pr_ticket.py"), tmp_path)   # as the setup step
     env = dict(os.environ, PATH=f"{tmp_path / 'bin'}:{os.environ['PATH']}", GH_LOG=str(tmp_path / "log"),
                GH_TABLE=str(tmp_path / "table.json"), RUNNER_TEMP=str(tmp_path))
     p = subprocess.run(["bash", "-e", "-c", script], cwd=tmp_path, env=env, capture_output=True, text=True)

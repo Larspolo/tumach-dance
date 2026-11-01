@@ -58,13 +58,9 @@ describe("requestEmail", () => {
     expect(email.text).toContain("Nina kijkt ernaar en antwoordt je snel.");
   });
 
-  test("Slovenian: the subject and the text in Slovenian", () => {
+  test("an old Slovenian booking (#299): the text in English", () => {
     const { booking, offer } = booked();
-    const email = requestEmail(booking, offer, "sl");
-    expect(email.subject).toBe("Tvoja prošnja za rezervacijo pri TUMACH");
-    expect(email.text).toContain("Živjo, Ana,");
-    expect(email.text).toContain("nedelja, 25. oktober 2026 ob 10:00");
-    expect(email.text).toContain("Nina bo pregledala prošnjo in ti kmalu odgovorila.");
+    expect(requestEmail(booking, offer, "sl").subject).toBe(requestEmail(booking, offer, "en").subject);
   });
 });
 
@@ -99,22 +95,22 @@ describe("sendRequestEmail", () => {
         name: "Ana",
         email: "ana@example.com",
         phone: "+31612345678",
-        locale: "sl",
+        locale: "nl",
       },
       { now: NOW },
     );
     if (!result.ok) throw new Error("the booking should be ok");
     vi.spyOn(console, "info").mockImplementation(() => {});
 
-    await sendRequestEmail(db, result.booking, "sl");
+    await sendRequestEmail(db, result.booking, "nl");
 
     const sent = readFileSync(process.env.EMAIL_LOG_FILE as string, "utf8")
       .trim()
       .split("\n")
       .map((l) => JSON.parse(l));
     expect(sent).toHaveLength(1);
-    expect(sent[0]).toMatchObject({ to: "ana@example.com", subject: "Tvoja prošnja za rezervacijo pri TUMACH" });
-    expect(sent[0].text).toContain("Najem studia, 120 min");
+    expect(sent[0]).toMatchObject({ to: "ana@example.com", subject: "Je aanvraag bij TUMACH" });
+    expect(sent[0].text).toContain("Studio huren, 120 min");
   });
 
   test("a failed email does not undo the booking: the error is logged", async () => {

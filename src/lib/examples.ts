@@ -15,9 +15,12 @@ import { type SiteEnv, siteEnv } from "./site";
 const EXAMPLE_DAYS = 7;
 const EXAMPLE_BOOKINGS = 4;
 
-/** One lesson and one rental, only when there is no offer. Gives the count of new offers. */
+/**
+ * One lesson and one rental, only when there is no visible offer: a hidden offer alone (the steps of #72 end with
+ * "Then hide it") leaves the booking page with nothing to book (#296). Gives the count of new offers.
+ */
 function seedOffers(db: Db): number {
-  if (listOffers(db).length > 0) return 0;
+  if (listOffers(db, { visibleOnly: true }).length > 0) return 0;
   addOffer(db, { kind: "lesson", minutes: 60, priceCents: 6000, visible: true, position: 1 });
   addOffer(db, { kind: "rental", minutes: 60, priceCents: 2500, visible: true, position: 2 });
   return 2;
@@ -28,7 +31,7 @@ function seedOffers(db: Db): number {
  * booking takes a free slot of a new day first, so that the week shows them apart. Gives the count of new bookings.
  */
 function seedBookings(db: Db, now: number): number {
-  if (listOffers(db, { visibleOnly: true }).length === 0) seedOffers(db);
+  seedOffers(db);
   const offer = listOffers(db, { visibleOnly: true })[0];
   if (!offer) return 0;
   const usedDays = new Set<string>();

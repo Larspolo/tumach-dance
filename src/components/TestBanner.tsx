@@ -13,7 +13,7 @@ export default async function TestBanner() {
       role="status"
       data-testid="test-banner"
       className="test-banner"
-      // Fixed above the fixed nav, with the height --test-banner of globals.css (one line, also in Slovenian).
+      // Fixed above the fixed nav, with the height --test-banner of globals.css (one line).
       style={{
         position: "fixed",
         top: 0,

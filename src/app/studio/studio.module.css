@@ -27,6 +27,11 @@
   gap: 0.75rem;
 }
 
+/* A section of the start page above another section (the passkey above the notifications). */
+.section {
+  margin-bottom: 1.5rem;
+}
+
 .label {
   font-family: "Space Mono", monospace;
   font-size: 0.8rem;
@@ -188,6 +193,20 @@
   border-radius: 0.5rem;
 }
 
+/* The choices of a question for Nina: one below the other, as a suggested text can be long (2026-10-31). The radio
+   button stays at the start of the first line. */
+.answers {
+  flex-direction: column;
+}
+
+.answers .choice {
+  align-items: flex-start;
+}
+
+.answers .choice input {
+  flex: none;
+}
+
 /* The grid of the photos (#173): two columns on a phone. */
 .photos {
   display: grid;
@@ -203,4 +222,15 @@
   height: auto;
   aspect-ratio: 1;
   object-fit: cover;
+}
+
+/* The language control of the studio app (#314): buttons with the look of the links of the public control. */
+.languageButton {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
 }

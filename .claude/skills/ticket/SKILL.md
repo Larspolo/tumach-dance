@@ -29,7 +29,7 @@ Body:
 ## Verify
 <The verify level (1-4) and the commands or checks.>
 
-Depends on: #<n>, #<m>        (only when another ticket must close first)
+Depends on: #<n>, #<m>        (only when another ticket must close first; at the start of its own line, not in a list item: `dashboard.depends` reads only such lines, #5354)
 Start after: <N> PRs after #<M>       (only when the ticket must wait for work, for example to measure a change: N merged PRs after PR #M)
 Start after: <YYYY-MM-DD HH:MM> UTC   (only for a real date outside the project, for example a quota reset; never to measure a change, #2039)
 ```
@@ -39,7 +39,7 @@ after"): the speed of the project changes, and a paused project merges nothing (
 lists the open tickets with a date in `Start after:` ("Time waits").
 
 A new line of a data file in `game/data/` needs no criterion "the values are those of the source" and no test of its values:
-`tests/test_data_files.py` checks the form of each line (#1916). A ticket that changes only data files names no new
+`tests/test_data_files.py` checks the form of each line with the module of its file in `tests/data_checks/` (#1916, #4778). A ticket that changes only data files names no new
 test and no test file: its criterion is that the existing tests pass (owner, 2026-10-29, #4242; `docs/extend.md`).
 A test of a menu or a bonus with the names and values of the new line is a test of the data content too. Name a test
 of behavior only for a change of code, with test data or the expected value from the data. Never copy the test of an
@@ -101,7 +101,9 @@ the `human` skill gives them to `game/watch.py` (#1123). The place is `chopper`,
 A question for Nina (`steering/project/PRINCIPLES.md`, "Owner involvement") has the title "Question for Nina: <the question>",
 the section `## For Nina` with 2 to 4 choices, and the label `for-nina`. Its `## For the owner` steps stay for Lars until the
 page "For Nina" works. After her answer ("Nina's answer: ..."), the page hides the question; a reply of a run does
-not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). The form (`src/lib/nina-question.ts` reads it):
+not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). Her answer also
+removes `needs-human` (#294), so the ticket is a candidate: the autopilot run acts on it (autopilot step 6, "A question
+for Nina"). The form (`src/lib/nina-question.ts` reads it):
 
     ## For Nina
     <The question in plain words, no technical word.>
@@ -114,6 +116,15 @@ The line `Example: <name>` is optional (#146): when Nina taps "Try" on the previ
 first, once per question (`src/lib/examples.ts`). The names: `bookings` (two requests and two approved bookings in the
 next 7 days), `offers` (one lesson and one rental, when there is no offer). The live site never loads example data.
 
+Do not ask Nina for a text (a placeholder in `messages/`) when a sensible text is possible: write it yourself (P2,
+owner 2026-10-31, #257). Only her tagline is hers. Ask only when no text is a good option. Such a question is never a
+bare text box (owner, 2026-10-31, #269 to #274): give 2 or 3 suggestions as choices, and the last choice "I write my own text in the box." Each suggestion
+names each part (`Title: "..." · Text: "..."`), and `## Context` names the key of each part. A fact that you do not
+know (her dance styles, the address, a time to answer) is a gap in [brackets] that she fills in the box; never invent
+it. The suggestions are new texts: never a text of the current tumach.dance (P2). The line above the choices says:
+"Choose the suggestion that you like most. In the box, fill in the parts in [brackets] and write what you want to
+change. Or choose D and write your own text in the box."
+
 
 A check ticket ("check X in the game") starts without `needs-human`: an agent runs the check first (`verify`, level 4),
 comments the results and screenshots with the list of what only a person can check (#580, #1707): sound, the feel of a control (delay, how hard it is to aim), "is it fun".
@@ -123,6 +134,10 @@ Then it closes the ticket on this evidence with the label `owner-sample` (owner 
 No owner point for times, speeds, values or texts: the agent measures them against the original (#1159). A look point links an
 image before and an image after.
 When the check finds bugs, the check ticket depends on the bug tickets and closes only after a check without bugs (#668).
+A bug ticket of a check names the check command in its Verify line, and the fix runs it before the push (`verify`, level
+4, "Check tools", #5461). When the data of the check is only on the owner's computer (an install, a `.dat`), the bug
+ticket gives the measured cause (a traceback, a count of tiles). Without one, ask the owner for it first (`needs-human`):
+three fixes of a guessed cause came back as rework bugs (#5380 → #5422, #5381 → #5423, #5317 → #5361).
 
 ## Decision tickets
 
@@ -153,7 +168,7 @@ does not say?
 
 | Lane | Label | When | Cost |
 |---|---|---|---|
-| Haiku | `lane:haiku` | Nothing to decide: the body names the place (file, function, data line) and the result, the code has a pattern to copy, and no render, screenshot or real game is needed. `size:S` or a small `size:M`. | About 1/8 of an Opus ticket, 2.4 times the time (#1717; 22 of 24 merged, 2026-10-28) |
+| Haiku | `lane:haiku` | Nothing to decide. All 3 are true: the body names the place (file, function, data line); the body says the exact result or the check that shows it; the code has a similar change and the body names it (a function, a data line or the PR of an earlier ticket of the series). No render, screenshot or real game is needed. Examples: one ticket of a series (a unique technology, a civilization bonus, a random map script command), a new key of a data file, a fix whose cause the body names, a change of text or docs. `size:S` or a small `size:M`. | About 1/8 of an Opus ticket, 2.4 times the time (#1717; 22 of 24 merged, 2026-10-28) |
 | Main (Opus, low effort) | none | Choices with a clear right answer: a bug with a known cause, a design or a look to judge, a check on the real server or client. | |
 | Deep (Opus, high effort) | `lane:deep` | A choice where a wrong answer can pass the tests and cost later: a bug with an unknown cause, a race or shared state, a new structure, a change to how the runs decide or plan, a ticket that failed before (red CI after 3 tries, a takeover, reopened), a `size:L` ticket to split. | 4.5 times or more the tokens of a main run |
 
@@ -162,7 +177,7 @@ does not say?
   label (`autopilot` skill, `queue.md`). Not sure between main and deep: main.
 - Write tickets for Haiku (owner, 2026-10-29: 40 % of the closed tickets had `lane:haiku`, but 2 of 25 ready ones).
   When you make a ticket, decide the place and the result while that code is in your context: write the file, the
-  function or data line, the exact result and (for a change of code only) the test to copy into the body, then give `lane:haiku` (a render, a
+  function or data line, the exact result, the earlier ticket or PR of a series as the pattern, and (for a change of code only) the test to copy into the body, then give `lane:haiku` (a render, a
   screenshot or a real game still needs main). Spend at most one `grep` per ticket on it; when it does not find the
   place, give no Haiku label. In the queue refill, also give `lane:haiku` to the ready tickets with no lane whose
   body already meets the Haiku row (read the bodies only, not the code).
@@ -173,6 +188,10 @@ does not say?
 
 - One goal per ticket. If you write "and also", make two tickets.
 - Search the open issues first. Do not make a duplicate.
+- Release focus (`steering/project/RELEASE.md`; skip this rule when the project has no such file): decide for each new `feature` ticket if it goes into the next release
+  (the GitHub milestone "vX.Y.Z" of the open release epic) or gets `after-release`, by comparison with the held tickets
+  and the milestone ("A new feature: in the next release or after it?"). Not for a ticket with `in-progress` or an open PR: it
+  finishes. Before the release, prefer tickets that make the play test work or improve what the player sees and does.
 - Do not change the priority of a ticket that the owner set. Propose the change in a comment.
 - A ticket that uses a tool, file or function of a ticket that is not merged yet gets "Depends on: #<that ticket>": else it is a candidate at once, and a run claims it without the tool (#829 needed `tools/replay_drift.py` of the open PR #830).
 - A ticket that adds an item to the menu of a building (`train.ITEMS`) names its slot: the first free slot of that

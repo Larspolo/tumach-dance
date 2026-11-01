@@ -1,5 +1,6 @@
 """Automerge starts image.yml after a merge that changes the site: a merge with GITHUB_TOKEN starts no `push` workflow,
-so the merges of 2026-10-30 made no site image, and the home server kept the site of #90."""
+so the merges of 2026-10-30 made no site image, and the home server kept the site of #90. merge() writes the merged
+files, and framework/tools/push_workflows.py selects the push workflows of main by their paths filters (#4839)."""
 import json
 import os
 import re
@@ -9,7 +10,9 @@ import sys
 import pytest
 from test_automerge_failure import FAKE_GH, gate, merge_function
 
-IMAGE = os.path.join(os.path.dirname(__file__), "..", "..", ".github", "workflows", "image.yml")
+WORKFLOWS = os.path.join(os.path.dirname(__file__), "..", "..", ".github", "workflows")
+IMAGE = os.path.join(WORKFLOWS, "image.yml")
+PUSH = os.path.join(os.path.dirname(__file__), "..", "tools", "push_workflows.py")
 pytestmark = pytest.mark.skipif(subprocess.run(["which", "jq"], capture_output=True).returncode != 0,
                                 reason="the fake gh needs jq")
 
@@ -21,7 +24,8 @@ def ignored():
 
 
 def merged(tmp_path, files):
-    """Run merge() for a green PR that merges and changes `files`. Gives ($labels, $image)."""
+    """Run merge() for a green PR that merges and changes `files`. Gives "labels=0|1 image=0|1": the push workflows
+    that Automerge starts after it."""
     (tmp_path / "bin").mkdir()
     gh = tmp_path / "bin" / "gh"
     gh.write_text(FAKE_GH.format(python=sys.executable))
@@ -29,14 +33,16 @@ def merged(tmp_path, files):
     (tmp_path / "table.json").write_text(json.dumps({
         "GET repos/o/r/pulls/7/files?per_page=100": [[{"filename": f} for f in files], 0]}))
     pr = json.dumps({"number": 7, "head": {"ref": "agent/7-x", "sha": "abc"}, "labels": [], "body": "A change."})
-    script = "\n".join(["R=o/r merged=0 conflict=0 labels=0 image=0 AGENT=true", merge_function(),
-                        f"merge '{pr}' abc", 'echo "labels=$labels image=$image"'])
+    script = "\n".join(["R=o/r merged=0 conflict=0 AGENT=true", merge_function(), f"merge '{pr}' abc"])
     gate(tmp_path)
     env = dict(os.environ, PATH=f"{tmp_path / 'bin'}:{os.environ['PATH']}", GH_LOG=str(tmp_path / "log"),
                GH_TABLE=str(tmp_path / "table.json"), RUNNER_TEMP=str(tmp_path))
     p = subprocess.run(["bash", "-e", "-c", script], cwd=tmp_path, env=env, capture_output=True, text=True)
     assert p.returncode == 0, p.stderr
-    return p.stdout.splitlines()[-1]
+    names = (tmp_path / "merged_files.txt").read_text().splitlines()
+    run = subprocess.run([sys.executable, PUSH, "--dir", WORKFLOWS, *names], capture_output=True, text=True, check=True)
+    started = run.stdout.split()
+    return f"labels={int('labels.yml' in started)} image={int('image.yml' in started)}"
 
 
 def test_a_change_of_the_site_starts_the_image(tmp_path):

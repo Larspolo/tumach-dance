@@ -57,6 +57,7 @@ export function ContactForm({ stamp }: { stamp: string }) {
         defaultValue=""
       />
       {state.status === "failed" && <p className={styles.fieldError}>{t("failed")}</p>}
+      {state.status === "notSent" && <p className={styles.fieldError}>{t("notSent")}</p>}
       <div className={styles.field}>
         <label htmlFor={name.id}>{t("name")}</label>
         <input

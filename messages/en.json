@@ -1,33 +1,33 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (en): the welcome of Nina]",
-    "eyebrow": "[Placeholder (en): short line above the title]",
-    "primaryAction": "[Placeholder (en): button to the schedule]",
-    "secondaryAction": "[Placeholder (en): button to the studio]",
-    "imageBlock": "[Placeholder (en): photo of the studio]",
+    "welcome": "Come as you are and dance at your own pace: private lessons, classes and a studio to rent.",
+    "eyebrow": "Dance studio · Amsterdam",
+    "primaryAction": "See the schedule",
+    "secondaryAction": "About the studio",
+    "imageBlock": "The TUMACH dance studio",
     "about": {
-      "title": "[Placeholder (en): title about the studio]",
-      "label": "[Placeholder (en): (01) about]",
-      "text1": "[Placeholder (en): first paragraph about the studio]",
-      "text2": "[Placeholder (en): second paragraph about Nina]",
-      "text3": "[Placeholder (en): third paragraph about the dancers]",
-      "quote": "[Placeholder (en): a short quote of Nina]",
-      "quoteBy": "[Placeholder (en): who said the quote]"
+      "title": "About TUMACH",
+      "label": "(01) About",
+      "text1": "TUMACH is a small dance studio in Amsterdam. Take a private lesson, join a class, or rent the studio for your own practice.",
+      "text2": "I am Nina, and this is my studio. I teach private lessons and classes, at the pace that suits you.",
+      "text3": "Beginners and experienced dancers are both welcome. We start where you are.",
+      "quote": "Every dancer starts somewhere.",
+      "quoteBy": "Nina"
     },
     "photos": {
-      "title": "[Placeholder (en): title of the photos]",
-      "label": "[Placeholder (en): (02) photos]",
-      "alt": "[Placeholder (en): a photo of the studio]"
+      "title": "The studio",
+      "label": "Photos",
+      "alt": "A photo of the TUMACH dance studio"
     },
     "classes": {
-      "title": "[Placeholder (en): title of the classes]",
-      "label": "[Placeholder (en): (02) classes]",
+      "title": "Classes",
+      "label": "(02) Classes",
       "none": "No classes yet."
     },
     "schedule": {
-      "title": "[Placeholder (en): title of the schedule]",
-      "label": "[Placeholder (en): (03) schedule]",
+      "title": "Every week",
+      "label": "(03) Schedule",
       "none": "No class times yet.",
       "days": {
         "mon": "Monday",
@@ -41,33 +41,35 @@
       "time": "{from}–{to}"
     },
     "contact": {
-      "title": "[Placeholder (en): title of the contact]",
-      "label": "[Placeholder (en): (04) contact]",
-      "text": "[Placeholder (en): invitation to write to Nina]",
-      "name": "[Placeholder (en): name]",
-      "email": "[Placeholder (en): email]",
-      "message": "[Placeholder (en): message]",
-      "send": "[Placeholder (en): send]",
-      "placeLabel": "[Placeholder (en): place]",
-      "place": "[Placeholder (en): address of the studio]",
-      "closing": "[Placeholder (en): closing line]",
-      "thanks": "[Placeholder (en): Thank you, your message is sent]",
-      "failed": "Sending failed, please try again later"
+      "title": "Say hello",
+      "label": "(04) Contact",
+      "text": "A question about a lesson, a class or the studio? Send me a message, and I will answer soon.",
+      "name": "Your name",
+      "email": "Your email",
+      "message": "Your message",
+      "send": "Send",
+      "placeLabel": "Where",
+      "place": "Amsterdam",
+      "closing": "See you in the studio.",
+      "thanks": "Thank you! Your message is sent.",
+      "failed": "Sending failed, please try again later",
+      "notSent": "Your message was not sent. Wait a few seconds and send it again."
     }
   },
   "Nav": {
     "label": "Main",
     "logo": "TUMACH",
-    "about": "[Placeholder (en): about]",
-    "classes": "[Placeholder (en): classes]",
-    "schedule": "[Placeholder (en): schedule]",
-    "contact": "[Placeholder (en): contact]"
+    "about": "About",
+    "photos": "Photos",
+    "classes": "Classes",
+    "schedule": "Schedule",
+    "contact": "Contact"
   },
   "Footer": {
     "copyright": "© {year}",
     "domain": "tumach.dance",
-    "tagline": "[Placeholder (en): the tagline of Nina]",
-    "place": "[Placeholder (en): the place]",
+    "tagline": "Tumach Dance? Never enough!",
+    "place": "Amsterdam",
     "privacy": "How we keep your data"
   },
   "StudioLogin": {
@@ -103,8 +105,10 @@
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
+    "buttonTitle": "Passkey",
     "text": "Add a passkey on this phone. Next time you log in with Face ID or your fingerprint, with no code.",
     "add": "Add a passkey",
+    "added": "The passkey is added. Next time you log in with no code.",
     "notNow": "Not now",
     "failed": "The passkey was not added. You can still log in with a code by email."
   },
@@ -180,7 +184,6 @@
     "textIn": "Text in {language}",
     "forWhomIn": "For whom in {language}",
     "nl": "Dutch",
-    "sl": "Slovenian",
     "translations": "Translations",
     "save": "Save",
     "hide": "Hide",
@@ -284,7 +287,10 @@
     "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
     "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "payReminderSubject": "Payment of your booking at TUMACH",
-    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well.",
+    "unansweredSubject": "Your booking request at TUMACH",
+    "unansweredBody": "Nina could not answer your request in time: {offer}, {when}. The request has ended.",
+    "unansweredOther": "You can pick another time on the booking page: {url}"
   },
   "bookingPush": {
     "title": "New booking request",
@@ -333,7 +339,15 @@
     "cancelAsk": "Cancel this booking?",
     "cancelYes": "Yes, cancel",
     "removed": "Name removed",
-    "cancelNo": "No"
+    "cancelNo": "No",
+    "block": "Kept free",
+    "blockRemove": "Remove",
+    "blockAdd": "Keep a time free",
+    "blockDate": "Day",
+    "blockFrom": "From",
+    "blockTo": "To",
+    "blockSave": "Save",
+    "blockWrong": "Choose a day, and an end after the start."
   },
   "StudioFeedback": {
     "back": "Back",
@@ -359,6 +373,7 @@
     "title": "Photos",
     "back": "Back",
     "none": "No photos yet.",
+    "onSite": "See the photos on the site",
     "choose": "Photos from your phone",
     "add": "Add photos",
     "adding": "Adding…",
@@ -403,8 +418,8 @@
   "Meta": {
     "imageAlt": "TUMACH, the dance studio in Amsterdam",
     "home": {
-      "title": "[Placeholder (en): title of the site in a search result]",
-      "description": "[Placeholder (en): description of the site in a search result]"
+      "title": "TUMACH · Dance studio in Amsterdam",
+      "description": "Private dance lessons, classes and a studio to rent in Amsterdam. See the times and book online, with no account."
     },
     "book": {
       "title": "Book a lesson · TUMACH",
