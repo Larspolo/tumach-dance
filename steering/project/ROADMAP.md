@@ -8,7 +8,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - The home page has the look ("simple and chill") and the layout of the current site, on a phone and a laptop; its texts are placeholders until Nina gives the real ones
   - Each merge to main updates the preview site on the home server, with no step by Lars (after one setup)
   - `npm run dev` starts the site on the owner's computer (`/try`)
-- [ ] `site:languages` English and Dutch
+- [x] `site:languages` (#39) English and Dutch
   - A visitor selects the language on each page; the first visit uses the language of the browser
   - Each text is in a data file per language; a missing text shows the English text
 - [x] `site:schedule` (#94) The classes and the weekly schedule come from data that Nina changes
@@ -19,7 +19,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:contact` The contact form sends the message to Nina's email (Mailgun)
   - A visitor sends a message; Nina gets it in her Gmail and replies to the visitor
   - The form stops spam bots with no puzzle for the visitor
-- [ ] `site:photos` Photos of the studio that Nina adds from her phone
+- [x] `site:photos` (#170) Photos of the studio that Nina adds from her phone
   - Nina adds or removes a photo in a few taps; the site shows the photos fast on a phone
 - [x] `site:findable` (#237) Search engines and link previews find and show the site
   - A shared link shows a picture and a short text in WhatsApp and Instagram
@@ -32,7 +32,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:access` (#339) Each visitor can read the site and book, also with a screen reader, a large text or only the keyboard
   - Each page of the site and of the studio app has no serious barrier (a check with axe)
   - A dancer books a lesson with only the keyboard
-- [ ] `site:lost` A visitor who opens a wrong or old address, or meets an error, finds the way back
+- [x] `site:lost` (#357) A visitor who opens a wrong or old address, or meets an error, finds the way back
   - An unknown address shows a page in the look and the language of the site, with links to the home page and to the booking page; the studio app has the same
   - An error of a page shows a calm page with "Try again", not the bare error page
 - [ ] `site:live` tumach.dance runs the new site
@@ -43,7 +43,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:mail` Nobody misses an email that the site could not send
   - When an email to a dancer does not go out, Nina gets a push with the name of the dancer, and tells the dancer herself
   - A server with no email setup shows in the health check, so the site watch tells Lars
-- [ ] `site:updates` The live site gets the security fixes of its libraries
+- [x] `site:updates` (#407) The live site gets the security fixes of its libraries
   - Each week a check finds the known security problems of the libraries of the site and opens a ticket for the agents
   - The update goes live only after the tests pass, with no step by Lars
 
@@ -66,7 +66,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:overview` (#100) All bookings at a glance
   - Nina sees the requests, the approved and the paid bookings per day and per week
   - The calendar on her phone shows the bookings (a calendar feed)
-- [ ] `nina:block` Nina keeps a time free of bookings from the site
+- [x] `nina:block` (#322) Nina keeps a time free of bookings from the site
   - Nina blocks a time on one day in a few taps (a lesson that she gave by WhatsApp or phone, or time for herself); the booking page no longer offers it
   - Nina removes the block, and the time is free again
 - [ ] `nina:move` Nina moves a booking to another free time
@@ -79,7 +79,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A dancer selects a private lesson or studio rental, sees only the free slots, and sends a request with a name, an email and a phone number (no account)
   - The dancer gets an email in the language of the site that the request is in
   - Two dancers never get the same slot: an open request holds its slot until Nina decides
-- [ ] `book:note` A dancer tells Nina what the request is for
+- [x] `book:note` (#382) A dancer tells Nina what the request is for
   - A dancer adds an optional short note to the request (what to learn, the level, how many people come); Nina reads it before she decides
   - The note goes away with the other data of the dancer
 - [x] `book:safe` (#372) Only a person can send a booking request
@@ -98,10 +98,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A cancel removes the event from the calendar of the dancer
 - [x] `book:reply` (#373) A dancer who answers an email of the site reaches Nina
   - The Reply button of each email to a dancer writes to Nina's email
-- [ ] `book:unanswered` A request that Nina does not answer in time
+- [x] `book:unanswered` (#337) A request that Nina does not answer in time
   - A request with no answer at its start ends by itself; the dancer gets one email with a link to book another time
   - Nina never approves or declines a request whose time has started
 - [x] `book:privacy` (#222) The data of the dancers is safe
   - A privacy page says what the studio keeps and for how long; old data goes away
-- [ ] `book:forget` Nina removes the data of a dancer who asks for it
+- [x] `book:forget` (#358) Nina removes the data of a dancer who asks for it
   - From one booking in her app, Nina removes the name, email and phone of each booking of that dancer in two taps; a coming booking is cancelled first, with the usual email
