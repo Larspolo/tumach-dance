@@ -26,9 +26,12 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - No page shows a placeholder
 - [ ] `site:where` Dancers know where the studio is
   - The home page, the emails of an approved booking and the calendar file of a booking give the address, in the places that Nina chooses; a page has a link that opens the map on the phone
-- [ ] `site:access` Each visitor can read the site and book, also with a screen reader, a large text or only the keyboard
+- [x] `site:access` (#339) Each visitor can read the site and book, also with a screen reader, a large text or only the keyboard
   - Each page of the site and of the studio app has no serious barrier (a check with axe)
   - A dancer books a lesson with only the keyboard
+- [ ] `site:lost` A visitor who opens a wrong or old address, or meets an error, finds the way back
+  - An unknown address shows a page in the look and the language of the site, with links to the home page and to the booking page; the studio app has the same
+  - An error of a page shows a calm page with "Try again", not the bare error page
 - [ ] `site:live` tumach.dance runs the new site
   - Each merge to main updates the live site, as the preview (one image, owner 2026-10-31); the live site and the preview have separate data
   - A backup of the data each night, and a tested way to restore it
@@ -78,3 +81,5 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - Nina never approves or declines a request whose time has started
 - [x] `book:privacy` (#222) The data of the dancers is safe
   - A privacy page says what the studio keeps and for how long; old data goes away
+- [ ] `book:forget` Nina removes the data of a dancer who asks for it
+  - From one booking in her app, Nina removes the name, email and phone of each booking of that dancer in two taps; a coming booking is cancelled first, with the usual email
