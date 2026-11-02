@@ -19,11 +19,16 @@ test.describe("phone", () => {
 
 test.describe("laptop", () => {
   test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false });
-  test("the menu link Book opens the booking page", async ({ page }, testInfo) => {
-    await page.goto("/en");
-    await page.screenshot({ path: `out/screenshots/home-book-laptop-${testInfo.project.name}.png` });
-    const nav = page.getByRole("navigation", { name: en.Nav.label });
-    await nav.getByRole("link", { name: en.Nav.book, exact: true }).click();
-    await expect(page).toHaveURL(/\/en\/book$/);
-  });
+  for (const [locale, m] of [
+    ["en", en],
+    ["nl", nl],
+  ] as const) {
+    test(`the menu link Book opens the booking page (${locale})`, async ({ page }, testInfo) => {
+      await page.goto(`/${locale}`);
+      await page.screenshot({ path: `out/screenshots/home-book-laptop-${locale}-${testInfo.project.name}.png` });
+      const nav = page.getByRole("navigation", { name: m.Nav.label });
+      await nav.getByRole("link", { name: m.Nav.book, exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/${locale}/book$`));
+    });
+  }
 });
