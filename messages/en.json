@@ -554,6 +554,13 @@
     "kind": "{type, select, phone {Phone} tablet {Tablet} computer {Computer} other {Device}} · {browser, select, safari {Safari} chrome {Chrome} firefox {Firefox} edge {Edge} other {other browser}}",
     "thisDevice": "This device",
     "today": "today",
-    "lastUse": "Last used: {day}"
+    "lastUse": "Last used: {day}",
+    "logOut": "Log out",
+    "confirm": "Log out this device?",
+    "logOutOthers": "Log out all other devices",
+    "confirmOthers": "Log out all other devices?",
+    "yes": "Yes",
+    "no": "No",
+    "failed": "Something went wrong. Try again in a minute."
   }
 }
