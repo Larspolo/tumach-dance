@@ -13,7 +13,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - Each text is in a data file per language; a missing text shows the English text
 - [x] `site:schedule` (#94) The classes and the weekly schedule come from data that Nina changes
   - Nina changes a class or a time on her phone, and the site shows it at once
-- [ ] `site:book` A visitor finds the booking and the prices from the home page
+- [x] `site:book` (#380) A visitor finds the booking and the prices from the home page
   - The home page and the menu have a button that opens the booking page; on a phone it is one tap
   - The home page shows the private lesson and the studio rental with their length and price, each with a link that opens the booking page with that offer
 - [ ] `site:contact` The contact form sends the message to Nina's email (Mailgun)
@@ -40,12 +40,18 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A backup of the data each night, and a tested way to restore it
 - [ ] `site:watch` Lars knows when the live site has a problem
   - Lars gets a message when the live site stops or the nightly backup fails, with no paid service
-- [ ] `site:mail` Nobody misses an email that the site could not send
+- [x] `site:mail` (#408) Nobody misses an email that the site could not send
   - When an email to a dancer does not go out, Nina gets a push with the name of the dancer, and tells the dancer herself
   - A server with no email setup shows in the health check, so the site watch tells Lars
 - [x] `site:updates` (#407) The live site gets the security fixes of its libraries
   - Each week a check finds the known security problems of the libraries of the site and opens a ticket for the agents
   - The update goes live only after the tests pass, with no step by Lars
+- [ ] `site:fast` Each page opens fast on a phone
+  - The home page and the booking page show their content in less than 2.5 seconds on a mid-range phone with a slow mobile network (Lighthouse, mobile)
+  - A check of each PR stops a change that makes one of these pages slow
+- [ ] `site:social` Visitors find the studio on the apps that Nina uses
+  - The home page and the footer link to the accounts that Nina names (for example Instagram or WhatsApp); a tap opens the app on the phone
+  - Search engines know the accounts of the studio
 
 ## 2. Nina's studio app
 
@@ -69,9 +75,12 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:block` (#322) Nina keeps a time free of bookings from the site
   - Nina blocks a time on one day in a few taps (a lesson that she gave by WhatsApp or phone, or time for herself); the booking page no longer offers it
   - Nina removes the block, and the time is free again
-- [ ] `nina:move` Nina moves a booking to another free time
+- [x] `nina:move` (#406) Nina moves a booking to another free time
   - Nina moves a requested or approved booking to another free time in a few taps (a dancer asks by WhatsApp for another time); the old time is free at once
   - The dancer gets one email with the new time, and the calendar file moves the event in the calendar of the dancer
+- [ ] `nina:busy` A time that is busy in Nina's own calendar is not free on the booking page
+  - Nina connects her own calendar once; the booking page does not offer a time that her calendar shows as busy, also for a repeating event
+  - When her calendar cannot be read, the booking page still works with the last known busy times
 
 ## 3. Book a lesson or the studio
 
@@ -105,3 +114,6 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A privacy page says what the studio keeps and for how long; old data goes away
 - [x] `book:forget` (#358) Nina removes the data of a dancer who asks for it
   - From one booking in her app, Nina removes the name, email and phone of each booking of that dancer in two taps; a coming booking is cancelled first, with the usual email
+- [ ] `book:look` The emails to a dancer have the look of the site
+  - Each email to a dancer has the colors, the fonts and the name of the studio as on the site, with a button for each link (pay, cancel, book again), and still reads well as plain text
+  - The emails read well in Gmail, Apple Mail and Outlook on a phone, also in dark mode
