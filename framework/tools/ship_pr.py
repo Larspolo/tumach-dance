@@ -19,7 +19,8 @@ Run it with the Bash `timeout` 600000. Exit 0: shipped (the quick CI is green, s
 waits again). Exit 2: the lint or a test fails, or a change of data
 files only adds a test (`docs/extend.md`; nothing pushed). Exit 3: the
 guard or the push fails (do not push by hand). Exit 4: no commit to ship, or the PR call fails. Exit 5: the quick CI
-is red: it prints the failed steps and tests; fix them, commit and run it again.
+is red, or a check of GATES (`browser`) during the wait for the merge: it prints the failed steps and tests;
+fix them, commit and run it again.
 After a green quick CI it reads the PR until Automerge merged it, up to the same time limit (#5584): in 3 of 9
 takeovers of 100 merged PRs on 2026-11-01, main moved during the CI wait, the merge of Automerge found a conflict 0 to 2
 minutes after the green CI, and the run had reported and stopped. Exit 6: the PR has a merge conflict (also at the
@@ -40,6 +41,9 @@ from agent_config import CONFIG  # noqa: E402
 
 push = merge_main.push
 QUICK = "quick"                                     # the check of ci.yml that Automerge waits for
+GATES = ("browser",)    # the other checks of ci.yml that Automerge needs green (#221): red after a green quick CI, the
+#                         wait for the merge ended at the time limit with "Automerge merges it", and a cold run took
+#                         the PR over (7 of 10 red CI runs and 5 of 8 takeovers in 100 PRs, process review 2026-11-02)
 WAIT = 9          # minutes: the quick CI of a PR took 6.2 (median) and 7.2 (p90) minutes on 2026-10-30 (#4784)
 POLL = 20         # seconds
 DATA = ("data/", "game/data/", "tools/mcdata/")      # data files: a change there needs no test (owner, 2026-10-29)
@@ -109,9 +113,15 @@ def state(number, tries=6, wait=5):
     return "unknown"
 
 
-def quick(sha):
-    """The check run `quick` of commit `sha`, or None (not queued yet)."""
-    return next(iter(dashboard.api(f"commits/{sha}/check-runs?check_name={QUICK}").get("check_runs", [])), None)
+def quick(sha, name=QUICK):
+    """The check run `name` (default `quick`) of commit `sha`, or None (not queued yet)."""
+    return next(iter(dashboard.api(f"commits/{sha}/check-runs?check_name={name}").get("check_runs", [])), None)
+
+
+def red_gate(sha):
+    """The first failed check run of GATES of commit `sha`, or None (green, still running or not queued)."""
+    return next((c for c in (quick(sha, name) for name in GATES)
+                 if c and c["status"] == "completed" and c["conclusion"] == "failure"), None)
 
 
 def failures(check):
@@ -138,9 +148,10 @@ def conflict(number):
     return f"merge conflict: run `python3 framework/tools/merge_main.py --push {number}`, then `ship_pr.py {number} --ci`"
 
 
-def wait_merge(pr, deadline, get=None, now=time.monotonic, sleep=time.sleep):
+def wait_merge(pr, deadline, get=None, now=time.monotonic, sleep=time.sleep, red=lambda: None):
     """After the green quick CI: "merged", "dirty" (Automerge found a conflict: main moved during the CI, #5584),
-    "hold" (Automerge waits for the PR's own checks) or "open" at the deadline. At least one read."""
+    "hold" (Automerge waits for the PR's own checks), "red" (`red()` gives a failed check of GATES: Automerge never
+    merges it) or "open" at the deadline. At least one read."""
     get = get or (lambda n: dashboard.api(f"pulls/{n}"))
     while True:
         p = get(pr)
@@ -150,6 +161,8 @@ def wait_merge(pr, deadline, get=None, now=time.monotonic, sleep=time.sleep):
             return "dirty"
         if "hold" in {lb.get("name") for lb in p.get("labels", [])}:
             return "hold"
+        if red():
+            return "red"
         if now() + POLL > deadline:
             return "open"
         sleep(POLL)
@@ -157,7 +170,7 @@ def wait_merge(pr, deadline, get=None, now=time.monotonic, sleep=time.sleep):
 
 def ci(number, sha, deadline, pr=None):
     """Wait for the quick CI of `sha` and print its result; then wait for the merge of PR `pr`. Exit 5 when the CI is
-    red, 6 when the PR has a merge conflict, else 0."""
+    red (the quick CI, or a check of GATES during the wait for the merge), 6 when the PR has a merge conflict, else 0."""
     print(f"waiting for the quick CI of {sha[:8]} (at most until {WAIT} minutes after the start)", flush=True)
     c = wait_ci(sha, deadline)
     if c is None:
@@ -167,9 +180,15 @@ def ci(number, sha, deadline, pr=None):
     if c["conclusion"] != "failure":
         if pr is None:
             return 0
-        m = wait_merge(pr, deadline)
-        print(conflict(number) if m == "dirty" else f"PR #{pr}: {m}" + (": Automerge merges it" if m == "open" else ""))
-        return 6 if m == "dirty" else 0
+        gate = []                                   # the failed check of GATES, when one turns red
+        m = wait_merge(pr, deadline, red=lambda: gate.append(red_gate(sha)) or gate[-1])
+        if m == "red":
+            c = gate[-1]
+            print(f"{c.get('name') or GATES[0]} CI failure")
+        else:
+            print(conflict(number) if m == "dirty" else f"PR #{pr}: {m}" + (": Automerge merges it when the "
+                  f"{', '.join(GATES)} check is green too" if m == "open" else ""))
+            return 6 if m == "dirty" else 0
     print("\n".join(failures(c)) or "no failed step: open the run of the check")
     print(f"fix it, commit and run `python3 framework/tools/ship_pr.py {number}` again (autopilot step 6.9)")
     return 5
