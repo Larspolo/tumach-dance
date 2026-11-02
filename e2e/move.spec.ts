@@ -1,5 +1,6 @@
 // Nina moves a booking from the week page on her phone (#411): Move, a day, a time, "Yes, move" (4 taps). The week of
-// the new time shows the booking, the dancer gets the move email, and a cancelled booking has no Move link.
+// the new time shows the booking, the dancer gets the move email, a requested booking stays requested (#434), and a
+// cancelled booking has no Move link.
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
@@ -110,4 +111,49 @@ test("a started booking has no Move link", async ({ page }, testInfo) => {
   const item = page.locator("li", { hasText: "Started Dancer" });
   await expect(item).toBeVisible();
   await expect(item.getByRole("link", { name: en.StudioWeek.move, exact: true })).toHaveCount(0);
+});
+
+test("Nina moves a requested booking in 4 taps, and it stays requested", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "phone", "the move is for the phone");
+  const db = openDb("out/e2e/tumach.db");
+  const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 4322, position: 96, visible: false });
+  const free = bookingDays(db, offer).filter((day) => day.slots.length > 2);
+  test.skip(free.length < 4, "the test needs open hours on 4 days");
+  // Other slots than the test of the approved booking (#313).
+  const [from, target] = [free[3], free[2]];
+  const email = `move-requested-${Date.now()}@example.test`;
+  const booking = db
+    .insert(bookings)
+    .values({
+      offerId: offer.id,
+      start: from.slots[1].start,
+      end: from.slots[1].end,
+      name: "Requested Mover",
+      email,
+      phone: "+31 6 1234 5678",
+      locale: "en",
+      status: "requested",
+      createdAt: Date.now(),
+    })
+    .returning()
+    .get();
+
+  await page.goto(`/studio/week?start=${weekOf(from.date).start}`);
+  const item = page.locator("li", { hasText: "Requested Mover" });
+  await item.getByRole("link", { name: en.StudioWeek.move, exact: true }).click();
+  await item.locator(`a[href*="day=${target.date}"]`).first().click();
+  const to = target.slots[1].start;
+  await item.locator(`a[href*="to=${to}"]`).click();
+  await item.getByRole("button", { name: en.StudioWeek.moveYes }).click();
+
+  await expect(page).toHaveURL(new RegExp(`start=${weekOf(target.date).start}`));
+  const moved = page.locator(`section[data-day="${localDate(to)}"]`).locator("li", { hasText: "Requested Mover" });
+  await expect(moved).toBeVisible();
+  await expect.poll(() => emailsTo(email).length).toBe(1);
+  const row = db
+    .select()
+    .from(bookings)
+    .all()
+    .find((b) => b.id === booking.id);
+  expect(row).toMatchObject({ status: "requested", start: to });
 });
