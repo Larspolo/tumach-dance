@@ -22,7 +22,7 @@ export async function cancel(form: FormData): Promise<void> {
     const db = getDb();
     const result = cancelBooking(db, id);
     // A second tap (or another device) finds the booking already cancelled: show the week again.
-    if (result.ok) await sendCancelEmail(db, result.booking);
+    if (result.ok) await sendCancelEmail(db, result.booking, "nina", result.wasApproved);
   }
   redirect(`/studio/week?start=${week.start}`);
 }

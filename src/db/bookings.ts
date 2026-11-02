@@ -144,20 +144,25 @@ export function decideBooking(
   return { ok: false, reason: "not-requested" };
 }
 
-export type CancelResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-active" };
+/** `wasApproved`: the booking was approved before the cancel (its calendar file reached the dancer, #386). */
+export type CancelResult =
+  | { ok: true; booking: Booking; wasApproved: boolean }
+  | { ok: false; reason: "not-found" | "not-active" };
 
 /**
  * Cancel a `requested` or `approved` booking (#159): it gets `cancelled` and frees its time, as `busyRanges()` counts
  * only the holding statuses. A paid booking keeps `paidAt` (the refund waits for #139).
  */
 export function cancelBooking(db: Db, id: number): CancelResult {
+  // better-sqlite3 is synchronous: the status read here is the one the `UPDATE` changes.
+  const before = db.select({ status: bookings.status }).from(bookings).where(eq(bookings.id, id)).get();
   const booking = db
     .update(bookings)
     .set({ status: "cancelled" })
     .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
     .returning()
     .get();
-  if (booking) return { ok: true, booking };
+  if (booking) return { ok: true, booking, wasApproved: before?.status === "approved" };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-active" : "not-found" };
 }

@@ -47,11 +47,11 @@ function replyToNina(): Pick<Email, "replyTo"> {
 }
 
 /** The calendar file of a booking as an email attachment (#166, #385). */
-function icsAttachment(booking: Booking, offer: Offer) {
+function icsAttachment(booking: Booking, offer: Offer, cancel = false) {
   return {
     filename: "tumach.ics",
     contentType: "text/calendar",
-    content: bookingEvent(booking, offer, booking.locale),
+    content: bookingEvent(booking, offer, booking.locale, cancel),
   };
 }
 
@@ -104,8 +104,11 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
 export type CancelledBy = "nina" | "dancer";
 
-/** The email to the dancer after a booking is cancelled (#160), in the language of the booking. */
-export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina"): Email {
+/**
+ * The email to the dancer after a booking is cancelled (#160), in the language of the booking. An approved booking
+ * (`wasApproved`, #386) gets the cancel file that removes its event from the calendar of the dancer.
+ */
+export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina", wasApproved = false): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -114,7 +117,14 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text, ...replyToNina() };
+  const attachments = wasApproved ? [icsAttachment(booking, offer, true)] : undefined;
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.cancelledSubject"),
+    text,
+    ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
 }
 
 /** The email to the dancer when Nina did not answer a request before its start (#340), in the language of the booking. */
@@ -203,11 +213,16 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
  * Send the cancel email after a booking is cancelled. A failed email does not undo the cancellation: the error is
  * logged, and the cancelled booking stays.
  */
-export async function sendCancelEmail(db: Db, booking: Booking, by: CancelledBy = "nina"): Promise<void> {
+export async function sendCancelEmail(
+  db: Db,
+  booking: Booking,
+  by: CancelledBy = "nina",
+  wasApproved = false,
+): Promise<void> {
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(cancelEmail(booking, offer, by));
+    await sendEmail(cancelEmail(booking, offer, by, wasApproved));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
   }
