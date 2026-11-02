@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { getCalendarToken } from "@/lib/calendar-token";
+import { countUnanswered } from "@/lib/contact-store";
 import { countNinaQuestions } from "@/lib/github";
 import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
@@ -28,6 +29,8 @@ export default async function StudioPage() {
   const calendarUrl = `webcal://${requestHeaders.get("host")}/api/calendar/${getCalendarToken(getDb())}.ics`;
   // The number of open questions shows Nina at once that a question waits (#130).
   const questionCount = await countNinaQuestions();
+  // The count of unanswered contact messages (#533).
+  const messageCount = countUnanswered(getDb());
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
@@ -35,6 +38,11 @@ export default async function StudioPage() {
       <p className={styles.tileRow}>
         <Link className={styles.tile} href="/studio/bookings">
           {t("bookings")}
+        </Link>
+      </p>
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/messages">
+          {messageCount ? t("messagesCount", { count: messageCount }) : t("messages")}
         </Link>
       </p>
       <p className={styles.tileRow}>

@@ -269,3 +269,24 @@ export const blocks = sqliteTable(
   },
   (t) => [index("blocks_start_idx").on(t.start), check("blocks_range", sql`${t.end} > ${t.start}`)],
 );
+
+/**
+ * A message of the contact form of the home page (#533): Nina reads it and answers it in the studio app.
+ * `forgetOldMessages()` (`src/lib/contact-store.ts`) removes it after `MESSAGE_KEEP_MONTHS`.
+ */
+export const contactMessages = sqliteTable(
+  "contact_messages",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    message: text("message").notNull(),
+    /** The language of the site of the visitor: the language of the answer email. */
+    locale: text("locale").notNull(),
+    /** UTC, epoch milliseconds. */
+    createdAt: integer("created_at").notNull(),
+    answer: text("answer"),
+    answeredAt: integer("answered_at"),
+  },
+  (t) => [index("contact_messages_created_idx").on(t.createdAt)],
+);

@@ -111,7 +111,9 @@
     "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
     "classes": "Classes",
     "feedback": "Feedback",
-    "photos": "Photos"
+    "photos": "Photos",
+    "messages": "Messages",
+    "messagesCount": "Messages ({count} new)"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -459,7 +461,7 @@
     "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address, phone number and note by itself.",
     "backup": "Each night the site makes a backup of its data for the case of a fault. A backup keeps a copy of your data for {nights, plural, one {# night} other {# nights}}, then the site removes it.",
     "contactTitle": "A contact message",
-    "contactWhat": "The site keeps no copy of your message: it sends one email to Nina.",
+    "contactWhat": "The site keeps your name, email address and message so that Nina can answer it in her studio app. It sends a copy to Nina by email. {months, plural, one {# month} other {# months}} after your message, the site removes it by itself.",
     "contactSpam": "Against spam, the site keeps the internet address of your device in its memory for at most one hour.",
     "cookiesTitle": "Cookies",
     "cookies": "You need no account. The site uses no tracking and no advertising cookies.",
@@ -508,5 +510,22 @@
     "home": "To the home page",
     "studioHome": "To the start of the app",
     "code": "Code:"
+  },
+  "StudioMessages": {
+    "title": "Messages",
+    "back": "Back",
+    "none": "No messages yet.",
+    "answer": "Your answer",
+    "send": "Send the answer",
+    "empty": "Write an answer first.",
+    "error": "The answer was not sent. Try again.",
+    "thanks": "Your answer is sent by email.",
+    "answered": "Answered on {when}:",
+    "keep": "The site removes a message {months, plural, one {# month} other {# months}} after it came.",
+    "pushTitle": "New message from {name}"
+  },
+  "ContactAnswer": {
+    "subject": "Your message to TUMACH",
+    "quote": "Your message: {message}"
   }
 }

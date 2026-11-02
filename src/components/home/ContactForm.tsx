@@ -1,5 +1,5 @@
 "use client";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { type ContactState, sendContact } from "@/app/[locale]/contact-action";
 import type { ContactField } from "@/lib/contact";
@@ -14,6 +14,7 @@ const IDLE: ContactState = { status: "idle", errors: {}, values: { name: "", ema
 export function ContactForm({ stamp }: { stamp: string }) {
   const t = useTranslations("HomePage.contact");
   const tAll = useTranslations();
+  const locale = useLocale();
   const [state, action, pending] = useActionState(sendContact, IDLE);
   if (state.status === "sent") {
     return (
@@ -47,6 +48,7 @@ export function ContactForm({ stamp }: { stamp: string }) {
     <form action={action} noValidate key={key}>
       <p>{t("text")}</p>
       <input type="hidden" name={STAMP} value={stamp} />
+      <input type="hidden" name="locale" value={locale} />
       <input
         type="text"
         name={HONEYPOT}

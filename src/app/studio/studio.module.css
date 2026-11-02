@@ -297,3 +297,8 @@
 .tileRow:nth-of-type(6n) .tile {
   background: #141210;
 }
+
+/* The text of a contact message keeps its lines (#533). */
+.pre {
+  white-space: pre-wrap;
+}
