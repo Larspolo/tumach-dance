@@ -1,8 +1,13 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
+import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
+import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
 import { bookingDays } from "@/lib/booking-page";
+import { HONEYPOT, STAMP } from "@/lib/contact-fields";
+import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
+import { offerLabel } from "@/lib/offer-label";
 import { pageMetadata } from "@/lib/page-meta";
 import { sendRequest } from "./actions";
 import styles from "./book.module.css";
@@ -50,7 +55,6 @@ export default async function BookPage({
   const day = days.find((d) => d.date === search.day && d.slots.length > 0);
   const slot = day?.slots.find((s) => String(s.start) === search.start);
 
-  const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
   const dayName = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     weekday: "short",
@@ -58,16 +62,16 @@ export default async function BookPage({
     month: "short",
   });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
-  const offerName = (o: Offer) => `${t(o.kind, { minutes: o.minutes })} · ${euro.format(o.priceCents / 100)}`;
+  const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
-  const error = search.error && ["taken", "invalid", "notSlot"].includes(search.error) ? search.error : undefined;
+  const error = BOOKING_ERRORS.find((e) => e === search.error);
 
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       {error && (
         <p className={styles.error} role="status">
-          {t(error as "taken" | "invalid" | "notSlot")}
+          {error === "noteLong" ? t("noteLong", { max: NOTE_MAX }) : t(error as Exclude<BookingError, "noteLong">)}
         </p>
       )}
 
@@ -143,6 +147,16 @@ export default async function BookPage({
             <input type="hidden" name="day" value={day.date} />
             <input type="hidden" name="start" value={slot.start} />
             <input type="hidden" name="end" value={slot.end} />
+            <input type="hidden" name={STAMP} value={formStamp("booking")} />
+            <input
+              type="text"
+              name={HONEYPOT}
+              className={styles.honeypot}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              defaultValue=""
+            />
             <label className={styles.field}>
               <span>{t("name")}</span>
               <input className={styles.input} name="name" required maxLength={100} autoComplete="name" />
@@ -154,6 +168,17 @@ export default async function BookPage({
             <label className={styles.field}>
               <span>{t("phone")}</span>
               <input className={styles.input} name="phone" type="tel" required autoComplete="tel" />
+            </label>
+            <label className={styles.field}>
+              <span>{t("note")}</span>
+              <textarea
+                className={styles.input}
+                name="note"
+                rows={3}
+                maxLength={NOTE_MAX}
+                aria-describedby="note-hint"
+              />
+              <small id="note-hint">{t("noteHint", { max: NOTE_MAX })}</small>
             </label>
             <button className={styles.button} type="submit">
               {t("send")}

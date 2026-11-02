@@ -74,7 +74,6 @@ describe("cancelPush", () => {
     expect(en.body).toContain("10:00");
     expect(en.url).toBe("/studio/week?start=2026-10-19");
     expect(cancelPush(booking, offer, "nl").title).toBe("Boeking geannuleerd");
-    expect(cancelPush(booking, offer, "sl").title).toBe("Rezervacija preklicana");
   });
 });
 

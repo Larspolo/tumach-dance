@@ -8,6 +8,7 @@ import { and, eq, gt, isNotNull, isNull } from "drizzle-orm";
 import type { Db } from "../db";
 import { bookings, offers } from "../db/schema";
 import { paymentReminderEmail } from "./booking-email";
+import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 
 const HOUR = 60 * 60_000;
@@ -46,6 +47,7 @@ export async function checkPaymentReminders(db: Db, now = Date.now()): Promise<n
       await sendEmail(paymentReminderEmail(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ paymentRemindedAt: null }).where(eq(bookings.id, booking.id)).run();
+      await sendEmailFailPush(db, claimed, "payment");
       throw error;
     }
     sent.push(booking.id);

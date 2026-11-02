@@ -86,7 +86,6 @@ test("the push links to the page For Nina in the language of each device", async
     url: "/studio/questions",
   });
   expect(message("nl").title).toBe("Een nieuwe vraag voor jou");
-  expect(message("sl").title).toBe("Novo vprašanje zate");
 });
 
 test("with no GITHUB_TOKEN no timer starts", () => {

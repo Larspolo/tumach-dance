@@ -7,18 +7,20 @@ import { eq } from "drizzle-orm";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
+import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
+import { emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
+import { studioEmail } from "./studio-email";
 
-const MESSAGES = { en, nl, sl } as const;
+const MESSAGES = { en, nl } as const;
 
 /** The translator of `locale` (English for another one), the label of the offer and the Amsterdam time of `booking`. */
 function parts(booking: Booking, offer: Offer, locale: string) {
@@ -28,16 +30,35 @@ function parts(booking: Booking, offer: Offer, locale: string) {
     offer.kind === "lesson"
       ? t("Book.lesson", { minutes: offer.minutes })
       : t("Book.rental", { minutes: offer.minutes });
-  const when = new Intl.DateTimeFormat(lang, { timeZone: TIME_ZONE, dateStyle: "full", timeStyle: "short" }).format(
-    new Date(booking.start),
+  return { t, offerLabel, when: whenText(lang, booking.start) };
+}
+
+/** The date and time of `ms` in Europe/Amsterdam time, in the format of `lang` (#410). */
+function whenText(lang: string, ms: number): string {
+  return new Intl.DateTimeFormat(lang, { timeZone: TIME_ZONE, dateStyle: "full", timeStyle: "short" }).format(
+    new Date(ms),
   );
-  return { t, offerLabel, when };
 }
 
 /** The price of `offer` in euro, in the format of `locale`. */
 function priceText(offer: Offer, locale: string): string {
   const lang = locale in MESSAGES ? locale : "en";
   return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
+}
+
+/** Reply goes to Nina's Gmail (#375): the dancer's answer reaches her. No value: no Reply-To. */
+function replyToNina(): Pick<Email, "replyTo"> {
+  const address = studioEmail();
+  return address ? { replyTo: address } : {};
+}
+
+/** The calendar file of a booking as an email attachment (#166, #385). */
+function icsAttachment(booking: Booking, offer: Offer, cancel = false) {
+  return {
+    filename: "tumach.ics",
+    contentType: "text/calendar",
+    content: bookingEvent(booking, offer, booking.locale, cancel),
+  };
 }
 
 /** The email to the dancer of a `requested` booking, in the language of the page (`locale`). */
@@ -54,7 +75,7 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.subject"), text };
+  return { to: booking.email, subject: t("bookingEmail.subject"), text, ...replyToNina() };
 }
 
 export type Decision = "approved" | "declined";
@@ -81,14 +102,65 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
     "\n",
   );
   const subject = decision === "approved" ? t("bookingEmail.approvedSubject") : t("bookingEmail.declinedSubject");
-  return { to: booking.email, subject, text };
+  // The calendar file (#385): the dancer adds the lesson with one tap at the approval. Same uid as the reminder.
+  const attachments = decision === "approved" ? [icsAttachment(booking, offer)] : undefined;
+  return { to: booking.email, subject, text, ...(attachments ? { attachments } : {}), ...replyToNina() };
+}
+
+/**
+ * `decisionEmail()` with the HTML part of the approval (#439): the same lines, with a button to pay and a button to
+ * cancel. Async: React Email renders async. The declined email stays plain text.
+ */
+export async function decisionEmailHtml(
+  booking: Booking,
+  offer: Offer,
+  decision: Decision,
+  origin = siteOrigin(),
+): Promise<Email> {
+  const email = decisionEmail(booking, offer, decision, origin);
+  if (decision !== "approved") return email;
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  return { ...email, html: await approvedHtml(booking, offer, t, offerLabel, when, origin) };
+}
+
+function approvedHtml(
+  booking: Booking,
+  offer: Offer,
+  t: ReturnType<typeof parts>["t"],
+  offerLabel: string,
+  when: string,
+  origin: string,
+): Promise<string> {
+  const price = priceText(offer, booking.locale);
+  return emailHtml({
+    lang: booking.locale in MESSAGES ? booking.locale : "en",
+    greeting: t("bookingEmail.greeting", { name: booking.name }),
+    blocks: [
+      { text: t("bookingEmail.approvedBody", { offer: offerLabel, when }) },
+      booking.tikkieUrl
+        ? {
+            text: t("bookingEmail.payPrice", { price }),
+            button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
+          }
+        : { text: t("bookingEmail.payLater", { price }) },
+      {
+        text: t("bookingEmail.cancelText"),
+        button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
+      },
+      { text: t("bookingEmail.approvedSee") },
+    ],
+    sign: t("bookingEmail.sign"),
+  });
 }
 
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
 export type CancelledBy = "nina" | "dancer";
 
-/** The email to the dancer after a booking is cancelled (#160), in the language of the booking. */
-export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina"): Email {
+/**
+ * The email to the dancer after a booking is cancelled (#160), in the language of the booking. An approved booking
+ * (`wasApproved`, #386) gets the cancel file that removes its event from the calendar of the dancer.
+ */
+export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina", wasApproved = false): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -97,7 +169,58 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text };
+  const attachments = wasApproved ? [icsAttachment(booking, offer, true)] : undefined;
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.cancelledSubject"),
+    text,
+    ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+/**
+ * The email to the dancer after Nina moved a booking (#410), in the language of the booking: the old and the new time.
+ * An approved booking gets the calendar file with the new time and the next sequence: the event moves in the calendar.
+ */
+export function moveEmail(booking: Booking, offer: Offer, from: { start: number }, origin = siteOrigin()): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.move", {
+      offer: offerLabel,
+      from: whenText(booking.locale in MESSAGES ? booking.locale : "en", from.start),
+      when,
+    }),
+    "",
+    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  const attachments = booking.status === "approved" ? [icsAttachment(booking, offer)] : undefined;
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.moveSubject"),
+    text,
+    ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+/** The email to the dancer when Nina did not answer a request before its start (#340), in the language of the booking. */
+export function unansweredEmail(booking: Booking, offer: Offer, origin = siteOrigin()): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.unansweredBody", { offer: offerLabel, when }),
+    "",
+    t("bookingEmail.unansweredOther", { url: `${origin}/${booking.locale}/book` }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  return { to: booking.email, subject: t("bookingEmail.unansweredSubject"), text, ...replyToNina() };
 }
 
 /** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
@@ -112,12 +235,13 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  const ics = {
-    filename: "tumach.ics",
-    contentType: "text/calendar",
-    content: bookingEvent(booking, offer, booking.locale),
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.reminderSubject"),
+    text,
+    attachments: [icsAttachment(booking, offer)],
+    ...replyToNina(),
   };
-  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics] };
 }
 
 /** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
@@ -135,7 +259,7 @@ export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text };
+  return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text, ...replyToNina() };
 }
 
 /**
@@ -149,6 +273,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
     await sendEmail(requestEmail(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-email] the email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "request");
   }
 }
 
@@ -160,9 +285,10 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(decisionEmail(booking, offer, decision));
+    await sendEmail(await decisionEmailHtml(booking, offer, decision));
   } catch (error) {
     console.error(`[booking-email] the decision email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "decision");
   }
 }
 
@@ -170,12 +296,33 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
  * Send the cancel email after a booking is cancelled. A failed email does not undo the cancellation: the error is
  * logged, and the cancelled booking stays.
  */
-export async function sendCancelEmail(db: Db, booking: Booking, by: CancelledBy = "nina"): Promise<void> {
+export async function sendCancelEmail(
+  db: Db,
+  booking: Booking,
+  by: CancelledBy = "nina",
+  wasApproved = false,
+): Promise<void> {
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(cancelEmail(booking, offer, by));
+    await sendEmail(cancelEmail(booking, offer, by, wasApproved));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "cancel");
+  }
+}
+
+/**
+ * Send the move email after `moveBooking()` gave `ok`. A failed email does not undo the move: the error is logged,
+ * and the moved booking stays.
+ */
+export async function sendMoveEmail(db: Db, booking: Booking, from: { start: number; end: number }): Promise<void> {
+  try {
+    const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
+    if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
+    await sendEmail(moveEmail(booking, offer, from));
+  } catch (error) {
+    console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "move");
   }
 }

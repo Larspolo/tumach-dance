@@ -15,8 +15,16 @@ export const BOOKING_DAYS = 28;
 
 export type BookingDay = { date: string; slots: OpenRange[] };
 
-/** Each day of the next 4 weeks (local dates "YYYY-MM-DD") with its free slots for the offer; a day can have none. */
-export function bookingDays(db: Db, offer: Offer, now: number = Date.now()): BookingDay[] {
+/**
+ * Each day of the next 4 weeks (local dates "YYYY-MM-DD") with its free slots for the offer; a day can have none.
+ * `except`: a booking whose own time counts as free (the move of Nina, #411; the same rule as `moveBooking()`).
+ */
+export function bookingDays(
+  db: Db,
+  offer: Offer,
+  now: number = Date.now(),
+  { except }: { except?: number } = {},
+): BookingDay[] {
   const first = DateTime.fromMillis(now, { zone: TIME_ZONE }).startOf("day");
   const dates = Array.from({ length: BOOKING_DAYS }, (_, i) => first.plus({ days: i }).toISODate() as string);
   const open = openRanges(getHoursRule(db), dates[0], dates[dates.length - 1]);
@@ -24,7 +32,7 @@ export function bookingDays(db: Db, offer: Offer, now: number = Date.now()): Boo
   const to = open[open.length - 1]?.end ?? now;
   // A class uses the room: its times of the page are busy too (#99). A hidden class blocks nothing.
   const classes = classRanges(listClassTimes(db, { visibleOnly: true }), dates[0], dates[dates.length - 1]);
-  const slots = freeSlots(open, [...busyRanges(db, from, to), ...classes], offer.minutes, {
+  const slots = freeSlots(open, [...busyRanges(db, from, to, { except }), ...classes], offer.minutes, {
     notBefore: notBefore(now),
   });
   return dates.map((date) => ({

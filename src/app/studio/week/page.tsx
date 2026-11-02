@@ -3,21 +3,32 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
+import { listBlocks } from "@/db/blocks";
 import { listBookings } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
-import { shownName } from "@/lib/booking-name";
+import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import styles from "../studio.module.css";
-import { cancel } from "./actions";
+import { addBlock, cancel, forget, removeBlock } from "./actions";
+import { MovePanel } from "./MovePanel";
 
 // The bookings of a week, per day (#102): the requests and the approved bookings, Monday to Sunday.
 export default async function WeekPage({
   searchParams,
 }: {
-  searchParams: Promise<{ start?: string; cancel?: string }>;
+  searchParams: Promise<{
+    start?: string;
+    cancel?: string;
+    forget?: string;
+    add?: string;
+    move?: string;
+    day?: string;
+    to?: string;
+    taken?: string;
+  }>;
 }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -28,7 +39,17 @@ export default async function WeekPage({
   const week = weekOf(params.start);
   // The first tap on "Cancel" asks again; only "Yes, cancel" cancels (#162).
   const asked = Number(params.cancel);
+  // The same two taps for "Remove the data of this dancer" (#363).
+  const forgetAsked = Number(params.forget);
+  // The move of a booking that has not started (#411): a day, a time, then "Yes, move".
+  const moving = Number(params.move);
+  const now = Date.now();
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
+  // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
+  const blocks = listBlocks(getDb(), week.from, week.to);
+  // The form "Keep a time free" (#327): its date is the first day of the week that is not in the past.
+  const today = localDate(Date.now());
+  const blockDate = week.days.find((day) => day >= today) ?? today;
   const dayName = new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
 
@@ -47,43 +68,138 @@ export default async function WeekPage({
           {t("next")}
         </Link>
       </p>
+      {params.add ? (
+        <form className={`${styles.form} ${styles.section}`} action={addBlock}>
+          <input type="hidden" name="start" value={week.start} />
+          <label className={styles.label}>
+            {t("blockDate")}
+            <input className={styles.input} type="date" name="date" defaultValue={blockDate} required />
+          </label>
+          <label className={styles.label}>
+            {t("blockFrom")}
+            <input className={styles.input} type="time" name="from" step={1800} defaultValue="18:00" required />
+          </label>
+          <label className={styles.label}>
+            {t("blockTo")}
+            <input className={styles.input} type="time" name="to" step={1800} defaultValue="19:00" required />
+          </label>
+          {params.add === "wrong" && <p className={styles.error}>{t("blockWrong")}</p>}
+          <button className={styles.button} type="submit">
+            {t("blockSave")}
+          </button>
+        </form>
+      ) : (
+        <p>
+          <Link className={styles.link} href={`/studio/week?start=${week.start}&add=1`}>
+            {t("blockAdd")}
+          </Link>
+        </p>
+      )}
       {week.days.map((day) => {
         const ofDay = bookings.filter(({ booking }) => localDate(booking.start) === day);
+        const blocksOfDay = blocks.filter((block) => localDate(block.start) === day);
+        const items = [
+          ...ofDay.map((entry) => ({ start: entry.booking.start, entry, block: undefined })),
+          ...blocksOfDay.map((block) => ({ start: block.start, entry: undefined, block })),
+        ].sort((a, b) => a.start - b.start);
         return (
           <section key={day} className={styles.item} data-day={day}>
             <h2 className={styles.label}>{dayName.format(new Date(`${day}T12:00:00Z`))}</h2>
-            {ofDay.length === 0 && <p className={styles.note}>{t("free")}</p>}
+            {items.length === 0 && <p className={styles.note}>{t("free")}</p>}
             <ul className={styles.list}>
-              {ofDay.map(({ booking, offer }) => (
-                <li key={booking.id}>
-                  {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
-                  {shownName(booking, t("removed"))}{" "}
-                  {booking.status === "requested" ? (
-                    <Link className={styles.link} href="/studio/bookings">
-                      {t("request")}
-                    </Link>
-                  ) : (
-                    <span className={styles.mark}>{t(booking.paidAt === null ? "approved" : "paid")}</span>
-                  )}{" "}
-                  {booking.id === asked ? (
-                    <form className={styles.form} action={cancel}>
-                      <input type="hidden" name="id" value={booking.id} />
-                      <input type="hidden" name="start" value={week.start} />
-                      <span>{t("cancelAsk")}</span>{" "}
-                      <button className={styles.button} type="submit">
-                        {t("cancelYes")}
-                      </button>{" "}
-                      <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
-                        {t("cancelNo")}
+              {items.map(({ entry, block }) => {
+                if (block) {
+                  return (
+                    <li key={`block-${block.id}`} data-block={block.id}>
+                      {time.format(block.start)}–{time.format(block.end)}{" "}
+                      <span className={styles.mark}>{t("block")}</span>{" "}
+                      <form className={styles.form} action={removeBlock}>
+                        <input type="hidden" name="id" value={block.id} />
+                        <input type="hidden" name="start" value={week.start} />
+                        <button className={styles.button} type="submit">
+                          {t("blockRemove")}
+                        </button>
+                      </form>
+                    </li>
+                  );
+                }
+                if (!entry) return null;
+                const { booking, offer } = entry;
+                return (
+                  <li key={booking.id}>
+                    {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
+                    {shownName(booking, t("removed"))}{" "}
+                    {shownNote(booking, 80) !== null && (
+                      <span className={styles.dancerNote} data-note>
+                        {shownNote(booking, 80)}
+                      </span>
+                    )}{" "}
+                    {booking.status === "requested" ? (
+                      <Link className={styles.link} href="/studio/bookings">
+                        {t("request")}
                       </Link>
-                    </form>
-                  ) : (
-                    <Link className={styles.link} href={`/studio/week?start=${week.start}&cancel=${booking.id}`}>
-                      {t("cancel")}
-                    </Link>
-                  )}
-                </li>
-              ))}
+                    ) : (
+                      <span className={styles.mark}>{t(booking.paidAt === null ? "approved" : "paid")}</span>
+                    )}{" "}
+                    {booking.id === asked ? (
+                      <form className={styles.form} action={cancel}>
+                        <input type="hidden" name="id" value={booking.id} />
+                        <input type="hidden" name="start" value={week.start} />
+                        <span>{t("cancelAsk")}</span>{" "}
+                        <button className={styles.button} type="submit">
+                          {t("cancelYes")}
+                        </button>{" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
+                          {t("cancelNo")}
+                        </Link>
+                      </form>
+                    ) : (
+                      <Link className={styles.link} href={`/studio/week?start=${week.start}&cancel=${booking.id}`}>
+                        {t("cancel")}
+                      </Link>
+                    )}
+                    {booking.start > now && booking.id !== moving && (
+                      <>
+                        {" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&move=${booking.id}`}>
+                          {t("move")}
+                        </Link>
+                      </>
+                    )}{" "}
+                    {booking.start > now && booking.id === moving && (
+                      <MovePanel
+                        booking={booking}
+                        offer={offer}
+                        weekStart={week.start}
+                        locale={locale}
+                        day={params.day}
+                        to={Number(params.to)}
+                        taken={params.taken !== undefined}
+                      />
+                    )}
+                    {booking.email === "" ? null : booking.id === forgetAsked ? (
+                      <form className={styles.form} action={forget}>
+                        <input type="hidden" name="id" value={booking.id} />
+                        <input type="hidden" name="start" value={week.start} />
+                        <span>{t("forgetAsk")}</span>{" "}
+                        <button className={styles.button} type="submit">
+                          {t("forgetYes")}
+                        </button>{" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
+                          {t("forgetNo")}
+                        </Link>
+                      </form>
+                    ) : (
+                      <>
+                        {" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&forget=${booking.id}`}>
+                          {t("forget")}
+                        </Link>
+                      </>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         );
