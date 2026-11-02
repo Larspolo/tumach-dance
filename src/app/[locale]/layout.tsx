@@ -15,7 +15,7 @@ import "../globals.css";
 // its font file when the page needs it (#453: the preload of `latin-ext` made the first text 1 s slower on a phone).
 const fraunces = Fraunces({
   subsets: ["latin"],
-  axes: ["opsz"],
+  // No `opsz` axis (owner, option C of #469): the font files are about half as large, so the first text comes sooner.
   // No preload: a page gets only the faces that it shows (the book page has no italic: 82 KB less, #453).
   preload: false,
   style: ["normal", "italic"],

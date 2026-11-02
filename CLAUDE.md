@@ -14,7 +14,7 @@ The owner is **Larspolo**. Nina is the user of the studio app; she is not techni
 | Lint | `ruff check . && npx @biomejs/biome check .` (`--write` fixes the format) |
 | Fast tests | `python3 -m pytest -q && npx vitest run` (one file: `npx vitest run tests/a.test.ts`) |
 | Slow tests | `npx playwright test` (browser tests and the screenshots of a PR) |
-| Speed on a phone | `npm run build`, then `node scripts/lighthouse.mjs --lcp 2500 --cls 0.1` (Lighthouse mobile, 4 pages; exit 1 over the budget) |
+| Speed on a phone | `npm run build`, then `node scripts/lighthouse.mjs --cls 0.1` (Lighthouse mobile, 4 pages; LCP budget 3.0 s home, 2.5 s booking; exit 1 over the budget) |
 | Development server | `npm run dev` (the owner's `/try`) |
 
 Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.env` file or the data of a dancer.
