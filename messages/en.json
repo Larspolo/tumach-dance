@@ -339,7 +339,9 @@
     "toPay": "Approved bookings",
     "markPaid": "Paid",
     "paidOn": "Paid on {date}",
-    "undo": "Undo"
+    "undo": "Undo",
+    "whatsapp": "WhatsApp",
+    "whatsappText": "Hi {name}, about your booking on {date}: "
   },
   "StudioQuestions": {
     "title": "For Nina",

@@ -9,6 +9,7 @@ import { getStudioSession } from "@/lib/auth";
 import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
+import { whatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
 import { decide, pay } from "./actions";
 
@@ -37,6 +38,23 @@ export default async function BookingsPage({
     minute: "2-digit",
   });
   const day = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, day: "numeric", month: "short" });
+  // The WhatsApp first line is in the language of the booking (#496), not of the studio app.
+  const bookingT = {
+    en: await getTranslations({ locale: "en", namespace: "StudioBookings" }),
+    nl: await getTranslations({ locale: "nl", namespace: "StudioBookings" }),
+  };
+  const whatsappHref = (booking: { phone: string; locale: string; name: string; start: number }): string | null => {
+    const lang = booking.locale === "nl" ? "nl" : "en";
+    const date = new Intl.DateTimeFormat(lang, {
+      timeZone: TIME_ZONE,
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(booking.start);
+    return whatsappLink(booking.phone, bookingT[lang]("whatsappText", { name: booking.name, date }));
+  };
   const db = getDb();
   const now = Date.now();
   const requests = listOpenRequests(db, now);
@@ -68,6 +86,13 @@ export default async function BookingsPage({
                 {booking.phone}
               </a>
             </p>
+            {whatsappHref(booking) !== null && (
+              <p>
+                <a className={styles.link} href={whatsappHref(booking) ?? undefined}>
+                  {t("whatsapp")}
+                </a>
+              </p>
+            )}
             {shownNote(booking) !== null && <p className={styles.dancerNote}>{shownNote(booking)}</p>}
             <form className={styles.form} action={decide}>
               <input type="hidden" name="id" value={booking.id} />
