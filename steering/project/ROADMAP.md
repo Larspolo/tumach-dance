@@ -84,11 +84,17 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:move` (#406) Nina moves a booking to another free time
   - Nina moves a requested or approved booking to another free time in a few taps (a dancer asks by WhatsApp for another time); the old time is free at once
   - The dancer gets one email with the new time, and the calendar file moves the event in the calendar of the dancer
-- [ ] `nina:busy` A time that is busy in Nina's own calendar is not free on the booking page
+- [x] `nina:busy` (#441, not planned: Nina blocks her own times in the app herself, #442) A time that is busy in Nina's own calendar is not free on the booking page
   - Nina connects her own calendar once; the booking page does not offer a time that her calendar shows as busy, also for a repeating event
   - When her calendar cannot be read, the booking page still works with the last known busy times
 - [x] `nina:chat` (#495) Nina writes to a dancer by WhatsApp from a booking
   - Each booking in her app has a WhatsApp link that opens a chat with the dancer in one tap, with a first line about the booking
+- [ ] `nina:reach` Nina never misses a new request because her phone gets no push
+  - The studio app renews the push of her phone by itself when the browser changes or loses it; a device with no working push shows it, with one button that fixes it
+  - Lars knows when no device of Nina gets a push on the live site
+- [ ] `nina:undo` Nina takes back a wrong tap on Approve or Decline
+  - For 1 minute after the tap, Nina undoes the decision with one tap, and the dancer gets no email of it
+  - Approve and Decline stay one tap each
 
 ## 3. Book a lesson or the studio
 
