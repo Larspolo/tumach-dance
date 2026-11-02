@@ -6,6 +6,7 @@ import { type NinaQuestion, parseNinaQuestion } from "./nina-question";
 import { siteEnv } from "./site";
 
 const LABEL = "for-nina";
+const NEEDS_HUMAN = "needs-human";
 
 type Issue = {
   number: number;
@@ -90,6 +91,16 @@ export async function postNinaAnswer(
   const head = choice ? `${ANSWER_HEAD} ${choice.key}. ${choice.text}` : ANSWER_HEAD;
   const body = answer.text.trim() ? `${head}\n\n${answer.text.trim()}` : head;
   await call(s, `/issues/${number}/comments`, { method: "POST", body: JSON.stringify({ body }) });
+  // Her answer is the answer of the owner: remove `needs-human`, so that the ticket is a candidate and a run acts on
+  // it (#294). Only the comment window of `feedback.py` (6 hours) saw her answers, and 14 of them waited for ever.
+  // A failed removal is no error for Nina: the answer is on the ticket, and a second send makes a copy.
+  if (labels.includes(NEEDS_HUMAN)) {
+    try {
+      await call(s, `/issues/${number}/labels/${NEEDS_HUMAN}`, { method: "DELETE" });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 const FEEDBACK_LABEL = "from-nina";

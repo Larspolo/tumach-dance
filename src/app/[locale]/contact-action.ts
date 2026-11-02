@@ -4,10 +4,12 @@ import { headers } from "next/headers";
 import { getDb } from "@/db";
 import { type Contact, type ContactErrors, parseContact, sendContactMessage } from "@/lib/contact";
 import { clientAddress, spamReason } from "@/lib/contact-spam";
+import { recordError } from "@/lib/site-errors";
+import { turnstileReason } from "@/lib/turnstile";
 
 /** `values`: the text of the visitor, kept in the form after an error (#152). */
 export type ContactState = {
-  status: "idle" | "sent" | "invalid" | "failed";
+  status: "idle" | "sent" | "invalid" | "failed" | "notSent";
   errors: ContactErrors;
   values: Contact;
 };
@@ -26,15 +28,19 @@ export async function sendContact(_prev: ContactState, form: FormData): Promise<
   };
   const parsed = parseContact(form);
   if (!parsed.ok) return { status: "invalid", errors: parsed.errors, values };
-  const spam = await spamReason(form, clientAddress(await headers()));
+  const address = clientAddress(await headers());
+  // Turnstile (#564) after the honeypot: a failed check gets the visible "not sent" text, so a person can try again.
+  const spam = (await spamReason(form, address)) ?? (await turnstileReason(form, address));
   if (spam) {
     console.warn(`Contact: no email, spam (${spam})`);
-    return { status: "sent", errors: {}, values: EMPTY };
+    if (spam === "honeypot") return { status: "sent", errors: {}, values: EMPTY };
+    return { status: "notSent", errors: {}, values };
   }
   try {
-    await sendContactMessage(getDb(), parsed.value);
+    await sendContactMessage(getDb(), parsed.value, String(form.get("locale") ?? "en"));
   } catch (error) {
     console.error("Contact: the email failed", error);
+    recordError("email: contact", error);
     return { status: "failed", errors: {}, values };
   }
   return { status: "sent", errors: {}, values: EMPTY };

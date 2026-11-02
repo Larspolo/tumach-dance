@@ -11,13 +11,15 @@ export async function studioGuard(
   check: SessionCheck,
 ): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
-  if (pathname === LOGIN_PATH) return NextResponse.next();
+  // The request headers go on to the page: they carry the nonce of the Content-Security-Policy (#491).
+  const next = () => NextResponse.next({ request: { headers: request.headers } });
+  if (pathname === LOGIN_PATH) return next();
   const { session, headers } = await check(request.headers);
   if (!session) {
     if (pathname.startsWith("/api/")) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     return NextResponse.redirect(new URL(LOGIN_PATH, request.url));
   }
-  const response = NextResponse.next();
+  const response = next();
   // The session renews when Nina uses the app: pass the new cookie on.
   for (const cookie of headers?.getSetCookie() ?? []) response.headers.append("set-cookie", cookie);
   return response;
