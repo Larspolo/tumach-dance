@@ -298,3 +298,15 @@ export function listOpenRequests(db: Db, now = Date.now()): { booking: Booking; 
     .orderBy(bookings.start)
     .all();
 }
+
+/** One `approved` booking with its offer (#535: the calendar file of Nina), or null. */
+export function getApprovedBooking(db: Db, id: number): { booking: Booking; offer: Offer } | null {
+  return (
+    db
+      .select({ booking: bookings, offer: offers })
+      .from(bookings)
+      .innerJoin(offers, eq(offers.id, bookings.offerId))
+      .where(and(eq(bookings.id, id), eq(bookings.status, "approved")))
+      .get() ?? null
+  );
+}
