@@ -103,6 +103,15 @@ def body_with_ticket(text, number, part=False):
     return text if claim.closes(number).search(claim.prose(text)) else f"{text.rstrip()}\n\nCloses #{number}\n"
 
 
+def part_closer(text, number):
+    """The first line whose prose closes #number, or None: a `--part` PR must not close its ticket (#470, PR #468:
+    "does not close #453" closed #453)."""
+    for line in claim.prose(text).splitlines():
+        if claim.closes(number).search(line):
+            return line.strip()
+    return None
+
+
 def state(number, tries=6, wait=5):
     """`mergeable_state` of PR `number`; GitHub computes it after a push (`unknown` or None for some seconds)."""
     for _ in range(tries):
@@ -212,6 +221,11 @@ def main(argv=None):
     a = ap.parse_args(argv)
     deadline = time.monotonic() + a.wait * 60
     branch = git("branch", "--show-current").stdout.strip()
+    if a.part:
+        for f in (a.message, a.body):
+            if f and (line := part_closer(open(f, encoding="utf-8").read(), a.number)):
+                print(f"--part: {f} closes #{a.number} in the line {line!r}: reword it (GitHub closes the ticket)")
+                return 2
     if a.ci:
         owner, head = CONFIG["repo"].split("/")[0], a.pr_branch or branch
         pr = next(iter(dashboard.api(f"pulls?head={owner}:{head}&state=open")), None)
