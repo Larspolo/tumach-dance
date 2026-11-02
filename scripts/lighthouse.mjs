@@ -2,13 +2,21 @@
 // A plain Node script, as `scripts/restore.mjs`. First `npm run build`. Then:
 //   node scripts/lighthouse.mjs [--runs 3] [--lcp 2500] [--cls 0.1] [--tbt 600] [--kb 1000] [--url http://localhost:3100]
 // With no `--url` it starts the build on port 3102 with a throwaway database in out/lighthouse (one lesson offer, one
-// class, two photos). It prints one line per page with the medians and exits 1 when a page is over a budget.
+// class, two photos). With no `--lcp` each page has its own LCP budget (`LCP_BUDGET`). It prints one line per page with the medians and exits 1 when a page is over a budget.
 import { spawn, spawnSync } from "node:child_process";
 import { mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const PAGES = ["/en", "/nl", "/en/book", "/nl/book"];
+
+/** The LCP budget in ms of each page when no `--lcp` is given (owner, option C of #469): 3.0 s home, 2.5 s booking. */
+export const LCP_BUDGET = { "/en": 3000, "/nl": 3000, "/en/book": 2500, "/nl/book": 2500 };
+
+/** The budget of one page: the LCP of `LCP_BUDGET` unless the arguments give `--lcp`. */
+export function budgetFor(page, budget = {}) {
+  return budget.lcp === undefined && LCP_BUDGET[page] !== undefined ? { ...budget, lcp: LCP_BUDGET[page] } : budget;
+}
 
 /** The median of numbers (the mean of the two middle values for an even count). */
 export function median(values) {
@@ -166,7 +174,7 @@ async function main() {
     for (const page of PAGES) {
       const results = [];
       for (let i = 0; i < opts.runs; i++) results.push(lighthouse(base + page));
-      const s = summarize(results, opts.budget);
+      const s = summarize(results, budgetFor(page, opts.budget));
       report[page] = { ...s, opportunities: opportunities(results[results.length - 1]) };
       console.log(formatLine(page, s));
       for (const o of report[page].opportunities) console.log(`          - ${o.title}: ${Math.round(o.ms)} ms`);
