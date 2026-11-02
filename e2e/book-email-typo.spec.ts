@@ -15,11 +15,12 @@ test.beforeAll(() => {
   addOffer(db, { kind: "lesson", minutes: 60, priceCents: 4931, position: 92 });
 });
 
-async function fillForm(page: Page, slot: number) {
+// Each test books its own day: the first day of the list can have one free time, and an earlier test takes it.
+async function fillForm(page: Page, day: number) {
   await page.goto("/en/book");
   await page.getByRole("link", { name: /€49\.31/ }).click();
-  await page.locator("section", { hasText: en.Book.day }).getByRole("link").first().click();
-  await page.locator("section", { hasText: en.Book.time }).getByRole("link").nth(slot).click();
+  await page.locator("section", { hasText: en.Book.day }).getByRole("link").nth(day).click();
+  await page.locator("section", { hasText: en.Book.time }).getByRole("link").first().click();
   await page.getByLabel(en.Book.name).fill("Typo Test");
   await page.getByLabel(en.Book.email).fill("typo@gmial.com");
   await page.getByLabel(en.Book.phone).fill("+31 6 1234 5678");
