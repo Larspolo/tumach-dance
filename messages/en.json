@@ -362,7 +362,14 @@
     "paidOn": "Paid on {date}",
     "undo": "Undo",
     "whatsapp": "WhatsApp",
-    "whatsappText": "Hi {name}, about your booking on {date}: "
+    "whatsappText": "Hi {name}, about your booking on {date}: ",
+    "undoDecision": "Undo",
+    "undone": "Undone: the request is open again. The dancer got no email.",
+    "undoFailed": {
+      "sent": "Too late: the dancer already has the email.",
+      "taken": "Another dancer took this time in the meantime.",
+      "started": "Too late: the time already started."
+    }
   },
   "StudioQuestions": {
     "title": "For Nina",
