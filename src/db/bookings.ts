@@ -22,33 +22,41 @@ export type BookingInput = {
   name: string;
   email: string;
   phone: string;
+  /** An optional note to Nina, at most 500 characters (#387). Empty = `null`. */
+  note?: string | null;
   locale: string;
 };
 
 export type BookingResult =
   | { ok: true; booking: Booking }
-  | { ok: false; reason: "invalid"; field: "offerId" | "name" | "email" | "phone" | "locale" }
+  | { ok: false; reason: "invalid"; field: "offerId" | "name" | "email" | "phone" | "note" | "locale" }
   | { ok: false; reason: "notSlot" }
   | { ok: false; reason: "taken" };
 
 /** The statuses that hold their time. */
 const HOLDING = ["requested", "approved"] as const;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** The longest note of a dancer (#387). */
+export const NOTE_MAX = 500;
 const PHONE = /^\+?[\d\s()./-]+$/;
 
 /** The first field that is wrong, with the clean values. Simple checks (P1): the email to Nina is the real check. */
 function clean(
   input: BookingInput,
-): { field: "name" | "email" | "phone" | "locale" } | { name: string; email: string; phone: string } {
+):
+  | { field: "name" | "email" | "phone" | "note" | "locale" }
+  | { name: string; email: string; phone: string; note: string | null } {
   const name = String(input.name ?? "").trim();
   const email = String(input.email ?? "").trim();
   const phone = String(input.phone ?? "").trim();
+  const note = String(input.note ?? "").trim();
   const digits = phone.replace(/\D/g, "").length;
   if (!name || name.length > 100) return { field: "name" };
   if (email.length > 200 || !EMAIL.test(email)) return { field: "email" };
   if (!PHONE.test(phone) || digits < 6 || digits > 15) return { field: "phone" };
+  if (note.length > NOTE_MAX) return { field: "note" };
   if (!(routing.locales as readonly string[]).includes(input.locale)) return { field: "locale" };
-  return { name, email, phone };
+  return { name, email, phone, note: note || null };
 }
 
 /** The `start`..`end` ranges of the `requested` and `approved` bookings that overlap `from`..`to`, for `freeSlots()`. */

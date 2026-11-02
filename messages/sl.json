@@ -254,6 +254,8 @@
     "name": "Ime",
     "email": "E-pošta",
     "phone": "Telefon",
+    "note": "Sporočilo za Nino (neobvezno)",
+    "noteHint": "Na primer, kaj se želiš naučiti ali koliko vas pride.",
     "send": "Pošlji prošnjo",
     "sent": "Prošnja poslana",
     "sentText": "Nina bo pregledala tvojo prošnjo in ti odgovorila po e-pošti.",

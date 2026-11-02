@@ -155,6 +155,11 @@ export default async function BookPage({
               <span>{t("phone")}</span>
               <input className={styles.input} name="phone" type="tel" required autoComplete="tel" />
             </label>
+            <label className={styles.field}>
+              <span>{t("note")}</span>
+              <textarea className={styles.input} name="note" rows={3} maxLength={500} aria-describedby="note-hint" />
+              <small id="note-hint">{t("noteHint")}</small>
+            </label>
             <button className={styles.button} type="submit">
               {t("send")}
             </button>

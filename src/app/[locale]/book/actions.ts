@@ -20,6 +20,7 @@ export async function sendRequest(form: FormData): Promise<void> {
     name: text("name"),
     email: text("email"),
     phone: text("phone"),
+    note: text("note"),
     locale,
   });
   const safeLocale = /^[a-z]{2}$/.test(locale) ? locale : "en";
