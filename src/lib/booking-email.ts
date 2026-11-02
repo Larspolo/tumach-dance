@@ -29,10 +29,14 @@ function parts(booking: Booking, offer: Offer, locale: string) {
     offer.kind === "lesson"
       ? t("Book.lesson", { minutes: offer.minutes })
       : t("Book.rental", { minutes: offer.minutes });
-  const when = new Intl.DateTimeFormat(lang, { timeZone: TIME_ZONE, dateStyle: "full", timeStyle: "short" }).format(
-    new Date(booking.start),
+  return { t, offerLabel, when: whenText(lang, booking.start) };
+}
+
+/** The date and time of `ms` in Europe/Amsterdam time, in the format of `lang` (#410). */
+function whenText(lang: string, ms: number): string {
+  return new Intl.DateTimeFormat(lang, { timeZone: TIME_ZONE, dateStyle: "full", timeStyle: "short" }).format(
+    new Date(ms),
   );
-  return { t, offerLabel, when };
 }
 
 /** The price of `offer` in euro, in the format of `locale`. */
@@ -122,6 +126,35 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
   return {
     to: booking.email,
     subject: t("bookingEmail.cancelledSubject"),
+    text,
+    ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+/**
+ * The email to the dancer after Nina moved a booking (#410), in the language of the booking: the old and the new time.
+ * An approved booking gets the calendar file with the new time and the next sequence: the event moves in the calendar.
+ */
+export function moveEmail(booking: Booking, offer: Offer, from: { start: number }, origin = siteOrigin()): Email {
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const text = [
+    t("bookingEmail.greeting", { name: booking.name }),
+    "",
+    t("bookingEmail.move", {
+      offer: offerLabel,
+      from: whenText(booking.locale in MESSAGES ? booking.locale : "en", from.start),
+      when,
+    }),
+    "",
+    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  const attachments = booking.status === "approved" ? [icsAttachment(booking, offer)] : undefined;
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.moveSubject"),
     text,
     ...(attachments ? { attachments } : {}),
     ...replyToNina(),
@@ -229,5 +262,19 @@ export async function sendCancelEmail(
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
     await sendEmailFailPush(db, booking, "cancel");
+  }
+}
+
+/**
+ * Send the move email after `moveBooking()` gave `ok`. A failed email does not undo the move: the error is logged,
+ * and the moved booking stays.
+ */
+export async function sendMoveEmail(db: Db, booking: Booking, from: { start: number; end: number }): Promise<void> {
+  try {
+    const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
+    if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
+    await sendEmail(moveEmail(booking, offer, from));
+  } catch (error) {
+    console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
   }
 }
