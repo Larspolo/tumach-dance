@@ -347,7 +347,11 @@
     "blockFrom": "From",
     "blockTo": "To",
     "blockSave": "Save",
-    "blockWrong": "Choose a day, and an end after the start."
+    "blockWrong": "Choose a day, and an end after the start.",
+    "forget": "Remove the data of this dancer",
+    "forgetAsk": "Remove the name, email and phone of this dancer from each booking, and cancel the coming ones?",
+    "forgetYes": "Yes, remove",
+    "forgetNo": "No"
   },
   "StudioFeedback": {
     "back": "Back",

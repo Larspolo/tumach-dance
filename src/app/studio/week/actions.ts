@@ -7,6 +7,7 @@ import { removeBlock as deleteBlock } from "@/db/blocks";
 import { cancelBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { sendCancelEmail } from "@/lib/booking-email";
+import { forgetDancerOfBooking } from "@/lib/booking-forget";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { weekOf } from "@/lib/week";
 import { addLocalBlock } from "@/lib/week-block";
@@ -23,6 +24,16 @@ export async function cancel(form: FormData): Promise<void> {
     // A second tap (or another device) finds the booking already cancelled: show the week again.
     if (result.ok) await sendCancelEmail(db, result.booking);
   }
+  redirect(`/studio/week?start=${week.start}`);
+}
+
+/** Remove the data of the dancer of one booking (#363): cancel their coming bookings with the email, then remove the data. */
+export async function forget(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  if (Number.isInteger(id)) await forgetDancerOfBooking(getDb(), id);
   redirect(`/studio/week?start=${week.start}`);
 }
 
