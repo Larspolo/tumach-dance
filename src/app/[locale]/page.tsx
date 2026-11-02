@@ -15,6 +15,8 @@ import { listClasses, listClassTimes } from "@/db/classes";
 import { listOffers } from "@/db/offers";
 import { listPhotos } from "@/db/photos";
 import { routing } from "@/i18n/routing";
+import { closedNotices } from "@/lib/closed-notice";
+import { getHoursRule } from "@/lib/hours-store";
 import { pageMetadata } from "@/lib/page-meta";
 
 // The classes and the photos come from the database at each request, so a change of Nina shows at the next load (#98, #174).
@@ -35,6 +37,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const times = listClassTimes(db, { visibleOnly: true });
   const offers = listOffers(db, { visibleOnly: true });
   const photos = listPhotos(db);
+  const closed = closedNotices(getHoursRule(db), Date.now());
   return (
     <main className={styles.main}>
       <Hero />
@@ -42,7 +45,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
       <Offers offers={offers} locale={locale} />
       <Photos photos={photos} />
       <Classes classes={classes} locale={locale} />
-      <Schedule classes={classes} times={times} locale={locale} />
+      <Schedule classes={classes} times={times} locale={locale} closed={closed} />
       <Contact />
     </main>
   );

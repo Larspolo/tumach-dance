@@ -43,7 +43,9 @@
         "sat": "zaterdag",
         "sun": "zondag"
       },
-      "time": "{from}–{to}"
+      "time": "{from}–{to}",
+      "closedDay": "Gesloten op {date, date, ::dMMMM}.",
+      "closedPeriod": "Gesloten van {from, date, ::dMMMM} tot en met {to, date, ::dMMMM}."
     },
     "contact": {
       "title": "Zeg hallo",
