@@ -3,8 +3,8 @@
     "title": "TUMACH",
     "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen, groepslessen en een studio om te huren.",
     "eyebrow": "Dansstudio · Amsterdam",
-    "primaryAction": "Bekijk het rooster",
-    "secondaryAction": "Over de studio",
+    "primaryAction": "Boek een les",
+    "secondaryAction": "Bekijk het rooster",
     "imageBlock": "De dansstudio TUMACH",
     "about": {
       "title": "Over TUMACH",
@@ -63,7 +63,8 @@
     "photos": "Foto's",
     "classes": "Lessen",
     "schedule": "Rooster",
-    "contact": "Contact"
+    "contact": "Contact",
+    "book": "Boeken"
   },
   "Footer": {
     "copyright": "© {year}",

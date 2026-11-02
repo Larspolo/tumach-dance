@@ -3,8 +3,8 @@
     "title": "TUMACH",
     "welcome": "Come as you are and dance at your own pace: private lessons, classes and a studio to rent.",
     "eyebrow": "Dance studio · Amsterdam",
-    "primaryAction": "See the schedule",
-    "secondaryAction": "About the studio",
+    "primaryAction": "Book a lesson",
+    "secondaryAction": "See the schedule",
     "imageBlock": "The TUMACH dance studio",
     "about": {
       "title": "About TUMACH",
@@ -63,7 +63,8 @@
     "photos": "Photos",
     "classes": "Classes",
     "schedule": "Schedule",
-    "contact": "Contact"
+    "contact": "Contact",
+    "book": "Book"
   },
   "Footer": {
     "copyright": "© {year}",

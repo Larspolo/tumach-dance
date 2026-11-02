@@ -21,6 +21,9 @@ export function Nav() {
               <Link href={{ pathname: "/", hash: id }}>{t(id)}</Link>
             </li>
           ))}
+          <li>
+            <Link href="/book">{t("book")}</Link>
+          </li>
         </ul>
       </nav>
       <LanguageSwitcher />
