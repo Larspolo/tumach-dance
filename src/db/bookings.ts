@@ -2,6 +2,7 @@
 import { and, eq, gt, inArray, isNotNull, isNull, lt, ne, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
+import { type BookingLimit, bookingLimit } from "../lib/booking-limits";
 import { notBefore } from "../lib/booking-notice";
 import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
@@ -32,7 +33,8 @@ export type BookingResult =
   | { ok: true; booking: Booking }
   | { ok: false; reason: "invalid"; field: "offerId" | "name" | "email" | "phone" | "note" | "locale" }
   | { ok: false; reason: "notSlot" }
-  | { ok: false; reason: "taken" };
+  | { ok: false; reason: "taken" }
+  | { ok: false; reason: "limit"; limit: BookingLimit };
 
 /** The statuses that hold their time. */
 const HOLDING = ["requested", "approved"] as const;
@@ -85,7 +87,8 @@ export function busyRanges(db: Db, from: number, to: number, { except }: { excep
 /**
  * Store a booking request with status `requested`. The start and the end must be a free slot of a visible offer in
  * Nina's hours, at `notBefore(now)` or later. One `BEGIN IMMEDIATE` transaction checks and inserts, so that two requests at the
- * same moment (also from two connections) never both get an overlapping time: the second gets `taken`.
+ * same moment (also from two connections) never both get an overlapping time: the second gets `taken`. A request over a
+ * limit of `bookingLimit()` (#541) gets `limit` and holds no time.
  */
 export function requestBooking(
   db: Db,
@@ -110,6 +113,9 @@ export function requestBooking(
       const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
       const inClass = classes.some((c) => c.start < end && start < c.end);
       if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      // The limits of an email address and of the day (#541): a bot with many connections holds only a few times.
+      const limit = bookingLimit(db, fields.email, now);
+      if (limit) return { ok: false, reason: "limit", limit };
       const booking = tx
         .insert(bookings)
         .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })
