@@ -261,7 +261,10 @@
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
     "notSlot": "This time is not free. Choose another time.",
-    "privacy": "How we keep your data"
+    "privacy": "How we keep your data",
+    "emailTypo": "Did you mean {email}?",
+    "emailUse": "Use {email}",
+    "emailKeep": "My address is right"
   },
   "bookingEmail": {
     "subject": "Your booking request at TUMACH",

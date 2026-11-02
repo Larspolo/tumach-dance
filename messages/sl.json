@@ -261,7 +261,10 @@
     "taken": "Nekdo drug je pravkar vzel ta termin. Izberi drug termin.",
     "invalid": "Preveri svoje ime, e-pošto in telefonsko številko.",
     "notSlot": "Ta termin ni prost. Izberi drug termin.",
-    "privacy": "Kako hranimo tvoje podatke"
+    "privacy": "Kako hranimo tvoje podatke",
+    "emailTypo": "Ste mislili {email}?",
+    "emailUse": "Uporabi {email}",
+    "emailKeep": "Moj naslov je pravilen"
   },
   "bookingEmail": {
     "subject": "Tvoja prošnja za rezervacijo pri TUMACH",

@@ -102,3 +102,24 @@
 .link {
   color: #7c3527;
 }
+
+.typo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.typo p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.plain {
+  font: inherit;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #7c3527;
+  text-decoration: underline;
+}
