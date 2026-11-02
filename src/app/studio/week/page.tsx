@@ -12,13 +12,13 @@ import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import styles from "../studio.module.css";
-import { addBlock, cancel, removeBlock } from "./actions";
+import { addBlock, cancel, forget, removeBlock } from "./actions";
 
 // The bookings of a week, per day (#102): the requests and the approved bookings, Monday to Sunday.
 export default async function WeekPage({
   searchParams,
 }: {
-  searchParams: Promise<{ start?: string; cancel?: string; add?: string }>;
+  searchParams: Promise<{ start?: string; cancel?: string; forget?: string; add?: string }>;
 }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -29,6 +29,8 @@ export default async function WeekPage({
   const week = weekOf(params.start);
   // The first tap on "Cancel" asks again; only "Yes, cancel" cancels (#162).
   const asked = Number(params.cancel);
+  // The same two taps for "Remove the data of this dancer" (#363).
+  const forgetAsked = Number(params.forget);
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
   const blocks = listBlocks(getDb(), week.from, week.to);
@@ -137,6 +139,26 @@ export default async function WeekPage({
                       <Link className={styles.link} href={`/studio/week?start=${week.start}&cancel=${booking.id}`}>
                         {t("cancel")}
                       </Link>
+                    )}
+                    {booking.email === "" ? null : booking.id === forgetAsked ? (
+                      <form className={styles.form} action={forget}>
+                        <input type="hidden" name="id" value={booking.id} />
+                        <input type="hidden" name="start" value={week.start} />
+                        <span>{t("forgetAsk")}</span>{" "}
+                        <button className={styles.button} type="submit">
+                          {t("forgetYes")}
+                        </button>{" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
+                          {t("forgetNo")}
+                        </Link>
+                      </form>
+                    ) : (
+                      <>
+                        {" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&forget=${booking.id}`}>
+                          {t("forget")}
+                        </Link>
+                      </>
                     )}
                   </li>
                 );

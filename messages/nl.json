@@ -347,7 +347,11 @@
     "blockFrom": "Van",
     "blockTo": "Tot",
     "blockSave": "Opslaan",
-    "blockWrong": "Kies een dag, en een eindtijd na de begintijd."
+    "blockWrong": "Kies een dag, en een eindtijd na de begintijd.",
+    "forget": "Verwijder de gegevens van deze danser",
+    "forgetAsk": "De naam, e-mail en telefoon van deze danser uit elke boeking verwijderen, en de komende boekingen annuleren?",
+    "forgetYes": "Ja, verwijder",
+    "forgetNo": "Nee"
   },
   "StudioFeedback": {
     "back": "Terug",
