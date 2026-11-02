@@ -17,7 +17,8 @@ async function status(): Promise<HealthStatus> {
   } catch (error) {
     console.error("health: no database", error);
     recordError("GET /api/health", error);
-    return { ok: false, backupAt: null };
+    // The email state is not known when the module does not load: false, with ok false (#413).
+    return { ok: false, backupAt: null, email: false };
   }
 }
 
