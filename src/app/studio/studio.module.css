@@ -256,3 +256,44 @@
   font-style: italic;
   color: #3a352e;
 }
+
+/* The links of the start page as large boxes in the colors of the theme (Nina, #522): a tap target of a full
+   width, each box with its own color, so that Nina finds a task at a glance. White text on each color has a
+   contrast of 4.5:1 or more. */
+.tileRow {
+  margin: 0 0 0.75rem;
+}
+
+.tile {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.95rem 1rem;
+  border-radius: 0.5rem;
+  background: #a8503a;
+  color: #fbf8f1;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.tileRow:nth-of-type(6n + 2) .tile {
+  background: #7c3527;
+}
+
+.tileRow:nth-of-type(6n + 3) .tile {
+  background: #5c6b3a;
+}
+
+.tileRow:nth-of-type(6n + 4) .tile {
+  background: #3f5a66;
+}
+
+.tileRow:nth-of-type(6n + 5) .tile {
+  background: #8a5a1c;
+}
+
+.tileRow:nth-of-type(6n) .tile {
+  background: #141210;
+}
