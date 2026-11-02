@@ -8,6 +8,7 @@ import { deviceKind } from "@/lib/device-kind";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
+import { LogOutDevice } from "./log-out-device";
 
 // "Devices" (#585): each device where Nina is logged in, its kind and the day of its last use, newest first.
 export default async function DevicesPage() {
@@ -41,10 +42,12 @@ export default async function DevicesPage() {
                 {current && <> · {t("thisDevice")}</>}
               </p>
               <p className={styles.note}>{t("lastUse", { day: lastUse(new Date(s.updatedAt)) })}</p>
+              {!current && <LogOutDevice token={s.token} />}
             </li>
           );
         })}
       </ul>
+      {sessions.length > 1 && <LogOutDevice />}
     </main>
   );
 }
