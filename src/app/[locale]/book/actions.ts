@@ -7,8 +7,8 @@ import { requestBooking } from "@/db/bookings";
 import { sendRequestEmail } from "@/lib/booking-email";
 import { bookingError } from "@/lib/booking-error";
 import { sendRequestPush } from "@/lib/booking-push";
-import { emailSuggestion } from "@/lib/email-typo";
 import { clientAddress, formSpamReason } from "@/lib/contact-spam";
+import { emailSuggestion } from "@/lib/email-typo";
 
 /**
  * The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. A bot
