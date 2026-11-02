@@ -28,7 +28,7 @@ test("a dancer sends a request with a note", async ({ page }) => {
   await page.getByLabel(en.Book.email).fill("ana@example.test");
   await page.getByLabel(en.Book.phone).fill("+31 6 1234 5678");
   await page.getByLabel(en.Book.note).fill("  We are two people.  ");
-  await expect(page.getByText(en.Book.noteHint)).toBeVisible();
+  await expect(page.getByText(en.Book.noteHint.replace("{max}", "500"))).toBeVisible();
   await page.screenshot({ path: "out/screenshots/book-note-phone.png", fullPage: true });
   await page.getByRole("button", { name: en.Book.send }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.Book.sent);

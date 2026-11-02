@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { requestBooking } from "@/db/bookings";
 import { sendRequestEmail } from "@/lib/booking-email";
+import { bookingError } from "@/lib/booking-error";
 import { sendRequestPush } from "@/lib/booking-push";
 import { clientAddress, formSpamReason } from "@/lib/contact-spam";
 
@@ -47,7 +48,7 @@ export async function sendRequest(form: FormData): Promise<void> {
     redirect(`/${safeLocale}/book?sent=1`);
   }
   const day = text("day");
-  const back = new URLSearchParams({ offer: String(offerId), day, error: result.reason });
+  const back = new URLSearchParams({ offer: String(offerId), day, error: bookingError(result) });
   if (result.reason === "invalid") back.set("start", String(start));
   redirect(`/${safeLocale}/book?${back}`);
 }

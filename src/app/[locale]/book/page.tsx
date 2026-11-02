@@ -1,6 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
+import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
+import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
 import { bookingDays } from "@/lib/booking-page";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
 import { formStamp } from "@/lib/contact-spam";
@@ -62,15 +64,14 @@ export default async function BookPage({
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
   const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
-  const error =
-    search.error && ["taken", "invalid", "notSlot", "limit"].includes(search.error) ? search.error : undefined;
+  const error = BOOKING_ERRORS.find((e) => e === search.error);
 
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       {error && (
         <p className={styles.error} role="status">
-          {t(error as "taken" | "invalid" | "notSlot" | "limit")}
+          {error === "noteLong" ? t("noteLong", { max: NOTE_MAX }) : t(error as Exclude<BookingError, "noteLong">)}
         </p>
       )}
 
@@ -170,8 +171,14 @@ export default async function BookPage({
             </label>
             <label className={styles.field}>
               <span>{t("note")}</span>
-              <textarea className={styles.input} name="note" rows={3} maxLength={500} aria-describedby="note-hint" />
-              <small id="note-hint">{t("noteHint")}</small>
+              <textarea
+                className={styles.input}
+                name="note"
+                rows={3}
+                maxLength={NOTE_MAX}
+                aria-describedby="note-hint"
+              />
+              <small id="note-hint">{t("noteHint", { max: NOTE_MAX })}</small>
             </label>
             <button className={styles.button} type="submit">
               {t("send")}
