@@ -54,6 +54,8 @@ jobs:
         run: |
           export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
           { echo '### Speed on a phone (Lighthouse mobile, medians of 3 runs)'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          # pipefail: the status of a pipe is the status of tee (0) with no pipefail, and the step never failed (#448)
+          set -o pipefail
           status=0
           node scripts/lighthouse.mjs --runs 3 --lcp 2500 --cls 0.1 | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
           echo '```' >> "$GITHUB_STEP_SUMMARY"
