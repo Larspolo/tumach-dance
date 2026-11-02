@@ -371,7 +371,15 @@
     "forget": "Verwijder de gegevens van deze danser",
     "forgetAsk": "De naam, e-mail en telefoon van deze danser uit elke boeking verwijderen, en de komende boekingen annuleren?",
     "forgetYes": "Ja, verwijder",
-    "forgetNo": "Nee"
+    "forgetNo": "Nee",
+    "move": "Verplaatsen",
+    "moveDay": "Naar welke dag?",
+    "moveTime": "Welke tijd op {day}?",
+    "moveAsk": "Deze boeking verplaatsen naar {day} om {time}? De danser krijgt een e-mail.",
+    "moveYes": "Ja, verplaats",
+    "moveNo": "Nee",
+    "moveTaken": "Deze tijd is niet meer vrij. Kies een andere tijd.",
+    "moveNone": "Geen vrije tijd in de komende 4 weken."
   },
   "StudioFeedback": {
     "back": "Terug",
