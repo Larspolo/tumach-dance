@@ -14,16 +14,14 @@ import { type Db, getDb } from "../db";
 import * as schema from "../db/schema";
 import { studioLocale } from "../i18n/studio";
 import { emailTransport, sendEmail } from "./email";
+import { studioEmail } from "./studio-email";
 
 const DAY = 24 * 60 * 60;
 export const SESSION_DAYS = 180;
 export const CODE_MINUTES = 10;
 export const CODE_TRIES = 5;
 
-/** The email of Nina, in lower case. Empty: nobody logs in. */
-export function studioEmail(env: NodeJS.ProcessEnv = process.env): string {
-  return (env.STUDIO_EMAIL ?? "").trim().toLowerCase();
-}
+export { studioEmail } from "./studio-email";
 
 function isStudioEmail(email: unknown): boolean {
   return typeof email === "string" && studioEmail() !== "" && email.trim().toLowerCase() === studioEmail();
