@@ -85,6 +85,11 @@ export default async function StudioPage() {
       <p className={styles.note}>{t("calendarNote")}</p>
       <RenewCalendarButton />
       <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/devices">
+          {t("devices")}
+        </Link>
+      </p>
+      <p className={styles.tileRow}>
         <Link className={styles.tile} href="/studio/feedback">
           {t("feedback")}
         </Link>
