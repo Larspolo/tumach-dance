@@ -7,7 +7,7 @@ import { listBlocks } from "@/db/blocks";
 import { listBookings } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
-import { shownName } from "@/lib/booking-name";
+import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
@@ -116,6 +116,11 @@ export default async function WeekPage({
                   <li key={booking.id}>
                     {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
                     {shownName(booking, t("removed"))}{" "}
+                    {shownNote(booking, 80) !== null && (
+                      <span className={styles.dancerNote} data-note>
+                        {shownNote(booking, 80)}
+                      </span>
+                    )}{" "}
                     {booking.status === "requested" ? (
                       <Link className={styles.link} href="/studio/bookings">
                         {t("request")}

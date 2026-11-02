@@ -18,6 +18,7 @@ export function forgetOldBookings(db: Db, now = Date.now()): number[] {
       name: "",
       email: "",
       phone: "",
+      note: null,
       // A new secret per row (the column is unique): the cancel link of the old email then finds nothing.
       cancelToken: sql`lower(hex(randomblob(32)))`,
       forgottenAt: now,
@@ -42,6 +43,7 @@ export function forgetDancer(db: Db, email: string, now = Date.now()): number[] 
       name: "",
       email: "",
       phone: "",
+      note: null,
       cancelToken: sql`lower(hex(randomblob(32)))`,
       forgottenAt: now,
     })
