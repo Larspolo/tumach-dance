@@ -59,6 +59,9 @@
       "placeLabel": "Where",
       "place": "Amsterdam",
       "closing": "See you in the studio.",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "whatsappLink": "Send me a message",
       "thanks": "Thank you! Your message is sent.",
       "failed": "Sending failed, please try again later",
       "notSent": "Your message was not sent. Wait a few seconds and send it again."
@@ -80,7 +83,9 @@
     "domain": "tumach.dance",
     "tagline": "Tumach Dance? Never enough!",
     "place": "Amsterdam",
-    "privacy": "How we keep your data"
+    "privacy": "How we keep your data",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -282,6 +287,8 @@
     "invalid": "Please check your name, email and phone number.",
     "noteLong": "Your note is longer than {max} characters. Please make it shorter.",
     "limit": "Too many requests from this connection. Try again in an hour, or send Nina a message.",
+    "limitOpen": "You already have several requests that wait for Nina's answer. Wait for her answer first, or send Nina a message.",
+    "limitDay": "The booking page takes no more requests today. Try again tomorrow, or send Nina a message.",
     "notSlot": "This time is not free. Choose another time.",
     "privacy": "How we keep your data",
     "emailTypo": "Did you mean {email}?",
@@ -334,7 +341,9 @@
     "emailFailReminder": "{name} did not get the reminder.",
     "emailFailPayment": "{name} did not get the payment reminder.",
     "emailFailUnanswered": "{name} did not get the email about the open request.",
-    "emailFailBounce": "The email to {name} bounced: the address does not exist. Ask {name} for the right address."
+    "emailFailBounce": "The email to {name} bounced: the address does not exist. Ask {name} for the right address.",
+    "limitTitle": "Many booking requests today",
+    "limitBody": "The booking page got many requests in 24 hours, maybe from a bot. It takes no new requests until tomorrow."
   },
   "StudioBookings": {
     "title": "Bookings",

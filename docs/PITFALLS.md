@@ -19,6 +19,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - Drizzle `migrate()` (better-sqlite3) reads the last migration before its `BEGIN`: two starts at once fail ("table already exists"). Use `runMigrations` of `src/db/migrate.ts` (#14).
 - `PRAGMA journal_mode = WAL` ignores the busy timeout: two starts on a new database get `SQLITE_BUSY`. Use `setWalMode` of `src/db/wal.ts`; a race test of processes waits for one start instant, else it passes by chance (#180).
 - `drizzle-kit generate` of a new `.notNull()` column with no default gives `ALTER TABLE ADD ... NOT NULL`: SQLite refuses it. Rebuild the table in the migration (`drizzle/0014_outstanding_junta.sql`, #164).
+- Keep `src/db/*.ts` free of imports of `src/lib/push.ts` (also through another module): `tests/examples.test.ts` mocks push with a variable that is not hoisted, and the import of the database layer fails with "Cannot access 'sendPush' before initialization". Put the push in its own module (`booking-limit-push.ts`, #541).
 
 ## Next.js
 
