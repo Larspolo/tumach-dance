@@ -22,7 +22,7 @@ function status(env: NodeJS.ProcessEnv) {
 }
 
 test("production with no email keys has no email and is not ok", () => {
-  expect(status({ NODE_ENV: "production" })).toEqual({ ok: false, backupAt: null, email: false });
+  expect(status({ NODE_ENV: "production" })).toEqual({ ok: false, backupAt: null, email: false, push: false });
 });
 
 test("production with the email keys can send email", () => {
@@ -30,6 +30,7 @@ test("production with the email keys can send email", () => {
     ok: true,
     backupAt: null,
     email: true,
+    push: false,
   });
 });
 
@@ -38,5 +39,10 @@ test("the test environment can send email (the log transport)", () => {
 });
 
 test("EMAIL_TRANSPORT=log in production can send email", () => {
-  expect(status({ NODE_ENV: "production", EMAIL_TRANSPORT: "log" })).toEqual({ ok: true, backupAt: null, email: true });
+  expect(status({ NODE_ENV: "production", EMAIL_TRANSPORT: "log" })).toEqual({
+    ok: true,
+    backupAt: null,
+    email: true,
+    push: false,
+  });
 });
