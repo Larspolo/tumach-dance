@@ -3,7 +3,7 @@ import { getDb } from "@/db";
 import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
 import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
-import { bookingDays } from "@/lib/booking-page";
+import { bookingDays, nextFreeDate } from "@/lib/booking-page";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
 import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
@@ -64,6 +64,8 @@ export default async function BookPage({
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
   const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
+  // With no free time in the 4 weeks, the next free day after them, and the day from which the page shows it (#478).
+  const next = offer && days.every((d) => d.slots.length === 0) ? nextFreeDate(db, offer) : null;
   const error = BOOKING_ERRORS.find((e) => e === search.error);
   // A dancer with no free time or no offer can ask Nina instead (#477).
   const contact = (
@@ -112,6 +114,9 @@ export default async function BookPage({
           {days.every((d) => d.slots.length === 0) && (
             <>
               <p className={styles.note}>{t("noTimes")}</p>
+              {next && (
+                <p className={styles.note}>{t("nextFree", { date: dateOf(next.date), from: dateOf(next.from) })}</p>
+              )}
               {contact}
             </>
           )}
