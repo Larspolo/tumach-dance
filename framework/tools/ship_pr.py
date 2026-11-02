@@ -109,11 +109,11 @@ CLOSER = re.compile(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?):?\s+#(\d+)\b",
 
 
 def closer(text, number, part=False):
-    """The first prose line (`claim.prose`: no code) that closes a ticket other than #number, or with `part` any
-    ticket, else None. One ticket per PR: GitHub closes each ticket that a merged PR names after a closing word
-    (#472: the body of PR #471 said "PR #468 closed #453" and closed #453; #470: "does not close #453" in a
-    `--part` PR)."""
-    for line in claim.prose(text).splitlines():
+    """The first line that closes a ticket other than #number, or with `part` any ticket, else None. One ticket per
+    PR: GitHub closes each ticket that a merged PR names after a closing word (#472: the body of PR #471 said
+    "PR #468 closed #453" and closed #453; #470: "does not close #453" in a `--part` PR), also in code: no
+    `claim.prose` here (#474: PR #473 closed #453 from a code span)."""
+    for line in text.splitlines():
         if any(part or int(m.group(1)) != number for m in CLOSER.finditer(line)):
             return line.strip()
     return None

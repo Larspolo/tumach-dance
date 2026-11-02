@@ -18,9 +18,8 @@ def test_colon_form_is_refused():
     assert ship_pr.closer("Fixes: #12\nCloses #470\n", 470) == "Fixes: #12"
 
 
-def test_own_ticket_and_code_pass():
-    text = "Closes #470\nPart of #446\nSee `closes #453` and\n```\nfixes #12\n```\nfixed #470 too\n"
-    assert ship_pr.closer(text, 470) is None
+def test_own_ticket_passes():
+    assert ship_pr.closer("Closes #470\nPart of #446\nfixed #470 too\n", 470) is None
 
 
 def test_part_refuses_own_ticket():
