@@ -35,3 +35,16 @@
   color: #7c3527;
   padding: 0.5rem 0;
 }
+
+/* The "Try again" button of the error page (#362). */
+.button {
+  padding: 0.5rem 0;
+  border: 0;
+  background: none;
+  color: #7c3527;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

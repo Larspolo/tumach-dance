@@ -447,5 +447,13 @@
     "text": "Het adres is misschien oud of heeft een typfout. Adem even uit en ga verder via een van deze pagina's.",
     "home": "Naar de homepagina",
     "book": "Boek een les"
+  },
+  "PageError": {
+    "title": "Er ging iets mis",
+    "text": "Deze pagina laadde niet. Probeer het opnieuw, of ga verder vanaf het begin.",
+    "retry": "Probeer opnieuw",
+    "home": "Naar de homepagina",
+    "studioHome": "Naar het begin van de app",
+    "code": "Code:"
   }
 }
