@@ -43,7 +43,9 @@
         "sat": "Saturday",
         "sun": "Sunday"
       },
-      "time": "{from}–{to}"
+      "time": "{from}–{to}",
+      "closedDay": "Closed on {date, date, ::dMMMM}.",
+      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}."
     },
     "contact": {
       "title": "Say hello",

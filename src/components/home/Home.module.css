@@ -413,3 +413,9 @@
 .contact .lbl {
   color: var(--rust-light);
 }
+
+/* A coming closed period of the studio (#530): a calm line above the schedule. */
+.closed {
+  margin: 0 0 0.75rem;
+  color: #6a6358;
+}
