@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { use } from "react";
+
 import { About } from "@/components/home/About";
 import { Classes } from "@/components/home/Classes";
 import { Contact } from "@/components/home/Contact";
@@ -30,8 +30,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "", locale);
 }
 
-export default function HomePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = use(params);
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  // A test of #448 only: 3 s slower home page. Revert.
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const db = getDb();
