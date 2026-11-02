@@ -59,6 +59,9 @@
       "placeLabel": "Where",
       "place": "Amsterdam",
       "closing": "See you in the studio.",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "whatsappLink": "Send me a message",
       "thanks": "Thank you! Your message is sent.",
       "failed": "Sending failed, please try again later",
       "notSent": "Your message was not sent. Wait a few seconds and send it again."
@@ -80,7 +83,9 @@
     "domain": "tumach.dance",
     "tagline": "Tumach Dance? Never enough!",
     "place": "Amsterdam",
-    "privacy": "How we keep your data"
+    "privacy": "How we keep your data",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp"
   },
   "StudioLogin": {
     "title": "Studio",
