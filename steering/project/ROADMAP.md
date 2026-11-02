@@ -89,10 +89,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - When her calendar cannot be read, the booking page still works with the last known busy times
 - [x] `nina:chat` (#495) Nina writes to a dancer by WhatsApp from a booking
   - Each booking in her app has a WhatsApp link that opens a chat with the dancer in one tap, with a first line about the booking
-- [ ] `nina:reach` Nina never misses a new request because her phone gets no push
+- [x] `nina:reach` (#567) Nina never misses a new request because her phone gets no push
   - The studio app renews the push of her phone by itself when the browser changes or loses it; a device with no working push shows it, with one button that fixes it
   - Lars knows when no device of Nina gets a push on the live site
-- [ ] `nina:undo` Nina takes back a wrong tap on Approve or Decline
+- [x] `nina:undo` (#568) Nina takes back a wrong tap on Approve or Decline
   - For 1 minute after the tap, Nina undoes the decision with one tap, and the dancer gets no email of it
   - Approve and Decline stay one tap each
 - [ ] `nina:devices` Nina logs out a lost phone
