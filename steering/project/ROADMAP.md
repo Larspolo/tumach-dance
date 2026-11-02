@@ -110,7 +110,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:change` (#158) Cancel and remind
   - The dancer cancels with a link in the email, by the cancel rules; Nina cancels from her app
   - The dancer gets a reminder the day before, with a calendar file
-- [ ] `book:calendar` The lesson is in the calendar of the dancer from the approval on
+- [x] `book:calendar` (#381) The lesson is in the calendar of the dancer from the approval on
   - The approval email has the calendar file of the booking
   - A cancel removes the event from the calendar of the dancer
 - [x] `book:reply` (#373) A dancer who answers an email of the site reaches Nina
