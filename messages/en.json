@@ -20,14 +20,19 @@
       "label": "Photos",
       "alt": "A photo of the TUMACH dance studio"
     },
+    "offers": {
+      "title": "Prices",
+      "label": "(02) Prices",
+      "book": "Book"
+    },
     "classes": {
       "title": "Classes",
-      "label": "(02) Classes",
+      "label": "(03) Classes",
       "none": "No classes yet."
     },
     "schedule": {
       "title": "Every week",
-      "label": "(03) Schedule",
+      "label": "(04) Schedule",
       "none": "No class times yet.",
       "days": {
         "mon": "Monday",
@@ -42,7 +47,7 @@
     },
     "contact": {
       "title": "Say hello",
-      "label": "(04) Contact",
+      "label": "(05) Contact",
       "text": "A question about a lesson, a class or the studio? Send me a message, and I will answer soon.",
       "name": "Your name",
       "email": "Your email",
@@ -60,6 +65,7 @@
     "label": "Main",
     "logo": "TUMACH",
     "about": "About",
+    "offers": "Prices",
     "photos": "Photos",
     "classes": "Classes",
     "schedule": "Schedule",

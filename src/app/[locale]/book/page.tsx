@@ -5,6 +5,7 @@ import { bookingDays } from "@/lib/booking-page";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
 import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
+import { offerLabel } from "@/lib/offer-label";
 import { pageMetadata } from "@/lib/page-meta";
 import { sendRequest } from "./actions";
 import styles from "./book.module.css";
@@ -52,7 +53,6 @@ export default async function BookPage({
   const day = days.find((d) => d.date === search.day && d.slots.length > 0);
   const slot = day?.slots.find((s) => String(s.start) === search.start);
 
-  const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
   const dayName = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     weekday: "short",
@@ -60,7 +60,7 @@ export default async function BookPage({
     month: "short",
   });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
-  const offerName = (o: Offer) => `${t(o.kind, { minutes: o.minutes })} · ${euro.format(o.priceCents / 100)}`;
+  const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
   const error =
     search.error && ["taken", "invalid", "notSlot", "limit"].includes(search.error) ? search.error : undefined;
