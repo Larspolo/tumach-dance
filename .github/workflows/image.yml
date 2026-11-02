@@ -48,6 +48,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          # The commit in the image: `/api/health` gives it, and the site watch names the merges after it.
+          build-args: SITE_VERSION=${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

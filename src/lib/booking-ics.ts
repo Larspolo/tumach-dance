@@ -4,11 +4,10 @@ import { createEvents } from "ics";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 
-const MESSAGES = { en, nl, sl } as const;
+const MESSAGES = { en, nl } as const;
 
 /** The `.ics` text of `booking` with the title "TUMACH: <offer>" in `locale` (English for another one), times in UTC. */
 export function bookingEvent(booking: Booking, offer: Offer, locale: string): string {

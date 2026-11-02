@@ -7,7 +7,7 @@ import { clientAddress, spamReason } from "@/lib/contact-spam";
 
 /** `values`: the text of the visitor, kept in the form after an error (#152). */
 export type ContactState = {
-  status: "idle" | "sent" | "invalid" | "failed";
+  status: "idle" | "sent" | "invalid" | "failed" | "notSent";
   errors: ContactErrors;
   values: Contact;
 };
@@ -29,7 +29,8 @@ export async function sendContact(_prev: ContactState, form: FormData): Promise<
   const spam = await spamReason(form, clientAddress(await headers()));
   if (spam) {
     console.warn(`Contact: no email, spam (${spam})`);
-    return { status: "sent", errors: {}, values: EMPTY };
+    if (spam === "honeypot") return { status: "sent", errors: {}, values: EMPTY };
+    return { status: "notSent", errors: {}, values };
   }
   try {
     await sendContactMessage(getDb(), parsed.value);

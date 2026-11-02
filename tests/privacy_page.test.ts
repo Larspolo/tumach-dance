@@ -3,10 +3,9 @@ import { createTranslator } from "next-intl";
 import { expect, test } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 import { KEEP_MONTHS } from "../src/lib/booking-privacy";
 
-const all = { en, nl, sl };
+const all = { en, nl };
 
 test.each(Object.entries(all))("%s: the keep text shows the number of months", (locale, messages) => {
   const t = createTranslator({ locale, messages, namespace: "Privacy" });
@@ -15,10 +14,9 @@ test.each(Object.entries(all))("%s: the keep text shows the number of months", (
   expect(t("keep", { months: 1 })).toMatch(/^1 /);
 });
 
-test("each privacy text is in English, Dutch and Slovenian", () => {
+test("each privacy text is in English and Dutch", () => {
   const keys = Object.keys(en.Privacy).sort();
   expect(Object.keys(nl.Privacy).sort()).toEqual(keys);
-  expect(Object.keys(sl.Privacy).sort()).toEqual(keys);
   for (const m of Object.values(all)) {
     expect(m.Footer.privacy).toBeTruthy();
     expect(m.Book.privacy).toBeTruthy();

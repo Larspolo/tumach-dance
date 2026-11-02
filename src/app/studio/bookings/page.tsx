@@ -38,8 +38,8 @@ export default async function BookingsPage({
   });
   const day = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, day: "numeric", month: "short" });
   const db = getDb();
-  const requests = listOpenRequests(db);
   const now = Date.now();
+  const requests = listOpenRequests(db, now);
   const approved = listBookings(db, now - 30 * DAY, now + 90 * DAY, ["approved"]);
 
   return (

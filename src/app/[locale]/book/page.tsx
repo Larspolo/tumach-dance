@@ -2,6 +2,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
 import { listOffers, type Offer } from "@/db/offers";
 import { bookingDays } from "@/lib/booking-page";
+import { HONEYPOT, STAMP } from "@/lib/contact-fields";
+import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
 import { pageMetadata } from "@/lib/page-meta";
 import { sendRequest } from "./actions";
@@ -60,14 +62,15 @@ export default async function BookPage({
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
   const offerName = (o: Offer) => `${t(o.kind, { minutes: o.minutes })} · ${euro.format(o.priceCents / 100)}`;
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
-  const error = search.error && ["taken", "invalid", "notSlot"].includes(search.error) ? search.error : undefined;
+  const error =
+    search.error && ["taken", "invalid", "notSlot", "limit"].includes(search.error) ? search.error : undefined;
 
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       {error && (
         <p className={styles.error} role="status">
-          {t(error as "taken" | "invalid" | "notSlot")}
+          {t(error as "taken" | "invalid" | "notSlot" | "limit")}
         </p>
       )}
 
@@ -143,6 +146,16 @@ export default async function BookPage({
             <input type="hidden" name="day" value={day.date} />
             <input type="hidden" name="start" value={slot.start} />
             <input type="hidden" name="end" value={slot.end} />
+            <input type="hidden" name={STAMP} value={formStamp("booking")} />
+            <input
+              type="text"
+              name={HONEYPOT}
+              className={styles.honeypot}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              defaultValue=""
+            />
             <label className={styles.field}>
               <span>{t("name")}</span>
               <input className={styles.input} name="name" required maxLength={100} autoComplete="name" />
