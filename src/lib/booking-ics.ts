@@ -1,11 +1,12 @@
 // The calendar file of one booking (#166): the reminder email attaches it, so that the dancer adds it with one tap.
-// The site has no address of the studio yet (`src/lib/site.ts`): the event has no location.
+// The location is the address of the studio (`STUDIO_ADDRESS`, #540); with no setting the event has none.
 import { createEvents } from "ics";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
+import { studioAddress } from "./studio-email";
 
 const MESSAGES = { en, nl } as const;
 
@@ -36,6 +37,7 @@ export function bookingEvent(booking: Booking, offer: Offer, locale: string, can
         endInputType: "utc",
         endOutputType: "utc",
         title: `TUMACH: ${label}`,
+        ...(studioAddress() ? { location: studioAddress() } : {}),
       },
     ],
     cancel ? { method: "CANCEL" } : undefined,

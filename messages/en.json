@@ -316,7 +316,8 @@
     "payButton": "Pay with Tikkie",
     "cancelText": "Can you not come? Cancel the booking at any time before the start.",
     "cancelButton": "Cancel the booking",
-    "bookButton": "Book another time"
+    "bookButton": "Book another time",
+    "address": "Where: {address}"
   },
   "bookingPush": {
     "title": "New booking request",
