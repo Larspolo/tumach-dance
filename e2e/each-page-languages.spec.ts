@@ -7,8 +7,11 @@ import { STUDIO_SESSION } from "./studio-session";
 
 const LOCALES = { en: "en-GB", nl: "nl-NL" } as const;
 // A sample path for each page with a dynamic segment other than [locale]. A dynamic page not here fails the test.
-// The catch-all of an unknown address (#359) shows the not-found page.
-const SAMPLES: Record<string, string> = { "src/app/[locale]/[...rest]/page.tsx": "/no-such-page" };
+// The catch-all of an unknown address shows the not-found page (#359; the studio app: #360).
+const SAMPLES: Record<string, string> = {
+  "src/app/[locale]/[...rest]/page.tsx": "/no-such-page",
+  "src/app/studio/[...rest]/page.tsx": "/studio/no-such-page",
+};
 
 // A missing text shows as `Group.key`. Match on the group: a key that is missing in all three files is not in en.json.
 const groups = new Set(Object.keys(en));
