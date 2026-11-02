@@ -1,13 +1,13 @@
 // The email to the dancer after Nina's decision (#77): approved or declined, in the language of the booking, in
-// Amsterdam time, sent by the requests page, and a failed email that keeps the decision.
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+// Amsterdam time, sent by the requests page when the undo time ends (#572), and a failed email that keeps the decision.
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { type Db, openDb } from "../src/db";
-import { requestBooking } from "../src/db/bookings";
+import { requestBooking, UNDO_MS } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
 import { saveHoursRule } from "../src/lib/hours-store";
@@ -24,6 +24,7 @@ vi.mock("next/navigation", () => ({
 
 const { decisionEmail } = await import("../src/lib/booking-email");
 const { decide } = await import("../src/app/studio/bookings/actions");
+const { sendDueDecisionEmails } = await import("../src/lib/decision-mail");
 
 const zone = "Europe/Amsterdam";
 const NOW = DateTime.fromISO("2026-10-20T12:00", { zone }).toMillis();
@@ -92,7 +93,7 @@ describe("decisionEmail", () => {
   });
 });
 
-describe("the requests page sends the email", () => {
+describe("the requests page sends the email after the undo time", () => {
   let dir: string;
   const saved = { ...process.env };
 
@@ -130,6 +131,10 @@ describe("the requests page sends the email", () => {
     await expect(tap(booking.id, "approved")).rejects.toThrow("redirect /studio/bookings?done=approved");
     // A second tap finds the request already decided: no second email.
     await expect(tap(booking.id, "approved")).rejects.toThrow("redirect /studio/bookings");
+    // No email in the undo time; the end of the undo time sends it once.
+    expect(existsSync(process.env.EMAIL_LOG_FILE as string)).toBe(false);
+    await sendDueDecisionEmails(db, NOW + UNDO_MS);
+    await sendDueDecisionEmails(db, NOW + UNDO_MS);
 
     expect(sent()).toHaveLength(1);
     expect(sent()[0]).toMatchObject({ to: "ana@example.com", subject: "Je boeking bij TUMACH is bevestigd" });
@@ -139,6 +144,7 @@ describe("the requests page sends the email", () => {
     const { db, booking } = booked("en");
     state.db = db;
     await expect(tap(booking.id, "declined")).rejects.toThrow("redirect /studio/bookings?done=declined");
+    await sendDueDecisionEmails(db, NOW + UNDO_MS);
 
     expect(sent()).toHaveLength(1);
     expect(sent()[0].text).toContain("Sorry, Nina cannot take your request");
@@ -153,6 +159,7 @@ describe("the requests page sends the email", () => {
     const error = vi.spyOn(console, "error").mockImplementation(() => {});
 
     await expect(tap(booking.id, "approved")).rejects.toThrow("redirect /studio/bookings?done=approved");
+    await sendDueDecisionEmails(db, NOW + UNDO_MS);
 
     expect(error).toHaveBeenCalled();
     const row = db.select().from(bookings).where(eq(bookings.id, booking.id)).get();

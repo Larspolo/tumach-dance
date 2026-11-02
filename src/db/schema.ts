@@ -199,6 +199,13 @@ export const bookings = sqliteTable(
     forgottenAt: integer("forgotten_at"),
     /** The SEQUENCE of the calendar event of the booking (#409): one more at each move, so a calendar takes the new time. */
     calendarSequence: integer("calendar_sequence").notNull().default(0),
+    /**
+     * UTC, epoch milliseconds; the tap of Nina on Approve or Decline (#572). The decision email waits `UNDO_MS` after
+     * it. `null` = no decision, or a decision before #572 (its email went at once).
+     */
+    decidedAt: integer("decided_at"),
+    /** UTC, epoch milliseconds; the claim of the decision email (#572), set before the send: one email only. */
+    decisionMailedAt: integer("decision_mailed_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
