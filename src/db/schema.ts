@@ -131,6 +131,8 @@ export const pushSubscriptions = sqliteTable("push_subscriptions", {
   createdAt: integer("created_at").notNull(),
   /** The language of the studio app on the device (#69): the push texts of a timer have no request. */
   locale: text("locale").notNull().default("en"),
+  /** The login of the device (#586): the end of the login deletes the push. NULL for a push of before #586. */
+  sessionId: text("session_id").references(() => session.id, { onDelete: "cascade" }),
 });
 
 /** A question for Nina (a GitHub issue) that has had its push (#69). The row comes before the push: one push only. */
