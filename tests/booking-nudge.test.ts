@@ -5,6 +5,7 @@ import { beforeEach, expect, test, vi } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
 import { type Db, openDb } from "../src/db";
+import { decideBooking, undoDecision } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
 import { checkNudges } from "../src/lib/booking-nudge";
@@ -116,9 +117,9 @@ test("after an undo of a nudged request no second push", async () => {
   const now = at("2026-11-14T14:00");
   const booking = request(now, 11, 3);
   await checkNudges(db, now);
-  // An approval and its undo change only the status: `nudgedAt` stays.
-  db.update(bookings).set({ status: "approved" }).where(eq(bookings.id, booking.id)).run();
-  db.update(bookings).set({ status: "requested" }).where(eq(bookings.id, booking.id)).run();
+  decideBooking(db, booking.id, "approved", null, now + 60_000);
+  expect(undoDecision(db, booking.id, now + 90_000).ok).toBe(true);
+  expect(row(booking.id)?.status).toBe("requested");
   expect(await checkNudges(db, now + HOUR)).toEqual([]);
   expect(push.sent).toHaveLength(1);
 });
