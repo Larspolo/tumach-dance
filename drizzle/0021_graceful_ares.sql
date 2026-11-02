@@ -1,0 +1,1 @@
+ALTER TABLE `push_subscriptions` ADD `session_id` text REFERENCES session(id) ON DELETE cascade;

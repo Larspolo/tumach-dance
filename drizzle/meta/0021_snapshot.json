@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b260d61c-e1b2-4d69-beb4-34f16b2c3499",
+  "id": "6b035e17-fb1f-4895-9f1d-897760b42933",
   "prevId": "7e65be55-4ae0-45e6-be01-8a41339a58cc",
   "tables": {
     "account": {
@@ -182,13 +182,6 @@
         },
         "offer_id": {
           "name": "offer_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "price_cents": {
-          "name": "price_cents",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -887,10 +880,27 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'en'"
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "push_subscriptions_session_id_session_id_fk": {
+          "name": "push_subscriptions_session_id_session_id_fk",
+          "tableFrom": "push_subscriptions",
+          "tableTo": "session",
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
