@@ -19,7 +19,7 @@ test("add, change, hide and list a class", () => {
   const b = addClass(db, { ...salsa, name: { en: "Ballet", nl: "Ballet" }, position: 0 });
   expect(a.visible).toBe(true);
   expect(listClasses(db).map((c) => c.name.en)).toEqual(["Ballet", "Salsa"]);
-  expect(updateClass(db, a.id, { name: { en: "Salsa", sl: "Salsa" } })?.name).toEqual({ en: "Salsa", sl: "Salsa" });
+  expect(updateClass(db, a.id, { name: { en: "Salsa", nl: "Salsa" } })?.name).toEqual({ en: "Salsa", nl: "Salsa" });
   expect(hideClass(db, b.id)?.visible).toBe(false);
   expect(listClasses(db, { visibleOnly: true }).map((c) => c.id)).toEqual([a.id]);
   expect(listClasses(db)).toHaveLength(2);

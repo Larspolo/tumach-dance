@@ -14,7 +14,7 @@ export async function cancelWithLink(form: FormData): Promise<void> {
   const db = getDb();
   const result = cancelByDancer(db, token);
   if (result.ok) {
-    await sendCancelEmail(db, result.booking, "dancer");
+    await sendCancelEmail(db, result.booking, "dancer", result.wasApproved);
     await sendCancelPush(db, result.booking);
   }
   // The page shows the new state: cancelled, or why nothing changed (a second tap, an old link, a started booking).

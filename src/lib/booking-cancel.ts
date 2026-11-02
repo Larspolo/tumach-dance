@@ -46,11 +46,13 @@ export function cancelByDancer(
   db: Db,
   token: string,
   now = Date.now(),
-): { ok: true; booking: Booking } | { ok: false; state: Exclude<CancelLink["state"], "open"> } {
+): { ok: true; booking: Booking; wasApproved: boolean } | { ok: false; state: Exclude<CancelLink["state"], "open"> } {
   const link = cancelLink(db, token, now);
   if (link.state !== "open") return { ok: false, state: link.state };
   const result = cancelBooking(db, link.booking.id);
-  return result.ok ? { ok: true, booking: result.booking } : { ok: false, state: "cancelled" };
+  return result.ok
+    ? { ok: true, booking: result.booking, wasApproved: result.wasApproved }
+    : { ok: false, state: "cancelled" };
 }
 
 /** The address of the cancel page of `booking` on the site `origin` (for example `https://tumach.dance`). */

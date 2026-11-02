@@ -32,54 +32,54 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
-      <PasskeyOffer />
-      <p>
-        <Link className={styles.link} href="/studio/bookings">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/bookings">
           {t("bookings")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/week">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/week">
           {t("week")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/hours">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/hours">
           {t("hours")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/offers">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/offers">
           {t("offers")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/photos">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/photos">
           {t("photos")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/classes">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/classes">
           {t("classes")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/questions">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/questions">
           {questionCount ? t("questionsCount", { count: questionCount }) : t("questions")}
         </Link>
       </p>
-      <p>
-        <a className={styles.link} href={calendarUrl}>
+      <p className={styles.tileRow}>
+        <a className={styles.tile} href={calendarUrl}>
           {t("calendarAdd")}
         </a>
       </p>
       <p className={styles.note}>{t("calendarNote")}</p>
       <RenewCalendarButton />
-      <p>
-        <Link className={styles.link} href="/studio/feedback">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/feedback">
           {t("feedback")}
         </Link>
       </p>
+      <PasskeyOffer />
       <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>

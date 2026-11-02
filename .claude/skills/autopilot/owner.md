@@ -11,6 +11,10 @@ session, or only in the status report. When the auto mode denies an action (for 
 it through another tool: add `needs-human` to that issue and comment the evidence and the action. When the owner did
 it, remove the label.
 
+Before you ask Lars for a log of the server (why an email did not go out, an error of the preview or the live site),
+read the health log of both sites (#460): `git fetch -q origin metrics && git show origin/metrics:site/<YYYY-MM-DD>.jsonl`
+(the `errors` of `/api/health`, with `email: <kind>` for each failed email). Ask only when it does not show the cause.
+
 ## Close an issue
 
 The auto mode can deny a close by the API (#862, #1641). So close with the label `close` (owner, #1740): write the

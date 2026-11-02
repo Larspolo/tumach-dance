@@ -1,4 +1,5 @@
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import styles from "./Home.module.css";
 
 export function Hero() {
@@ -10,10 +11,10 @@ export function Hero() {
         <h1 className={styles.title}>{t("title")}</h1>
         <p className={styles.heroSub}>{t("welcome")}</p>
         <div className={styles.actions}>
-          <a href="#schedule" className={styles.btn}>
+          <Link href="/book" className={styles.btn}>
             {t("primaryAction")}
-          </a>
-          <a href="#about" className={`${styles.btn} ${styles.ghost}`}>
+          </Link>
+          <a href="#schedule" className={`${styles.btn} ${styles.ghost}`}>
             {t("secondaryAction")}
           </a>
         </div>

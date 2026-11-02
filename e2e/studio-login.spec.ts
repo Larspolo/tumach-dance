@@ -2,6 +2,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
+import { watchCspErrors } from "./csp-errors";
+
+watchCspErrors(test);
 
 const EMAIL = "nina@example.test";
 const EMAIL_LOG = "out/e2e/email.log";

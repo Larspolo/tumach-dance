@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-// The first visit to / opens the language of the browser (#41): Dutch, Slovenian, or English for any other language.
+// The first visit to / opens the language of the browser (#41): Dutch, or English for any other language.
 const cases = [
   { locale: "nl-NL", path: "/nl", lang: "nl" },
-  { locale: "sl-SI", path: "/sl", lang: "sl" },
   { locale: "de-DE", path: "/en", lang: "en" },
 ];
 
