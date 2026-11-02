@@ -58,12 +58,4 @@ describe("cancelEmail", () => {
     expect(email.text).toContain("Hoi Ana,");
     expect(email.text).toContain("Nina heeft je boeking geannuleerd: ");
   });
-
-  test("Slovenian booking: the Slovenian subject and text", () => {
-    const { booking, offer } = booked("sl", "2026-10-25");
-    const email = cancelEmail(booking, offer);
-    expect(email.subject).toBe("Tvoja rezervacija pri TUMACH je preklicana");
-    expect(email.text).toContain("Živjo, Ana,");
-    expect(email.text).toContain("Nina je preklicala tvojo rezervacijo: ");
-  });
 });

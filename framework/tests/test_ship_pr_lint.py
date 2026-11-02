@@ -5,7 +5,7 @@ from test_ship_pr import fake_github, repo
 
 def test_a_lint_error_stops_the_push_also_with_tested(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(repo(tmp_path))
-    fake_github(monkeypatch, open_prs=[{"number": 9}])
+    fake_github(monkeypatch, open_prs=[{"number": 9}], lint=False)
     monkeypatch.setattr(ship, "LINT", "echo 'biome: 2 errors' && false")
     monkeypatch.setattr(ship, "push", lambda n: (_ for _ in ()).throw(AssertionError("pushed")))
     assert ship.main(["5", "--tested"]) == 2

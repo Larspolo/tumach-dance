@@ -2,6 +2,7 @@
 
 [pacing]
 max_runs = 16                   # the most runs at one time (framework/tools/usage.py)
+week_guard = false              # true: the 7-day usage limits the runs (week_free, framework/tools/usage.py); false: only the 5-hour window counts (owner, 2026-11-01)
 max_waiting_prs = 10            # flow brake: at this many old agent PRs the pacer starts only 1 repair run
 max_ci_queue = 5                # flow brake: at this many queued CI runs the pacer starts no run
 weights = { haiku = 0.25, deep = 4.0 }   # a lane run in Opus runs (start value); deep: high effort

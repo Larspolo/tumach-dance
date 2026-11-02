@@ -123,3 +123,22 @@
   color: #7c3527;
   text-decoration: underline;
 }
+
+/* A keyboard user sees where the focus is (#347): an outline in the brick red of the site (P2). */
+.choice:focus-visible,
+.chosen:focus-visible,
+.input:focus-visible,
+.button:focus-visible,
+.link:focus-visible {
+  outline: 3px solid #7c3527;
+  outline-offset: 2px;
+}
+
+/* The field that a person does not see (#374): a bot fills it. */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

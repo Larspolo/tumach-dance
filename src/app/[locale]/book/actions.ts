@@ -1,22 +1,40 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { requestBooking } from "@/db/bookings";
 import { sendRequestEmail } from "@/lib/booking-email";
+import { bookingError } from "@/lib/booking-error";
 import { sendRequestPush } from "@/lib/booking-push";
 import { emailSuggestion } from "@/lib/email-typo";
+import { clientAddress, formSpamReason } from "@/lib/contact-spam";
 
-/** The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. */
+/**
+ * The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. A bot
+ * (#374) gets the normal answer and makes no booking; a person over the limit of the address gets `error=limit`.
+ */
 export async function sendRequest(form: FormData): Promise<void> {
   const text = (name: string) => String(form.get(name) ?? "");
   // "Use <suggestion>" sends the fixed address; "My address is right" sends `emailChecked` (#493).
   const fix = text("emailFix");
   if (fix) form.set("email", fix);
   const locale = text("locale");
+  const safeLocale = /^[a-z]{2}$/.test(locale) ? locale : "en";
   const offerId = Number(text("offerId"));
   const start = Number(text("start"));
-  const safeLocale = /^[a-z]{2}$/.test(locale) ? locale : "en";
+  const spam = await formSpamReason("booking", form, clientAddress(await headers()));
+  if (spam) {
+    console.warn(`Booking: no request, spam (${spam})`);
+    if (spam !== "limit") redirect(`/${safeLocale}/book?sent=1`);
+    const back = new URLSearchParams({
+      offer: String(offerId),
+      day: text("day"),
+      start: String(start),
+      error: "limit",
+    });
+    redirect(`/${safeLocale}/book?${back}`);
+  }
   // A likely typo in the email (#493): back to the form with the values and the fix; it holds no time.
   const typo = text("emailChecked") || fix ? null : emailSuggestion(text("email"));
   if (typo) {
@@ -38,6 +56,7 @@ export async function sendRequest(form: FormData): Promise<void> {
     name: text("name"),
     email: text("email"),
     phone: text("phone"),
+    note: text("note"),
     locale,
   });
   if (result.ok) {
@@ -46,7 +65,7 @@ export async function sendRequest(form: FormData): Promise<void> {
     redirect(`/${safeLocale}/book?sent=1`);
   }
   const day = text("day");
-  const back = new URLSearchParams({ offer: String(offerId), day, error: result.reason });
+  const back = new URLSearchParams({ offer: String(offerId), day, error: bookingError(result) });
   if (result.reason === "invalid") back.set("start", String(start));
   redirect(`/${safeLocale}/book?${back}`);
 }

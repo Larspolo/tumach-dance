@@ -1,9 +1,10 @@
 // The timer of the booking emails (#165): `src/instrumentation.ts` starts it at each start of the server, also with
-// no `GITHUB_TOKEN`. It checks now and every 5 minutes: the reminder the day before, the payment reminder (#167), and the removal
+// no `GITHUB_TOKEN`. It checks now and every 5 minutes: the reminder the day before, the payment reminder (#167), the end of an unanswered request (#340), and the removal
 // of the personal data of old bookings (#224).
 import type { Db } from "../db";
 import { forgetOldBookings } from "./booking-privacy";
 import { checkReminders } from "./booking-reminder";
+import { checkUnanswered } from "./booking-unanswered";
 import { checkPaymentReminders } from "./payment-reminder";
 
 export const BOOKING_CHECK_INTERVAL_MS = 5 * 60_000;
@@ -20,6 +21,7 @@ export function startBookingTimer(db: Db): NodeJS.Timeout {
   const check = () =>
     Promise.all([
       checkReminders(db),
+      checkUnanswered(db),
       checkPaymentReminders(db),
       Promise.resolve().then(() => forgetOldBookings(db)),
     ]).then(

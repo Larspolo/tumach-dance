@@ -3,9 +3,9 @@
 import type { Db } from "../db";
 import { addClass, type LocalTexts, listClasses, updateClass } from "../db/classes";
 
-/** The texts of a class; each has a box per language: `name_en`, `name_nl`, `name_sl`. */
+/** The texts of a class; each has a box per language: `name_en`, `name_nl`. */
 export const CLASS_FIELDS = ["name", "text", "forWhom"] as const;
-export const CLASS_LANGUAGES = ["en", "nl", "sl"] as const;
+export const CLASS_LANGUAGES = ["en", "nl"] as const;
 
 /** The texts of one field; undefined when the English text is empty. An empty other language is left out. */
 function textsOf(form: FormData, field: string): LocalTexts | undefined {
@@ -13,7 +13,7 @@ function textsOf(form: FormData, field: string): LocalTexts | undefined {
   const en = value("en");
   if (!en) return undefined;
   const texts: LocalTexts = { en };
-  for (const lang of ["nl", "sl"] as const) if (value(lang)) texts[lang] = value(lang);
+  for (const lang of ["nl"] as const) if (value(lang)) texts[lang] = value(lang);
   return texts;
 }
 

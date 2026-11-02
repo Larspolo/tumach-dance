@@ -5,10 +5,12 @@ import { Classes } from "@/components/home/Classes";
 import { Contact } from "@/components/home/Contact";
 import { Hero } from "@/components/home/Hero";
 import styles from "@/components/home/Home.module.css";
+import { Offers } from "@/components/home/Offers";
 import { Photos } from "@/components/home/Photos";
 import { Schedule } from "@/components/home/Schedule";
 import { getDb } from "@/db";
 import { listClasses, listClassTimes } from "@/db/classes";
+import { listOffers } from "@/db/offers";
 import { listPhotos } from "@/db/photos";
 import { pageMetadata } from "@/lib/page-meta";
 
@@ -26,11 +28,13 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const db = getDb();
   const classes = listClasses(db, { visibleOnly: true });
   const times = listClassTimes(db, { visibleOnly: true });
+  const offers = listOffers(db, { visibleOnly: true });
   const photos = listPhotos(db);
   return (
     <main className={styles.main}>
       <Hero />
       <About />
+      <Offers offers={offers} locale={locale} />
       <Photos photos={photos} />
       <Classes classes={classes} locale={locale} />
       <Schedule classes={classes} times={times} locale={locale} />
