@@ -555,6 +555,13 @@
     "kind": "{type, select, phone {Telefoon} tablet {Tablet} computer {Computer} other {Apparaat}} · {browser, select, safari {Safari} chrome {Chrome} firefox {Firefox} edge {Edge} other {andere browser}}",
     "thisDevice": "Dit apparaat",
     "today": "vandaag",
-    "lastUse": "Laatst gebruikt: {day}"
+    "lastUse": "Laatst gebruikt: {day}",
+    "logOut": "Uitloggen",
+    "confirm": "Dit apparaat uitloggen?",
+    "logOutOthers": "Alle andere apparaten uitloggen",
+    "confirmOthers": "Alle andere apparaten uitloggen?",
+    "yes": "Ja",
+    "no": "Nee",
+    "failed": "Er ging iets mis. Probeer het over een minuut opnieuw."
   }
 }
