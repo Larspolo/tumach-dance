@@ -1,6 +1,8 @@
 /* The booking page (#36): the look of the current site (P2), big tap targets for a phone. */
 .main {
   box-sizing: border-box;
+  /* The full width up to 32rem, also with no form yet: else the boxes grow when the form shows (#550). */
+  width: 100%;
   max-width: 32rem;
   margin: 0 auto;
   /* The top space of `body > main` (globals.css): the fixed nav covers no title (#211). */
