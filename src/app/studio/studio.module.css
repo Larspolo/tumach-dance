@@ -302,3 +302,11 @@
 .pre {
   white-space: pre-wrap;
 }
+
+/* The notifications section when the phone gets no push (#580): a calm frame in the colors of the site, no red box. */
+.alert {
+  padding: 1rem;
+  border: 2px solid #a8503a;
+  border-radius: 0.5rem;
+  background: #fbf8f1;
+}
