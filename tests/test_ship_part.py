@@ -14,4 +14,4 @@ def test_does_not_close_is_refused(tmp_path):
 
 
 def test_part_of_is_accepted():
-    assert ship_pr.closer("Part of #453\nSee `closes #453` in code.\n", 453, part=True) is None
+    assert ship_pr.closer("Part of #453\nSee the epic #446.\n", 453, part=True) is None

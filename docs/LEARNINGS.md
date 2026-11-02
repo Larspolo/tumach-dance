@@ -10,6 +10,7 @@ The agent writes here what it learned the hard way. Each line must save time in 
 
 - Luxon: `DateTime.set({ hour })` takes the first instant of a local time that exists twice (end of summer time), `DateTime.fromISO()` the second. `src/lib/hours.ts` uses `set()`.
 - next-intl ESM imports `next/server` with no extension: Vitest needs `server.deps.inline: ["next-intl"]` (#19).
+- A PR body closes each ticket that it names after close, fix or resolve, also in a code span (PR #473 closed #453). Name another ticket with no such word before it; `ship_pr.py` refuses it (#474).
 
 ## Some tickets
 
