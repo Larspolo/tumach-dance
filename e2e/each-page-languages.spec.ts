@@ -7,7 +7,8 @@ import { STUDIO_SESSION } from "./studio-session";
 
 const LOCALES = { en: "en-GB", nl: "nl-NL" } as const;
 // A sample path for each page with a dynamic segment other than [locale]. A dynamic page not here fails the test.
-const SAMPLES: Record<string, string> = {};
+// The catch-all of an unknown address (#359) shows the not-found page.
+const SAMPLES: Record<string, string> = { "src/app/[locale]/[...rest]/page.tsx": "/no-such-page" };
 
 // A missing text shows as `Group.key`. Match on the group: a key that is missing in all three files is not in en.json.
 const groups = new Set(Object.keys(en));
@@ -30,7 +31,9 @@ async function check(browser: Browser, locale: string, path: string, session: bo
   const page = await context.newPage();
   const errors: string[] = [];
   page.on("console", (m) => {
-    if (m.type() === "error") errors.push(`${m.text()} ${m.location().url}`);
+    // The not-found page (#359) answers 404 by design: the browser logs that status of the page itself.
+    if (m.type() === "error" && !(m.text().includes("status of 404") && new URL(m.location().url).pathname === path))
+      errors.push(`${m.text()} ${m.location().url}`);
   });
   await page.goto(path);
   await page.waitForLoadState("networkidle");

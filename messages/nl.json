@@ -436,5 +436,12 @@
     "cancel": {
       "title": "Een boeking annuleren · TUMACH"
     }
+  },
+  "NotFound": {
+    "pageTitle": "Pagina niet gevonden · TUMACH",
+    "title": "Deze pagina is er niet",
+    "text": "Het adres is misschien oud of heeft een typfout. Adem even uit en ga verder via een van deze pagina's.",
+    "home": "Naar de homepagina",
+    "book": "Boek een les"
   }
 }
