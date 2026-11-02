@@ -39,8 +39,17 @@ export function saveSubscription(
   sub: Subscription,
   now = Date.now(),
   locale: PushLocale = routing.defaultLocale,
+  sessionId: string | null = null,
 ): void {
-  const row = { endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth, createdAt: now, locale };
+  // The login of the device (#586): its end deletes the push (`ON DELETE CASCADE`).
+  const row = {
+    endpoint: sub.endpoint,
+    p256dh: sub.keys.p256dh,
+    auth: sub.keys.auth,
+    createdAt: now,
+    locale,
+    sessionId,
+  };
   db.insert(pushSubscriptions).values(row).onConflictDoUpdate({ target: pushSubscriptions.endpoint, set: row }).run();
 }
 
