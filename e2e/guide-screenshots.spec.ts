@@ -4,10 +4,9 @@ import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
-import sl from "../messages/sl.json" with { type: "json" };
 
 const EMAIL = "nina@example.test";
-const BROWSER_LOCALE = { en: "en-GB", nl: "nl-NL", sl: "sl-SI" };
+const BROWSER_LOCALE = { en: "en-GB", nl: "nl-NL" };
 
 test.skip(!process.env.GUIDE_SCREENSHOTS, "only when GUIDE_SCREENSHOTS=1");
 
@@ -16,7 +15,7 @@ function lastCode(): string {
   return JSON.parse(lines.at(-1) ?? "{}").text?.match(/\b\d{6}\b/)?.[0] ?? "";
 }
 
-for (const [locale, m] of Object.entries({ en, nl, sl })) {
+for (const [locale, m] of Object.entries({ en, nl })) {
   test.describe(locale, () => {
     test.use({ locale: BROWSER_LOCALE[locale as keyof typeof BROWSER_LOCALE] });
     test(`the pictures of the guide in ${locale}`, async ({ page }, testInfo) => {

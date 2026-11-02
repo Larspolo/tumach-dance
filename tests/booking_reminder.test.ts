@@ -139,7 +139,8 @@ test("the booking timer starts once per process, with no GITHUB_TOKEN", async ()
   const { startBookingTimer } = await import("../src/lib/booking-timer");
   const first = startBookingTimer(db);
   expect(startBookingTimer(db)).toBe(first);
-  expect(setInterval).toHaveBeenCalledTimes(1);
+  // Two intervals at the first start (the booking checks and the bounces of #494), none at the second.
+  expect(setInterval).toHaveBeenCalledTimes(2);
 });
 
 test("register() starts the booking timer with no GITHUB_TOKEN", async () => {

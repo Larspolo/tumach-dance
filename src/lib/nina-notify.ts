@@ -6,7 +6,6 @@ import { eq } from "drizzle-orm";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import { notifiedQuestions } from "../db/schema";
 import { withFallback } from "../i18n/fallback";
@@ -16,7 +15,7 @@ import { type PushLocale, sendPush } from "./push";
 export const CHECK_INTERVAL_MS = 5 * 60_000;
 export const QUESTIONS_PATH = "/studio/questions";
 
-const MESSAGES = { en, nl: withFallback(nl, en), sl: withFallback(sl, en) };
+const MESSAGES = { en, nl: withFallback(nl, en) };
 
 function questionPush(locale: PushLocale) {
   const t = createTranslator({ locale, messages: MESSAGES[locale], namespace: "Push" });

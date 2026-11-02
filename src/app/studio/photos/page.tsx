@@ -27,6 +27,11 @@ export default async function PhotosPage() {
       <h1 className={styles.title}>{t("title")}</h1>
       <PhotoUpload />
       {photos.length === 0 && <p className={styles.note}>{t("none")}</p>}
+      {photos.length > 0 && (
+        <a className={styles.link} href="/#photos">
+          {t("onSite")}
+        </a>
+      )}
       <ul className={styles.photos}>
         {photos.map((photo, i) => (
           <li key={photo.id}>

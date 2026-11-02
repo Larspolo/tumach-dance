@@ -3,10 +3,9 @@ import { createTranslator } from "next-intl";
 import { expect, test } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 import { BACKUP_KEEP_NIGHTS } from "../src/lib/backup";
 
-const all = { en, nl, sl };
+const all = { en, nl };
 
 test.each(Object.entries(all))("%s: the backup text shows the number of nights", (locale, messages) => {
   const t = createTranslator({ locale, messages, namespace: "Privacy" });

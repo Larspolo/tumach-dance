@@ -5,6 +5,7 @@ import type { Db } from "../db";
 import { listBookings } from "../db/bookings";
 import type { Locale } from "../i18n/studio";
 import { shownName } from "./booking-name";
+import { studioAddress } from "./studio-email";
 
 const DAY = 24 * 60 * 60_000;
 export const PAST_DAYS = 30;
@@ -26,6 +27,8 @@ export async function calendarFeed(db: Db, locale: Locale, now = Date.now()): Pr
       endInputType: "utc" as const,
       endOutputType: "utc" as const,
       title: `${t(offer.kind, { minutes: offer.minutes })}: ${shownName(booking, tWeek("removed"))}`,
+      // The address of the studio from `STUDIO_ADDRESS` (#345, #540); with no setting, no location.
+      ...(studioAddress() ? { location: studioAddress() } : {}),
       // A removed booking has no phone any more (#224): the event has no description.
       description: booking.forgottenAt === null ? booking.phone : undefined,
     })),

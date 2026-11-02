@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, expect, test, vi } from "vitest";
 import { getDb, openDb } from "../src/db";
 import { healthStatus } from "../src/lib/health";
+import { clearErrors } from "../src/lib/site-errors";
 
 vi.mock("../src/db", async (importOriginal) => {
   const original = await importOriginal<typeof import("../src/db")>();
@@ -33,23 +34,23 @@ afterEach(() => {
 
 test("the health of an open database is ok", () => {
   const db = openDb(":memory:");
-  expect(healthStatus(db)).toEqual({ ok: true, backupAt: BACKUP_AT.toISOString() });
+  expect(healthStatus(db)).toEqual({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true });
 });
 
 test("the health of a closed database is not ok and logs one line", () => {
   const db = openDb(":memory:");
   db.$client.close();
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
-  expect(healthStatus(db)).toEqual({ ok: false, backupAt: BACKUP_AT.toISOString() });
+  expect(healthStatus(db)).toEqual({ ok: false, backupAt: BACKUP_AT.toISOString(), email: true });
   expect(log).toHaveBeenCalledTimes(1);
 });
 
 test("the address answers 200 with ok and no-store", async () => {
   const { GET } = await import("../src/app/api/health/route");
   vi.mocked(getDb).mockReturnValue(openDb(":memory:"));
-  const response = GET();
+  const response = await GET();
   expect(response.status).toBe(200);
-  expect(await response.text()).toBe(JSON.stringify({ ok: true, backupAt: BACKUP_AT.toISOString() }));
+  expect(await response.text()).toBe(JSON.stringify({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true }));
   expect(response.headers.get("Cache-Control")).toBe("no-store");
 });
 
@@ -59,8 +60,14 @@ test("the address answers 503 when there is no database", async () => {
     throw new Error("no database file");
   });
   vi.spyOn(console, "error").mockImplementation(() => {});
-  const response = GET();
+  const response = await GET();
   expect(response.status).toBe(503);
-  expect(await response.text()).toBe('{"ok":false,"backupAt":null}');
+  // The error text goes to the site watch on GitHub (2026-10-31).
+  const body = await response.json();
+  expect(body).toMatchObject({ ok: false, backupAt: null });
+  expect(body.errors).toEqual([
+    expect.objectContaining({ where: "GET /api/health", message: "Error: no database file" }),
+  ]);
   expect(response.headers.get("Cache-Control")).toBe("no-store");
+  clearErrors();
 });

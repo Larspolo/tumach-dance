@@ -43,7 +43,16 @@ export default defineConfig({
       // The login test (#19): a test email, the emails in a file (the code), and a throwaway database in out/.
       env: {
         STUDIO_EMAIL: "nina@example.test",
+        // The accounts of the studio (#451, e2e/accounts.spec.ts).
+        STUDIO_INSTAGRAM: "tumach.test",
+        STUDIO_WHATSAPP: "+31 6 0000 0000",
         EMAIL_TRANSPORT: "log",
+        // All booking tests send from one address with no wait (#374); e2e/book-bots.spec.ts checks the honeypot.
+        BOOKING_MIN_MS: "0",
+        BOOKING_LIMIT_PER_HOUR: "1000",
+        // Many tests book with one email address (#541): no limit of the open requests and of the day.
+        BOOKING_OPEN_PER_EMAIL: "1000",
+        BOOKING_LIMIT_PER_DAY: "1000",
         EMAIL_LOG_FILE: "out/e2e/email.log",
         DATABASE_PATH: "out/e2e/tumach.db",
         BETTER_AUTH_URL: "http://localhost:3100",
