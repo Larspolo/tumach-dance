@@ -6,6 +6,7 @@ You do this once. After it, the server pulls each new preview image by itself (e
 2. In that folder, copy `.env.example` to `.env`.
 3. Fill in `.env`:
    - `STUDIO_EMAIL`: the email of Nina.
+   - `STUDIO_ADDRESS`: the address of the studio, for the approval email (empty: no address).
    - `BETTER_AUTH_URL`: the public address of the preview, for example `https://preview.tumach.dance`.
    - `BETTER_AUTH_SECRET`: the output of `openssl rand -base64 32`.
    - `MAILGUN_API_KEY`, `MAILGUN_DOMAIN` (and `MAILGUN_API_URL` for an EU account).

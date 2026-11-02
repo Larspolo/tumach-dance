@@ -19,7 +19,7 @@ import { type EmailBlock, emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
 import { recordError } from "./site-errors";
-import { studioEmail } from "./studio-email";
+import { studioAddress, studioEmail } from "./studio-email";
 
 const MESSAGES = { en, nl } as const;
 
@@ -79,6 +79,12 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
   return { to: booking.email, subject: t("bookingEmail.subject"), text, ...replyToNina() };
 }
 
+/** The line with the address of the studio and an empty line, or nothing with no `STUDIO_ADDRESS` (#540). */
+function addressLines(t: ReturnType<typeof parts>["t"]): string[] {
+  const address = studioAddress();
+  return address ? [t("bookingEmail.address", { address }), ""] : [];
+}
+
 export type Decision = "approved" | "declined";
 
 /** The email to the dancer after Nina's decision, in the language of the booking (`booking.locale`). */
@@ -89,6 +95,7 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
       ? [
           t("bookingEmail.approvedBody", { offer: offerLabel, when }),
           "",
+          ...addressLines(t),
           // The payment of `book:pay` (#142): the price, and Nina's Tikkie link or that she sends a Tikkie.
           booking.tikkieUrl
             ? t("bookingEmail.payLink", { price: priceText(offer, booking.locale), url: booking.tikkieUrl })
@@ -146,6 +153,9 @@ function approvedHtml(
     greeting: t("bookingEmail.greeting", { name: booking.name }),
     blocks: [
       { text: t("bookingEmail.approvedBody", { offer: offerLabel, when }) },
+      ...addressLines(t)
+        .filter(Boolean)
+        .map((text) => ({ text })),
       booking.tikkieUrl
         ? {
             text: t("bookingEmail.payPrice", { price }),
