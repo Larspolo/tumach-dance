@@ -115,6 +115,7 @@
     "questions": "For Nina",
     "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
     "classes": "Classes",
+    "devices": "Devices",
     "feedback": "Feedback",
     "photos": "Photos",
     "messages": "Messages",
@@ -545,5 +546,14 @@
   "ContactAnswer": {
     "subject": "Your message to TUMACH",
     "quote": "Your message: {message}"
+  },
+  "Devices": {
+    "back": "Back",
+    "title": "Devices",
+    "intro": "You are logged in on these devices. Do you see one that is not yours? Tell Lars.",
+    "kind": "{type, select, phone {Phone} tablet {Tablet} computer {Computer} other {Device}} · {browser, select, safari {Safari} chrome {Chrome} firefox {Firefox} edge {Edge} other {other browser}}",
+    "thisDevice": "This device",
+    "today": "today",
+    "lastUse": "Last used: {day}"
   }
 }

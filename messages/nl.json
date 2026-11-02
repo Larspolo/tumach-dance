@@ -115,6 +115,7 @@
     "questions": "Voor Nina",
     "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
     "classes": "Lessen",
+    "devices": "Apparaten",
     "feedback": "Feedback",
     "photos": "Foto's",
     "messages": "Berichten",
@@ -545,5 +546,14 @@
   "ContactAnswer": {
     "subject": "Je bericht aan TUMACH",
     "quote": "Jouw bericht: {message}"
+  },
+  "Devices": {
+    "back": "Terug",
+    "title": "Apparaten",
+    "intro": "Je bent ingelogd op deze apparaten. Zie je er een die niet van jou is? Zeg het tegen Lars.",
+    "kind": "{type, select, phone {Telefoon} tablet {Tablet} computer {Computer} other {Apparaat}} · {browser, select, safari {Safari} chrome {Chrome} firefox {Firefox} edge {Edge} other {andere browser}}",
+    "thisDevice": "Dit apparaat",
+    "today": "vandaag",
+    "lastUse": "Laatst gebruikt: {day}"
   }
 }
