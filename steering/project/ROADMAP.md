@@ -92,7 +92,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 
 ## 3. Book a lesson or the studio
 
-- [ ] `book:request` A dancer picks a free timeslot and sends a request
+- [x] `book:request` (#32) A dancer picks a free timeslot and sends a request
   - A dancer selects a private lesson or studio rental, sees only the free slots, and sends a request with a name, an email and a phone number (no account)
   - The dancer gets an email in the language of the site that the request is in
   - Two dancers never get the same slot: an open request holds its slot until Nina decides
@@ -104,8 +104,8 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:decide` (#73) Nina approves or declines each request
   - Nina gets a push notification for each new request and approves or declines it with one tap
   - The dancer gets an email with the decision
-- [ ] `book:pay` A payment link after the approval
-  - The approval email has a payment link (iDEAL)
+- [x] `book:pay` (#138) A payment link after the approval
+  - The approval email has the price and a Tikkie (decision #139)
   - Nina sees which bookings are paid; a dancer who did not pay gets one reminder
 - [x] `book:change` (#158) Cancel and remind
   - The dancer cancels with a link in the email, by the cancel rules; Nina cancels from her app
