@@ -327,7 +327,8 @@
     "emailFailMove": "{name} kreeg de e-mail met de nieuwe tijd niet.",
     "emailFailReminder": "{name} kreeg de herinnering niet.",
     "emailFailPayment": "{name} kreeg de betaalherinnering niet.",
-    "emailFailUnanswered": "{name} kreeg de e-mail over de open aanvraag niet."
+    "emailFailUnanswered": "{name} kreeg de e-mail over de open aanvraag niet.",
+    "emailFailBounce": "De e-mail aan {name} kwam terug: het adres bestaat niet. Vraag {name} om het juiste adres."
   },
   "StudioBookings": {
     "title": "Boekingen",

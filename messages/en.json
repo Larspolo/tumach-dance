@@ -327,7 +327,8 @@
     "emailFailMove": "{name} did not get the email with the new time.",
     "emailFailReminder": "{name} did not get the reminder.",
     "emailFailPayment": "{name} did not get the payment reminder.",
-    "emailFailUnanswered": "{name} did not get the email about the open request."
+    "emailFailUnanswered": "{name} did not get the email about the open request.",
+    "emailFailBounce": "The email to {name} bounced: the address does not exist. Ask {name} for the right address."
   },
   "StudioBookings": {
     "title": "Bookings",

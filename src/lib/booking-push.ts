@@ -36,10 +36,22 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
   };
 }
 
-/** The email of the site to a dancer that can fail (#414, `unanswered`: #421). */
-export type EmailKind = "request" | "decision" | "cancel" | "move" | "reminder" | "payment" | "unanswered";
+/**
+ * The email of the site to a dancer that can fail (#414, `unanswered`: #421). `bounce`: Mailgun sent an email, and the
+ * server of the dancer refused it (#494, `email-bounce.ts`).
+ */
+export type EmailKind = "request" | "decision" | "cancel" | "move" | "reminder" | "payment" | "unanswered" | "bounce";
 
-export const EMAIL_KINDS: EmailKind[] = ["request", "decision", "cancel", "move", "reminder", "payment", "unanswered"];
+export const EMAIL_KINDS: EmailKind[] = [
+  "request",
+  "decision",
+  "cancel",
+  "move",
+  "reminder",
+  "payment",
+  "unanswered",
+  "bounce",
+];
 
 const KIND_KEY = {
   request: "emailFailRequest",
@@ -49,6 +61,7 @@ const KIND_KEY = {
   reminder: "emailFailReminder",
   payment: "emailFailPayment",
   unanswered: "emailFailUnanswered",
+  bounce: "emailFailBounce",
 } as const;
 
 /** The push to Nina when an email to a dancer failed (#414): she can tell the dancer by WhatsApp. */
