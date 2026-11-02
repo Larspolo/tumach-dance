@@ -1,12 +1,13 @@
 // The end of a request that Nina did not answer before its start (#340, P11: no new rule). The booking timer
 // (`booking-timer.ts`) checks every 5 minutes. The request ends as `declined`: the cancel page and the privacy removal
 // treat it as a declined request already. One `UPDATE` ends it before the send, so two checks at once send one
-// email. A failed send sets `requested` again: the next check tries again. A request that started more than 1 day ago
-// ends with no email (the first start of this code on the live site must not send old emails).
+// email. A failed send keeps the request ended (no retry, as the reminder emails) and sends Nina one push (#421): she
+// can tell the dancer by WhatsApp. A request that started more than 1 day ago ends with no email (the first start of this code on the live site must not send old emails).
 import { and, eq, isNull, lte } from "drizzle-orm";
 import type { Db } from "../db";
 import { bookings, offers } from "../db/schema";
 import { unansweredEmail } from "./booking-email";
+import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 
 /** A request that started longer ago than this ends with no email. */
@@ -33,8 +34,8 @@ export async function checkUnanswered(db: Db, now = Date.now()): Promise<number[
       try {
         await sendEmail(unansweredEmail(claimed, offer));
       } catch (error) {
-        db.update(bookings).set({ status: "requested" }).where(eq(bookings.id, booking.id)).run();
-        throw error;
+        console.error(`unanswered email of booking ${booking.id} failed`, error);
+        await sendEmailFailPush(db, claimed, "unanswered");
       }
     }
     ended.push(booking.id);

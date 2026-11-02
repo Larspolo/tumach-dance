@@ -80,17 +80,6 @@ test("two checks at once send one email", async () => {
   expect(mail.sent).toHaveLength(1);
 });
 
-test("a failed send keeps the request, and the next check sends it", async () => {
-  const start = at("2026-11-14T18:00");
-  const booking = book(start);
-  mail.fail = true;
-  await expect(checkUnanswered(db, start + MINUTE)).rejects.toThrow("Mailgun down");
-  expect(status(booking.id)).toBe("requested");
-  mail.fail = false;
-  expect(await checkUnanswered(db, start + 6 * MINUTE)).toEqual([booking.id]);
-  expect(mail.sent).toHaveLength(1);
-});
-
 test("an old request ends with no email; other bookings do not change", async () => {
   const now = at("2026-11-14T18:00");
   const old = book(now - 24 * HOUR - MINUTE);
