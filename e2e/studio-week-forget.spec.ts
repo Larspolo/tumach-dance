@@ -24,6 +24,7 @@ test("Nina removes the data of a dancer in two taps", async ({ page }, testInfo)
       .insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 60 }).toMillis(),
         name: "Forget Dancer",

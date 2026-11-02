@@ -32,6 +32,7 @@ test("the WhatsApp link of a booking is a 44 px tap target, reachable by Tab, wi
     db.insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 60 }).toMillis(),
         name,

@@ -31,6 +31,7 @@ function setup() {
       .insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start,
         end: start + HOUR,
         name: "Ana",

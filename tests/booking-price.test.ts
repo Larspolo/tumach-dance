@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { afterEach, expect, test } from "vitest";
 import { MIGRATIONS_FOLDER, openDb } from "../src/db";
-import { requestBooking } from "../src/db/bookings";
+import { moveBooking, requestBooking } from "../src/db/bookings";
 import { runMigrations } from "../src/db/migrate";
 import { addOffer, updateOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
@@ -30,6 +30,8 @@ test("a booking keeps the price of the request after a price change of its offer
   expect(updateOffer(db, offer.id, { priceCents: 7000 })?.priceCents).toBe(7000);
   const row = db.select().from(bookings).where(eq(bookings.id, result.booking.id)).get();
   expect(row?.priceCents).toBe(6000);
+  const moved = moveBooking(db, result.booking.id, START + 3_600_000, { now: NOW });
+  expect(moved).toMatchObject({ ok: true, booking: { priceCents: 6000 } });
 });
 
 test("the migration fills the price of an existing booking from its offer", () => {
