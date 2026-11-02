@@ -436,5 +436,12 @@
     "cancel": {
       "title": "Cancel a booking · TUMACH"
     }
+  },
+  "NotFound": {
+    "pageTitle": "Page not found · TUMACH",
+    "title": "This page is not here",
+    "text": "The address may be old or have a typing error. Take a breath and go on from one of these pages.",
+    "home": "To the home page",
+    "book": "Book a lesson"
   }
 }

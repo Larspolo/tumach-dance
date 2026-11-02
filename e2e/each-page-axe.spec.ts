@@ -7,7 +7,8 @@ import { STUDIO_SESSION } from "./studio-session";
 
 const LOCALES = { en: "en-GB", nl: "nl-NL" } as const;
 // A sample path for each page with a dynamic segment other than [locale]. A dynamic page not here fails the test.
-const SAMPLES: Record<string, string> = {};
+// The catch-all of an unknown address (#359) shows the not-found page.
+const SAMPLES: Record<string, string> = { "src/app/[locale]/[...rest]/page.tsx": "/no-such-page" };
 
 function pagePaths(): { file: string; path: string }[] {
   return (readdirSync("src/app", { recursive: true }) as string[])
