@@ -55,6 +55,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:secure` (#489) The site and the studio app keep out the common attacks of the web
   - No other site can show a page of the site or of the studio app in a frame; the browser uses only HTTPS
   - The browser runs only the scripts of the site, and the pages stay as fast as before
+- [ ] `site:closed` Dancers see when a class does not take place or the studio is closed
+  - The schedule of the home page names each date in the next 4 weeks on which a class does not take place (a holiday), with no extra step by Nina for a period that she already closed in her hours
+  - The home page shows a closed period of the studio from 4 weeks before it until its end, in the language of the page
 
 ## 2. Nina's studio app
 
