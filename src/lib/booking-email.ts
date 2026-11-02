@@ -15,7 +15,7 @@ import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
-import { emailHtml } from "./email-html";
+import { type EmailBlock, emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
 import { studioEmail } from "./studio-email";
@@ -262,6 +262,127 @@ export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
   return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text, ...replyToNina() };
 }
 
+type Translator = ReturnType<typeof parts>["t"];
+
+/** The language of the HTML part and of the links: `locale`, English for another one. */
+function langOf(locale: string): keyof typeof MESSAGES {
+  return locale in MESSAGES ? (locale as keyof typeof MESSAGES) : "en";
+}
+
+/** `email` with the HTML part (#440): the greeting, the `blocks` (a button under a paragraph) and the sign-off. */
+async function withHtml(
+  email: Email,
+  ctx: { lang: string; name: string; t: Translator },
+  blocks: EmailBlock[],
+): Promise<Email> {
+  const html = await emailHtml({
+    lang: ctx.lang,
+    greeting: ctx.t("bookingEmail.greeting", { name: ctx.name }),
+    blocks,
+    sign: ctx.t("bookingEmail.sign"),
+  });
+  return { ...email, html };
+}
+
+/** The block with the cancel button (#440), the same text as the cancel link of the plain part. */
+function cancelBlock(t: Translator, url: string): EmailBlock {
+  return { text: t("bookingEmail.cancelText"), button: { label: t("bookingEmail.cancelButton"), url } };
+}
+
+/** The booking page of `locale`: the button to pick another time. */
+const bookUrl = (origin: string, locale: string) => `${origin}/${locale}/book`;
+
+/** `requestEmail()` with the HTML part (#440): a button to cancel. */
+export async function requestEmailHtml(
+  booking: Booking,
+  offer: Offer,
+  locale: string,
+  origin = siteOrigin(),
+): Promise<Email> {
+  const email = requestEmail(booking, offer, locale, origin);
+  const { t, offerLabel, when } = parts(booking, offer, locale);
+  return withHtml(email, { lang: langOf(locale), name: booking.name, t }, [
+    { text: t("bookingEmail.body", { offer: offerLabel, when }) },
+    { text: t("bookingEmail.soon") },
+    cancelBlock(t, cancelUrl(origin, booking)),
+  ]);
+}
+
+/** `cancelEmail()` with the HTML part (#440): a button to pick another time. */
+export async function cancelEmailHtml(
+  booking: Booking,
+  offer: Offer,
+  by: CancelledBy = "nina",
+  wasApproved = false,
+  origin = siteOrigin(),
+): Promise<Email> {
+  const email = cancelEmail(booking, offer, by, wasApproved);
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const lang = langOf(booking.locale);
+  return withHtml(email, { lang, name: booking.name, t }, [
+    {
+      text: t(by === "dancer" ? "bookingEmail.cancelledByYou" : "bookingEmail.cancelled", { offer: offerLabel, when }),
+      button: { label: t("bookingEmail.bookButton"), url: bookUrl(origin, booking.locale) },
+    },
+  ]);
+}
+
+/** `moveEmail()` with the HTML part (#440): a button to cancel. */
+export async function moveEmailHtml(
+  booking: Booking,
+  offer: Offer,
+  from: { start: number },
+  origin = siteOrigin(),
+): Promise<Email> {
+  const email = moveEmail(booking, offer, from, origin);
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const lang = langOf(booking.locale);
+  return withHtml(email, { lang, name: booking.name, t }, [
+    { text: t("bookingEmail.move", { offer: offerLabel, from: whenText(lang, from.start), when }) },
+    cancelBlock(t, cancelUrl(origin, booking)),
+  ]);
+}
+
+/** `unansweredEmail()` with the HTML part (#440): a button to pick another time. */
+export async function unansweredEmailHtml(booking: Booking, offer: Offer, origin = siteOrigin()): Promise<Email> {
+  const email = unansweredEmail(booking, offer, origin);
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
+    { text: t("bookingEmail.unansweredBody", { offer: offerLabel, when }) },
+    {
+      text: t("bookingEmail.declinedOther"),
+      button: { label: t("bookingEmail.bookButton"), url: bookUrl(origin, booking.locale) },
+    },
+  ]);
+}
+
+/** `reminderEmail()` with the HTML part (#440): a button to cancel. */
+export async function reminderEmailHtml(booking: Booking, offer: Offer, origin = siteOrigin()): Promise<Email> {
+  const email = reminderEmail(booking, offer);
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
+    { text: t("bookingEmail.reminder", { offer: offerLabel, when }) },
+    cancelBlock(t, cancelUrl(origin, booking)),
+    { text: t("bookingEmail.approvedSee") },
+  ]);
+}
+
+/** `paymentReminderEmail()` with the HTML part (#440): a pay button when the booking has a Tikkie link. */
+export async function paymentReminderEmailHtml(booking: Booking, offer: Offer): Promise<Email> {
+  const email = paymentReminderEmail(booking, offer);
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const price = priceText(offer, booking.locale);
+  return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
+    { text: t("bookingEmail.payReminder", { offer: offerLabel, when }) },
+    booking.tikkieUrl
+      ? {
+          text: t("bookingEmail.payPrice", { price }),
+          button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
+        }
+      : { text: t("bookingEmail.payLater", { price }) },
+  ]);
+}
+
 /**
  * Send the request email after `requestBooking()` gave `ok`. A failed email does not undo the booking: the error is
  * logged, and the dancer's request is still stored for Nina.
@@ -270,7 +391,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(requestEmail(booking, offer, locale));
+    await sendEmail(await requestEmailHtml(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-email] the email of booking ${booking.id} failed:`, error);
     await sendEmailFailPush(db, booking, "request");
@@ -305,7 +426,7 @@ export async function sendCancelEmail(
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(cancelEmail(booking, offer, by, wasApproved));
+    await sendEmail(await cancelEmailHtml(booking, offer, by, wasApproved));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
     await sendEmailFailPush(db, booking, "cancel");
@@ -320,7 +441,7 @@ export async function sendMoveEmail(db: Db, booking: Booking, from: { start: num
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(moveEmail(booking, offer, from));
+    await sendEmail(await moveEmailHtml(booking, offer, from));
   } catch (error) {
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
     await sendEmailFailPush(db, booking, "move");
