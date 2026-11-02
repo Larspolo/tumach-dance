@@ -1,4 +1,4 @@
-// The footer and the contact section link the accounts of the studio (#451); `playwright.config.ts` sets them.
+// The footer and the contact section link the accounts of the studio (#451), and the structured data has them (#452); `playwright.config.ts` sets them.
 import { expect, test } from "@playwright/test";
 
 const INSTAGRAM = "https://www.instagram.com/tumach.test/";
@@ -22,6 +22,16 @@ for (const [locale, message] of [
       await footer.scrollIntoViewIfNeeded();
       await page.screenshot({ path: testInfo.outputPath(`footer-${testInfo.project.name}.png`) });
     }
+  });
+}
+
+for (const locale of ["en", "nl"] as const) {
+  test(`the home page has the structured data with the accounts (${locale})`, async ({ page }) => {
+    await page.goto(`/${locale}`);
+    const text = await page.locator('script[type="application/ld+json"]').first().textContent();
+    const data = JSON.parse(text ?? "{}");
+    expect(data["@type"]).toBe("DanceSchool");
+    expect(data.sameAs).toEqual(expect.arrayContaining([INSTAGRAM, WHATSAPP]));
   });
 }
 
