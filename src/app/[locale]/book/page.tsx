@@ -65,6 +65,15 @@ export default async function BookPage({
   const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
   const error = BOOKING_ERRORS.find((e) => e === search.error);
+  // A dancer with no free time or no offer can ask Nina instead (#477).
+  const contact = (
+    <p className={styles.note}>
+      {t("contactText")}{" "}
+      <a className={styles.link} href={`/${locale}#contact`}>
+        {t("contact")}
+      </a>
+    </p>
+  );
 
   return (
     <main className={styles.main}>
@@ -77,7 +86,12 @@ export default async function BookPage({
 
       <section className={styles.step}>
         <h2 className={styles.heading}>{t("offer")}</h2>
-        {offers.length === 0 && <p className={styles.note}>{t("noOffers")}</p>}
+        {offers.length === 0 && (
+          <>
+            <p className={styles.note}>{t("noOffers")}</p>
+            {contact}
+          </>
+        )}
         <div className={styles.choices}>
           {offers.map((o) => (
             <a
@@ -95,7 +109,12 @@ export default async function BookPage({
       {offer && (
         <section className={styles.step}>
           <h2 className={styles.heading}>{t("day")}</h2>
-          {days.every((d) => d.slots.length === 0) && <p className={styles.note}>{t("noTimes")}</p>}
+          {days.every((d) => d.slots.length === 0) && (
+            <>
+              <p className={styles.note}>{t("noTimes")}</p>
+              {contact}
+            </>
+          )}
           <div className={styles.days}>
             {days.map((d) =>
               d.slots.length === 0 ? (
