@@ -306,7 +306,14 @@
   "bookingPush": {
     "title": "New booking request",
     "body": "{name}: {offer}, {when}",
-    "cancelTitle": "Booking cancelled"
+    "cancelTitle": "Booking cancelled",
+    "emailFailTitle": "Email not sent",
+    "emailFailRequest": "{name} did not get the email about the request.",
+    "emailFailDecision": "{name} did not get the email with your answer.",
+    "emailFailCancel": "{name} did not get the email about the cancellation.",
+    "emailFailReminder": "{name} did not get the reminder.",
+    "emailFailPayment": "{name} did not get the payment reminder.",
+    "emailFailUnanswered": "{name} did not get the email about the open request."
   },
   "StudioBookings": {
     "title": "Bookings",

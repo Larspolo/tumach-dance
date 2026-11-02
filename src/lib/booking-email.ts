@@ -13,6 +13,7 @@ import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
+import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
@@ -192,6 +193,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
     await sendEmail(requestEmail(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-email] the email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "request");
   }
 }
 
@@ -206,6 +208,7 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
     await sendEmail(decisionEmail(booking, offer, decision));
   } catch (error) {
     console.error(`[booking-email] the decision email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "decision");
   }
 }
 
@@ -225,5 +228,6 @@ export async function sendCancelEmail(
     await sendEmail(cancelEmail(booking, offer, by, wasApproved));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "cancel");
   }
 }

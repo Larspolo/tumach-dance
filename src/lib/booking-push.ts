@@ -36,6 +36,31 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
   };
 }
 
+/** The email of the site to a dancer that can fail (#414). `unanswered` has no sender yet. */
+export type EmailKind = "request" | "decision" | "cancel" | "reminder" | "payment" | "unanswered";
+
+export const EMAIL_KINDS: EmailKind[] = ["request", "decision", "cancel", "reminder", "payment", "unanswered"];
+
+const KIND_KEY = {
+  request: "emailFailRequest",
+  decision: "emailFailDecision",
+  cancel: "emailFailCancel",
+  reminder: "emailFailReminder",
+  payment: "emailFailPayment",
+  unanswered: "emailFailUnanswered",
+} as const;
+
+/** The push to Nina when an email to a dancer failed (#414): she can tell the dancer by WhatsApp. */
+export function emailFailPush(booking: Booking, kind: EmailKind, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  const day = DateTime.fromMillis(booking.start, { zone: TIME_ZONE }).toISODate() ?? undefined;
+  return {
+    title: t("bookingPush.emailFailTitle"),
+    body: t(`bookingPush.${KIND_KEY[kind]}`, { name: booking.name }),
+    url: `/studio/week?start=${weekOf(day).start}`,
+  };
+}
+
 function pushBody(booking: Booking, offer: Offer, locale: PushLocale): string {
   const t = createTranslator({ locale, messages: MESSAGES[locale] });
   const offerLabel =
@@ -67,5 +92,15 @@ export async function sendCancelPush(db: Db, booking: Booking): Promise<void> {
     await sendPush(db, (locale) => cancelPush(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-push] the cancel push of booking ${booking.id} failed:`, error);
+  }
+}
+
+/** Send the push after an email to a dancer failed. No push for a forgotten booking; a failed push is logged. */
+export async function sendEmailFailPush(db: Db, booking: Booking, kind: EmailKind): Promise<void> {
+  if (booking.forgottenAt) return;
+  try {
+    await sendPush(db, (locale) => emailFailPush(booking, kind, locale));
+  } catch (error) {
+    console.error(`[booking-push] the email fail push of booking ${booking.id} failed:`, error);
   }
 }
