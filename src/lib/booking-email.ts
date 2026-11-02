@@ -109,8 +109,8 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
 }
 
 /**
- * `decisionEmail()` with the HTML part of the approval (#439): the same lines, with a button to pay and a button to
- * cancel. Async: React Email renders async. The declined email stays plain text.
+ * `decisionEmail()` with the HTML part: the approval (#439) has a button to pay and a button to cancel; the declined
+ * email (#466) has a button to book another time. Async: React Email renders async.
  */
 export async function decisionEmailHtml(
   booking: Booking,
@@ -119,8 +119,16 @@ export async function decisionEmailHtml(
   origin = siteOrigin(),
 ): Promise<Email> {
   const email = decisionEmail(booking, offer, decision, origin);
-  if (decision !== "approved") return email;
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  if (decision !== "approved") {
+    return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
+      { text: t("bookingEmail.declinedBody", { offer: offerLabel, when }) },
+      {
+        text: t("bookingEmail.declinedOther"),
+        button: { label: t("bookingEmail.bookButton"), url: bookUrl(origin, booking.locale) },
+      },
+    ]);
+  }
   return { ...email, html: await approvedHtml(booking, offer, t, offerLabel, when, origin) };
 }
 
