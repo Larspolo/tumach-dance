@@ -11,12 +11,12 @@ import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
-import { studioEmail } from "./auth";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { type Email, sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
+import { studioEmail } from "./studio-email";
 
 const MESSAGES = { en, nl } as const;
 
