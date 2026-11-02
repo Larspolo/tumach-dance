@@ -1,3 +1,5 @@
+import { TURNSTILE_ORIGIN } from "./turnstile";
+
 // The Content-Security-Policy of the site (#491): the browser runs only the scripts of the site.
 // `src/proxy.ts` makes a new nonce for each page request; Next.js puts it on its own scripts (the pages are dynamic,
 // so a nonce costs no static page). `next.config.ts` sends the policy with no nonce on the other responses.
@@ -23,7 +25,9 @@ export function contentSecurityPolicy(nonce?: string, dev = false): string {
     "font-src 'self'",
     // The service worker of the push (`public/sw.js`): 'strict-dynamic' ignores 'self' in script-src.
     "worker-src 'self'",
-    "connect-src 'self'",
+    // Cloudflare Turnstile on the public forms (#564): its script loads from the nonced code, its widget is a frame.
+    `frame-src ${TURNSTILE_ORIGIN}`,
+    `connect-src 'self' ${TURNSTILE_ORIGIN}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

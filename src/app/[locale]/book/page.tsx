@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Turnstile } from "@/components/Turnstile";
 import { getDb } from "@/db";
 import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
@@ -12,6 +13,7 @@ import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
 import { offerLabel } from "@/lib/offer-label";
 import { pageMetadata } from "@/lib/page-meta";
+import { turnstileSiteKey } from "@/lib/turnstile";
 import { sendRequest } from "./actions";
 import styles from "./book.module.css";
 
@@ -252,6 +254,7 @@ export default async function BookPage({
               />
               <small id="note-hint">{t("noteHint", { max: NOTE_MAX })}</small>
             </label>
+            <Turnstile siteKey={turnstileSiteKey()} language={locale} />
             <button className={styles.button} type="submit">
               {t("send")}
             </button>

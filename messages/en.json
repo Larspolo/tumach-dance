@@ -289,6 +289,7 @@
     "limit": "Too many requests from this connection. Try again in an hour, or send Nina a message.",
     "limitOpen": "You already have several requests that wait for Nina's answer. Wait for her answer first, or send Nina a message.",
     "limitDay": "The booking page takes no more requests today. Try again tomorrow, or send Nina a message.",
+    "check": "The check for bots did not work. Wait a few seconds and send the request again.",
     "notSlot": "This time is not free. Choose another time.",
     "privacy": "How we keep your data",
     "emailTypo": "Did you mean {email}?",

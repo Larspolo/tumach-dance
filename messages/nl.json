@@ -289,6 +289,7 @@
     "limit": "Te veel aanvragen vanaf deze verbinding. Probeer het over een uur opnieuw, of stuur Nina een bericht.",
     "limitOpen": "Je hebt al een paar aanvragen die op het antwoord van Nina wachten. Wacht eerst op haar antwoord, of stuur Nina een bericht.",
     "limitDay": "De boekingspagina neemt vandaag geen aanvragen meer aan. Probeer het morgen opnieuw, of stuur Nina een bericht.",
+    "check": "De controle op bots is niet gelukt. Wacht een paar seconden en verstuur de aanvraag opnieuw.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd.",
     "privacy": "Hoe we je gegevens bewaren",
     "emailTypo": "Bedoel je {email}?",
