@@ -55,7 +55,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:secure` (#489) The site and the studio app keep out the common attacks of the web
   - No other site can show a page of the site or of the studio app in a frame; the browser uses only HTTPS
   - The browser runs only the scripts of the site, and the pages stay as fast as before
-- [ ] `site:closed` Dancers see when a class does not take place or the studio is closed
+- [x] `site:closed` (#529) Dancers see when a class does not take place or the studio is closed
   - The schedule of the home page names each date in the next 4 weeks on which a class does not take place (a holiday), with no extra step by Nina for a period that she already closed in her hours
   - The home page shows a closed period of the studio from 4 weeks before it until its end, in the language of the page
 
@@ -107,7 +107,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:pay` A payment link after the approval
   - The approval email has a payment link (iDEAL)
   - Nina sees which bookings are paid; a dancer who did not pay gets one reminder
-- [ ] `book:change` Cancel and remind
+- [x] `book:change` (#158) Cancel and remind
   - The dancer cancels with a link in the email, by the cancel rules; Nina cancels from her app
   - The dancer gets a reminder the day before, with a calendar file
 - [ ] `book:calendar` The lesson is in the calendar of the dancer from the approval on
