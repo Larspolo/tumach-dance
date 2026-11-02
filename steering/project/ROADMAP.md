@@ -122,7 +122,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A privacy page says what the studio keeps and for how long; old data goes away
 - [x] `book:forget` (#358) Nina removes the data of a dancer who asks for it
   - From one booking in her app, Nina removes the name, email and phone of each booking of that dancer in two taps; a coming booking is cancelled first, with the usual email
-- [ ] `book:look` The emails to a dancer have the look of the site
+- [x] `book:look` (#437) The emails to a dancer have the look of the site
   - Each email to a dancer has the colors, the fonts and the name of the studio as on the site, with a button for each link (pay, cancel, book again), and still reads well as plain text
   - The emails read well in Gmail, Apple Mail and Outlook on a phone, also in dark mode
 - [x] `book:none` (#476) A dancer who finds no free time knows what to do
