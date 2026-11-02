@@ -441,6 +441,11 @@
       "title": "Een boeking annuleren · TUMACH"
     }
   },
+  "StudioNotFound": {
+    "title": "Pagina niet gevonden",
+    "text": "Deze pagina van de studio-app bestaat niet.",
+    "back": "Terug naar de studio-app"
+  },
   "NotFound": {
     "pageTitle": "Pagina niet gevonden · TUMACH",
     "title": "Deze pagina is er niet",
