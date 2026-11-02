@@ -16,10 +16,17 @@ import "../globals.css";
 const fraunces = Fraunces({
   subsets: ["latin"],
   // No `opsz` axis (owner, option C of #469): the font files are about half as large, so the first text comes sooner.
-  // No preload: a page gets only the faces that it shows (the book page has no italic: 82 KB less, #453).
-  preload: false,
-  style: ["normal", "italic"],
+  // Preload of the normal face only: the first text (the `h1` of the home page) needs it before its first paint (#453).
+  style: ["normal"],
   variable: "--font-fraunces",
+});
+// The italic face in its own instance with no preload: a page gets it only when it shows an italic text (the book page
+// has none). The italic rules of the CSS name `--font-fraunces-italic`.
+const frauncesItalic = Fraunces({
+  subsets: ["latin"],
+  preload: false,
+  style: ["italic"],
+  variable: "--font-fraunces-italic",
 });
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -45,7 +52,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = pickMessages(await getMessages());
   return (
-    <html lang={locale} className={`${fraunces.variable} ${spaceMono.variable}`}>
+    <html lang={locale} className={`${fraunces.variable} ${frauncesItalic.variable} ${spaceMono.variable}`}>
       <body>
         <TestBanner />
         <NextIntlClientProvider messages={messages}>
