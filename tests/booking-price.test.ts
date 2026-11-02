@@ -41,7 +41,7 @@ test("the migration fills the price of an existing booking from its offer", () =
   cpSync(MIGRATIONS_FOLDER, folder, { recursive: true });
   const journalPath = join(folder, "meta", "_journal.json");
   const journal = JSON.parse(readFileSync(journalPath, "utf8"));
-  const index = journal.entries.findIndex((e: { tag: string }) => e.tag === "0021_ambitious_the_fallen");
+  const index = journal.entries.findIndex((e: { tag: string }) => e.tag === "0022_lovely_wrecker");
   expect(index).toBeGreaterThan(0);
   writeFileSync(journalPath, JSON.stringify({ ...journal, entries: journal.entries.slice(0, index) }));
   const sqlite = new Database(join(dir, "db.sqlite"));
