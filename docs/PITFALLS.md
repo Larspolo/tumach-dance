@@ -26,6 +26,8 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - Next.js 16 `src/proxy.ts` cuts a request body at 10 MB (`experimental.proxyClientMaxBodySize`), also when `serverActions.bodySizeLimit` is larger: set both (`next.config.ts`, #173).
 - Lighthouse mobile (simulated) counts each request that ends before the first paint, and on a local server the first paint comes after the scripts: the LCP of a page follows its bytes of fonts and JavaScript. `subsets` of `next/font` is only the preload; `NextIntlClientProvider` with no `messages` puts all the texts in each page (#453).
 - `pkill -f "next start"` misses the server: its process is `next-server`. A server that still runs on the port answers with the old build (#453).
+- The LCP median of 3 Lighthouse runs of one build moves up to 0.5 s from run to run: compare a change with `--runs 5` of main and of the branch, one after the other (#491).
+- The CSP nonce reaches the page only in the request headers: `NextResponse.next({ request: { headers } })`. A plain `NextResponse.next()` (`studio-guard.ts`) drops it, and the scripts of the page do not run. The CSP of `src/proxy.ts` replaces the one of `next.config.ts` (one header, #491).
 
 ## Photos
 

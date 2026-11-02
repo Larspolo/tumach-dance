@@ -6,6 +6,9 @@ import { type Db, openDb } from "../src/db";
 import { requestBooking } from "../src/db/bookings";
 import { addOffer, hideOffer, type Offer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
+import { watchCspErrors } from "./csp-errors";
+
+watchCspErrors(test);
 
 // The database of the test server (`playwright.config.ts`). Unusual prices find the offers of this test.
 let db: Db;
