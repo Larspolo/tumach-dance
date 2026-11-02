@@ -44,6 +44,11 @@ export function saveSubscription(
   db.insert(pushSubscriptions).values(row).onConflictDoUpdate({ target: pushSubscriptions.endpoint, set: row }).run();
 }
 
+/** True when the server has the push of this device (#570): the studio app makes a new push when not. */
+export function hasSubscription(db: Db, endpoint: string): boolean {
+  return db.select().from(pushSubscriptions).where(eq(pushSubscriptions.endpoint, endpoint)).get() !== undefined;
+}
+
 /**
  * Send to each device. A function gives the message in the language of each device (a timer has no request, #69).
  * A device that answers 404 or 410 is gone: delete it. Gives the count of sent pushes.

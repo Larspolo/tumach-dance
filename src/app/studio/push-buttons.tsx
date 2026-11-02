@@ -25,6 +25,30 @@ function isInstalled(): boolean {
   );
 }
 
+/** Make the push of this device again when the server does not know it (#570). */
+async function repair(
+  vapidKey: string | undefined,
+  registration: ServiceWorkerRegistration,
+  subscription: PushSubscription,
+) {
+  const check = await fetch(`/api/studio/push/subscribe?endpoint=${encodeURIComponent(subscription.endpoint)}`);
+  if (!check.ok) throw new Error(`check ${check.status}`);
+  if (((await check.json()) as { known?: boolean }).known) return;
+  if (!vapidKey) throw new Error("no VAPID key");
+  // A dead endpoint is never posted again: a new subscription replaces it.
+  await subscription.unsubscribe();
+  const fresh = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: keyBytes(vapidKey),
+  });
+  const response = await fetch("/api/studio/push/subscribe", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(fresh),
+  });
+  if (!response.ok) throw new Error(`subscribe ${response.status}`);
+}
+
 // Push notifications of the studio app (#25): turn them on (the browser asks only after a tap) and send a test.
 export function PushButtons({ vapidKey }: { vapidKey?: string }) {
   const t = useTranslations("Push");
@@ -42,9 +66,16 @@ export function PushButtons({ vapidKey }: { vapidKey?: string }) {
       if (Notification.permission === "denied") return setState("denied");
       const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/studio" });
       const subscription = await registration.pushManager.getSubscription();
-      setState(subscription && Notification.permission === "granted" ? "on" : "off");
+      if (!subscription || Notification.permission !== "granted") return setState("off");
+      // The server can lose the push of this device (a 404 or 410, a new database, #570): make a new one with no prompt.
+      try {
+        await repair(vapidKey, registration, subscription);
+        setState("on");
+      } catch {
+        setState("off");
+      }
     })().catch(() => setState("unsupported"));
-  }, []);
+  }, [vapidKey]);
 
   async function turnOn() {
     setBusy(true);
