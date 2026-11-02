@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { contactStamp } from "@/lib/contact-spam";
 import { studioAccounts } from "@/lib/studio-accounts";
+import { turnstileSiteKey } from "@/lib/turnstile";
 import { ContactForm } from "./ContactForm";
 import styles from "./Home.module.css";
 import { SectionHead } from "./SectionHead";
@@ -13,7 +14,7 @@ export function Contact() {
     <section id="contact" aria-labelledby="contact-title" className={`${styles.section} ${styles.contact}`}>
       <SectionHead id="contact" title={t("title")} label={t("label")} />
       <div className={styles.twoCols}>
-        <ContactForm stamp={contactStamp()} />
+        <ContactForm stamp={contactStamp()} siteKey={turnstileSiteKey()} />
         <div className={styles.meta}>
           <div className={styles.line}>
             <span className={styles.lbl}>{t("placeLabel")}</span>

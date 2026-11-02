@@ -5,6 +5,7 @@ import { getDb } from "@/db";
 import { type Contact, type ContactErrors, parseContact, sendContactMessage } from "@/lib/contact";
 import { clientAddress, spamReason } from "@/lib/contact-spam";
 import { recordError } from "@/lib/site-errors";
+import { turnstileReason } from "@/lib/turnstile";
 
 /** `values`: the text of the visitor, kept in the form after an error (#152). */
 export type ContactState = {
@@ -27,7 +28,9 @@ export async function sendContact(_prev: ContactState, form: FormData): Promise<
   };
   const parsed = parseContact(form);
   if (!parsed.ok) return { status: "invalid", errors: parsed.errors, values };
-  const spam = await spamReason(form, clientAddress(await headers()));
+  const address = clientAddress(await headers());
+  // Turnstile (#564) after the honeypot: a failed check gets the visible "not sent" text, so a person can try again.
+  const spam = (await spamReason(form, address)) ?? (await turnstileReason(form, address));
   if (spam) {
     console.warn(`Contact: no email, spam (${spam})`);
     if (spam === "honeypot") return { status: "sent", errors: {}, values: EMPTY };
