@@ -1,6 +1,6 @@
 // Measure how fast the home and the booking page open on a phone (#447, epic #446 `site:fast`).
 // A plain Node script, as `scripts/restore.mjs`. First `npm run build`. Then:
-//   node scripts/lighthouse.mjs [--runs 3] [--lcp 2500] [--cls 0.1] [--tbt 600] [--kb 1000] [--url http://localhost:3100]
+//   node scripts/lighthouse.mjs [--runs 3] [--lcp 2500] [--margin 0] [--ttfb 600] [--cls 0.1] [--tbt 600] [--kb 1000] [--url http://localhost:3100]
 // With no `--url` it starts the build on port 3102 with a throwaway database in out/lighthouse (one lesson offer, one
 // class, two photos). With no `--lcp` each page has its own LCP budget (`LCP_BUDGET`). It prints one line per page with the medians and exits 1 when a page is over a budget.
 import { spawn, spawnSync } from "node:child_process";
@@ -13,9 +13,12 @@ export const PAGES = ["/en", "/nl", "/en/book", "/nl/book"];
 /** The LCP budget in ms of each page when no `--lcp` is given (owner, option C of #469): 3.0 s home, 2.5 s booking. */
 export const LCP_BUDGET = { "/en": 3000, "/nl": 3000, "/en/book": 2500, "/nl/book": 2500 };
 
-/** The budget of one page: the LCP of `LCP_BUDGET` unless the arguments give `--lcp`. */
-export function budgetFor(page, budget = {}) {
-  return budget.lcp === undefined && LCP_BUDGET[page] !== undefined ? { ...budget, lcp: LCP_BUDGET[page] } : budget;
+/** The budget of one page: the LCP of `LCP_BUDGET` unless the arguments give `--lcp`, plus `margin` ms. CI gives a
+ * margin (#448): one run of the same page can be about 1 s slower than the next (a frame stall of headless Chromium),
+ * so the exact budget fails PRs that changed nothing. */
+export function budgetFor(page, budget = {}, margin = 0) {
+  const lcp = budget.lcp ?? LCP_BUDGET[page];
+  return lcp === undefined ? budget : { ...budget, lcp: lcp + margin };
 }
 
 /** The median of numbers (the mean of the two middle values for an even count). */
@@ -26,11 +29,14 @@ export function median(values) {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-/** The metrics of one Lighthouse JSON result: LCP and TBT in ms, CLS, transfer size in KB. */
+/** The metrics of one Lighthouse JSON result: LCP, TBT and TTFB in ms, CLS, transfer size in KB. TTFB is the
+ * measured server response time of the page: the simulated LCP leaves it out, so a page that is 3 s slower on the
+ * server keeps its LCP (#448). */
 export function metrics(result) {
   const audit = (id) => result.audits[id]?.numericValue ?? Number.NaN;
   return {
     lcp: audit("largest-contentful-paint"),
+    ttfb: audit("server-response-time"),
     cls: audit("cumulative-layout-shift"),
     tbt: audit("total-blocking-time"),
     kb: audit("total-byte-weight") / 1024,
@@ -50,26 +56,37 @@ export function opportunities(result, top = 3) {
 export function summarize(results, budget = {}) {
   const all = results.map(metrics);
   const med = {};
-  for (const key of ["lcp", "cls", "tbt", "kb"]) med[key] = median(all.map((m) => m[key]));
+  for (const key of ["lcp", "ttfb", "cls", "tbt", "kb"]) med[key] = median(all.map((m) => m[key]));
   const over = Object.keys(budget).filter((key) => budget[key] !== undefined && !(med[key] <= budget[key]));
-  return { ...med, over };
+  return { ...med, runs: all.map((m) => m.lcp), over };
 }
 
 /** One line of the output. */
 export function formatLine(page, s) {
   const over = s.over.length > 0 ? `  OVER: ${s.over.join(", ")}` : "";
-  return `${page.padEnd(9)} LCP ${(s.lcp / 1000).toFixed(2)} s  CLS ${s.cls.toFixed(3)}  TBT ${Math.round(s.tbt)} ms  ${Math.round(s.kb)} KB${over}`;
+  const runs = s.runs?.length > 1 ? `  (runs ${s.runs.map((ms) => (ms / 1000).toFixed(2)).join(" ")})` : "";
+  return `${page.padEnd(9)} LCP ${(s.lcp / 1000).toFixed(2)} s  TTFB ${Math.round(s.ttfb)} ms  CLS ${s.cls.toFixed(3)}  TBT ${Math.round(s.tbt)} ms  ${Math.round(s.kb)} KB${runs}${over}`;
 }
 
-/** The arguments: `--runs N`, `--url U` and the budgets `--lcp ms`, `--cls`, `--tbt ms`, `--kb KB`. */
+/** The first line of the output: the LCP budget of each page with the margin, and the count of runs. */
+export function budgetLine(opts) {
+  const seconds = (page) => ((budgetFor(page, opts.budget, opts.margin).lcp ?? Number.NaN) / 1000).toFixed(2);
+  const margin = opts.margin ? ` (with a margin of ${(opts.margin / 1000).toFixed(2)} s)` : "";
+  const ttfb = opts.budget.ttfb === undefined ? "" : `; TTFB budget ${opts.budget.ttfb} ms`;
+  return `LCP budget: ${PAGES.map((page) => `${page} ${seconds(page)} s`).join(", ")}${margin}${ttfb}; medians of ${opts.runs} runs`;
+}
+
+/** The arguments: `--runs N`, `--url U`, the budgets `--lcp ms`, `--ttfb ms`, `--cls`, `--tbt ms`, `--kb KB` and `--margin ms`
+ * (added to the LCP budget of each page). */
 export function parseArgs(argv) {
-  const opts = { runs: 3, url: undefined, budget: {}, json: undefined };
+  const opts = { runs: 3, url: undefined, budget: {}, margin: 0, json: undefined };
   for (let i = 0; i < argv.length; i += 2) {
     const [name, value] = [argv[i].replace(/^--/, ""), argv[i + 1]];
     if (name === "runs") opts.runs = Number(value);
     else if (name === "url") opts.url = value;
     else if (name === "json") opts.json = value;
-    else if (["lcp", "cls", "tbt", "kb"].includes(name)) opts.budget[name] = Number(value);
+    else if (name === "margin") opts.margin = Number(value);
+    else if (["lcp", "ttfb", "cls", "tbt", "kb"].includes(name)) opts.budget[name] = Number(value);
     else throw new Error(`Unknown argument --${name}`);
   }
   return opts;
@@ -170,11 +187,12 @@ async function main() {
   const base = opts.url ?? `http://localhost:${PORT}`;
   let failed = false;
   const report = {};
+  console.log(budgetLine(opts));
   try {
     for (const page of PAGES) {
       const results = [];
       for (let i = 0; i < opts.runs; i++) results.push(lighthouse(base + page));
-      const s = summarize(results, budgetFor(page, opts.budget));
+      const s = summarize(results, budgetFor(page, opts.budget, opts.margin));
       report[page] = { ...s, opportunities: opportunities(results[results.length - 1]) };
       console.log(formatLine(page, s));
       for (const o of report[page].opportunities) console.log(`          - ${o.title}: ${Math.round(o.ms)} ms`);

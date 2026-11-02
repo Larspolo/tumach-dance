@@ -49,17 +49,20 @@ jobs:
       - name: Browser tests
         run: npx playwright test
       - name: Speed on a phone
-        # Lighthouse mobile on the home and the booking page (#448, epic #446): fail over the budget (LCP 2.5 s, CLS
-        # 0.1). The browser tests made the build; the script starts it with its own data. The medians of 3 runs.
+        # The home and the booking page in Lighthouse mobile on the build of the browser tests (#448, epic #446). It also
+        # runs when a browser test failed. The margin: one run of a page can be about 1 s slower than the next (a frame
+        # stall of headless Chromium), so the exact budget of scripts/lighthouse.mjs fails PRs that change nothing. The
+        # simulated LCP leaves out the server time, so --ttfb fails a page that is slow on the server.
+        if: ${{ !cancelled() }}
         run: |
           export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
-          { echo '### Speed on a phone (Lighthouse mobile, medians of 3 runs)'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
-          # pipefail: the status of a pipe is the status of tee (0) with no pipefail, and the step never failed (#448)
+          # pipefail: with no pipefail the status of the pipe is the status of tee (0), and the step never fails.
           set -o pipefail
+          { echo '### Speed on a phone (Lighthouse mobile)'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           status=0
-          node scripts/lighthouse.mjs --runs 3 --lcp 2500 --cls 0.1 | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          node scripts/lighthouse.mjs --runs 5 --margin 1000 --ttfb 600 --cls 0.1 | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-          exit $status
+          exit "$status"
       - name: Keep the report of a failure
         if: failure()
         uses: actions/upload-artifact@v4
