@@ -1,1 +1,0 @@
-ALTER TABLE `bookings` ADD `nudged_at` integer;
