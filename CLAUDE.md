@@ -14,6 +14,7 @@ The owner is **Larspolo**. Nina is the user of the studio app; she is not techni
 | Lint | `ruff check . && npx @biomejs/biome check .` (`--write` fixes the format) |
 | Fast tests | `python3 -m pytest -q && npx vitest run` (one file: `npx vitest run tests/a.test.ts`) |
 | Slow tests | `npx playwright test` (browser tests and the screenshots of a PR) |
+| Speed on a phone | `npm run build`, then `node scripts/lighthouse.mjs --lcp 2500 --cls 0.1` (Lighthouse mobile, 4 pages; exit 1 over the budget) |
 | Development server | `npm run dev` (the owner's `/try`) |
 
 Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.env` file or the data of a dancer.
@@ -37,6 +38,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   (push). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
 - `Dockerfile`, `deploy/` – the image and the compose files of the home server (preview and live).
+- `scripts/lighthouse.mjs` – the speed of the home and booking pages on a phone (#447).
 - `scripts/restore.mjs` – restore the data of one night on the server (`node scripts/restore.mjs <date>`, plain Node: the image has no TypeScript).
 - `tools/` – the specific agent tools: `dashboard_site.py` builds the owner's dashboard page (GitHub Pages).
 - `framework/`, `.claude/`, `steering/` – the agent system.
