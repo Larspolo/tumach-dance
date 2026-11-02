@@ -276,5 +276,6 @@ export async function sendMoveEmail(db: Db, booking: Booking, from: { start: num
     await sendEmail(moveEmail(booking, offer, from));
   } catch (error) {
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
+    await sendEmailFailPush(db, booking, "move");
   }
 }
