@@ -52,6 +52,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:social` Visitors find the studio on the apps that Nina uses
   - The home page and the footer link to the accounts that Nina names (for example Instagram or WhatsApp); a tap opens the app on the phone
   - Search engines know the accounts of the studio
+- [ ] `site:secure` The site and the studio app keep out the common attacks of the web
+  - No other site can show a page of the site or of the studio app in a frame; the browser uses only HTTPS
+  - The browser runs only the scripts of the site, and the pages stay as fast as before
 
 ## 2. Nina's studio app
 
@@ -81,6 +84,8 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `nina:busy` A time that is busy in Nina's own calendar is not free on the booking page
   - Nina connects her own calendar once; the booking page does not offer a time that her calendar shows as busy, also for a repeating event
   - When her calendar cannot be read, the booking page still works with the last known busy times
+- [ ] `nina:chat` Nina writes to a dancer by WhatsApp from a booking
+  - Each booking in her app has a WhatsApp link that opens a chat with the dancer in one tap, with a first line about the booking
 
 ## 3. Book a lesson or the studio
 
@@ -120,3 +125,6 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:none` (#476) A dancer who finds no free time knows what to do
   - When an offer has no free time in the 4 weeks of the booking page, the page names the day of the next free time and the day from which the dancer can book it
   - The page with no free time or with no offer links to the contact form, so that the dancer can ask Nina
+- [ ] `book:email` A dancer with a wrong email address still hears from the studio
+  - The booking form points out a likely typo in the email address before the request goes
+  - When an email to a dancer bounces, Nina gets a push with the name of the dancer and tells the dancer herself
