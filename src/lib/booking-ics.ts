@@ -9,26 +9,35 @@ import type { Offer } from "../db/offers";
 
 const MESSAGES = { en, nl } as const;
 
-/** The `.ics` text of `booking` with the title "TUMACH: <offer>" in `locale` (English for another one), times in UTC. */
-export function bookingEvent(booking: Booking, offer: Offer, locale: string): string {
+/**
+ * The `.ics` text of `booking` with the title "TUMACH: <offer>" in `locale` (English for another one), times in UTC.
+ * `cancel` (#386): the file that removes the event from the calendar of the dancer (iTIP CANCEL, RFC 5546): the same
+ * uid with a higher sequence than the approval (0) and the reminder (no sequence).
+ */
+export function bookingEvent(booking: Booking, offer: Offer, locale: string, cancel = false): string {
   const lang = locale in MESSAGES ? (locale as keyof typeof MESSAGES) : "en";
   const t = createTranslator({ locale: lang, messages: MESSAGES[lang] });
   const label =
     offer.kind === "lesson"
       ? t("Book.lesson", { minutes: offer.minutes })
       : t("Book.rental", { minutes: offer.minutes });
-  const { error, value } = createEvents([
-    {
-      uid: `booking-${booking.id}@tumach.dance`,
-      start: booking.start,
-      startInputType: "utc",
-      startOutputType: "utc",
-      end: booking.end,
-      endInputType: "utc",
-      endOutputType: "utc",
-      title: `TUMACH: ${label}`,
-    },
-  ]);
+  const cancelFields = cancel ? { status: "CANCELLED" as const, sequence: 1 } : {};
+  const { error, value } = createEvents(
+    [
+      {
+        ...cancelFields,
+        uid: `booking-${booking.id}@tumach.dance`,
+        start: booking.start,
+        startInputType: "utc",
+        startOutputType: "utc",
+        end: booking.end,
+        endInputType: "utc",
+        endOutputType: "utc",
+        title: `TUMACH: ${label}`,
+      },
+    ],
+    cancel ? { method: "CANCEL" } : undefined,
+  );
   if (error || !value) throw error ?? new Error("no calendar text");
   return value;
 }
