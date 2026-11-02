@@ -13,6 +13,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - Each text is in a data file per language; a missing text shows the English text
 - [x] `site:schedule` (#94) The classes and the weekly schedule come from data that Nina changes
   - Nina changes a class or a time on her phone, and the site shows it at once
+- [ ] `site:book` A visitor finds the booking and the prices from the home page
+  - The home page and the menu have a button that opens the booking page; on a phone it is one tap
+  - The home page shows the private lesson and the studio rental with their length and price, each with a link that opens the booking page with that offer
 - [ ] `site:contact` The contact form sends the message to Nina's email (Mailgun)
   - A visitor sends a message; Nina gets it in her Gmail and replies to the visitor
   - The form stops spam bots with no puzzle for the visitor
@@ -67,7 +70,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A dancer selects a private lesson or studio rental, sees only the free slots, and sends a request with a name, an email and a phone number (no account)
   - The dancer gets an email in the language of the site that the request is in
   - Two dancers never get the same slot: an open request holds its slot until Nina decides
-- [ ] `book:safe` Only a person can send a booking request
+- [ ] `book:note` A dancer tells Nina what the request is for
+  - A dancer adds an optional short note to the request (what to learn, the level, how many people come); Nina reads it before she decides
+  - The note goes away with the other data of the dancer
+- [x] `book:safe` (#372) Only a person can send a booking request
   - A bot cannot take a free time, send an email from the site or send a push to Nina; a dancer sees no puzzle
 - [x] `book:decide` (#73) Nina approves or declines each request
   - Nina gets a push notification for each new request and approves or declines it with one tap
@@ -78,7 +84,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:change` Cancel and remind
   - The dancer cancels with a link in the email, by the cancel rules; Nina cancels from her app
   - The dancer gets a reminder the day before, with a calendar file
-- [ ] `book:reply` A dancer who answers an email of the site reaches Nina
+- [ ] `book:calendar` The lesson is in the calendar of the dancer from the approval on
+  - The approval email has the calendar file of the booking
+  - A cancel removes the event from the calendar of the dancer
+- [x] `book:reply` (#373) A dancer who answers an email of the site reaches Nina
   - The Reply button of each email to a dancer writes to Nina's email
 - [ ] `book:unanswered` A request that Nina does not answer in time
   - A request with no answer at its start ends by itself; the dancer gets one email with a link to book another time
