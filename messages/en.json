@@ -278,7 +278,10 @@
     "noteLong": "Your note is longer than {max} characters. Please make it shorter.",
     "limit": "Too many requests from this connection. Try again in an hour, or send Nina a message.",
     "notSlot": "This time is not free. Choose another time.",
-    "privacy": "How we keep your data"
+    "privacy": "How we keep your data",
+    "emailTypo": "Did you mean {email}?",
+    "emailUse": "Use {email}",
+    "emailKeep": "My address is right"
   },
   "bookingEmail": {
     "subject": "Your booking request at TUMACH",

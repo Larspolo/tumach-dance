@@ -8,6 +8,7 @@ import { sendRequestEmail } from "@/lib/booking-email";
 import { bookingError } from "@/lib/booking-error";
 import { sendRequestPush } from "@/lib/booking-push";
 import { clientAddress, formSpamReason } from "@/lib/contact-spam";
+import { emailSuggestion } from "@/lib/email-typo";
 
 /**
  * The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. A bot
@@ -15,6 +16,9 @@ import { clientAddress, formSpamReason } from "@/lib/contact-spam";
  */
 export async function sendRequest(form: FormData): Promise<void> {
   const text = (name: string) => String(form.get(name) ?? "");
+  // "Use <suggestion>" sends the fixed address; "My address is right" sends `emailChecked` (#493).
+  const fix = text("emailFix");
+  if (fix) form.set("email", fix);
   const locale = text("locale");
   const safeLocale = /^[a-z]{2}$/.test(locale) ? locale : "en";
   const offerId = Number(text("offerId"));
@@ -28,6 +32,19 @@ export async function sendRequest(form: FormData): Promise<void> {
       day: text("day"),
       start: String(start),
       error: "limit",
+    });
+    redirect(`/${safeLocale}/book?${back}`);
+  }
+  // A likely typo in the email (#493): back to the form with the values and the fix; it holds no time.
+  const typo = text("emailChecked") || fix ? null : emailSuggestion(text("email"));
+  if (typo) {
+    const fields = { name: text("name"), email: text("email"), phone: text("phone") };
+    const back = new URLSearchParams({
+      offer: String(offerId),
+      day: text("day"),
+      start: String(start),
+      ...fields,
+      typo,
     });
     redirect(`/${safeLocale}/book?${back}`);
   }
