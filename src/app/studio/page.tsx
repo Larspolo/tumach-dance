@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { getCalendarToken } from "@/lib/calendar-token";
+import { countUnanswered } from "@/lib/contact-store";
 import { countNinaQuestions } from "@/lib/github";
 import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
@@ -28,59 +29,72 @@ export default async function StudioPage() {
   const calendarUrl = `webcal://${requestHeaders.get("host")}/api/calendar/${getCalendarToken(getDb())}.ics`;
   // The number of open questions shows Nina at once that a question waits (#130).
   const questionCount = await countNinaQuestions();
+  // The count of unanswered contact messages (#533).
+  const messageCount = countUnanswered(getDb());
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
-      <PasskeyOffer />
-      <p>
-        <Link className={styles.link} href="/studio/bookings">
+      {/* At the top: a phone with no push shows it in the first screen (#580). One instance: it repairs (#570). */}
+      <PushButtons vapidKey={vapidPublicKey()} />
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/bookings">
           {t("bookings")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/week">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/messages">
+          {messageCount ? t("messagesCount", { count: messageCount }) : t("messages")}
+        </Link>
+      </p>
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/week">
           {t("week")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/hours">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/hours">
           {t("hours")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/offers">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/offers">
           {t("offers")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/photos">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/photos">
           {t("photos")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/classes">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/classes">
           {t("classes")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/questions">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/questions">
           {questionCount ? t("questionsCount", { count: questionCount }) : t("questions")}
         </Link>
       </p>
-      <p>
-        <a className={styles.link} href={calendarUrl}>
+      <p className={styles.tileRow}>
+        <a className={styles.tile} href={calendarUrl}>
           {t("calendarAdd")}
         </a>
       </p>
       <p className={styles.note}>{t("calendarNote")}</p>
       <RenewCalendarButton />
-      <p>
-        <Link className={styles.link} href="/studio/feedback">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/devices">
+          {t("devices")}
+        </Link>
+      </p>
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/feedback">
           {t("feedback")}
         </Link>
       </p>
-      <PushButtons vapidKey={vapidPublicKey()} />
+      <PasskeyOffer />
       <LogOutButton />
     </main>
   );

@@ -15,8 +15,13 @@ rule such as "weekends all day, weekdays from 17:00, not on Thursday", not a gri
 
 Nina likes the look of the current tumach.dance and calls it "simple and chill". Each page keeps its colors, fonts,
 space and calm layout (a copy with placeholder texts: `docs/design/current-site.html`). Its texts are not the content
-of the site: never copy a text, a class, a time or a claim from it. Each real text comes from Nina (a question for
-Nina); until then, a page shows a clear placeholder. Example: Nina's studio app uses the same fonts and colors.
+of the site: never copy a text, a class, a time or a claim from it. Example: Nina's studio app uses the same fonts and
+colors.
+
+Nina cares less about the texts than the agents thought (owner, 2026-10-31, #257): only the tagline is hers. An agent
+writes each other text itself, short and plain in the "simple and chill" tone, with no fact that it does not know (her
+dance styles, the address). Ask Nina about a text only when no text is a good option, for example a fact that only
+she knows and that the page needs.
 
 ## P3. Ready features first
 
@@ -47,9 +52,11 @@ other areas the agents decide, and ask only when two options are equally good.
 - Only real ties.
 - Two people answer. **Lars** (the owner, `Larspolo`) answers the technical questions, the setup steps on his
   accounts and the home server, and the costs. **Nina** (the studio owner, not technical) answers the questions of
-  taste and of her studio: the look, the texts, the booking rules that dancers see, which option she likes.
-- A question for Nina is in plain words with no technical word: what to look at (a link to the preview), the steps to
-  try it, and 2 to 4 choices. One question per ticket. Never send her a technical question.
+  taste and of her studio: the look, her tagline, the booking rules that dancers see, which option she likes. The
+  other texts are not hers to decide (P2).
+- A question for Nina is short and in plain words with no technical word: one sentence on what is new, a link to the
+  page on the preview, at most 3 steps, and 2 to 4 choices of one line each (Nina found the questions too long, #422).
+  One question per ticket. Never send her a technical question.
 - Until the feature `nina:review` works, a question for Nina is a `needs-human` ticket for Lars that starts with
   "Question for Nina:"; Lars passes it on. After that, the ticket also gets the label `for-nina`: the page "For Nina"
   shows it, sends a push notification to her phone, and writes her answer on the ticket. Her answer counts as an
@@ -63,5 +70,8 @@ How the owner tries a new feature. The agents make what this needs for each feat
 - Images in each PR: Playwright screenshots of each changed page on a phone (390×844) and a laptop (1280×800), the
   last level of the `verify` skill.
 - The preview for Nina: each merge to main updates the preview site on the home server within minutes, with test data
-  and a "test site" banner. Nina opens it on her phone and her laptop, with no step by Lars. At the end of each epic
-  that changes what Nina or a dancer sees, make a question for Nina with the steps to try it on the preview.
+  and a "test site" banner. Nina opens it on her phone and her laptop, with no step by Lars. At the end of an epic
+  that changes what Nina or a dancer sees, ask Nina only what no test can check (owner, #422): her taste (the look,
+  which option she likes), a booking rule of her studio, or a step that needs her own phone, email or calendar app.
+  When the tests check each criterion (a Playwright test at 390×844, the tests of the emails), the epic gets no
+  question and closes on the tests.

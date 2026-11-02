@@ -20,3 +20,26 @@ self.addEventListener("notificationclick", (event) => {
     }),
   );
 });
+
+// The browser renews or ends the push subscription (#569): send the new one to the server, so that the pushes continue.
+// A failed renew changes nothing: the check at the next open of the app repairs it.
+self.addEventListener("pushsubscriptionchange", (event) => {
+  const options = event.oldSubscription?.options;
+  const renew = event.newSubscription
+    ? Promise.resolve(event.newSubscription)
+    : options
+      ? self.registration.pushManager.subscribe(options)
+      : Promise.resolve(null);
+  event.waitUntil(
+    renew
+      .then((subscription) => {
+        if (!subscription) return;
+        return fetch("/api/studio/push/subscribe", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(subscription),
+        });
+      })
+      .catch(() => {}),
+  );
+});

@@ -27,6 +27,7 @@ import re
 import subprocess
 import sys
 import zlib
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))   # the project tools: release.py (#4195)
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -82,12 +83,17 @@ def pr_work(pr, open_issues, checks, beat, now, me="", ticket=None):
         return None
     idle = (now - dashboard.ts(pr.get("updated_at") or pr["created_at"])).total_seconds() / 60
     live = beat and not beat[1].startswith("Release") and beat[0] < STALE
-    if "hold" in dashboard.labels(pr):     # nothing removes `hold`: a run that stopped left it for ever (#4553)
-        return None if live or idle < STALE else (
-            f"`hold`, no live claim, no change for {idle:.0f} min: remove `hold` when its own checks passed, "
-            f"else add `needs-human` to #{ticket} with the reason")
     conflict = "conflict" in dashboard.labels(pr)
     red = [n for n, s, c in checks if s == "completed" and c in ("failure", "timed_out", "cancelled", "action_required")]
+    if "hold" in dashboard.labels(pr):     # nothing removes `hold`: a run that stopped left it for ever (#4553)
+        if live or idle < STALE:
+            return None
+        quick = any(n == "quick" and c == "success" for n, _, c in checks)
+        state = "checks red: " + ", ".join(red) if red else "checks green" if quick else "checks not finished"
+        if red or not quick:   # the auto mode denies a removal of `hold` on a PR of another run: the owner removes it (#581)
+            return f"`hold`, no live claim, no change for {idle:.0f} min, {state}: add `needs-human` to #{ticket} with the reason"
+        return (f"`hold`, no live claim, no change for {idle:.0f} min, {state}: add `needs-human` to #{ticket} and ask the "
+                "owner to remove `hold` (`owner.md`; the auto mode denies a removal of `hold` on a PR of another run)")
     if not checks and not conflict and idle > STALE:   # no CI event (a push of GITHUB_TOKEN): Automerge waits for ever
         return f"no CI run on its head for {idle:.0f} min: start CI on its branch (`github.md`)"
     if not conflict and not red:
@@ -201,6 +207,7 @@ def due_checks():
     except ImportError:                                     # a project with no tools/release.py has no release checks (#153)
         return []
     try:
+        import release
         features, _, rows, epics = release.load()
         return release.due_lines(release.due(features, rows, epics))
     except Exception as e:                                  # a GitHub or file error: the other sections still print
@@ -284,7 +291,7 @@ def main(argv=None):
     section("Stuck (`overlap.md`, \"Stuck tickets\")", text.splitlines() if code == 0 else [])
     code, text = tool("usage.py", "--flow")
     section("Flow brake", [f"ON: repair one PR or go to step 8, no new ticket ({text})"] if code == 1 else [])
-    import health                                                    # health imports dashboard
+    import health  # health imports dashboard
     held = beats(health.claim_refs() or [], now)
     prs = [p for p in dashboard.pages("pulls?state=open") if p["head"]["ref"].startswith(AGENT)]
     work = []

@@ -1,16 +1,19 @@
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
-import { listBookings, listOpenRequests } from "@/db/bookings";
+import { listBookings, listOpenRequests, UNDO_MS } from "@/db/bookings";
+import { bookings } from "@/db/schema";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
-import { shownName } from "@/lib/booking-name";
+import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
+import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
-import { decide, pay } from "./actions";
+import { decide, pay, undo } from "./actions";
 
 const DAY = 24 * 60 * 60_000;
 
@@ -19,7 +22,7 @@ const DAY = 24 * 60 * 60_000;
 export default async function BookingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ done?: string; error?: string }>;
+  searchParams: Promise<{ done?: string; id?: string; undone?: string; undo?: string; error?: string }>;
 }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -27,7 +30,7 @@ export default async function BookingsPage({
   const t = await getTranslations("StudioBookings");
   const offerName = await getTranslations("StudioOffers");
   const weekName = await getTranslations("StudioWeek");
-  const { done, error } = await searchParams;
+  const { done, id, undone, undo: undoError, error } = await searchParams;
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
     weekday: "short",
@@ -38,9 +41,25 @@ export default async function BookingsPage({
   });
   const day = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, day: "numeric", month: "short" });
   const db = getDb();
-  const requests = listOpenRequests(db);
   const now = Date.now();
+  const requests = listOpenRequests(db, now);
   const approved = listBookings(db, now - 30 * DAY, now + 90 * DAY, ["approved"]);
+  // The Undo button of the last tap (#573): only while the undo time of the server runs; a later load shows none.
+  const decided = Number.isInteger(Number(id))
+    ? db
+        .select()
+        .from(bookings)
+        .where(eq(bookings.id, Number(id)))
+        .get()
+    : undefined;
+  const canUndo =
+    decided !== undefined &&
+    decided.status === done &&
+    decided.decidedAt !== null &&
+    decided.decisionMailedAt === null &&
+    now - decided.decidedAt < UNDO_MS;
+  const undoReasons = ["sent", "taken", "started"] as const;
+  const undoReason = undoReasons.find((r) => r === undoError);
 
   return (
     <main className={styles.main}>
@@ -48,8 +67,21 @@ export default async function BookingsPage({
         {t("back")}
       </Link>
       <h1 className={styles.title}>{t("title")}</h1>
-      {done === "approved" && <p className={styles.note}>{t("approved")}</p>}
-      {done === "declined" && <p className={styles.note}>{t("declined")}</p>}
+      {(done === "approved" || done === "declined") && (
+        <form className={styles.form} action={undo}>
+          <p className={styles.note}>{t(done)}</p>
+          {canUndo && (
+            <>
+              <input type="hidden" name="id" value={decided.id} />
+              <button className={styles.button} type="submit">
+                {t("undoDecision")}
+              </button>
+            </>
+          )}
+        </form>
+      )}
+      {undone === "1" && <p className={styles.note}>{t("undone")}</p>}
+      {undoReason !== undefined && <p className={styles.note}>{t(`undoFailed.${undoReason}`)}</p>}
       {error === "link" && <p className={styles.note}>{t("badLink")}</p>}
       {requests.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list}>
@@ -58,16 +90,28 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
-            <p>
-              <a className={styles.link} href={`mailto:${booking.email}`}>
-                {booking.email}
-              </a>
-            </p>
-            <p>
-              <a className={styles.link} href={`tel:${booking.phone.replace(/[^\d+]/g, "")}`}>
-                {booking.phone}
-              </a>
-            </p>
+            {booking.email !== "" && (
+              <p>
+                <a className={styles.link} href={`mailto:${booking.email}`}>
+                  {booking.email}
+                </a>
+              </p>
+            )}
+            {booking.phone !== "" && (
+              <p>
+                <a className={styles.link} href={`tel:${booking.phone.replace(/[^\d+]/g, "")}`}>
+                  {booking.phone}
+                </a>
+              </p>
+            )}
+            {bookingWhatsappLink(booking) !== null && (
+              <p>
+                <a className={`${styles.link} ${styles.chat}`} href={bookingWhatsappLink(booking) ?? undefined}>
+                  {t("whatsapp")}
+                </a>
+              </p>
+            )}
+            {shownNote(booking) !== null && <p className={styles.dancerNote}>{shownNote(booking)}</p>}
             <form className={styles.form} action={decide}>
               <input type="hidden" name="id" value={booking.id} />
               <label className={styles.label}>
@@ -91,6 +135,11 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
+            <p>
+              <a className={styles.link} href={`/api/studio/bookings/${booking.id}.ics`} download>
+                {t("addToCalendar")}
+              </a>
+            </p>
             <form className={styles.form} action={pay}>
               <input type="hidden" name="id" value={booking.id} />
               {booking.paidAt === null ? (

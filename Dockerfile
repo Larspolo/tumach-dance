@@ -26,6 +26,9 @@ COPY --from=build --chown=nextjs:nodejs /app/public ./public
 # `src/instrumentation.ts` applies the migrations at the start.
 COPY --from=build --chown=nextjs:nodejs /app/drizzle ./drizzle
 COPY --from=build --chown=nextjs:nodejs /app/scripts/restore.mjs ./scripts/restore.mjs
+# The commit of the image (the Image workflow): `/api/health` shows it to the site watch on GitHub.
+ARG SITE_VERSION=
+ENV SITE_VERSION=$SITE_VERSION
 USER nextjs
 VOLUME /app/data
 EXPOSE 3000

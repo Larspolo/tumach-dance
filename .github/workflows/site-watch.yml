@@ -1,0 +1,36 @@
+name: Site watch
+
+# Checks the live site (tools/site_watch.py, #263 option A) in each cycle of the pacer loop (pacer.yml, 10 minutes).
+# No workflow_run of Image: Automerge starts Image with the workflow token, and GitHub then starts no workflow_run
+# (2026-10-31). The cron is the fallback when no pacer loop runs: GitHub fires it only a few times a day.
+# A failure opens one P0 ticket `site-down` with the error text of /api/health; a site that answers again closes it.
+# Each watch also keeps /api/health of the live site and the preview on the branch metrics (`site/`, #460).
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write    # push the branch metrics (`site/YYYY-MM-DD.jsonl`, `site_watch.log_health`)
+  issues: write
+
+concurrency:
+  group: site-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50                       # the merges up to the version of the image
+      - name: Check the site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]          # the commits of the health log on the branch metrics
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: python3 tools/site_watch.py

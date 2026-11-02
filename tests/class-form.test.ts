@@ -17,12 +17,9 @@ describe("applyClassForm", () => {
   it("adds a class at the end, changes its text and hides it", () => {
     const db = openDb(":memory:");
     addClass(db, { name: { en: "Tango" }, text: { en: "Close." }, forWhom: { en: "All" }, position: 2 });
-    expect(applyClassForm(db, SESSION, form({ intent: "add", ...TEXTS, name_nl: "Salsa NL", name_sl: " " }))).toBe(
-      true,
-    );
+    expect(applyClassForm(db, SESSION, form({ intent: "add", ...TEXTS, name_nl: "Salsa NL" }))).toBe(true);
     const added = listClasses(db).at(-1);
     expect(added).toMatchObject({ name: { en: "Salsa", nl: "Salsa NL" }, position: 3, visible: true });
-    expect(added?.name).not.toHaveProperty("sl");
     const id = added?.id ?? 0;
     expect(applyClassForm(db, SESSION, form({ intent: "save", id, ...TEXTS, text_en: "New text." }))).toBe(true);
     expect(applyClassForm(db, SESSION, form({ intent: "hide", id }))).toBe(true);

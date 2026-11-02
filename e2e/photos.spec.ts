@@ -5,7 +5,10 @@ import sharp from "sharp";
 import en from "../messages/en.json" with { type: "json" };
 import { openDb } from "../src/db";
 import { listPhotos, removePhoto } from "../src/db/photos";
+import { watchCspErrors } from "./csp-errors";
 import { STUDIO_SESSION } from "./studio-session";
+
+watchCspErrors(test);
 
 // The database and the photo folder of the test server (`playwright.config.ts`).
 const DB = "out/e2e/tumach.db";

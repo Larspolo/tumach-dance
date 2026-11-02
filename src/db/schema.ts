@@ -174,6 +174,8 @@ export const bookings = sqliteTable(
     name: text("name").notNull(),
     email: text("email").notNull(),
     phone: text("phone").notNull(),
+    /** The optional note of the dancer to Nina (#387), `null` = no note. */
+    note: text("note"),
     /** The language of the dancer, for the emails. */
     locale: text("locale").notNull(),
     /** UTC, epoch milliseconds. */
@@ -197,6 +199,15 @@ export const bookings = sqliteTable(
       .$defaultFn(() => randomBytes(32).toString("base64url")),
     /** UTC, epoch milliseconds; the removal of the name, email and phone (#224), `null` = not removed. */
     forgottenAt: integer("forgotten_at"),
+    /** The SEQUENCE of the calendar event of the booking (#409): one more at each move, so a calendar takes the new time. */
+    calendarSequence: integer("calendar_sequence").notNull().default(0),
+    /**
+     * UTC, epoch milliseconds; the tap of Nina on Approve or Decline (#572). The decision email waits `UNDO_MS` after
+     * it. `null` = no decision, or a decision before #572 (its email went at once).
+     */
+    decidedAt: integer("decided_at"),
+    /** UTC, epoch milliseconds; the claim of the decision email (#572), set before the send: one email only. */
+    decisionMailedAt: integer("decision_mailed_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
@@ -207,8 +218,8 @@ export const bookings = sqliteTable(
 );
 
 /**
- * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "...",
- * "sl": "..."}`: `en` is required, the other languages are optional (`src/lib/local-text.ts`).
+ * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "..."}`: `en` is
+ * required, the other language is optional (`src/lib/local-text.ts`).
  */
 export const classes = sqliteTable("classes", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -252,3 +263,39 @@ export const photos = sqliteTable("photos", {
   /** UTC, epoch milliseconds. */
   createdAt: integer("created_at").notNull(),
 });
+
+/**
+ * A time that Nina keeps free of bookings (#323, epic #322). `start` and `end` are UTC, epoch milliseconds, as the
+ * bookings; `end` is exclusive.
+ */
+export const blocks = sqliteTable(
+  "blocks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    start: integer("start").notNull(),
+    end: integer("end").notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("blocks_start_idx").on(t.start), check("blocks_range", sql`${t.end} > ${t.start}`)],
+);
+
+/**
+ * A message of the contact form of the home page (#533): Nina reads it and answers it in the studio app.
+ * `forgetOldMessages()` (`src/lib/contact-store.ts`) removes it after `MESSAGE_KEEP_MONTHS`.
+ */
+export const contactMessages = sqliteTable(
+  "contact_messages",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    message: text("message").notNull(),
+    /** The language of the site of the visitor: the language of the answer email. */
+    locale: text("locale").notNull(),
+    /** UTC, epoch milliseconds. */
+    createdAt: integer("created_at").notNull(),
+    answer: text("answer"),
+    answeredAt: integer("answered_at"),
+  },
+  (t) => [index("contact_messages_created_idx").on(t.createdAt)],
+);
