@@ -18,7 +18,8 @@ test.beforeAll(() => {
 async function fillForm(page: Page, slot: number) {
   await page.goto("/en/book");
   await page.getByRole("link", { name: /€49\.31/ }).click();
-  await page.locator("section", { hasText: en.Book.day }).getByRole("link").first().click();
+  // The last day: the first day can be today, with one free time left late in the day.
+  await page.locator("section", { hasText: en.Book.day }).getByRole("link").last().click();
   await page.locator("section", { hasText: en.Book.time }).getByRole("link").nth(slot).click();
   await page.getByLabel(en.Book.name).fill("Typo Test");
   await page.getByLabel(en.Book.email).fill("typo@gmial.com");
