@@ -10,6 +10,7 @@ import styles from "@/components/home/Home.module.css";
 import { Offers } from "@/components/home/Offers";
 import { Photos } from "@/components/home/Photos";
 import { Schedule } from "@/components/home/Schedule";
+import { StudioJsonLd } from "@/components/home/StudioJsonLd";
 import { getDb } from "@/db";
 import { listClasses, listClassTimes } from "@/db/classes";
 import { listOffers } from "@/db/offers";
@@ -17,7 +18,6 @@ import { listPhotos } from "@/db/photos";
 import { routing } from "@/i18n/routing";
 import { classDaysOff } from "@/lib/class-days-off";
 import { closedNotices } from "@/lib/closed-notice";
-import { jsonLdText, studioJsonLd } from "@/lib/home-jsonld";
 import { getHoursRule } from "@/lib/hours-store";
 import { pageMetadata } from "@/lib/page-meta";
 
@@ -44,8 +44,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const daysOff = classDaysOff(rule, times, Date.now());
   return (
     <main className={styles.main}>
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the JSON-LD of the Next.js docs; `jsonLdText` escapes `<`, and the data is ours (the settings). */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdText(studioJsonLd(locale)) }} />
+      <StudioJsonLd locale={locale} />
       <Hero />
       <About />
       <Offers offers={offers} locale={locale} />

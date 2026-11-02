@@ -1,5 +1,6 @@
 // The structured data of the home page: the studio and one `sameAs` link per account (#452).
 import { expect, test } from "vitest";
+import { nonceFrom } from "../src/lib/csp";
 import { jsonLdText, studioJsonLd } from "../src/lib/home-jsonld";
 
 const ORIGIN = "https://tumach.dance";
@@ -24,4 +25,10 @@ test("the JSON text cannot close the script tag", () => {
   const text = jsonLdText({ name: "</script><script>alert(1)</script>" });
   expect(text).not.toContain("<");
   expect(JSON.parse(text).name).toBe("</script><script>alert(1)</script>");
+});
+
+test("the nonce of a policy is read back for the script", () => {
+  expect(nonceFrom("script-src 'self' 'nonce-abc+/=' 'strict-dynamic'")).toBe("abc+/=");
+  expect(nonceFrom("default-src 'self'")).toBeUndefined();
+  expect(nonceFrom(null)).toBeUndefined();
 });
