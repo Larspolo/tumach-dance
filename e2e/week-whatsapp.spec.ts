@@ -20,6 +20,7 @@ test("an approved booking has a WhatsApp link, a removed dancer has none", async
     db.insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 60 }).toMillis(),
         name,

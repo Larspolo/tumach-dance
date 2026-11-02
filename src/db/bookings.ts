@@ -118,7 +118,16 @@ export function requestBooking(
       if (limit) return { ok: false, reason: "limit", limit };
       const booking = tx
         .insert(bookings)
-        .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })
+        .values({
+          offerId: offer.id,
+          priceCents: offer.priceCents,
+          start,
+          end,
+          status: "requested",
+          ...fields,
+          locale: input.locale,
+          createdAt: now,
+        })
         .returning()
         .get();
       return { ok: true, booking };

@@ -38,6 +38,7 @@ function book(start = "2026-10-25T10:00", change: Partial<typeof bookings.$infer
     .insert(bookings)
     .values({
       offerId,
+      priceCents: 6000,
       start: at(start),
       end: at(start) + HOUR,
       status: "approved",

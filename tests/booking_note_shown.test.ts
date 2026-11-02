@@ -33,6 +33,7 @@ it("forgetDancer removes the note too", () => {
     .insert(bookings)
     .values({
       offerId,
+      priceCents: 6000,
       start: 0,
       end: 3_600_000,
       status: "requested",

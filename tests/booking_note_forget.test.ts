@@ -18,6 +18,7 @@ function setup() {
       .insert(bookings)
       .values({
         offerId,
+        priceCents: 6000,
         start: end - HOUR,
         end,
         status: "approved",

@@ -23,6 +23,7 @@ function addBooking(start: DateTime, email: string) {
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: start.toMillis(),
       end: start.plus({ minutes: 60 }).toMillis(),
       name: "Link Dancer",

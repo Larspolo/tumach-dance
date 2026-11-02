@@ -26,6 +26,7 @@ test("Nina marks an approved booking paid with one tap, and undoes it", async ({
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: start.toMillis(),
       end: start.plus({ minutes: 60 }).toMillis(),
       name,
