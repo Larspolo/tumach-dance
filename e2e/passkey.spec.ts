@@ -1,4 +1,5 @@
-// #26: the passkey offer of the studio app; "Not now" stays on the device; a passkey logs in with no code.
+// #26: the passkey offer of the studio app; "Not now" stays on the device, with a button to add a passkey later; a
+// passkey logs in with no code.
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
@@ -28,7 +29,7 @@ test("Nina adds a passkey and then logs in with it", async ({ page, context }, t
     },
   });
 
-  // "Not now": the offer closes and does not come back on this device.
+  // "Not now": the offer closes and does not come back on this device; the button to add a passkey stays.
   await page.goto("/studio");
   await expect(page.getByRole("heading", { name: en.PasskeyOffer.title })).toBeVisible();
   await page.screenshot({ path: "out/screenshots/studio-passkey-offer.png", fullPage: true });
@@ -37,13 +38,19 @@ test("Nina adds a passkey and then logs in with it", async ({ page, context }, t
   await page.reload();
   await expect(page.getByText(EMAIL)).toBeVisible();
   await expect(page.getByRole("heading", { name: en.PasskeyOffer.title })).toBeHidden();
+  await expect(page.getByRole("heading", { name: en.PasskeyOffer.buttonTitle })).toBeVisible();
+  await page.screenshot({ path: "out/screenshots/studio-passkey-button.png", fullPage: true });
 
-  // Another device (no choice stored): the offer comes, and Nina adds a passkey.
+  // Later on the same device: Nina adds a passkey with the button.
+  await page.getByRole("button", { name: en.PasskeyOffer.add }).click();
+  await expect(page.getByRole("status").filter({ hasText: en.PasskeyOffer.added })).toBeVisible();
+  await expect(page.getByText(en.PasskeyOffer.failed)).toBeHidden();
+  await expect(page.getByRole("button", { name: en.PasskeyOffer.add })).toBeVisible();
+
+  // Another device (no choice stored): the offer comes again.
   await page.evaluate(() => localStorage.clear());
   await page.reload();
-  await page.getByRole("button", { name: en.PasskeyOffer.add }).click();
-  await expect(page.getByRole("heading", { name: en.PasskeyOffer.title })).toBeHidden();
-  await expect(page.getByText(en.PasskeyOffer.failed)).toBeHidden();
+  await expect(page.getByRole("heading", { name: en.PasskeyOffer.title })).toBeVisible();
 
   // No session (not a log out: that ends the shared session of the other tests); the passkey logs in with no
   // email and no code, with the same session as a code.
@@ -59,4 +66,5 @@ test("Nina adds a passkey and then logs in with it", async ({ page, context }, t
   expect(cookie?.httpOnly).toBe(true);
   expect((cookie?.expires ?? 0) * 1000 - Date.now()).toBeGreaterThan(179 * 24 * 60 * 60 * 1000);
   await expect(page.getByRole("heading", { name: en.PasskeyOffer.title })).toBeHidden();
+  await expect(page.getByRole("button", { name: en.PasskeyOffer.add })).toBeVisible();
 });

@@ -2,10 +2,9 @@
 
 import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 import { type Db, openDb } from "../src/db";
 import { type BookingInput, decideBooking, requestBooking } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
@@ -16,6 +15,12 @@ import { calendarFeed } from "../src/lib/calendar-feed";
 
 const at = (local: string) => DateTime.fromISO(local, { zone: "Europe/Amsterdam" }).toMillis();
 const NOW = at("2026-10-22T12:00");
+
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(NOW);
+});
+afterEach(() => vi.useRealTimers());
 const REMOVED = "Name removed";
 
 let db: Db;
@@ -93,7 +98,6 @@ describe("the removed text in the messages", () => {
   it.each([
     ["en", en],
     ["nl", nl],
-    ["sl", sl],
   ])("has StudioWeek.removed in %s", (_locale, messages) => {
     expect(messages.StudioWeek.removed.trim().length).toBeGreaterThan(0);
   });

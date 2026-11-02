@@ -12,7 +12,7 @@ test("the live site hides the studio, the API and each cancel link, and names th
   expect(robots.rules).toEqual({
     userAgent: "*",
     allow: "/",
-    disallow: ["/studio", "/api", "/en/booking/cancel", "/nl/booking/cancel", "/sl/booking/cancel"],
+    disallow: ["/studio", "/api", "/en/booking/cancel", "/nl/booking/cancel"],
   });
   expect(robots.sitemap).toBe("https://tumach.dance/sitemap.xml");
 });

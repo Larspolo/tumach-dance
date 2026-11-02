@@ -30,6 +30,12 @@ const NOW = DateTime.fromISO("2026-10-20T12:00", { zone }).toMillis();
 // Sunday 2026-10-25: the day that summer time ends. 10:00 local is 10:00 CET (09:00 UTC).
 const START = DateTime.fromISO("2026-10-25T10:00", { zone }).toMillis();
 
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(NOW);
+});
+afterEach(() => vi.useRealTimers());
+
 function booked(locale: string, db: Db = openDb(":memory:")) {
   saveHoursRule(db, { weekly: { sun: { from: "09:00", to: "13:00" } } });
   const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 6000, position: 0 });
@@ -83,17 +89,6 @@ describe("decisionEmail", () => {
     expect(declined.text).toContain(
       "Sorry, Nina kan je aanvraag niet aannemen: Privéles, 60 min, zondag 25 oktober 2026 om 10:00.",
     );
-  });
-
-  test("Slovenian: the language of the booking", () => {
-    const { booking, offer } = booked("sl");
-    const approved = decisionEmail(booking, offer, "approved");
-    expect(approved.subject).toBe("Tvoja rezervacija pri TUMACH je potrjena");
-    expect(approved.text).toContain("Živjo, Ana,");
-    expect(approved.text).toContain("nedelja, 25. oktober 2026 ob 10:00");
-    const declined = decisionEmail(booking, offer, "declined");
-    expect(declined.subject).toBe("Tvoja prošnja za rezervacijo pri TUMACH");
-    expect(declined.text).toContain("Na strani za rezervacije lahko izbereš drug termin.");
   });
 });
 

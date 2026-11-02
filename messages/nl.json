@@ -1,33 +1,33 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (nl): the welcome of Nina]",
-    "eyebrow": "[Placeholder (nl): short line above the title]",
-    "primaryAction": "[Placeholder (nl): button to the schedule]",
-    "secondaryAction": "[Placeholder (nl): button to the studio]",
-    "imageBlock": "[Placeholder (nl): photo of the studio]",
+    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen, groepslessen en een studio om te huren.",
+    "eyebrow": "Dansstudio · Amsterdam",
+    "primaryAction": "Bekijk het rooster",
+    "secondaryAction": "Over de studio",
+    "imageBlock": "De dansstudio TUMACH",
     "about": {
-      "title": "[Placeholder (nl): title about the studio]",
-      "label": "[Placeholder (nl): (01) about]",
-      "text1": "[Placeholder (nl): first paragraph about the studio]",
-      "text2": "[Placeholder (nl): second paragraph about Nina]",
-      "text3": "[Placeholder (nl): third paragraph about the dancers]",
-      "quote": "[Placeholder (nl): a short quote of Nina]",
-      "quoteBy": "[Placeholder (nl): who said the quote]"
+      "title": "Over TUMACH",
+      "label": "(01) Over",
+      "text1": "TUMACH is een kleine dansstudio in Amsterdam. Neem een privéles, doe mee met een groepsles, of huur de studio om zelf te oefenen.",
+      "text2": "Ik ben Nina, en dit is mijn studio. Ik geef privélessen en groepslessen, in het tempo dat bij jou past.",
+      "text3": "Beginners en ervaren dansers zijn allebei welkom. We beginnen waar jij bent.",
+      "quote": "Elke danser begint ergens.",
+      "quoteBy": "Nina"
     },
     "photos": {
-      "title": "[Placeholder (nl): title of the photos]",
-      "label": "[Placeholder (nl): (02) photos]",
-      "alt": "[Placeholder (nl): a photo of the studio]"
+      "title": "De studio",
+      "label": "Foto's",
+      "alt": "Een foto van de dansstudio TUMACH"
     },
     "classes": {
-      "title": "[Placeholder (nl): title of the classes]",
-      "label": "[Placeholder (nl): (02) classes]",
+      "title": "Lessen",
+      "label": "(02) Lessen",
       "none": "Nog geen lessen."
     },
     "schedule": {
-      "title": "[Placeholder (nl): title of the schedule]",
-      "label": "[Placeholder (nl): (03) schedule]",
+      "title": "Elke week",
+      "label": "(03) Rooster",
       "none": "Nog geen lestijden.",
       "days": {
         "mon": "maandag",
@@ -41,33 +41,35 @@
       "time": "{from}–{to}"
     },
     "contact": {
-      "title": "[Placeholder (nl): title of the contact]",
-      "label": "[Placeholder (nl): (04) contact]",
-      "text": "[Placeholder (nl): invitation to write to Nina]",
-      "name": "[Placeholder (nl): name]",
-      "email": "[Placeholder (nl): email]",
-      "message": "[Placeholder (nl): message]",
-      "send": "[Placeholder (nl): send]",
-      "placeLabel": "[Placeholder (nl): place]",
-      "place": "[Placeholder (nl): address of the studio]",
-      "closing": "[Placeholder (nl): closing line]",
-      "thanks": "[Placeholder (nl): Dank je, je bericht is verstuurd]",
-      "failed": "Versturen mislukt, probeer het later opnieuw"
+      "title": "Zeg hallo",
+      "label": "(04) Contact",
+      "text": "Een vraag over een les, een groepsles of de studio? Stuur me een bericht, dan antwoord ik snel.",
+      "name": "Je naam",
+      "email": "Je e-mail",
+      "message": "Je bericht",
+      "send": "Versturen",
+      "placeLabel": "Waar",
+      "place": "Amsterdam",
+      "closing": "Tot ziens in de studio.",
+      "thanks": "Dank je! Je bericht is verstuurd.",
+      "failed": "Versturen mislukt, probeer het later opnieuw",
+      "notSent": "Je bericht is niet verstuurd. Wacht een paar seconden en verstuur het opnieuw."
     }
   },
   "Nav": {
     "label": "Hoofdmenu",
     "logo": "TUMACH",
-    "about": "[Placeholder (nl): about]",
-    "classes": "[Placeholder (nl): classes]",
-    "schedule": "[Placeholder (nl): schedule]",
-    "contact": "[Placeholder (nl): contact]"
+    "about": "Over",
+    "photos": "Foto's",
+    "classes": "Lessen",
+    "schedule": "Rooster",
+    "contact": "Contact"
   },
   "Footer": {
     "copyright": "© {year}",
     "domain": "tumach.dance",
-    "tagline": "[Placeholder (nl): the tagline of Nina]",
-    "place": "[Placeholder (nl): the place]",
+    "tagline": "Tumach Dance? Nooit genoeg!",
+    "place": "Amsterdam",
     "privacy": "Hoe we je gegevens bewaren"
   },
   "StudioLogin": {
@@ -103,8 +105,10 @@
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
+    "buttonTitle": "Passkey",
     "text": "Voeg een passkey toe op deze telefoon. Volgende keer log je in met Face ID of je vingerafdruk, zonder code.",
     "add": "Passkey toevoegen",
+    "added": "De passkey is toegevoegd. Volgende keer log je in zonder code.",
     "notNow": "Nu niet",
     "failed": "De passkey is niet toegevoegd. Je kunt nog steeds inloggen met een code per e-mail."
   },
@@ -180,7 +184,6 @@
     "textIn": "Tekst in het {language}",
     "forWhomIn": "Voor wie in het {language}",
     "nl": "Nederlands",
-    "sl": "Sloveens",
     "translations": "Vertalingen",
     "save": "Opslaan",
     "hide": "Verbergen",
@@ -284,7 +287,10 @@
     "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
     "cancelledByYou": "Je hebt je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "payReminderSubject": "Betaling van je boeking bij TUMACH",
-    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed."
+    "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed.",
+    "unansweredSubject": "Je boekingsaanvraag bij TUMACH",
+    "unansweredBody": "Nina kon je aanvraag niet op tijd beantwoorden: {offer}, {when}. De aanvraag is gestopt.",
+    "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}"
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",
@@ -333,7 +339,15 @@
     "cancelAsk": "Deze boeking annuleren?",
     "cancelYes": "Ja, annuleren",
     "removed": "Naam verwijderd",
-    "cancelNo": "Nee"
+    "cancelNo": "Nee",
+    "block": "Vrijgehouden",
+    "blockRemove": "Verwijderen",
+    "blockAdd": "Tijd vrijhouden",
+    "blockDate": "Dag",
+    "blockFrom": "Van",
+    "blockTo": "Tot",
+    "blockSave": "Opslaan",
+    "blockWrong": "Kies een dag, en een eindtijd na de begintijd."
   },
   "StudioFeedback": {
     "back": "Terug",
@@ -359,6 +373,7 @@
     "title": "Foto's",
     "back": "Terug",
     "none": "Nog geen foto's.",
+    "onSite": "Bekijk de foto's op de site",
     "choose": "Foto's van je telefoon",
     "add": "Foto's toevoegen",
     "adding": "Bezig…",
@@ -403,8 +418,8 @@
   "Meta": {
     "imageAlt": "TUMACH, de dansstudio in Amsterdam",
     "home": {
-      "title": "[Placeholder (nl): titel van de site in een zoekresultaat]",
-      "description": "[Placeholder (nl): beschrijving van de site in een zoekresultaat]"
+      "title": "TUMACH · Dansstudio in Amsterdam",
+      "description": "Privélessen, groepslessen en een dansstudio om te huren in Amsterdam. Bekijk de tijden en boek online, zonder account."
     },
     "book": {
       "title": "Les boeken · TUMACH",
@@ -417,11 +432,21 @@
     "guide": {
       "title": "Zo gebruik je de studio-app · TUMACH",
       "description": "Log in, zet de studio-app op je beginscherm en zet meldingen aan."
+    },
+    "cancel": {
+      "title": "Een boeking annuleren · TUMACH"
     }
   },
   "StudioNotFound": {
     "title": "Pagina niet gevonden",
     "text": "Deze pagina van de studio-app bestaat niet.",
     "back": "Terug naar de studio-app"
+  },
+  "NotFound": {
+    "pageTitle": "Pagina niet gevonden · TUMACH",
+    "title": "Deze pagina is er niet",
+    "text": "Het adres is misschien oud of heeft een typfout. Adem even uit en ga verder via een van deze pagina's.",
+    "home": "Naar de homepagina",
+    "book": "Boek een les"
   }
 }

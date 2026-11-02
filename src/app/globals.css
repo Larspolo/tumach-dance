@@ -5,6 +5,8 @@
   --paper-2: #ece5d6;
   --rust: #a8503a;
   --rust-deep: #7c3527;
+  /* The rust on the dark ink: #a8503a has a contrast of 3.4, this one 5.0 (#343). */
+  --rust-light: #c86a50;
   --cream: #fbf8f1;
   --line: #d8cfbd;
   --shadow: rgba(20, 18, 16, 0.18);

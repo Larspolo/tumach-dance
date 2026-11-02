@@ -205,8 +205,8 @@ export const bookings = sqliteTable(
 );
 
 /**
- * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "...",
- * "sl": "..."}`: `en` is required, the other languages are optional (`src/lib/local-text.ts`).
+ * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "..."}`: `en` is
+ * required, the other language is optional (`src/lib/local-text.ts`).
  */
 export const classes = sqliteTable("classes", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -250,3 +250,18 @@ export const photos = sqliteTable("photos", {
   /** UTC, epoch milliseconds. */
   createdAt: integer("created_at").notNull(),
 });
+
+/**
+ * A time that Nina keeps free of bookings (#323, epic #322). `start` and `end` are UTC, epoch milliseconds, as the
+ * bookings; `end` is exclusive.
+ */
+export const blocks = sqliteTable(
+  "blocks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    start: integer("start").notNull(),
+    end: integer("end").notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("blocks_start_idx").on(t.start), check("blocks_range", sql`${t.end} > ${t.start}`)],
+);

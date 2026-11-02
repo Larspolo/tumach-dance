@@ -29,7 +29,9 @@ STATUS, PAUSED = CONFIG["status"]["label"], CONFIG["status"]["paused"]
 MUTED = "muted"                # the owner mutes a ticket: no agent works on it, and "Waiting for you" hides it
 CLOSE = "close"                # the work is done, close.yml closes the ticket: no candidate (#2920)
 AFTER = "after-release"        # the owner holds a ticket until the next release: after-release.yml removes it (#4175)
-SKIP = {"needs-human", "blocked", "epic", STATUS, "in-progress", MUTED, CLOSE, AFTER}
+RANK = "rank"                  # after a release: the ticket waits until a deep run ranks all of them (after-release.yml)
+RELEASE = "release"            # the epic of the next release: release.yml tags v0.N.0 when it closes (owner, 2026-11-01)
+SKIP = {"needs-human", "blocked", "epic", STATUS, "in-progress", MUTED, CLOSE, AFTER, RANK}
 PRIORITY = ["P0", "P1", "P2", "P3"]
 # Names in ticket text that do not count for the overlap: tools for checks, and LEARNINGS.md (merge=union: no conflicts).
 # A PR that changes them still counts (work() takes the files of the PRs as they are).
@@ -52,6 +54,10 @@ def start_after(issue):
     m = re.search(r"^Start after:\s*(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2}))?", issue.get("body") or "", re.M)
     if not m:
         return None
+    # fromisoformat() accepts "24:00" on Python 3.14 but not 3.12: reject it here so every version agrees
+    hour, minute = map(int, (m.group(2) or "00:00").split(":"))
+    if hour > 23 or minute > 59:
+        raise ValueError(f"bad time {m.group(2)}")
     return datetime.datetime.fromisoformat(f"{m.group(1)}T{m.group(2) or '00:00'}+00:00")
 
 
@@ -105,10 +111,21 @@ def prs_after(number):
     return None if not t else sum(n != number for _, n in merges(since=ts(t)))
 
 
-def waits(issue, after=prs_after):
-    """True while the "Start after: N PRs after #M" line of the issue holds it. after(M): the merged PRs after #M."""
+def last_merge():
+    """The time of the last PR merged into the default branch, or None."""
+    return next((t for t, _ in merges(n=1)), None)
+
+
+def waits(issue, after=prs_after, now=None, last=last_merge):
+    """True while the "Start after: N PRs after #M" line of the issue holds it. after(M): the merged PRs after #M.
+    The wait ends also after claim.ROADMAP_IDLE minutes with no merged PR (#5201): with no other ready ticket no run
+    merges, so the count never comes. last(): the time of the last merge."""
     s = start_after_prs(issue)
-    return bool(s) and (after(s[1]) or 0) < s[0]
+    if not s or (after(s[1]) or 0) >= s[0]:
+        return False
+    from claim import ROADMAP_IDLE  # here: claim.py imports this module
+    t, now = last(), now or datetime.datetime.now(datetime.timezone.utc)
+    return bool(t) and now - t < datetime.timedelta(minutes=ROADMAP_IDLE)
 
 
 def names(text):
@@ -155,12 +172,18 @@ def candidates(issues, busy=frozenset(), now=None, lane=None, reserved=RESERVED,
     now = now or datetime.datetime.now(datetime.timezone.utc)
     open_numbers = {i["number"] for i in issues}
     issues = [i for i in issues if "pull_request" not in i]
+    by_number = {i["number"]: i for i in issues}
+
+    def parked(i):          # the parent epic waits for the release or the owner muted it (#5169)
+        url = i.get("parent_issue_url") or ""
+        parent = by_number.get(int(url.rsplit("/", 1)[1])) if url.rsplit("/", 1)[-1].isdigit() else None
+        return bool(parent and labels(parent) & {AFTER, MUTED})
 
     def rank(i):
         p = next((k for k, name in enumerate(PRIORITY) if name in labels(i)), len(PRIORITY))
         return lane is None and any(n.startswith(LANE) for n in labels(i)), p, len(overlap(i, busy)), i["number"]
     ready = [i for i in issues if not labels(i) & SKIP and not any(d in open_numbers for d in depends(i))
-             and not i.get("title", "").startswith("Decide:")
+             and not i.get("title", "").startswith("Decide:") and not parked(i)
              and (LANE + lane in labels(i) if lane else not {LANE + r for r in reserved} & labels(i))
              and not held(i, now, after)]                   # last: it reads GitHub
     return sorted(ready, key=rank)
@@ -171,7 +194,7 @@ def held(issue, now, after=prs_after):
     date, a #M that is no PR: GitHub answers 404) holds only its own ticket, with one warning on stderr (#3055): an
     error here stopped the pick of all tickets, usage.py --fire and the dashboard."""
     try:
-        return (start_after(issue) or now) > now or waits(issue, after)
+        return (start_after(issue) or now) > now or waits(issue, after, now)
     except Exception as e:                          # ValueError, CalledProcessError, HTTPError: the line is wrong
         line = re.search(r"^Start after:.*", issue.get("body") or "", re.M)
         print(f"warning: #{issue['number']} is not ready: bad line {line[0].strip() if line else ''!r} ({e})",
@@ -179,7 +202,7 @@ def held(issue, now, after=prs_after):
         return True
 
 
-WATCHED = {"needs-human", MUTED, AFTER, "in-progress", "epic", STATUS, CLOSE}   # an owner, a run or a workflow acts
+WATCHED = {"needs-human", MUTED, AFTER, RANK, "in-progress", "epic", STATUS, CLOSE}   # an owner, a run or a workflow acts
 
 
 def orphans(issues, after=prs_after):
@@ -203,11 +226,19 @@ def orphans(issues, after=prs_after):
                 seen.add(d)
                 todo += [x for x in depends(tickets[d]) if x in tickets]
         return False
+    closers = {}                                    # ticket -> the open PRs that close it
+    for i in issues:
+        if "pull_request" in i:
+            for c in closes(i):
+                closers.setdefault(c, []).append(i["number"])
     out = []
     for n, i in sorted(tickets.items()):
         if labels(i) & WATCHED:
             continue
-        if i.get("title", "").startswith("Decide:"):
+        if i.get("title", "").startswith("Decide:") and n in closers:   # the owner answered in a `human/*` PR (#4754)
+            out.append((n, f"a decision that PR #{closers[n][0]} closes: Automerge takes no `human/*` branch without "
+                           "the label `automerge` (#3383): ask the owner on the ticket to add it or to merge"))
+        elif i.get("title", "").startswith("Decide:"):
             out.append((n, "a decision with no `needs-human`: act on the owner's answer, or add `needs-human`"))
         elif "blocked" in labels(i) and not any(d in open_numbers for d in depends(i)):
             out.append((n, "`blocked` with no open \"Depends on\" ticket: remove `blocked`, or add `needs-human` "
@@ -291,12 +322,33 @@ def process_changes(prs, now, hours=24):
                and datetime.datetime.fromisoformat(p["merged_at"].replace("Z", "+00:00")) >= since)
 
 
+def release_version(epic):
+    """The version "vX.Y.Z" in the title of a release epic, or None. The GitHub milestone of that title is its scope."""
+    m = re.search(r"\bv\d+\.\d+\.\d+\b", epic.get("title") or "")
+    return m and m[0]
+
+
+def release_scope(epic, issues, milestones=()):
+    """(closed, total, [open numbers]) of the scope of a release epic: the issues of the GitHub milestone with its
+    version as the title. issues: the open issues; milestones: [{title, open_issues, closed_issues}] when known (else
+    the milestone object of an open issue gives the counts; with neither, (0, 0, []))."""
+    if not (v := release_version(epic)):
+        return 0, 0, []
+    left =[i["number"] for i in issues if (i.get("milestone") or {}).get("title") == v and i["number"] != epic["number"]]
+    m = next((m for m in milestones if m.get("title") == v), None) or next(
+        (i["milestone"] for i in issues if (i.get("milestone") or {}).get("title") == v), None)
+    if not m:
+        return 0, len(left), left
+    return m.get("closed_issues", 0), m.get("closed_issues", 0) + m.get("open_issues", 0), left
+
+
 def render(old_body, issues, comments, open_prs, closed_issues, closed_prs, now, unanswered=None, nxt=None, accounts=None,
-           insights=None):
+           insights=None, releases=None):
     """The new body of the status issue. comments: {issue number: comments} for the needs-human and
     in-progress issues. unanswered: the owner comments without a lock (`framework/tools/feedback.py`, #971).
     nxt: the "Next up" tickets, if known (candidates() can read GitHub). accounts: one row per Claude account
-    (`dashboard_data.accounts`, #4239); no section when None or when there is one account only."""
+    (`dashboard_data.accounts`, #4239); no section when None or when there is one account only. releases: the
+    progress of each release (`dashboard_data.releases`); no section when None."""
     nxt = candidates(issues, now=now)[:5] if nxt is None else nxt
     issues = [i for i in issues if "pull_request" not in i]
     state = re.search(r"<!-- agent-state:.*?-->", old_body or "")
@@ -313,6 +365,21 @@ def render(old_body, issues, comments, open_prs, closed_issues, closed_prs, now,
         out.append(f"- Muted: {muted} ticket{'s' * (muted != 1)} (label `{MUTED}`: no agent works on them; remove the label to bring one back)")
     if after := sum(AFTER in labels(i) for i in issues):
         out.append(f"- After the release: {after} ticket{'s' * (after != 1)} (label `{AFTER}`: no agent works on them before the next release)")
+
+    if releases and releases.get("rows"):              # the progress toward each release (owner, 2026-11-01)
+        goals = list(dict.fromkeys(g for _, gs, _, _ in releases["rows"] for g in gs))
+        out += ["", "### Releases", "| Release | " + " | ".join(goals) + " | All |",
+                "|---" * (len(goals) + 2) + "|"]
+        cell = lambda pct, left: f"{pct:.0f} % ({left} left)"
+        out += [f"| {name} | " + " | ".join(cell(*gs[g]) if g in gs else "–" for g in goals) + f" | {cell(pct, left)} |"
+                for name, gs, pct, left in releases["rows"]]
+        for e in sorted((i for i in issues if RELEASE in labels(i)), key=lambda i: i["number"]):
+            done, total, left = release_scope(e, issues, releases.get("milestones") or ())
+            out.append(f"{e['title']} (#{e['number']}): {done} of {total} tickets of the milestone "
+                       f"`{release_version(e)}` closed" + (", open: " + " ".join(f"#{n}" for n in left[:10]) if left else ""))
+        if releases.get("waiting"):
+            out.append(f"Wait for the release: {releases['waiting']} roadmap features outside the release focus "
+                       "(`steering/project/RELEASE.md`)")
 
     out += ["", "### Working on"]
     for i in sorted(issues, key=lambda i: i["number"]):
@@ -345,6 +412,14 @@ def render(old_body, issues, comments, open_prs, closed_issues, closed_prs, now,
                 for k, r in sorted(insights["sizes"].items())]
         if insights.get("sinks"):
             out += ["", "Top costs (M eq): " + ", ".join(f"{k} {v:.1f}" for k, v in insights["sinks"])]
+    if insights and insights.get("days"):              # what the runs do per day (#4725)
+        out += ["", "### Activity (7 days)", "| Day | Runs | Merged PRs | Runs per PR | Runs: ticket, review, idle | Minutes |",
+                "|---|---|---|---|---|---|"]
+        for r in insights["days"]:
+            k, work = r["kinds"], sorted(r["work"].items(), key=lambda x: -x[1])
+            out.append(f"| {r['day']} | {r['runs']} | {r['merged']} | " + (f"{r['runs'] / r['merged']:.1f}" if r["merged"] else "–") +
+                       f" | {k.get('ticket', 0)}, {k.get('review', 0)}, {k.get('idle', 0)} | " +
+                       (", ".join(f"{n} {m:g}" for n, m in work if m) or "–") + " |")
     out += ["", "### Recently done"]
     merged = [p for p in closed_prs if p.get("merged_at")]
     done = [i for i in closed_issues if "pull_request" not in i and i.get("state_reason") == "completed"]
@@ -356,7 +431,7 @@ def render(old_body, issues, comments, open_prs, closed_issues, closed_prs, now,
         out.append("- nothing")
     out += ["", f"Process changes (24 h): {process_changes(closed_prs, now)} merged PRs with the label `process`"]
     if unanswered is not None:
-        from feedback import HOURS, issue_number           # feedback imports this module: import at the call
+        from feedback import HOURS, issue_number  # feedback imports this module: import at the call
         out.append(f"Owner comments without an answer ({HOURS:g} h): {len(unanswered)}" + "".join(
             f" #{n}" for n in dict.fromkeys(issue_number(c) for c in unanswered)) +
             " (`framework/tools/feedback.py`: the next run answers them)" * bool(unanswered))
@@ -411,7 +486,7 @@ def main(argv=None):
     if a.next:
         prs = [i["number"] for i in open_all if "pull_request" in i]
         busy = work(open_all, {n: [f["filename"] for f in pages(f"pulls/{n}/files", 3)] for n in prs})
-        import health                                       # health imports this module
+        import health  # health imports this module
         held = claimed(health.claim_refs() or [], datetime.datetime.now(datetime.timezone.utc))
         for i in (i for i in candidates(open_all, busy, lane=a.lane) if i["number"] not in held):
             ov = overlap(i, busy)
@@ -426,11 +501,11 @@ def main(argv=None):
                 for i in issues if labels(i) & {"needs-human", "in-progress"}}
     closed = api("issues?state=closed&sort=updated&direction=desc&per_page=50")
     closed_prs = pages("pulls?state=closed&sort=updated&direction=desc", 5)    # about 24 h of merges (#901)
-    from feedback import fetch as unanswered               # owner comments without a lock (#971)
+    from feedback import fetch as unanswered  # owner comments without a lock (#971)
     open_prs, owner, now = api("pulls?state=open&per_page=100"), unanswered(), datetime.datetime.now(datetime.timezone.utc)
     nxt = candidates(open_all, now=now)[:5]
     try:                                                    # the accounts section (#4239): one row per Claude account
-        import dashboard_data                               # a project tool: a copy of the generic tools has none (#3560)
+        import dashboard_data  # a project tool: a copy of the generic tools has none (#3560)
         accounts = dashboard_data.accounts()
     except (ImportError, OSError, subprocess.CalledProcessError) as e:   # a failed read: no section, the rest updates
         print(f"accounts: {e}", file=sys.stderr)
@@ -440,11 +515,16 @@ def main(argv=None):
     except (NameError, AttributeError, OSError, subprocess.CalledProcessError) as e:   # no tool, an older one or a failed read
         print(f"insights: {e}", file=sys.stderr)
         insights = None
+    try:
+        releases = dashboard_data.releases()
+    except Exception as e:                                  # no tool, an older one, a file or a GitHub error
+        print(f"releases: {e}", file=sys.stderr)
+        releases = None
     # Read the body again after all other reads (#3002): a run writes the state comment and the process changes
     # while the reads above take about 20 s, and the PATCH of the old body deleted them.
     status = api(f"issues/{status['number']}")
     body = render(status["body"], open_all, comments, open_prs, closed, closed_prs, now, owner, nxt, accounts=accounts,
-                  insights=insights)
+                  insights=insights, releases=releases)
     if a.out:                                   # out/ is not in git: a fresh checkout (the workflow) has no folder
         os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
         with open(a.out, "w", encoding="utf-8") as f:

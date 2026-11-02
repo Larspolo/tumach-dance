@@ -15,8 +15,13 @@ rule such as "weekends all day, weekdays from 17:00, not on Thursday", not a gri
 
 Nina likes the look of the current tumach.dance and calls it "simple and chill". Each page keeps its colors, fonts,
 space and calm layout (a copy with placeholder texts: `docs/design/current-site.html`). Its texts are not the content
-of the site: never copy a text, a class, a time or a claim from it. Each real text comes from Nina (a question for
-Nina); until then, a page shows a clear placeholder. Example: Nina's studio app uses the same fonts and colors.
+of the site: never copy a text, a class, a time or a claim from it. Example: Nina's studio app uses the same fonts and
+colors.
+
+Nina cares less about the texts than the agents thought (owner, 2026-10-31, #257): only the tagline is hers. An agent
+writes each other text itself, short and plain in the "simple and chill" tone, with no fact that it does not know (her
+dance styles, the address). Ask Nina about a text only when no text is a good option, for example a fact that only
+she knows and that the page needs.
 
 ## P3. Ready features first
 
@@ -47,7 +52,8 @@ other areas the agents decide, and ask only when two options are equally good.
 - Only real ties.
 - Two people answer. **Lars** (the owner, `Larspolo`) answers the technical questions, the setup steps on his
   accounts and the home server, and the costs. **Nina** (the studio owner, not technical) answers the questions of
-  taste and of her studio: the look, the texts, the booking rules that dancers see, which option she likes.
+  taste and of her studio: the look, her tagline, the booking rules that dancers see, which option she likes. The
+  other texts are not hers to decide (P2).
 - A question for Nina is in plain words with no technical word: what to look at (a link to the preview), the steps to
   try it, and 2 to 4 choices. One question per ticket. Never send her a technical question.
 - Until the feature `nina:review` works, a question for Nina is a `needs-human` ticket for Lars that starts with

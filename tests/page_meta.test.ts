@@ -3,16 +3,14 @@ import { createTranslator } from "next-intl";
 import { expect, test } from "vitest";
 import en from "../messages/en.json";
 import nl from "../messages/nl.json";
-import sl from "../messages/sl.json";
 import { PUBLIC_PAGES, pageMetadata } from "../src/lib/page-meta";
 
-const all = { en, nl, sl };
+const all = { en, nl };
 
-test("each key of Meta is in English, Dutch and Slovenian", () => {
+test("each key of Meta is in English and Dutch", () => {
   const keys = (m: typeof en) =>
     Object.entries(m.Meta).flatMap(([k, v]) => (typeof v === "string" ? [k] : Object.keys(v).map((f) => `${k}.${f}`)));
   expect(keys(nl as typeof en).sort()).toEqual(keys(en).sort());
-  expect(keys(sl as typeof en).sort()).toEqual(keys(en).sort());
 });
 
 test.each(Object.entries(all))("%s: each public page has a title and a description", (locale, messages) => {
