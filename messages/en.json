@@ -258,6 +258,8 @@
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
+    "note": "A note for Nina (optional)",
+    "noteHint": "For example what you want to learn, or how many people come.",
     "send": "Send the request",
     "sent": "Request sent",
     "sentText": "Nina will look at your request and answer you by email.",

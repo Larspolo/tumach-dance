@@ -38,6 +38,7 @@ export async function sendRequest(form: FormData): Promise<void> {
     name: text("name"),
     email: text("email"),
     phone: text("phone"),
+    note: text("note"),
     locale,
   });
   if (result.ok) {

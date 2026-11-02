@@ -258,6 +258,8 @@
     "name": "Naam",
     "email": "E-mail",
     "phone": "Telefoon",
+    "note": "Een bericht voor Nina (niet verplicht)",
+    "noteHint": "Bijvoorbeeld wat je wilt leren, of met hoeveel mensen je komt.",
     "send": "Verstuur de aanvraag",
     "sent": "Aanvraag verstuurd",
     "sentText": "Nina bekijkt je aanvraag en antwoordt je per e-mail.",
