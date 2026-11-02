@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
+import { routing } from "@/i18n/routing";
 import { cancelLink } from "@/lib/booking-cancel";
 import { TIME_ZONE } from "@/lib/hours";
 import styles from "../../book/book.module.css";
@@ -13,6 +16,7 @@ export const dynamic = "force-dynamic";
 // The token is in the address: no search engine and no referrer gets it. A title names the page for a screen reader (#343).
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: "Meta" });
   return { title: t("cancel.title"), robots: { index: false, follow: false }, referrer: "no-referrer" };
 }
@@ -27,6 +31,7 @@ export default async function CancelPage({
   searchParams: Promise<Search>;
 }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const { token = "", done } = await searchParams;
   const t = await getTranslations("CancelBooking");
