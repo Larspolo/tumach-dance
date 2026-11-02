@@ -37,14 +37,15 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
 }
 
 /** The email of the site to a dancer that can fail (#414, `unanswered`: #421). */
-export type EmailKind = "request" | "decision" | "cancel" | "reminder" | "payment" | "unanswered";
+export type EmailKind = "request" | "decision" | "cancel" | "move" | "reminder" | "payment" | "unanswered";
 
-export const EMAIL_KINDS: EmailKind[] = ["request", "decision", "cancel", "reminder", "payment", "unanswered"];
+export const EMAIL_KINDS: EmailKind[] = ["request", "decision", "cancel", "move", "reminder", "payment", "unanswered"];
 
 const KIND_KEY = {
   request: "emailFailRequest",
   decision: "emailFailDecision",
   cancel: "emailFailCancel",
+  move: "emailFailMove",
   reminder: "emailFailReminder",
   payment: "emailFailPayment",
   unanswered: "emailFailUnanswered",
