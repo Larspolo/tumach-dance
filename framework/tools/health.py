@@ -13,6 +13,7 @@ REST only (cloud sessions give 403 for GraphQL and `search/...`). Token and `gh`
 import argparse
 import datetime
 import difflib
+import json
 import math
 import os
 import re
@@ -62,8 +63,60 @@ def ci_runs(runs, since):
     out = {}
     for name, rs in sorted(by.items()):
         m = [minutes(r["run_started_at"], r["updated_at"]) for r in rs]
-        out[name] = (len(rs), med(m), max(m), sum(r["conclusion"] == "failure" for r in rs))
+        out[name] = (len(rs), med(m), max(m), sum(r["conclusion"] == "failure" and not held(r) for r in rs))
     return out
+
+
+def loop_gaps(runs, since, until):
+    """(longest gap, sum of the gaps) in hours with no live run of `runs` between `since` and `until`: the pacer loop
+    died quietly twice in 12 hours, and the owner started it by hand (#4647). A run that did not start (queued, held)
+    counts as no run; a live run lasts to `until`."""
+    spans = sorted((max(ts(r["run_started_at"]), since), min(until, ts(r["updated_at"]) if r.get("status") == "completed"
+                    else until)) for r in runs if r.get("status") in ("completed", "in_progress") and r.get("run_started_at"))
+    gaps, t = [], since
+    for a, b in spans:
+        if a > t:
+            gaps.append((a - t).total_seconds() / 3600)
+        t = max(t, b)
+    if until > t:
+        gaps.append((until - t).total_seconds() / 3600)
+    return max(gaps, default=0.0), sum(gaps)
+
+
+def idle_queue(cycles, until):
+    """(longest, sum) in hours of the idle stretches of the pacer `cycles` (dicts of `pacer/YYYY-MM-DD.jsonl`): the
+    consecutive cycles with `target` > 0, no claim and no started run, from the first one to the next cycle that is not
+    idle (or `until`). The queue stood still for hours on 2026-10-31 while the pacer loop ran (#5199). A paused
+    project is not idle."""
+    stretches, start = [], None
+    for c in sorted(cycles, key=lambda c: c["at"]):
+        idle = (c.get("target", 0) > 0 and not c.get("claims") and not sum((c.get("started") or {}).values())
+                and "paused True" not in c.get("line", ""))
+        if idle and start is None:
+            start = ts(c["at"])
+        elif not idle and start is not None:
+            stretches.append((ts(c["at"]) - start).total_seconds() / 3600)
+            start = None
+    if start is not None:
+        stretches.append(max(0.0, (until - start).total_seconds() / 3600))
+    return max(stretches, default=0.0), sum(stretches)
+
+
+def held(r):
+    """GitHub held the run: it waits for an approval (#4645), or it is the pull_request run of a push of
+    github-actions[bot] (Unconflict), which GitHub ends with 0 jobs (29 of 29 runs, #4988): no red CI."""
+    return ("action_required" in (r.get("status"), r.get("conclusion")) or r.get("status") == "waiting"
+            or r.get("event") == "pull_request" and (r.get("actor") or {}).get("login") == "github-actions[bot]"
+            and r.get("conclusion") != "success")
+
+
+def held_runs(runs):
+    """({workflow: runs that GitHub held}, {workflow: runs that a person started again}): a held run waits for an
+    approval (#4645: GitHub held the pacer runs that read `toJSON(secrets)` as "may be malicious"); no tool starts a run
+    again, so an attempt 2 or more is owner work (lever 9)."""
+    held_ = Counter(r["name"] for r in runs if held(r))
+    again = Counter(r["name"] for r in runs if r.get("run_attempt", 1) > 1)
+    return dict(held_), dict(again)
 
 
 def slow_steps(jobs, n=3):
@@ -381,20 +434,63 @@ def release_per_week(points):
     return ((pts[-1][2] - pts[0][2]) / used, pts[0][2], pts[-1][2]) if len(pts) > 1 and used else None
 
 
+RELEASE_MILESTONE = re.compile(r"v\d")
+
+
+def milestone_per_week(issues, points):
+    """(closed issues per 1 % of 7-day quota, closed issues, quota %, milestone titles) or None (#5552): the issues of a
+    release milestone ("v0.1.0") that closed as done between the first and the last point of weekly(). The release bar
+    stays at its level while the runs work only on the release focus, so this counts the work of the focus."""
+    if len(points) < 2:
+        return None
+    used = sum(b[1] - a[1] for a, b in zip(points, points[1:]) if b[1] > a[1])
+    done = [i for i in issues if "pull_request" not in i and i.get("closed_at") and i.get("state_reason") != "not_planned"
+            and RELEASE_MILESTONE.match((i.get("milestone") or {}).get("title") or "")
+            and points[0][0] <= ts(i["closed_at"]) <= points[-1][0]]
+    return (len(done) / used, len(done), used, sorted({i["milestone"]["title"] for i in done})) if used else None
+
+
 def weak_spots(issues, events, prs, runs, since):
-    """Counts that cost quality: issues that the owner reopened, bug tickets that name a PR merged since `since`
-    (rework), bug tickets that name a check ticket ("Check ..."), and failed night runs of CI."""
+    """Counts that cost quality: issues that the owner reopened, bug tickets that name a PR merged since `since` and
+    before the bug (rework: a PR that merged later is a blocked PR, not the cause, #5461), bug tickets that name a
+    check ticket ("Check ..."), and failed night runs of CI."""
     new = [i for i in issues if "pull_request" not in i and ts(i["created_at"]) >= since]
     bugs = [i for i in new if "bug" in {lb["name"] for lb in i.get("labels", [])}]
-    merged = {p["number"] for p in prs if p.get("merged_at") and ts(p["merged_at"]) >= since}
+    merged_at = {p["number"]: ts(p["merged_at"]) for p in prs if p.get("merged_at") and ts(p["merged_at"]) >= since}
+    merged = lambda i: {n for n, t in merged_at.items() if t < ts(i["created_at"])}
     checks = {i["number"] for i in issues if i["title"].startswith("Check ")}
     named = lambda i: {int(n) for n in re.findall(r"#(\d+)", i.get("body") or "")}
     return {"reopened": sum(e["event"] == "reopened" and (e.get("actor") or {}).get("login") in OWNERS
                             and ts(e["created_at"]) >= since for e in events),
-            "rework": sum(bool(named(i) & merged) for i in bugs),
+            "rework": sum(bool(named(i) & merged(i)) for i in bugs),
             "check bugs": sum(bool(named(i) & checks) for i in bugs),
             "red nights": sum(r["name"] == "CI" and r.get("event") == "schedule" and r.get("conclusion") == "failure"
                               and ts(r["run_started_at"]) >= since for r in runs)}
+
+
+def lane_rework(issues, prs, comments, since):
+    """{lane: (rework bug tickets, merged PRs)} (#5533): the rule of `rework` in weak_spots, by the lane of each PR. The
+    lane of a PR is the lane of the first `Metrics:` line that names it (`· pr #N ·`, `· lane NAME`, else "opus")."""
+    lane_of = {}
+    for c in comments:
+        for line in (c.get("body") or "").splitlines():
+            m = re.match(r"Metrics: .*?· pr #(\d+) ·", line)
+            if m:
+                lane = re.search(r"· lane (\w+)", line)
+                lane_of.setdefault(int(m[1]), lane[1] if lane else "opus")
+    merged_at = {p["number"]: ts(p["merged_at"]) for p in prs if p.get("merged_at") and ts(p["merged_at"]) >= since
+                 and p["number"] in lane_of}
+    out = {k: [0, 0] for k in sorted({lane_of[n] for n in merged_at})}
+    for n in merged_at:
+        out[lane_of[n]][1] += 1
+    for i in issues:
+        if "pull_request" in i or ts(i["created_at"]) < since or "bug" not in {lb["name"] for lb in i.get("labels", [])}:
+            continue
+        hit = {int(n) for n in re.findall(r"#(\d+)", i.get("body") or "")} & \
+            {n for n, t in merged_at.items() if t < ts(i["created_at"])}
+        for k in {lane_of[n] for n in hit}:
+            out[k][0] += 1
+    return {k: tuple(v) for k, v in out.items()}
 
 
 def misses(issues, since):
@@ -552,6 +648,23 @@ def lanes(comments):
     return {k: tuple(v) for k, v in out.items()}
 
 
+def next_effect(comments):
+    """(runs that took a `next:` ticket, failed `next:` claims, M eq per first ticket, M eq per later ticket) of the run
+    reports (#5308). A later ticket has `· source NAME` on its `Metrics:` line; the `Tokens:` eq of a report splits
+    evenly over its tickets. The medians are None when no ticket of the kind has a `Tokens:` line."""
+    took = failed = 0
+    first, later = [], []
+    for c in comments:
+        body = c.get("body") or ""
+        lines = re.findall(r"^Metrics: ticket #.*$", body, re.M)
+        took += any(re.search(r"· source next\b", x) for x in lines)
+        failed += sum(len(m.split()) for m in re.findall(r"^Next failed: (.*)$", body, re.M))
+        if (tok := TOKENS.search(body)) and lines:
+            for x in lines:
+                (later if " · source " in x else first).append(float(tok[1]) / len(lines))
+    return took, failed, med(first), med(later)
+
+
 def pr_results(comments, prs):
     """The `pr #n` results of the `Metrics:` lines: (merged PRs, not merged PRs) by the present PR state (#902)."""
     merged = {p["number"] for p in prs if p.get("merged_at")}
@@ -576,8 +689,8 @@ def conflict_files(files_of, n=5, prefix=""):
     return Counter(f for fs in files_of.values() for f in set(fs) if f.startswith(prefix)).most_common(n)
 
 
-RUN = re.compile(r"^(?:Started|Taken over) by `([^`]+)`")
-CAUSES = ("quota", "merge conflict", "long mc test", "no report", "after the report")
+RUN = re.compile(r"^(?:Started|Taken over) by [^`\n]*`([^`]+)`")   # also "by the pacer run (claim `B`)"
+CAUSES = ("quota", "merge conflict", "long mc test", "red CI", "no report", "after the report")
 
 
 def by_run(report, run):
@@ -588,13 +701,16 @@ def by_run(report, run):
     return f"`{run}`" in (report.get("body") or "") or (bool(report.get("branch")) and base(report["branch"]) == base(run))
 
 
-def takeovers(comments, status_comments, prs=(), since=None, full=0.95):
+def takeovers(comments, status_comments, prs=(), since=None, full=0.95, runs=()):
     """[(time, item, old run, minutes since its last report or None, cause)] of the "Taken over by" comments (#1703).
     The old run: the last other "Started by" or "Taken over by" branch on the item, its ticket or its PR, else the
-    PR branch. The first rule that matches gives the cause: a `Usage:` line at `full` or more after the old run
-    started (quota), an Automerge merge failure or "conflict" in the takeover text (merge conflict), `-m mc` in the
-    last report of the old run (long mc test), no report of the old run after its start (the session ended in the
-    ticket: no report), else the run reported and did not come back (after the report)."""
+    PR branch. Its report: a report after its start that names its branch or a PR branch of the item (the `Run:`
+    line has no backticks, and a run of the pacer starts as `pacer-r...`) or a ticket of the item (`Metrics:`, #4777:
+    28 of 33 "no report" takeovers had one). The first rule that matches gives the cause: a `Usage:` line at `full` or
+    more after the old run started (quota), an Automerge merge failure or "conflict" in the takeover text (merge
+    conflict), `-m mc` in the last report of the old run (long mc test), a failure of the last CI run of a PR branch of
+    the item in `runs` (red CI), no report of the old run after its start (the session ended in the ticket: no
+    report), else the run reported and did not come back (after the report)."""
     num = lambda c: int(c["issue_url"].rsplit("/", 1)[1])
     by_pr = {p["number"]: p for p in prs}
     out = []
@@ -603,15 +719,21 @@ def takeovers(comments, status_comments, prs=(), since=None, full=0.95):
         when, item = t["created_at"], num(t)
         if since is not None and ts(when) < since:
             continue
+        if not (m := RUN.match(t["body"].lstrip())):
+            continue                                        # free text with no branch name: no run to count
+        new = m[1]
         rel = {item} | closes(by_pr.get(item, {})) | {n for n, p in by_pr.items() if item in closes(p)}
-        new = RUN.match(t["body"].lstrip())[1]
         prior = [(c["created_at"], m[1]) for c in comments if num(c) in rel and c["created_at"] < when
                  for m in [RUN.match((c.get("body") or "").lstrip())] if m and m[1] != new]
         start, old = max(prior) if prior else (None, by_pr.get(item, {}).get("head", {}).get("ref", "?"))
         after = lambda c: c["created_at"] < when and (start is None or c["created_at"] >= start)
-        reports = sorted((c for c in status_comments if after(c) and by_run(c, old)),
+        heads = {old} | {p["head"]["ref"] for n, p in by_pr.items() if n in rel and p.get("head")}
+        mine = re.compile("|".join([rf"`{re.escape(b)}`|\bbranch {re.escape(b)}(?:\s|$)" for b in heads]
+                                   + [rf"\bticket #{n}\b" for n in rel]))
+        reports = sorted((c for c in status_comments if after(c) and (mine.search(c.get("body") or "") or by_run(c, old))),
                          key=lambda c: c["created_at"])
         last = reports[-1] if reports else None
+        ci = [r for r in runs if r.get("name") == "CI" and r.get("head_branch") in heads and after(r) and not held(r)]
         if any(s[1] >= full for s in raw_samples([c for c in status_comments if after(c)])):
             cause = "quota"
         elif "conflict" in t["body"] or any(num(c) in rel and after(c) and (c.get("body") or "").lstrip().startswith(
@@ -619,6 +741,8 @@ def takeovers(comments, status_comments, prs=(), since=None, full=0.95):
             cause = "merge conflict"
         elif last and "-m mc" in last["body"]:
             cause = "long mc test"
+        elif ci and max(ci, key=lambda r: r["created_at"]).get("conclusion") == "failure":
+            cause = "red CI"
         else:
             cause = "after the report" if last else "no report"
         out.append((when, item, old, None if last is None else round(minutes(last["created_at"], when)), cause))
@@ -634,10 +758,17 @@ def takeover_lines(rows):
 
 
 def report(since, runs, jobs, status_comments, comments, prs, files, files_of=None, issues=(), issue_events=(),
-           unanswered=None, reviews=None, data_rows=None, owner=None, waits=None):
+           unanswered=None, reviews=None, data_rows=None, owner=None, waits=None, loop=None, idle=None):
     out = [f"Health since {since:%Y-%m-%d %H:%M} UTC", "", "CI runs (count, median min, max min, failures):"]
     for name, (k, m, mx, fail) in ci_runs(runs, since).items():
         out.append(f"  {name}: {k}, {fmt(m)}, {fmt(mx)}, {fail}")
+    if loop is not None:                        # a dead pacer loop starts no run (#4647): (longest, sum, hours)
+        out.append(f"Pacer loop gaps (no live run, #4647): longest {loop[0]:.1f} h, sum {loop[1]:.1f} h of {loop[2]:.1f} h")
+    if idle is not None:                        # the loop runs, but it starts nothing (#5199): (longest, sum)
+        out.append(f"Idle queue (target > 0, no claim, no start): longest {idle[0]:.1f} h, sum {idle[1]:.1f} h")
+    held, again = held_runs(runs)
+    out.append("Runs held by GitHub (#4645): " + (", ".join(f"{k} {v}" for k, v in sorted(held.items())) or "0")
+               + " · started again by hand: " + (", ".join(f"{k} {v}" for k, v in sorted(again.items())) or "0"))
     out.append("Slowest CI steps (median min): " + "; ".join(f"{k} {fmt(m)}" for m, k in slow_steps(jobs)))
     setup = setup_minutes(status_comments)
     out.append(f"Setup (median min of {len(setup)} Metrics lines): {fmt(med(setup))}")
@@ -646,7 +777,7 @@ def report(since, runs, jobs, status_comments, comments, prs, files, files_of=No
                + (f" ({', '.join(f'#{n}' for n in lost)})" if lost else ""))
     e = events(comments)
     out.append(f"Takeovers {e['takeovers']}, releases {e['releases']}, merge conflicts {e['conflicts']} (solved by Unconflict {e['solved']})")
-    out.append(takeover_lines(takeovers(comments, status_comments, prs, since))[-1])
+    out.append(takeover_lines(takeovers(comments, status_comments, prs, since, runs=runs))[-1])
     if files_of:
         out.append(f"Files of the {len(files_of)} conflicted PRs (PRs): "
                    + "; ".join(f"{f} {k}" for f, k in conflict_files(files_of)))
@@ -680,14 +811,24 @@ def report(since, runs, jobs, status_comments, comments, prs, files, files_of=No
     for name, (n, pr, mins, eq) in sorted(lanes(status_comments).items()):
         out.append(f"Lane {name}: {n} runs, {pr} PRs, median {fmt(med(mins))} min, median {fmt(med(eq))}M eq"
                    + (f", median ${med(costs[name]):.2f} per run" if costs.get(name) else ""))
+    took, nfail, first, later = next_effect(status_comments)
+    out.append(f"Next tickets (#5308): {took} runs took a next: ticket, {nfail} failed next: claims, M eq per ticket:"
+               f" first {fmt(first)}, later {fmt(later)}")
     weights, source, errors, pairs = lane_fit(status_comments)
     out.append(f"Lane weights (a lane run in Opus runs, #1727; {pairs} pairs, ± standard error, #2852): " + ", ".join(
         f"{k} {w:.2f}{f' ± {errors[k]:.2f}' if k in errors else ''} ({source[k]})" for k, w in weights.items()))
-    rw = release_per_week([p for p in weekly(status_comments) if p[0] >= since])
+    week = [p for p in weekly(status_comments) if p[0] >= since]
+    rw = release_per_week(week)
     out.append("Release per 1 % of 7-day quota: " + ("-" if rw is None else
                f"{rw[0]:.2f} points ({rw[1]:g} % to {rw[2]:g} %)"))
+    mw = milestone_per_week(issues, week)
+    out.append("Release milestone per 1 % of 7-day quota (#5552): " + ("-" if mw is None else
+               f"{mw[0]:.2f} closed issues ({mw[1]} closed in {', '.join(mw[3]) or '-'}, {mw[2]:g} % used)"))
     w = weak_spots(issues, issue_events, prs, runs, since)
     out.append("Weak spots: " + ", ".join(f"{k} {v}" for k, v in w.items()))
+    lr = lane_rework(issues, prs, status_comments, since)
+    out.append("Rework per lane (bug tickets / merged PRs, #5533): " + (", ".join(
+        f"{k} {b}/{n} ({b / n:.1%})" for k, (b, n) in lr.items()) or "-"))
     m = misses(issues, since)
     out.append(f"Misses (owner tickets for the system, improve step 0): {len(m)}"
                + (f" ({', '.join(f'#{n}' for n in m)})" if m else ""))
@@ -794,15 +935,48 @@ def period(until, hours, past, only_takeovers=False):
                                                                     issues, events)
     if only_takeovers:                          # the open PRs too: their branch and ticket
         return "\n".join(takeover_lines(takeovers(comments, status_comments,
-                                                   prs + api("pulls?state=open&per_page=100"), since)))
+                                                   prs + api("pulls?state=open&per_page=100"), since,
+                                                   runs=runs)))
     files_of = {n: [f["filename"] for f in api(f"pulls/{n}/files?per_page=100")] for n in conflicted(comments)}
     from feedback import fetch as unanswered
     refs = claim_refs()
     merged = sorted(t for p in prs if p.get("merged_at") and (t := ts(p["merged_at"])) >= since)
     text = report(since, runs, jobs, status_comments, comments, prs, git_files(), files_of, issues, events,
                   unanswered(), None if refs is None else review_delays(refs, merged, since), data_rows(),
-                  *owner_and_waits(since, until if past else None))
+                  *owner_and_waits(since, until if past else None), loop=pacer_loop(since, until), idle=pacer_idle(since, until))
     return text.replace(" UTC", f" UTC until {until:%Y-%m-%d %H:%M} UTC", 1) if past else text
+
+
+def pacer_loop(since, until):
+    """(longest gap, sum of the gaps, hours of the period) of the runs of pacer.yml; None with no such workflow. One
+    call: the runs that started up to 6 hours before `since` too (a loop lasts 5.5 hours)."""
+    created = f"{since - datetime.timedelta(hours=6):%Y-%m-%dT%H:%M:%SZ}..{until:%Y-%m-%dT%H:%M:%SZ}"
+    try:
+        runs = api(f"actions/workflows/pacer.yml/runs?per_page=100&created={created}")["workflow_runs"]
+    except Exception as e:                      # a project with no pacer workflow
+        print(f"health: no runs of pacer.yml ({e})", file=sys.stderr)
+        return None
+    return (*loop_gaps(runs, since, until), (until - since).total_seconds() / 3600)
+
+
+def pacer_idle(since, until):
+    """`idle_queue` of the pacer cycles between `since` and `until` (the branch `metrics`, `pacer/`); None when git
+    cannot read the branch."""
+    import metrics_log
+    if metrics_log.git("fetch", "-q", "--depth", "1", "origin", "+refs/heads/metrics:refs/remotes/origin/metrics").returncode:
+        return None
+    cycles, d = [], since.date()
+    while d <= until.date():
+        r = metrics_log.git("show", f"origin/metrics:pacer/{d:%Y-%m-%d}.jsonl")
+        for line in r.stdout.splitlines() if r.returncode == 0 else ():
+            try:
+                c = json.loads(line)
+            except ValueError:
+                continue
+            if since <= ts(c["at"]) <= until:
+                cycles.append(c)
+        d += datetime.timedelta(days=1)
+    return idle_queue(cycles, until)
 
 
 def merge_times(n, until):

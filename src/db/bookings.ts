@@ -7,6 +7,7 @@ import { classRanges } from "../lib/class-ranges";
 import { type OpenRange, openRanges, TIME_ZONE } from "../lib/hours";
 import { getHoursRule } from "../lib/hours-store";
 import { freeSlots } from "../lib/slots";
+import { listBlocks } from "./blocks";
 import { listClassTimes } from "./classes";
 import type { Db } from "./index";
 import type { Offer } from "./offers";
@@ -51,14 +52,19 @@ function clean(
   return { name, email, phone };
 }
 
-/** The `start`..`end` ranges of the `requested` and `approved` bookings that overlap `from`..`to`, for `freeSlots()`. */
+/**
+ * The `start`..`end` ranges that overlap `from`..`to`, for `freeSlots()`: the `requested` and `approved` bookings, and
+ * the blocks of Nina (#323, `listBlocks()`). Both the booking page and `requestBooking()` refuse a busy time, so a block
+ * is refused there too; removing a block frees its time again.
+ */
 export function busyRanges(db: Db, from: number, to: number): OpenRange[] {
-  return db
+  const booked = db
     .select({ start: bookings.start, end: bookings.end })
     .from(bookings)
     .where(and(inArray(bookings.status, HOLDING), lt(bookings.start, to), gt(bookings.end, from)))
-    .orderBy(bookings.start)
     .all();
+  const blocked = listBlocks(db, from, to).map((b) => ({ start: b.start, end: b.end }));
+  return [...booked, ...blocked].sort((a, b) => a.start - b.start);
 }
 
 /**
@@ -100,11 +106,14 @@ export function requestBooking(
   );
 }
 
-export type DecideResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-requested" };
+export type DecideResult =
+  | { ok: true; booking: Booking }
+  | { ok: false; reason: "not-found" | "not-requested" | "started" };
 
 /**
  * Nina approves or declines a `requested` booking. One `UPDATE` changes the status only while it is `requested`: a
  * second decision gets `not-requested` and changes nothing. A declined booking no longer holds its time.
+ * A request whose start is at or before `now` gets `started` and changes nothing (#341).
  * `tikkieUrl`: the payment link of an approval (#142), checked by `tikkieLink()` of `src/lib/tikkie.ts`.
  */
 export function decideBooking(
@@ -112,6 +121,7 @@ export function decideBooking(
   id: number,
   decision: "approved" | "declined",
   tikkieUrl: string | null = null,
+  now = Date.now(),
 ): DecideResult {
   const booking = db
     .update(bookings)
@@ -120,12 +130,18 @@ export function decideBooking(
       tikkieUrl: decision === "approved" ? tikkieUrl : null,
       approvedAt: decision === "approved" ? Date.now() : null,
     })
-    .where(and(eq(bookings.id, id), eq(bookings.status, "requested")))
+    .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
     .returning()
     .get();
   if (booking) return { ok: true, booking };
-  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
-  return { ok: false, reason: exists ? "not-requested" : "not-found" };
+  const exists = db
+    .select({ status: bookings.status, start: bookings.start })
+    .from(bookings)
+    .where(eq(bookings.id, id))
+    .get();
+  if (!exists) return { ok: false, reason: "not-found" };
+  if (exists.status === "requested" && exists.start <= now) return { ok: false, reason: "started" };
+  return { ok: false, reason: "not-requested" };
 }
 
 export type CancelResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-active" };
@@ -200,13 +216,13 @@ export function listBookings(
     .all();
 }
 
-/** The `requested` bookings with their offer, by start: the requests that wait for Nina. */
-export function listOpenRequests(db: Db): { booking: Booking; offer: Offer }[] {
+/** The `requested` bookings with their offer, by start: the requests that wait for Nina (not those already started, #341). */
+export function listOpenRequests(db: Db, now = Date.now()): { booking: Booking; offer: Offer }[] {
   return db
     .select({ booking: bookings, offer: offers })
     .from(bookings)
     .innerJoin(offers, eq(offers.id, bookings.offerId))
-    .where(eq(bookings.status, "requested"))
+    .where(and(eq(bookings.status, "requested"), gt(bookings.start, now)))
     .orderBy(bookings.start)
     .all();
 }

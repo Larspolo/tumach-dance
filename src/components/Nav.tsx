@@ -3,8 +3,8 @@ import { Link } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import styles from "./Nav.module.css";
 
-// The links go to the sections of the home page; as in the reference, a phone shows only the logo.
-const SECTIONS = ["about", "classes", "schedule", "contact"] as const;
+// The links go to the sections of the home page (photos: #297, Nina did not find them); as in the reference, a phone shows only the logo.
+const SECTIONS = ["about", "photos", "classes", "schedule", "contact"] as const;
 
 export function Nav() {
   const t = useTranslations("Nav");

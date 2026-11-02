@@ -27,3 +27,26 @@ export function forgetOldBookings(db: Db, now = Date.now()): number[] {
     .all()
     .map((row) => row.id);
 }
+
+/**
+ * Clear the personal data of each booking of one dancer (by email, any case) that still has it, past and coming;
+ * give the ids. The offer, time, status and payment stay. It does not cancel: the caller cancels first.
+ * An empty email changes nothing.
+ */
+export function forgetDancer(db: Db, email: string, now = Date.now()): number[] {
+  const key = email.trim().toLowerCase();
+  if (key === "") return [];
+  return db
+    .update(bookings)
+    .set({
+      name: "",
+      email: "",
+      phone: "",
+      cancelToken: sql`lower(hex(randomblob(32)))`,
+      forgottenAt: now,
+    })
+    .where(and(sql`lower(${bookings.email}) = ${key}`, isNull(bookings.forgottenAt)))
+    .returning({ id: bookings.id })
+    .all()
+    .map((row) => row.id);
+}

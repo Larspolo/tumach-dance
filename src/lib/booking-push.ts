@@ -6,7 +6,6 @@ import { DateTime } from "luxon";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
@@ -18,7 +17,7 @@ import { weekOf } from "./week";
 
 export const BOOKINGS_PATH = "/studio/bookings";
 
-const MESSAGES = { en, nl: withFallback(nl, en), sl: withFallback(sl, en) };
+const MESSAGES = { en, nl: withFallback(nl, en) };
 
 /** The push of a `requested` booking in the language `locale` of Nina's studio app. */
 export function requestPush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
