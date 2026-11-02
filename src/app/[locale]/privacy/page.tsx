@@ -1,5 +1,8 @@
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { BACKUP_KEEP_NIGHTS } from "@/lib/backup";
 import { KEEP_MONTHS } from "@/lib/booking-privacy";
 import { pageMetadata } from "@/lib/page-meta";
@@ -9,11 +12,13 @@ import styles from "./privacy.module.css";
 // from `KEEP_MONTHS`, so the page and the removal of old bookings never differ.
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/privacy", locale);
 }
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations("Privacy");
   return (

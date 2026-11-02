@@ -1,7 +1,10 @@
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
 import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
+import { routing } from "@/i18n/routing";
 import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
 import { bookingDays, nextFreeDate } from "@/lib/booking-page";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
@@ -30,6 +33,7 @@ type Search = {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/book", locale);
 }
 
@@ -41,6 +45,7 @@ export default async function BookPage({
   searchParams: Promise<Search>;
 }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const search = await searchParams;
   const t = await getTranslations("Book");

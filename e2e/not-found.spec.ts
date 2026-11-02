@@ -1,5 +1,7 @@
 // An unknown address shows the not-found page in the look and the language of the site (#359).
 import { expect, test } from "@playwright/test";
+import { type Db, openDb } from "../src/db";
+import { addOffer, hideOffer, type Offer } from "../src/db/offers";
 
 const CASES = [
   { path: "/en/no-such-page", locale: "en-GB", lang: "en", title: "This page is not here", book: "Book a lesson" },
@@ -21,3 +23,30 @@ for (const c of CASES) {
     await context.close();
   });
 }
+
+// A path with a dot (an iPhone asks for `/apple-touch-icon.png`, bots for `/book.php`) is not a locale: 404, and no server
+// error (#519). The home page shows the offers only when one is visible, and only then formats the price with the locale,
+// so the test shows one offer first.
+test.describe("a path with a dot", () => {
+  let db: Db;
+  let offer: Offer;
+
+  test.beforeAll(() => {
+    db = openDb("out/e2e/tumach.db");
+    offer = addOffer(db, { kind: "lesson", minutes: 45, priceCents: 3849, position: 90 });
+  });
+
+  test.afterAll(() => {
+    hideOffer(db, offer.id);
+  });
+
+  for (const path of ["/apple-touch-icon.png", "/book.php"]) {
+    test(`${path} gives 404 and no server error`, async ({ request, page }) => {
+      const response = await page.goto(path);
+      expect(response?.status()).toBe(404);
+      const health = await request.get("/api/health");
+      const body = await health.json();
+      expect(body).not.toHaveProperty("errors");
+    });
+  }
+});
