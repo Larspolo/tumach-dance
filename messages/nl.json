@@ -303,7 +303,11 @@
     "unansweredBody": "Nina kon je aanvraag niet op tijd beantwoorden: {offer}, {when}. De aanvraag is gestopt.",
     "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}",
     "moveSubject": "Je boeking bij TUMACH heeft een nieuwe tijd",
-    "move": "Nina heeft je boeking verplaatst: {offer}. Het was {from}. De nieuwe tijd is {when}."
+    "move": "Nina heeft je boeking verplaatst: {offer}. Het was {from}. De nieuwe tijd is {when}.",
+    "payPrice": "De prijs is {price}.",
+    "payButton": "Betaal met Tikkie",
+    "cancelText": "Kun je niet komen? Annuleer de boeking op elk moment voor de start.",
+    "cancelButton": "Annuleer de boeking"
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",

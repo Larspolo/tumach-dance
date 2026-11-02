@@ -15,6 +15,7 @@ import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
+import { emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
 import { studioEmail } from "./studio-email";
@@ -104,6 +105,52 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
   // The calendar file (#385): the dancer adds the lesson with one tap at the approval. Same uid as the reminder.
   const attachments = decision === "approved" ? [icsAttachment(booking, offer)] : undefined;
   return { to: booking.email, subject, text, ...(attachments ? { attachments } : {}), ...replyToNina() };
+}
+
+/**
+ * `decisionEmail()` with the HTML part of the approval (#439): the same lines, with a button to pay and a button to
+ * cancel. Async: React Email renders async. The declined email stays plain text.
+ */
+export async function decisionEmailHtml(
+  booking: Booking,
+  offer: Offer,
+  decision: Decision,
+  origin = siteOrigin(),
+): Promise<Email> {
+  const email = decisionEmail(booking, offer, decision, origin);
+  if (decision !== "approved") return email;
+  const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  return { ...email, html: await approvedHtml(booking, offer, t, offerLabel, when, origin) };
+}
+
+function approvedHtml(
+  booking: Booking,
+  offer: Offer,
+  t: ReturnType<typeof parts>["t"],
+  offerLabel: string,
+  when: string,
+  origin: string,
+): Promise<string> {
+  const price = priceText(offer, booking.locale);
+  return emailHtml({
+    lang: booking.locale in MESSAGES ? booking.locale : "en",
+    greeting: t("bookingEmail.greeting", { name: booking.name }),
+    blocks: [
+      { text: t("bookingEmail.approvedBody", { offer: offerLabel, when }) },
+      booking.tikkieUrl
+        ? {
+            text: t("bookingEmail.payPrice", { price }),
+            button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
+          }
+        : { text: t("bookingEmail.payLater", { price }) },
+      {
+        text: t("bookingEmail.cancelText"),
+        button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
+      },
+      { text: t("bookingEmail.approvedSee") },
+    ],
+    sign: t("bookingEmail.sign"),
+  });
 }
 
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
@@ -238,7 +285,7 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(decisionEmail(booking, offer, decision));
+    await sendEmail(await decisionEmailHtml(booking, offer, decision));
   } catch (error) {
     console.error(`[booking-email] the decision email of booking ${booking.id} failed:`, error);
     await sendEmailFailPush(db, booking, "decision");

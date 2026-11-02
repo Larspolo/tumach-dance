@@ -6,7 +6,15 @@ import { dirname } from "node:path";
 /** `replyTo`: the address that Nina's Reply button of Gmail answers (the contact form, #150). */
 /** `attachments`: files of the email, for example the calendar file of a reminder (#166). */
 export type Attachment = { filename: string; contentType: string; content: string };
-export type Email = { to: string; subject: string; text: string; replyTo?: string; attachments?: Attachment[] };
+/** `html`: the HTML part next to `text` (#439); a client with no HTML shows the text. */
+export type Email = {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+  replyTo?: string;
+  attachments?: Attachment[];
+};
 
 /**
  * "mailgun" with `MAILGUN_API_KEY` and `MAILGUN_DOMAIN`. "log" in development and tests, and with `EMAIL_TRANSPORT=log`
@@ -39,6 +47,7 @@ export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.e
     to: email.to,
     subject: email.subject,
     text: email.text,
+    ...(email.html ? { html: email.html } : {}),
     ...(email.replyTo ? { "h:Reply-To": email.replyTo } : {}),
   };
   let body: URLSearchParams | FormData = new URLSearchParams(fields);
