@@ -30,3 +30,4 @@ lane:haiku|c2e0c6|A clear, templated ticket for a Haiku run (ticket skill, "Mode
 process|5319e7|Improves the agent system itself: the loop, the tools, the setup
 close|0e8a16|The Close workflow closes this issue as completed (#1740)
 site-down|b60205|The Site watch found that the live site does not work (tools/site_watch.py)
+deps|5319e7|The Deps watch found a library of the image with a security problem (tools/deps_watch.py)
