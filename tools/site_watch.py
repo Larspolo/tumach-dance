@@ -17,7 +17,10 @@ log and no step by Lars:
     git fetch -q origin metrics && git show origin/metrics:site/2026-11-02.jsonl | tail -5
 
 Env: SITE_URL (default https://tumach.dance), PREVIEW_URL (default https://preview.tumach.dance), GITHUB_TOKEN,
-GITHUB_REPOSITORY. Python standard library only.
+GITHUB_REPOSITORY, OWNER (default Larspolo). Python standard library only.
+
+The push watch (#571): when the live site (not the preview) answers 200 with `"push": false` in two checks, it opens
+one `needs-human` issue for Lars (Nina turns on the notifications again) and closes it at `"push": true`.
 """
 import datetime
 import hashlib
@@ -39,7 +42,10 @@ BODY_CHARS = 1500
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 METRICS = "metrics"     # the orphan branch of the logs (`framework/tools/metrics_log.py`)
 LOG_DIR = "site"
-HEALTH_KEYS = ("ok", "email", "backupAt", "version", "errors")
+HEALTH_KEYS = ("ok", "email", "push", "backupAt", "version", "errors")
+PUSH_TITLE = "Nina's phone gets no push on the live site"
+PUSH_LABEL = "needs-human"
+PUSH_LABELS = ["P2", "bug", "size:S", PUSH_LABEL]   # not `site-down`: no push is no outage (#571)
 TEXT_CHARS = 300        # the start of an answer that is no JSON (a proxy page, a time-out)
 
 
@@ -168,8 +174,13 @@ class GitHub:
                 return ticket["number"]
         return None
 
-    def create(self, title, body):
-        return self.call("POST", "/issues", {"title": title, "body": body, "labels": LABELS})
+    def create(self, title, body, labels=LABELS):
+        return self.call("POST", "/issues", {"title": title, "body": body, "labels": labels})
+
+    def open_push_tickets(self):
+        """The open issues of the push watch (#571): `needs-human` with the title PUSH_TITLE."""
+        return [i for i in self.call("GET", f"/issues?labels={PUSH_LABEL}&state=open&per_page=100") or []
+                if "pull_request" not in i and i.get("title") == PUSH_TITLE]
 
     def comment(self, number, body):
         return self.call("POST", f"/issues/{number}/comments", {"body": body})
@@ -207,6 +218,53 @@ def watch(github, base, get=fetch, wait=time.sleep, merges=commits):
         return f"same #{ticket['number']}"
     github.comment(ticket["number"], "The failure changed.\n\n" + report(results, base, lines) + f"\n\n<!-- site-watch: {mark} -->")
     return f"updated #{ticket['number']}"
+
+
+def push_body(owner):
+    return "\n".join([
+        "## Goal",
+        "A device of Nina gets a push on the live site again, so that no booking request waits unseen.",
+        "",
+        "## Context",
+        "The Site watch (`tools/site_watch.py`, #571) read `\"push\": false` on `/api/health` of the live site in two "
+        "checks: the live site has no push subscription of a device. The watch closes this issue when the site "
+        "answers `\"push\": true`.",
+        "",
+        "## For the owner",
+        f"@{owner}" if owner else "",
+        "1. Ask Nina to open the studio app on her phone.",
+        "2. She taps \"Turn on notifications\" and \"Send a test\".",
+        "3. Reply \"done\".",
+    ])
+
+
+def push_state(base, get):
+    """True, False or None (no 200 or no `push` field: the `site-down` way handles a site that does not answer)."""
+    status, text = get(base.rstrip("/") + "/api/health")
+    if status != 200:
+        return None
+    push = health_json([{"path": "/api/health", "text": text}]).get("push")
+    return push if isinstance(push, bool) else None
+
+
+def watch_push(github, base, get=fetch, wait=time.sleep, owner=""):
+    """The push watch of the live site (#571): "push ok", "push unknown", "opened #N", "same #N", "closed #N"."""
+    state = push_state(base, get)
+    if state is False:
+        wait(RETRY_SECONDS)
+        state = push_state(base, get)
+    if state is None:
+        return "push unknown"
+    tickets = github.open_push_tickets()
+    if state:
+        for ticket in tickets:
+            github.comment(ticket["number"], "The live site answers `\"push\": true` again: a device of Nina gets a push.")
+            github.close(ticket["number"])
+        return "push ok" + "".join(f", closed #{t['number']}" for t in tickets)
+    if tickets:
+        return f"same #{tickets[0]['number']}"
+    ticket = github.create(PUSH_TITLE, push_body(owner), PUSH_LABELS)
+    return f"opened #{ticket['number']}"
 
 
 def health_record(site, base, get=fetch, now=None):
@@ -277,6 +335,10 @@ def main():
         print(f"site watch {base}: {watch(GitHub(repo, token), base)}")
     except Exception as error:                              # a GitHub error: the next watch tries again
         print(f"site watch {base}: GitHub error: {error}", file=sys.stderr)
+    try:                                                    # the live site only: the preview often has no device
+        print(f"push watch {base}: {watch_push(GitHub(repo, token), base, owner=os.environ.get('OWNER', 'Larspolo'))}")
+    except Exception as error:
+        print(f"push watch {base}: GitHub error: {error}", file=sys.stderr)
     added = log_health([health_record("live", base), health_record("preview", preview)])
     print(f"site health log: {'no push' if added is None else f'{added} new lines'} ({METRICS}:{LOG_DIR}/)")
 

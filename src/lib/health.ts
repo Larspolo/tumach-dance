@@ -3,6 +3,7 @@
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Db } from "../db";
+import { pushSubscriptions } from "../db/schema";
 import { backupDir } from "./backup";
 import { emailTransport } from "./email";
 
@@ -15,7 +16,8 @@ const SERVER_START = new Date();
 const DB_BACKUP = /^tumach-\d{4}-\d{2}-\d{2}\.db$/;
 
 /** `email`: the server can send email (`emailTransport()` does not throw). A production server with no keys cannot (#413). */
-export type HealthStatus = { ok: boolean; backupAt: string | null; email: boolean };
+/** `push`: at least one device of Nina gets a push (#571). Only a boolean: no count, no endpoint. It does not change `ok`. */
+export type HealthStatus = { ok: boolean; backupAt: string | null; email: boolean; push: boolean };
 
 function emailReady(env: NodeJS.ProcessEnv): boolean {
   try {
@@ -58,9 +60,10 @@ export function healthStatus(
   const email = emailReady(env);
   try {
     db.$client.prepare("select 1").get();
-    return { ok: backupOk && email, backupAt, email };
+    const push = db.select({ endpoint: pushSubscriptions.endpoint }).from(pushSubscriptions).limit(1).all().length > 0;
+    return { ok: backupOk && email, backupAt, email, push };
   } catch (error) {
     console.error("health: the database does not answer", error);
-    return { ok: false, backupAt, email };
+    return { ok: false, backupAt, email, push: false };
   }
 }

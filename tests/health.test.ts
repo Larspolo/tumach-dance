@@ -34,14 +34,14 @@ afterEach(() => {
 
 test("the health of an open database is ok", () => {
   const db = openDb(":memory:");
-  expect(healthStatus(db)).toEqual({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true });
+  expect(healthStatus(db)).toEqual({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true, push: false });
 });
 
 test("the health of a closed database is not ok and logs one line", () => {
   const db = openDb(":memory:");
   db.$client.close();
   const log = vi.spyOn(console, "error").mockImplementation(() => {});
-  expect(healthStatus(db)).toEqual({ ok: false, backupAt: BACKUP_AT.toISOString(), email: true });
+  expect(healthStatus(db)).toEqual({ ok: false, backupAt: BACKUP_AT.toISOString(), email: true, push: false });
   expect(log).toHaveBeenCalledTimes(1);
 });
 
@@ -50,7 +50,9 @@ test("the address answers 200 with ok and no-store", async () => {
   vi.mocked(getDb).mockReturnValue(openDb(":memory:"));
   const response = await GET();
   expect(response.status).toBe(200);
-  expect(await response.text()).toBe(JSON.stringify({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true }));
+  expect(await response.text()).toBe(
+    JSON.stringify({ ok: true, backupAt: BACKUP_AT.toISOString(), email: true, push: false }),
+  );
   expect(response.headers.get("Cache-Control")).toBe("no-store");
 });
 
