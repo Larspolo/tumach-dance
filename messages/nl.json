@@ -279,6 +279,8 @@
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
     "noteLong": "Je bericht is langer dan {max} tekens. Maak het korter.",
     "limit": "Te veel aanvragen vanaf deze verbinding. Probeer het over een uur opnieuw, of stuur Nina een bericht.",
+    "limitOpen": "Je hebt al een paar aanvragen die op het antwoord van Nina wachten. Wacht eerst op haar antwoord, of stuur Nina een bericht.",
+    "limitDay": "De boekingspagina neemt vandaag geen aanvragen meer aan. Probeer het morgen opnieuw, of stuur Nina een bericht.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd.",
     "privacy": "Hoe we je gegevens bewaren",
     "emailTypo": "Bedoel je {email}?",
@@ -330,7 +332,9 @@
     "emailFailReminder": "{name} kreeg de herinnering niet.",
     "emailFailPayment": "{name} kreeg de betaalherinnering niet.",
     "emailFailUnanswered": "{name} kreeg de e-mail over de open aanvraag niet.",
-    "emailFailBounce": "De e-mail aan {name} kwam terug: het adres bestaat niet. Vraag {name} om het juiste adres."
+    "emailFailBounce": "De e-mail aan {name} kwam terug: het adres bestaat niet. Vraag {name} om het juiste adres.",
+    "limitTitle": "Veel aanvragen vandaag",
+    "limitBody": "De boekingspagina kreeg veel aanvragen in 24 uur, misschien van een bot. Tot morgen neemt ze geen nieuwe aanvragen aan."
   },
   "StudioBookings": {
     "title": "Boekingen",

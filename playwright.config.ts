@@ -47,6 +47,9 @@ export default defineConfig({
         // All booking tests send from one address with no wait (#374); e2e/book-bots.spec.ts checks the honeypot.
         BOOKING_MIN_MS: "0",
         BOOKING_LIMIT_PER_HOUR: "1000",
+        // Many tests book with one email address (#541): no limit of the open requests and of the day.
+        BOOKING_OPEN_PER_EMAIL: "1000",
+        BOOKING_LIMIT_PER_DAY: "1000",
         EMAIL_LOG_FILE: "out/e2e/email.log",
         DATABASE_PATH: "out/e2e/tumach.db",
         BETTER_AUTH_URL: "http://localhost:3100",

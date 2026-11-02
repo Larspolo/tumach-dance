@@ -6,13 +6,15 @@ import { getDb } from "@/db";
 import { requestBooking } from "@/db/bookings";
 import { sendRequestEmail } from "@/lib/booking-email";
 import { bookingError } from "@/lib/booking-error";
+import { sendLimitPush } from "@/lib/booking-limit-push";
 import { sendRequestPush } from "@/lib/booking-push";
 import { clientAddress, formSpamReason } from "@/lib/contact-spam";
 import { emailSuggestion } from "@/lib/email-typo";
 
 /**
  * The booking request of a dancer (#36). `requestBooking()` checks each field and the time again on the server. A bot
- * (#374) gets the normal answer and makes no booking; a person over the limit of the address gets `error=limit`.
+ * (#374) gets the normal answer and makes no booking; a person over the limit of the address gets `error=limit`. A
+ * request over the limit of the email address or of the day (#541) sends no email; the day limit tells Nina once.
  */
 export async function sendRequest(form: FormData): Promise<void> {
   const text = (name: string) => String(form.get(name) ?? "");
@@ -63,6 +65,10 @@ export async function sendRequest(form: FormData): Promise<void> {
     await sendRequestEmail(db, result.booking, safeLocale);
     await sendRequestPush(db, result.booking);
     redirect(`/${safeLocale}/book?sent=1`);
+  }
+  if (result.reason === "limit") {
+    console.warn(`Booking: no request, limit (${result.limit})`);
+    if (result.limit === "day") await sendLimitPush(db);
   }
   const day = text("day");
   const back = new URLSearchParams({ offer: String(offerId), day, error: bookingError(result) });
