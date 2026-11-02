@@ -11,6 +11,7 @@ import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
+import { studioEmail } from "./auth";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { type Email, sendEmail } from "./email";
@@ -39,6 +40,12 @@ function priceText(offer: Offer, locale: string): string {
   return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
 }
 
+/** Reply goes to Nina's Gmail (#375): the dancer's answer reaches her. No value: no Reply-To. */
+function replyToNina(): Pick<Email, "replyTo"> {
+  const address = studioEmail();
+  return address ? { replyTo: address } : {};
+}
+
 /** The email to the dancer of a `requested` booking, in the language of the page (`locale`). */
 export function requestEmail(booking: Booking, offer: Offer, locale: string, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, locale);
@@ -53,7 +60,7 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.subject"), text };
+  return { to: booking.email, subject: t("bookingEmail.subject"), text, ...replyToNina() };
 }
 
 export type Decision = "approved" | "declined";
@@ -80,7 +87,7 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
     "\n",
   );
   const subject = decision === "approved" ? t("bookingEmail.approvedSubject") : t("bookingEmail.declinedSubject");
-  return { to: booking.email, subject, text };
+  return { to: booking.email, subject, text, ...replyToNina() };
 }
 
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
@@ -96,7 +103,7 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text };
+  return { to: booking.email, subject: t("bookingEmail.cancelledSubject"), text, ...replyToNina() };
 }
 
 /** The email to the dancer when Nina did not answer a request before its start (#340), in the language of the booking. */
@@ -111,7 +118,7 @@ export function unansweredEmail(booking: Booking, offer: Offer, origin = siteOri
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.unansweredSubject"), text };
+  return { to: booking.email, subject: t("bookingEmail.unansweredSubject"), text, ...replyToNina() };
 }
 
 /** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
@@ -131,7 +138,7 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     contentType: "text/calendar",
     content: bookingEvent(booking, offer, booking.locale),
   };
-  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics] };
+  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics], ...replyToNina() };
 }
 
 /** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
@@ -149,7 +156,7 @@ export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text };
+  return { to: booking.email, subject: t("bookingEmail.payReminderSubject"), text, ...replyToNina() };
 }
 
 /**
