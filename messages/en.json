@@ -371,7 +371,15 @@
     "forget": "Remove the data of this dancer",
     "forgetAsk": "Remove the name, email and phone of this dancer from each booking, and cancel the coming ones?",
     "forgetYes": "Yes, remove",
-    "forgetNo": "No"
+    "forgetNo": "No",
+    "move": "Move",
+    "moveDay": "Move to which day?",
+    "moveTime": "Which time on {day}?",
+    "moveAsk": "Move this booking to {day} at {time}? The dancer gets an email.",
+    "moveYes": "Yes, move",
+    "moveNo": "No",
+    "moveTaken": "This time is no longer free. Choose another time.",
+    "moveNone": "No free time in the next 4 weeks."
   },
   "StudioFeedback": {
     "back": "Back",

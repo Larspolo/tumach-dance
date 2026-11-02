@@ -13,12 +13,22 @@ import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import styles from "../studio.module.css";
 import { addBlock, cancel, forget, removeBlock } from "./actions";
+import { MovePanel } from "./MovePanel";
 
 // The bookings of a week, per day (#102): the requests and the approved bookings, Monday to Sunday.
 export default async function WeekPage({
   searchParams,
 }: {
-  searchParams: Promise<{ start?: string; cancel?: string; forget?: string; add?: string }>;
+  searchParams: Promise<{
+    start?: string;
+    cancel?: string;
+    forget?: string;
+    add?: string;
+    move?: string;
+    day?: string;
+    to?: string;
+    taken?: string;
+  }>;
 }) {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
@@ -31,6 +41,9 @@ export default async function WeekPage({
   const asked = Number(params.cancel);
   // The same two taps for "Remove the data of this dancer" (#363).
   const forgetAsked = Number(params.forget);
+  // The move of a booking that has not started (#411): a day, a time, then "Yes, move".
+  const moving = Number(params.move);
+  const now = Date.now();
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
   const blocks = listBlocks(getDb(), week.from, week.to);
@@ -144,6 +157,25 @@ export default async function WeekPage({
                       <Link className={styles.link} href={`/studio/week?start=${week.start}&cancel=${booking.id}`}>
                         {t("cancel")}
                       </Link>
+                    )}
+                    {booking.start > now && booking.id !== moving && (
+                      <>
+                        {" "}
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&move=${booking.id}`}>
+                          {t("move")}
+                        </Link>
+                      </>
+                    )}{" "}
+                    {booking.start > now && booking.id === moving && (
+                      <MovePanel
+                        booking={booking}
+                        offer={offer}
+                        weekStart={week.start}
+                        locale={locale}
+                        day={params.day}
+                        to={Number(params.to)}
+                        taken={params.taken !== undefined}
+                      />
                     )}
                     {booking.email === "" ? null : booking.id === forgetAsked ? (
                       <form className={styles.form} action={forget}>
