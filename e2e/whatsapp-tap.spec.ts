@@ -27,7 +27,7 @@ test("the WhatsApp link of a booking is a 44 px tap target, reachable by Tab, wi
   await page.setViewportSize({ width: 390, height: 844 });
   const db = openDb("out/e2e/tumach.db");
   const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 4242, position: 143 });
-  const add = (name: string, iso: string, status: "requested" | "approved") => {
+  const add = (name: string, iso: string, status: "requested" | "approved", removed = false) => {
     const start = DateTime.fromISO(iso, { zone: TIME_ZONE });
     db.insert(bookings)
       .values({
@@ -35,18 +35,20 @@ test("the WhatsApp link of a booking is a 44 px tap target, reachable by Tab, wi
         start: start.toMillis(),
         end: start.plus({ minutes: 60 }).toMillis(),
         name,
-        email: "tap@example.test",
-        phone: "+31 6 1234 5678",
+        email: removed ? "" : "tap@example.test",
+        phone: removed ? "" : "+31 6 1234 5678",
         locale: "en",
         status,
         createdAt: Date.now(),
-        forgottenAt: null,
+        forgottenAt: removed ? Date.now() : null,
       })
       .run();
   };
   // Days of 2033 that no other test books (the week test uses 7 and 8 June).
   add("Tap Request", "2033-06-14T10:00", "requested");
   add("Tap Approved", "2033-06-15T10:00", "approved");
+  // A removed dancer's request has no email and no phone: its links must not be empty (axe, #507).
+  add("Tap Removed", "2033-06-16T10:00", "requested", true);
 
   // The requests page.
   await page.goto("/studio/bookings");

@@ -59,16 +59,20 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
-            <p>
-              <a className={styles.link} href={`mailto:${booking.email}`}>
-                {booking.email}
-              </a>
-            </p>
-            <p>
-              <a className={styles.link} href={`tel:${booking.phone.replace(/[^\d+]/g, "")}`}>
-                {booking.phone}
-              </a>
-            </p>
+            {booking.email !== "" && (
+              <p>
+                <a className={styles.link} href={`mailto:${booking.email}`}>
+                  {booking.email}
+                </a>
+              </p>
+            )}
+            {booking.phone !== "" && (
+              <p>
+                <a className={styles.link} href={`tel:${booking.phone.replace(/[^\d+]/g, "")}`}>
+                  {booking.phone}
+                </a>
+              </p>
+            )}
             {bookingWhatsappLink(booking) !== null && (
               <p>
                 <a className={`${styles.link} ${styles.chat}`} href={bookingWhatsappLink(booking) ?? undefined}>
