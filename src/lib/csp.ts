@@ -30,3 +30,8 @@ export function contentSecurityPolicy(nonce?: string, dev = false): string {
     "frame-ancestors 'none'",
   ].join("; ");
 }
+
+/** The nonce of a Content-Security-Policy text (`'nonce-…'`), for a script of the page that the framework does not render (#452). */
+export function nonceFrom(policy: string | null | undefined): string | undefined {
+  return policy?.match(/'nonce-([^']+)'/)?.[1];
+}

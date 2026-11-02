@@ -10,6 +10,7 @@ import styles from "@/components/home/Home.module.css";
 import { Offers } from "@/components/home/Offers";
 import { Photos } from "@/components/home/Photos";
 import { Schedule } from "@/components/home/Schedule";
+import { StudioJsonLd } from "@/components/home/StudioJsonLd";
 import { getDb } from "@/db";
 import { listClasses, listClassTimes } from "@/db/classes";
 import { listOffers } from "@/db/offers";
@@ -43,6 +44,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const daysOff = classDaysOff(rule, times, Date.now());
   return (
     <main className={styles.main}>
+      <StudioJsonLd locale={locale} />
       <Hero />
       <About />
       <Offers offers={offers} locale={locale} />
