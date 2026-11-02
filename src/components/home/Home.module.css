@@ -415,6 +415,12 @@
 }
 
 /* A coming closed period of the studio (#530): a calm line above the schedule. */
+.off {
+  grid-column: 1 / -1;
+  font-size: 0.86rem;
+  color: #6a6358;
+}
+
 .closed {
   margin: 0 0 0.75rem;
   color: #6a6358;

@@ -45,7 +45,8 @@
       },
       "time": "{from}–{to}",
       "closedDay": "Gesloten op {date, date, ::dMMMM}.",
-      "closedPeriod": "Gesloten van {from, date, ::dMMMM} tot en met {to, date, ::dMMMM}."
+      "closedPeriod": "Gesloten van {from, date, ::dMMMM} tot en met {to, date, ::dMMMM}.",
+      "noClass": "Geen les op {date, date, ::dMMMM}."
     },
     "contact": {
       "title": "Zeg hallo",
