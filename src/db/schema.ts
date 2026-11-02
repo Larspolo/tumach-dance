@@ -163,6 +163,8 @@ export const bookings = sqliteTable(
     offerId: integer("offer_id")
       .notNull()
       .references(() => offers.id),
+    /** The price of the offer at the time of the request (#596): a later change of the offer does not change it. */
+    priceCents: integer("price_cents").notNull(),
     /** UTC, epoch milliseconds; `end` is exclusive. */
     start: integer("start").notNull(),
     end: integer("end").notNull(),

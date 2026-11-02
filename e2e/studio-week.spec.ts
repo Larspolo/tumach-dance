@@ -25,6 +25,7 @@ test.describe("with a session", () => {
     db.insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 90 }).toMillis(),
         name: "Week Dancer",

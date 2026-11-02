@@ -22,6 +22,7 @@ test("a paid booking shows paid, an unpaid approved booking shows approved", asy
       .insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 60 }).toMillis(),
         name,
