@@ -263,6 +263,7 @@
     "again": "Nog een tijd boeken",
     "taken": "Iemand anders heeft deze tijd net genomen. Kies een andere tijd.",
     "invalid": "Controleer je naam, e-mail en telefoonnummer.",
+    "limit": "Te veel aanvragen vanaf deze verbinding. Probeer het over een uur opnieuw, of stuur Nina een bericht.",
     "notSlot": "Deze tijd is niet vrij. Kies een andere tijd.",
     "privacy": "Hoe we je gegevens bewaren"
   },

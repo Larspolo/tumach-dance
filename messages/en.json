@@ -263,6 +263,7 @@
     "again": "Book another time",
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
+    "limit": "Too many requests from this connection. Try again in an hour, or send Nina a message.",
     "notSlot": "This time is not free. Choose another time.",
     "privacy": "How we keep your data"
   },

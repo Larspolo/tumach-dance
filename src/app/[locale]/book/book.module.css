@@ -112,3 +112,12 @@
   outline: 3px solid #7c3527;
   outline-offset: 2px;
 }
+
+/* The field that a person does not see (#374): a bot fills it. */
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

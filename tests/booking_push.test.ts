@@ -17,9 +17,11 @@ vi.mock("next/navigation", () => ({
   },
 }));
 vi.mock("../src/lib/booking-email", () => ({ sendRequestEmail: vi.fn() }));
+vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
 
 const { requestPush, sendRequestPush } = await import("../src/lib/booking-push");
 const { sendRequest } = await import("../src/app/[locale]/book/actions");
+const { formStamp } = await import("../src/lib/contact-spam");
 
 const zone = "Europe/Amsterdam";
 const NOW = DateTime.fromISO("2026-10-20T12:00", { zone }).toMillis();
@@ -46,6 +48,8 @@ function form(offerId: number) {
     day: "2026-10-25",
   };
   for (const [k, v] of Object.entries(fields)) f.set(k, v);
+  // A page of 5 seconds ago: a person, not a bot (#374).
+  f.set("stamp", formStamp("booking", Date.now() - 5000));
   return f;
 }
 
