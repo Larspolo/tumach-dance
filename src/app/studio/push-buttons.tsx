@@ -115,12 +115,16 @@ export function PushButtons({ vapidKey }: { vapidKey?: string }) {
     }
   }
 
+  if (state === "loading") return null;
   return (
-    <section className={styles.form}>
+    <section
+      className={`${styles.form} ${styles.section} ${state === "off" || state === "denied" ? styles.alert : ""}`}
+    >
       <h2 className={styles.label}>{t("title")}</h2>
       {state === "installFirst" && <p className={styles.note}>{t("installFirst")}</p>}
       {state === "unsupported" && <p className={styles.note}>{t("unsupported")}</p>}
       {state === "denied" && <p className={styles.note}>{t("denied")}</p>}
+      {state === "off" && <p className={styles.note}>{t("offNote")}</p>}
       {state === "off" && (
         <button className={styles.button} type="button" disabled={busy} onClick={turnOn}>
           {t("turnOn")}

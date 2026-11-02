@@ -229,6 +229,7 @@
   "Push": {
     "title": "Meldingen",
     "turnOn": "Meldingen aanzetten",
+    "offNote": "Deze telefoon krijgt geen meldingen van nieuwe aanvragen. Tik op de knop om ze aan te zetten.",
     "on": "Meldingen staan aan op deze telefoon.",
     "sendTest": "Stuur een test",
     "testSent": "De test is onderweg. Kijk op je telefoon.",

@@ -229,6 +229,7 @@
   "Push": {
     "title": "Notifications",
     "turnOn": "Turn on notifications",
+    "offNote": "This phone gets no notifications of new requests. Tap the button to turn them on.",
     "on": "Notifications are on for this phone.",
     "sendTest": "Send a test",
     "testSent": "The test is on its way. Look at your phone.",

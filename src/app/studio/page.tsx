@@ -35,6 +35,8 @@ export default async function StudioPage() {
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
+      {/* At the top: a phone with no push shows it in the first screen (#580). One instance: it repairs (#570). */}
+      <PushButtons vapidKey={vapidPublicKey()} />
       <p className={styles.tileRow}>
         <Link className={styles.tile} href="/studio/bookings">
           {t("bookings")}
@@ -88,7 +90,6 @@ export default async function StudioPage() {
         </Link>
       </p>
       <PasskeyOffer />
-      <PushButtons vapidKey={vapidPublicKey()} />
       <LogOutButton />
     </main>
   );
