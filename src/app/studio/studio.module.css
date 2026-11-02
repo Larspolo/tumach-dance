@@ -108,6 +108,13 @@
   font-size: 1.05rem;
 }
 
+/* The WhatsApp link of a booking: a tap target of 44 px on a phone (#507). */
+.chat {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .choice input,
 .day input {
   width: 1.4rem;
