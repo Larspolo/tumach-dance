@@ -50,7 +50,8 @@ describe("the cancel email of an approved booking has the cancel file", () => {
   }
 
   test("the approval file has no cancel fields: the approval and the reminder keep their file", () => {
-    const [approved] = decisionEmail({ ...booking, status: "approved" } as Booking, offer, "approved").attachments ?? [];
+    const [approved] =
+      decisionEmail({ ...booking, status: "approved" } as Booking, offer, "approved").attachments ?? [];
     expect(approved.content).not.toContain("METHOD:CANCEL");
     expect(approved.content).not.toContain("STATUS:CANCELLED");
   });
