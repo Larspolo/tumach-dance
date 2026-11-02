@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "7d1a9cb9-0300-4aa5-8389-1ba2fd831d91",
+  "id": "221c1e0f-3f24-49b9-b9e7-ea3fc8278591",
   "prevId": "369d27f4-3a51-4d0a-8eb7-b65c7cb7a2a1",
   "tables": {
     "account": {
@@ -121,6 +121,55 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "blocks": {
+      "name": "blocks",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "start": {
+          "name": "start",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end": {
+          "name": "end",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "blocks_start_idx": {
+          "name": "blocks_start_idx",
+          "columns": ["start"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "blocks_range": {
+          "name": "blocks_range",
+          "value": "\"blocks\".\"end\" > \"blocks\".\"start\""
+        }
+      }
+    },
     "bookings": {
       "name": "bookings",
       "columns": {
@@ -133,13 +182,6 @@
         },
         "offer_id": {
           "name": "offer_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "price_cents": {
-          "name": "price_cents",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
