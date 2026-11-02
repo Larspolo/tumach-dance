@@ -12,6 +12,7 @@ import { reminderEmail } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
+import { recordError } from "./site-errors";
 
 /** The longest local day (the end of summer time): the bookings that can be due start at most this long after now. */
 const MAX_DAY_MS = 25 * 60 * 60_000;
@@ -51,6 +52,7 @@ export async function checkReminders(db: Db, now = Date.now()): Promise<number[]
       await sendEmail(reminderEmail(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ remindedAt: null }).where(eq(bookings.id, booking.id)).run();
+      recordError("email: reminder", error);
       await sendEmailFailPush(db, claimed, "reminder");
       throw error;
     }

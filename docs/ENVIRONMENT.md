@@ -44,6 +44,8 @@ ticket for it.
   where a real CPU gives a clean error.
   The Site watch workflow (`tools/site_watch.py`) checks the live site from GitHub and opens a `site-down` ticket with
   the error text of `/api/health` (the agents cannot read the log of the server).
+  Each watch also keeps `/api/health` of the live site and of the preview on the branch `metrics` (#460), with the
+  failed emails (`email: <kind>` in `errors`): `git fetch -q origin metrics && git show origin/metrics:site/<YYYY-MM-DD>.jsonl`.
 - **Domain and DNS:** tumach.dance, with the DNS at Cloudflare (Lars). The free Cloudflare features (for example a
   tunnel to the home server) are allowed.
 - **Email:** a free Mailgun account. Mail to the domain (hello@tumach.dance) goes forward to Nina's Gmail. Use it to

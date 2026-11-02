@@ -10,6 +10,7 @@ import { bookings, offers } from "../db/schema";
 import { paymentReminderEmail } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
+import { recordError } from "./site-errors";
 
 const HOUR = 60 * 60_000;
 export const AFTER_APPROVAL_MS = 48 * HOUR;
@@ -47,6 +48,7 @@ export async function checkPaymentReminders(db: Db, now = Date.now()): Promise<n
       await sendEmail(paymentReminderEmail(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ paymentRemindedAt: null }).where(eq(bookings.id, booking.id)).run();
+      recordError("email: payment", error);
       await sendEmailFailPush(db, claimed, "payment");
       throw error;
     }
