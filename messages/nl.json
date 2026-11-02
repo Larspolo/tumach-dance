@@ -116,7 +116,9 @@
     "questionsCount": "Voor Nina ({count, plural, one {# vraag} other {# vragen}})",
     "classes": "Lessen",
     "feedback": "Feedback",
-    "photos": "Foto's"
+    "photos": "Foto's",
+    "messages": "Berichten",
+    "messagesCount": "Berichten ({count} nieuw)"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -468,7 +470,7 @@
     "keep": "{months, plural, one {# maand} other {# maanden}} na je les verwijdert de site vanzelf je naam, e-mailadres, telefoonnummer en notitie.",
     "backup": "Elke nacht maakt de site een back-up van zijn gegevens voor het geval van een storing. Een back-up bewaart een kopie van je gegevens {nights, plural, one {# nacht} other {# nachten}}, daarna verwijdert de site hem.",
     "contactTitle": "Een contactbericht",
-    "contactWhat": "De site bewaart geen kopie van je bericht: hij stuurt één e-mail naar Nina.",
+    "contactWhat": "De site bewaart je naam, e-mailadres en bericht, zodat Nina het in haar studio-app kan beantwoorden. Een kopie gaat per e-mail naar Nina. {months, plural, one {# maand} other {# maanden}} na je bericht verwijdert de site het vanzelf.",
     "contactSpam": "Tegen spam houdt de site het internetadres van je apparaat hoogstens één uur in zijn geheugen.",
     "cookiesTitle": "Cookies",
     "cookies": "Je hebt geen account nodig. De site gebruikt geen tracking- en geen advertentiecookies.",
@@ -517,5 +519,22 @@
     "home": "Naar de homepagina",
     "studioHome": "Naar het begin van de app",
     "code": "Code:"
+  },
+  "StudioMessages": {
+    "title": "Berichten",
+    "back": "Terug",
+    "none": "Nog geen berichten.",
+    "answer": "Jouw antwoord",
+    "send": "Stuur het antwoord",
+    "empty": "Schrijf eerst een antwoord.",
+    "error": "Het antwoord is niet verstuurd. Probeer het opnieuw.",
+    "thanks": "Je antwoord is per e-mail verstuurd.",
+    "answered": "Beantwoord op {when}:",
+    "keep": "De site verwijdert een bericht {months, plural, one {# maand} other {# maanden}} nadat het kwam.",
+    "pushTitle": "Nieuw bericht van {name}"
+  },
+  "ContactAnswer": {
+    "subject": "Je bericht aan TUMACH",
+    "quote": "Jouw bericht: {message}"
   }
 }

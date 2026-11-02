@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { BACKUP_KEEP_NIGHTS } from "@/lib/backup";
 import { KEEP_MONTHS } from "@/lib/booking-privacy";
+import { MESSAGE_KEEP_MONTHS } from "@/lib/contact-store";
 import { pageMetadata } from "@/lib/page-meta";
 import styles from "./privacy.module.css";
 
@@ -35,7 +36,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
       </section>
       <section className={styles.part}>
         <h2 className={styles.heading}>{t("contactTitle")}</h2>
-        <p>{t("contactWhat")}</p>
+        <p>{t("contactWhat", { months: MESSAGE_KEEP_MONTHS })}</p>
         <p>{t("contactSpam")}</p>
       </section>
       <section className={styles.part}>

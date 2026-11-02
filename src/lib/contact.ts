@@ -10,6 +10,7 @@ import type { Db } from "../db";
 import { pushSubscriptions } from "../db/schema";
 import { withFallback } from "../i18n/fallback";
 import { studioEmail } from "./auth";
+import { saveContactMessage, sendMessagePush } from "./contact-store";
 import { type Email, sendEmail } from "./email";
 
 const MESSAGES = { en, nl: withFallback(nl, en) };
@@ -61,8 +62,13 @@ export function contactEmail(value: Contact, locale: string): Email {
   return { to, subject: t("Contact.subject", { name: value.name }), text, replyTo: value.email };
 }
 
-/** Send the contact message to Nina, in the language of her newest studio device. */
-export async function sendContactMessage(db: Db, value: Contact): Promise<void> {
+/**
+ * Store the contact message for the studio app (#533), push it to Nina, and send it to Nina by email, in the language
+ * of her newest studio device. `locale`: the language of the site of the visitor, for the answer.
+ */
+export async function sendContactMessage(db: Db, value: Contact, locale = "en"): Promise<void> {
+  const stored = saveContactMessage(db, value, locale);
+  await sendMessagePush(db, stored);
   const newest = db
     .select({ locale: pushSubscriptions.locale })
     .from(pushSubscriptions)

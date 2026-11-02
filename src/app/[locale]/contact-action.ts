@@ -34,7 +34,7 @@ export async function sendContact(_prev: ContactState, form: FormData): Promise<
     return { status: "notSent", errors: {}, values };
   }
   try {
-    await sendContactMessage(getDb(), parsed.value);
+    await sendContactMessage(getDb(), parsed.value, String(form.get("locale") ?? "en"));
   } catch (error) {
     console.error("Contact: the email failed", error);
     recordError("email: contact", error);
