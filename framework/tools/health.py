@@ -526,6 +526,9 @@ def status_comments(hours=24, since=None):
     import metrics_log
     since = since or datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=hours)
     stored = metrics_log.load(since)
+    if stored is None:      # the run reports live only on the branch: the lines of the reports would read as 0
+        print(f"warning: git cannot read the branch {metrics_log.BRANCH}: the run reports since {since:%Y-%m-%d %H:%M} "
+              "are missing (Metrics, Tokens and Usage lines read as 0); run it again", file=sys.stderr)
     last = metrics_log.newest(stored or [])
     tail = metrics_log.api_comments(metrics_log.parse(last) if last else since)
     out = {c["id"]: c for c in (stored or []) + tail if c["created_at"] >= f"{since:%Y-%m-%dT%H:%M:%SZ}"}
