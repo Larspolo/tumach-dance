@@ -447,5 +447,13 @@
     "text": "The address may be old or have a typing error. Take a breath and go on from one of these pages.",
     "home": "To the home page",
     "book": "Book a lesson"
+  },
+  "PageError": {
+    "title": "Something went wrong",
+    "text": "This page did not load. Try again, or go on from the start.",
+    "retry": "Try again",
+    "home": "To the home page",
+    "studioHome": "To the start of the app",
+    "code": "Code:"
   }
 }
