@@ -344,6 +344,7 @@
     "badLink": "The Tikkie link must start with https://.",
     "toPay": "Approved bookings",
     "markPaid": "Paid",
+    "addToCalendar": "Add to my calendar",
     "paidOn": "Paid on {date}",
     "undo": "Undo",
     "whatsapp": "WhatsApp",

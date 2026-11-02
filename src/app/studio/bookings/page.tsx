@@ -104,6 +104,11 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
+            <p>
+              <a className={styles.link} href={`/api/studio/bookings/${booking.id}.ics`} download>
+                {t("addToCalendar")}
+              </a>
+            </p>
             <form className={styles.form} action={pay}>
               <input type="hidden" name="id" value={booking.id} />
               {booking.paidAt === null ? (
