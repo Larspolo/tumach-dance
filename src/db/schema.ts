@@ -195,6 +195,8 @@ export const bookings = sqliteTable(
       .$defaultFn(() => randomBytes(32).toString("base64url")),
     /** UTC, epoch milliseconds; the removal of the name, email and phone (#224), `null` = not removed. */
     forgottenAt: integer("forgotten_at"),
+    /** UTC, epoch milliseconds; the one extra push to Nina for a request that still waits (#594), `null` = none. */
+    nudgedAt: integer("nudged_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),

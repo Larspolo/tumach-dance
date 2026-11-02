@@ -26,6 +26,12 @@ export function requestPush(booking: Booking, offer: Offer, locale: PushLocale):
   return { title: t("bookingPush.title"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
 }
 
+/** The one extra push of a request that still waits 12 hours before its start (#594). */
+export function nudgePush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  return { title: t("bookingPush.nudgeTitle"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
+}
+
 /** The push of a booking that the dancer cancelled with the link (#210), with a link to the week of the booking. */
 export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
   const t = createTranslator({ locale, messages: MESSAGES[locale] });

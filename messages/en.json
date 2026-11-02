@@ -289,6 +289,7 @@
   "bookingPush": {
     "title": "New booking request",
     "body": "{name}: {offer}, {when}",
+    "nudgeTitle": "A request still waits",
     "cancelTitle": "Booking cancelled"
   },
   "StudioBookings": {
