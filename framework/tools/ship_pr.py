@@ -16,8 +16,9 @@ one with `Closes #N` in its body; or the open PR of the branch), and `mergeable_
 minutes after its start (#4784): a red quick CI after the end of its run cost a takeover and a cold run 30 to 40
 minutes later (11 to 25 of 50 takeovers on 2026-10-30); the run that wrote the code fixes it with its warm context.
 Run it with the Bash `timeout` 600000. Exit 0: shipped (the quick CI is green, still runs at the time limit: `--ci`
-waits again). Exit 2: the lint or a test fails, or a change of data
-files only adds a test (`docs/extend.md`; nothing pushed). Exit 3: the
+waits again). Exit 2: the lint or a test fails, a change of data
+files only adds a test (`docs/extend.md`), or the prose of the message or body closes another ticket (#472;
+nothing committed or pushed). Exit 3: the
 guard or the push fails (do not push by hand). Exit 4: no commit to ship, or the PR call fails. Exit 5: the quick CI
 is red, or a check of GATES (`browser`) during the wait for the merge: it prints the failed steps and tests;
 fix them, commit and run it again.
@@ -29,6 +30,7 @@ push): run `python3 framework/tools/merge_main.py --push N`, then `ship_pr.py N 
 import argparse
 import glob
 import os
+import re
 import subprocess
 import sys
 import time
@@ -103,11 +105,16 @@ def body_with_ticket(text, number, part=False):
     return text if claim.closes(number).search(claim.prose(text)) else f"{text.rstrip()}\n\nCloses #{number}\n"
 
 
-def part_closer(text, number):
-    """The first line whose prose closes #number, or None: a `--part` PR must not close its ticket (#470, PR #468:
-    "does not close #453" closed #453)."""
+CLOSER = re.compile(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?):?\s+#(\d+)\b", re.I)
+
+
+def closer(text, number, part=False):
+    """The first prose line (`claim.prose`: no code) that closes a ticket other than #number, or with `part` any
+    ticket, else None. One ticket per PR: GitHub closes each ticket that a merged PR names after a closing word
+    (#472: the body of PR #471 said "PR #468 closed #453" and closed #453; #470: "does not close #453" in a
+    `--part` PR)."""
     for line in claim.prose(text).splitlines():
-        if claim.closes(number).search(line):
+        if any(part or int(m.group(1)) != number for m in CLOSER.finditer(line)):
             return line.strip()
     return None
 
@@ -221,11 +228,11 @@ def main(argv=None):
     a = ap.parse_args(argv)
     deadline = time.monotonic() + a.wait * 60
     branch = git("branch", "--show-current").stdout.strip()
-    if a.part:
-        for f in (a.message, a.body):
-            if f and (line := part_closer(open(f, encoding="utf-8").read(), a.number)):
-                print(f"--part: {f} closes #{a.number} in the line {line!r}: reword it (GitHub closes the ticket)")
-                return 2
+    for f in (a.message, a.body):
+        if f and (line := closer(open(f, encoding="utf-8").read(), a.number, a.part)):
+            print(f"{f} closes a ticket in the line {line!r}: reword it (GitHub closes each ticket after a closing "
+                  f"word; only `{'Part of' if a.part else 'Closes'} #{a.number}`, #472)")
+            return 2
     if a.ci:
         owner, head = CONFIG["repo"].split("/")[0], a.pr_branch or branch
         pr = next(iter(dashboard.api(f"pulls?head={owner}:{head}&state=open")), None)
