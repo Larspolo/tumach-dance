@@ -197,6 +197,8 @@ export const bookings = sqliteTable(
       .$defaultFn(() => randomBytes(32).toString("base64url")),
     /** UTC, epoch milliseconds; the removal of the name, email and phone (#224), `null` = not removed. */
     forgottenAt: integer("forgotten_at"),
+    /** The SEQUENCE of the calendar event of the booking (#409): one more at each move, so a calendar takes the new time. */
+    calendarSequence: integer("calendar_sequence").notNull().default(0),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),

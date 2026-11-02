@@ -12,7 +12,7 @@ const MESSAGES = { en, nl } as const;
 /**
  * The `.ics` text of `booking` with the title "TUMACH: <offer>" in `locale` (English for another one), times in UTC.
  * `cancel` (#386): the file that removes the event from the calendar of the dancer (iTIP CANCEL, RFC 5546): the same
- * uid with a higher sequence than the approval (0) and the reminder (no sequence).
+ * uid with a higher sequence than the approval and the reminder (`calendarSequence`, one more at each move, #409).
  */
 export function bookingEvent(booking: Booking, offer: Offer, locale: string, cancel = false): string {
   const lang = locale in MESSAGES ? (locale as keyof typeof MESSAGES) : "en";
@@ -21,7 +21,9 @@ export function bookingEvent(booking: Booking, offer: Offer, locale: string, can
     offer.kind === "lesson"
       ? t("Book.lesson", { minutes: offer.minutes })
       : t("Book.rental", { minutes: offer.minutes });
-  const cancelFields = cancel ? { status: "CANCELLED" as const, sequence: 1 } : {};
+  // A move adds one to `calendarSequence` (#409): the cancel file is always higher than the last file of the dancer.
+  const sequence = booking.calendarSequence ?? 0;
+  const cancelFields = cancel ? { status: "CANCELLED" as const, sequence: sequence + 1 } : { sequence };
   const { error, value } = createEvents(
     [
       {

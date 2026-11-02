@@ -1,5 +1,5 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, isNotNull, isNull, lt } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt, ne, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { notBefore } from "../lib/booking-notice";
@@ -63,13 +63,20 @@ function clean(
 /**
  * The `start`..`end` ranges that overlap `from`..`to`, for `freeSlots()`: the `requested` and `approved` bookings, and
  * the blocks of Nina (#323, `listBlocks()`). Both the booking page and `requestBooking()` refuse a busy time, so a block
- * is refused there too; removing a block frees its time again.
+ * is refused there too; removing a block frees its time again. `except`: a booking that does not count (its move, #409).
  */
-export function busyRanges(db: Db, from: number, to: number): OpenRange[] {
+export function busyRanges(db: Db, from: number, to: number, { except }: { except?: number } = {}): OpenRange[] {
   const booked = db
     .select({ start: bookings.start, end: bookings.end })
     .from(bookings)
-    .where(and(inArray(bookings.status, HOLDING), lt(bookings.start, to), gt(bookings.end, from)))
+    .where(
+      and(
+        inArray(bookings.status, HOLDING),
+        lt(bookings.start, to),
+        gt(bookings.end, from),
+        except === undefined ? undefined : ne(bookings.id, except),
+      ),
+    )
     .all();
   const blocked = listBlocks(db, from, to).map((b) => ({ start: b.start, end: b.end }));
   return [...booked, ...blocked].sort((a, b) => a.start - b.start);
@@ -109,6 +116,58 @@ export function requestBooking(
         .returning()
         .get();
       return { ok: true, booking };
+    },
+    { behavior: "immediate" },
+  );
+}
+
+/** `from`: the old time of the booking, for the email and the push of the move (epic #406). */
+export type MoveResult =
+  | { ok: true; booking: Booking; from: { start: number; end: number } }
+  | { ok: false; reason: "not-found" | "not-open" | "started" | "notSlot" | "taken" };
+
+/**
+ * Move a `requested` or `approved` booking whose start is after `now` to `start` (#409). The new end is `start` plus
+ * the minutes of its offer, also when the offer is hidden now. The new time must be a free slot as in
+ * `requestBooking()`; the old time of the booking itself does not count as busy. One `BEGIN IMMEDIATE` transaction
+ * checks and updates, so that a request or another move at the same moment never gets an overlapping time. A move
+ * clears `remindedAt` (the reminder goes again for the new day) and adds one to `calendarSequence`.
+ */
+export function moveBooking(
+  db: Db,
+  id: number,
+  start: number,
+  { now = Date.now() }: { now?: number } = {},
+): MoveResult {
+  return db.transaction(
+    (tx): MoveResult => {
+      const row = tx
+        .select({ booking: bookings, offer: offers })
+        .from(bookings)
+        .innerJoin(offers, eq(offers.id, bookings.offerId))
+        .where(eq(bookings.id, id))
+        .get();
+      if (!row) return { ok: false, reason: "not-found" };
+      const { booking: before, offer } = row;
+      if (!(HOLDING as readonly string[]).includes(before.status)) return { ok: false, reason: "not-open" };
+      if (before.start <= now) return { ok: false, reason: "started" };
+      if (!Number.isInteger(start)) return { ok: false, reason: "notSlot" };
+      const end = start + offer.minutes * 60_000;
+      const date = DateTime.fromMillis(start, { zone: TIME_ZONE }).toISODate();
+      if (!date) return { ok: false, reason: "notSlot" };
+      const open = openRanges(getHoursRule(db), date, date);
+      const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
+      if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end, { except: id }).length > 0) return { ok: false, reason: "taken" };
+      const booking = tx
+        .update(bookings)
+        .set({ start, end, remindedAt: null, calendarSequence: sql`${bookings.calendarSequence} + 1` })
+        .where(eq(bookings.id, id))
+        .returning()
+        .get();
+      return { ok: true, booking, from: { start: before.start, end: before.end } };
     },
     { behavior: "immediate" },
   );

@@ -1,0 +1,1 @@
+ALTER TABLE `bookings` ADD `calendar_sequence` integer DEFAULT 0 NOT NULL;
