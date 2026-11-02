@@ -11,6 +11,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - Better Auth email-otp sends at most 3 codes a minute: a browser test that needs a session uses `storageState: STUDIO_SESSION` of `e2e/studio.setup.ts`, not its own login (#23).
 - The headless shell of Playwright gives `Notification.permission` "denied" after `grantPermissions` (`permissions.query`: "granted"). A test of a permission uses `test.use({ channel: "chromium" })` (#188).
 - A browser test that books on the first day of `/book` (today) fails in the evening: today has one or two free times left. Choose the last day (`e2e/book.spec.ts`, #313).
+- `globals.css` has `scroll-behavior: smooth`: `window.scrollTo(0, 0)` before a screenshot animates, and the image catches the page halfway. Use `{ top: 0, behavior: "instant" }` (#453).
 
 ## Database
 
@@ -23,6 +24,8 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - A `headers()` call in `src/i18n/request.ts` gives a 500 on each not-found page (static to dynamic). Read the request in the page (`setStudioLocale`, #19).
 - A layout `metadata.icons` replaces the icon of `src/app/icon.png`: give it an `icon` too, or the browser asks `/favicon.ico` (404, console error; #71).
 - Next.js 16 `src/proxy.ts` cuts a request body at 10 MB (`experimental.proxyClientMaxBodySize`), also when `serverActions.bodySizeLimit` is larger: set both (`next.config.ts`, #173).
+- Lighthouse mobile (simulated) counts each request that ends before the first paint, and on a local server the first paint comes after the scripts: the LCP of a page follows its bytes of fonts and JavaScript. `subsets` of `next/font` is only the preload; `NextIntlClientProvider` with no `messages` puts all the texts in each page (#453).
+- `pkill -f "next start"` misses the server: its process is `next-server`. A server that still runs on the port answers with the old build (#453).
 
 ## Photos
 
