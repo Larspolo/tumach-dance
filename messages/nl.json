@@ -418,5 +418,10 @@
       "title": "Zo gebruik je de studio-app · TUMACH",
       "description": "Log in, zet de studio-app op je beginscherm en zet meldingen aan."
     }
+  },
+  "StudioNotFound": {
+    "title": "Pagina niet gevonden",
+    "text": "Deze pagina van de studio-app bestaat niet.",
+    "back": "Terug naar de studio-app"
   }
 }

@@ -418,5 +418,10 @@
       "title": "How to use the studio app · TUMACH",
       "description": "Log in, add the studio app to your home screen and turn on notifications."
     }
+  },
+  "StudioNotFound": {
+    "title": "Page not found",
+    "text": "This page of the studio app does not exist.",
+    "back": "Back to the studio app"
   }
 }
