@@ -15,6 +15,7 @@ import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
+import { emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
 import { studioEmail } from "./studio-email";
@@ -103,7 +104,46 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
   const subject = decision === "approved" ? t("bookingEmail.approvedSubject") : t("bookingEmail.declinedSubject");
   // The calendar file (#385): the dancer adds the lesson with one tap at the approval. Same uid as the reminder.
   const attachments = decision === "approved" ? [icsAttachment(booking, offer)] : undefined;
-  return { to: booking.email, subject, text, ...(attachments ? { attachments } : {}), ...replyToNina() };
+  // The HTML part of the approval (#439): the same lines, with a button to pay and a button to cancel.
+  const html = decision === "approved" ? approvedHtml(booking, offer, t, offerLabel, when, origin) : undefined;
+  return {
+    to: booking.email,
+    subject,
+    text,
+    ...(html ? { html } : {}),
+    ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+function approvedHtml(
+  booking: Booking,
+  offer: Offer,
+  t: ReturnType<typeof parts>["t"],
+  offerLabel: string,
+  when: string,
+  origin: string,
+): string {
+  const price = priceText(offer, booking.locale);
+  return emailHtml({
+    lang: booking.locale in MESSAGES ? booking.locale : "en",
+    greeting: t("bookingEmail.greeting", { name: booking.name }),
+    blocks: [
+      { text: t("bookingEmail.approvedBody", { offer: offerLabel, when }) },
+      booking.tikkieUrl
+        ? {
+            text: t("bookingEmail.payPrice", { price }),
+            button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
+          }
+        : { text: t("bookingEmail.payLater", { price }) },
+      {
+        text: t("bookingEmail.cancelText"),
+        button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
+      },
+      { text: t("bookingEmail.approvedSee") },
+    ],
+    sign: t("bookingEmail.sign"),
+  });
 }
 
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */

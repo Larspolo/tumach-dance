@@ -303,7 +303,11 @@
     "unansweredBody": "Nina could not answer your request in time: {offer}, {when}. The request has ended.",
     "unansweredOther": "You can pick another time on the booking page: {url}",
     "moveSubject": "Your booking at TUMACH has a new time",
-    "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}."
+    "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}.",
+    "payPrice": "The price is {price}.",
+    "payButton": "Pay with Tikkie",
+    "cancelText": "Can you not come? Cancel the booking at any time before the start.",
+    "cancelButton": "Cancel the booking"
   },
   "bookingPush": {
     "title": "New booking request",
