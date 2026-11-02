@@ -1,5 +1,5 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, isNotNull, isNull, lt, ne, sql } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
 import { type BookingLimit, bookingLimit } from "../lib/booking-limits";
@@ -202,6 +202,7 @@ export function decideBooking(
       status: decision,
       tikkieUrl: decision === "approved" ? tikkieUrl : null,
       approvedAt: decision === "approved" ? Date.now() : null,
+      decidedAt: now,
     })
     .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
     .returning()
@@ -215,6 +216,75 @@ export function decideBooking(
   if (!exists) return { ok: false, reason: "not-found" };
   if (exists.status === "requested" && exists.start <= now) return { ok: false, reason: "started" };
   return { ok: false, reason: "not-requested" };
+}
+
+/** The time after a tap on Approve or Decline in which Nina can undo it; the decision email goes after it (#572). */
+export const UNDO_MS = 60_000;
+
+/**
+ * The bookings whose dancer has the decision email, or never waits for one: a decision before #572 (no `decidedAt`).
+ * The reminders and the payment reminder leave out the others, so no reminder comes before the decision email.
+ */
+export const decisionTold = or(isNull(bookings.decidedAt), isNotNull(bookings.decisionMailedAt));
+
+export type UndoResult =
+  | { ok: true; booking: Booking }
+  | { ok: false; reason: "not-found" | "not-decided" | "sent" | "started" | "taken" };
+
+/**
+ * Undo Nina's decision of the last `UNDO_MS` (#572): the booking is `requested` again, and the dancer gets no
+ * decision email. `sent`: the email went out, or the undo time ended. `taken`: a declined time that another booking,
+ * a block or a class took in the meantime. One `BEGIN IMMEDIATE` transaction checks and updates; the claim of the
+ * email (`claimDueDecisions()`) is one `UPDATE` that needs `decidedAt` and a `null` `decisionMailedAt`, so an undo
+ * and a send never both happen.
+ */
+export function undoDecision(db: Db, id: number, now = Date.now()): UndoResult {
+  return db.transaction(
+    (tx): UndoResult => {
+      const before = tx.select().from(bookings).where(eq(bookings.id, id)).get();
+      if (!before) return { ok: false, reason: "not-found" };
+      if ((before.status !== "approved" && before.status !== "declined") || before.decidedAt === null) {
+        return { ok: false, reason: "not-decided" };
+      }
+      if (before.decisionMailedAt !== null || now - before.decidedAt >= UNDO_MS) return { ok: false, reason: "sent" };
+      if (before.start <= now) return { ok: false, reason: "started" };
+      const date = DateTime.fromMillis(before.start, { zone: TIME_ZONE }).toISODate();
+      const classes = date ? classRanges(listClassTimes(db, { visibleOnly: true }), date, date) : [];
+      const inClass = classes.some((c) => c.start < before.end && before.start < c.end);
+      if (inClass || busyRanges(db, before.start, before.end, { except: id }).length > 0) {
+        return { ok: false, reason: "taken" };
+      }
+      const booking = tx
+        .update(bookings)
+        .set({ status: "requested", approvedAt: null, tikkieUrl: null, decidedAt: null })
+        .where(and(eq(bookings.id, id), isNull(bookings.decisionMailedAt)))
+        .returning()
+        .get();
+      return booking ? { ok: true, booking } : { ok: false, reason: "sent" };
+    },
+    { behavior: "immediate" },
+  );
+}
+
+/**
+ * Claim the decisions whose undo time ended and whose email did not go (#572): one `UPDATE` sets `decisionMailedAt`,
+ * so two callers at the same moment (the short timer of the tap and the booking timer) never claim one booking twice.
+ * A booking that Nina cancelled in the undo time is not claimed: the dancer gets only the cancel email.
+ */
+export function claimDueDecisions(db: Db, now = Date.now()): Booking[] {
+  return db
+    .update(bookings)
+    .set({ decisionMailedAt: now })
+    .where(
+      and(
+        inArray(bookings.status, ["approved", "declined"]),
+        isNotNull(bookings.decidedAt),
+        lte(bookings.decidedAt, now - UNDO_MS),
+        isNull(bookings.decisionMailedAt),
+      ),
+    )
+    .returning()
+    .all();
 }
 
 /** `wasApproved`: the booking was approved before the cancel (its calendar file reached the dancer, #386). */

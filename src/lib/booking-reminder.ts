@@ -7,6 +7,7 @@
 import { and, eq, gt, isNull, lte } from "drizzle-orm";
 import { DateTime } from "luxon";
 import type { Db } from "../db";
+import { decisionTold } from "../db/bookings";
 import { bookings, offers } from "../db/schema";
 import { reminderEmailHtml } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
@@ -31,6 +32,8 @@ export async function checkReminders(db: Db, now = Date.now()): Promise<number[]
     .where(
       and(
         eq(bookings.status, "approved"),
+        // No reminder before the decision email (#572).
+        decisionTold,
         isNull(bookings.remindedAt),
         gt(bookings.start, now),
         lte(bookings.start, now + MAX_DAY_MS),
