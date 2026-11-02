@@ -67,6 +67,7 @@
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(gh repo delete:*)",
+      "Agent",
       "Agent(claude-code-guide)",
       "Agent(statusline-setup)",
       "Artifact",
