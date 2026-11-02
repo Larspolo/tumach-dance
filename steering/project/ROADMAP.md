@@ -117,6 +117,6 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:look` The emails to a dancer have the look of the site
   - Each email to a dancer has the colors, the fonts and the name of the studio as on the site, with a button for each link (pay, cancel, book again), and still reads well as plain text
   - The emails read well in Gmail, Apple Mail and Outlook on a phone, also in dark mode
-- [ ] `book:none` A dancer who finds no free time knows what to do
+- [x] `book:none` (#476) A dancer who finds no free time knows what to do
   - When an offer has no free time in the 4 weeks of the booking page, the page names the day of the next free time and the day from which the dancer can book it
   - The page with no free time or with no offer links to the contact form, so that the dancer can ask Nina
