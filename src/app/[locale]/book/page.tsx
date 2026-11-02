@@ -16,7 +16,17 @@ import styles from "./book.module.css";
 // params, so the page works on a phone with no JavaScript; the form is a plain HTML form and a server action.
 export const dynamic = "force-dynamic";
 
-type Search = { offer?: string; day?: string; start?: string; error?: string; sent?: string };
+type Search = {
+  offer?: string;
+  day?: string;
+  start?: string;
+  error?: string;
+  sent?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  typo?: string;
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -166,6 +176,17 @@ export default async function BookPage({
             {offerName(offer)} · {dateOf(day.date)} · {time.format(slot.start)}
           </p>
           <form className={styles.form} action={sendRequest}>
+            {search.typo && (
+              <div className={`${styles.error} ${styles.typo}`} role="status">
+                <p>{t("emailTypo", { email: search.typo })}</p>
+                <button className={styles.button} type="submit" name="emailFix" value={search.typo}>
+                  {t("emailUse", { email: search.typo })}
+                </button>
+                <button className={styles.plain} type="submit" name="emailChecked" value="1">
+                  {t("emailKeep")}
+                </button>
+              </div>
+            )}
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="offerId" value={offer.id} />
             <input type="hidden" name="day" value={day.date} />
@@ -183,15 +204,37 @@ export default async function BookPage({
             />
             <label className={styles.field}>
               <span>{t("name")}</span>
-              <input className={styles.input} name="name" required maxLength={100} autoComplete="name" />
+              <input
+                className={styles.input}
+                name="name"
+                defaultValue={search.name}
+                required
+                maxLength={100}
+                autoComplete="name"
+              />
             </label>
             <label className={styles.field}>
               <span>{t("email")}</span>
-              <input className={styles.input} name="email" type="email" required maxLength={200} autoComplete="email" />
+              <input
+                className={styles.input}
+                name="email"
+                defaultValue={search.email}
+                type="email"
+                required
+                maxLength={200}
+                autoComplete="email"
+              />
             </label>
             <label className={styles.field}>
               <span>{t("phone")}</span>
-              <input className={styles.input} name="phone" type="tel" required autoComplete="tel" />
+              <input
+                className={styles.input}
+                name="phone"
+                defaultValue={search.phone}
+                type="tel"
+                required
+                autoComplete="tel"
+              />
             </label>
             <label className={styles.field}>
               <span>{t("note")}</span>

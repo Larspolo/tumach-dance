@@ -14,7 +14,7 @@ The owner is **Larspolo**. Nina is the user of the studio app; she is not techni
 | Lint | `ruff check . && npx @biomejs/biome check .` (`--write` fixes the format) |
 | Fast tests | `python3 -m pytest -q && npx vitest run` (one file: `npx vitest run tests/a.test.ts`) |
 | Slow tests | `npx playwright test` (browser tests and the screenshots of a PR) |
-| Speed on a phone | `npm run build`, then `node scripts/lighthouse.mjs --lcp 2500 --cls 0.1` (Lighthouse mobile, 4 pages; exit 1 over the budget) |
+| Speed on a phone | `npm run build`, then `node scripts/lighthouse.mjs --cls 0.1` (Lighthouse mobile, 4 pages; LCP budget 3.0 s home, 2.5 s booking; exit 1 over the budget) |
 | Development server | `npm run dev` (the owner's `/try`) |
 
 Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.env` file or the data of a dancer.
@@ -28,7 +28,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
 - `src/components/` – shared page parts (the "test site" banner).
-- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the questions for Nina of a ticket (`nina-question.ts`), the Content-Security-Policy (`csp.ts`, its nonce in `src/proxy.ts`).
+- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the questions for Nina of a ticket (`nina-question.ts`), the push of a bounced email (`email-bounce.ts`), the Content-Security-Policy (`csp.ts`, its nonce in `src/proxy.ts`).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
