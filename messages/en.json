@@ -261,6 +261,7 @@
     "rental": "Studio rental, {minutes} min",
     "noOffers": "There is nothing to book at the moment.",
     "noTimes": "No free time in the next 4 weeks.",
+    "nextFree": "The next free time is on {date}. You can book it from {from}.",
     "contactText": "A question, or another time?",
     "contact": "Write to Nina",
     "name": "Name",
