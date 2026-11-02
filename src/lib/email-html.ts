@@ -1,10 +1,10 @@
 // The HTML part of an email to a dancer (#439): the look of the site (`docs/design/current-site.html`), inline styles
 // (Gmail drops a `<style>` in some cases) and a dark mode. React Email gives the components and escapes each text.
-// `renderToStaticMarkup` of react-dom renders them in sync: `render()` of `@react-email/render` is async, and the
-// email builders of `booking-email.ts` are sync.
+// `render()` of `@react-email/render` is async: `decisionEmailHtml()` of `booking-email.ts` adds the HTML part.
+// (Next.js refuses `react-dom/server` in server code, so no sync `renderToStaticMarkup`.)
 import { Body, Button, Container, Head, Html, Section, Text } from "@react-email/components";
+import { render } from "@react-email/render";
 import { createElement as h, type ReactNode } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 
 export type EmailButton = { label: string; url: string };
 /** One block of the email: a paragraph, or a paragraph with a button under it. */
@@ -66,7 +66,7 @@ function button(b: EmailButton) {
 }
 
 /** The full HTML document of `layout`. */
-export function emailHtml(layout: EmailLayout): string {
+export async function emailHtml(layout: EmailLayout): Promise<string> {
   const tree = h(
     Html,
     { lang: layout.lang },
@@ -102,5 +102,5 @@ export function emailHtml(layout: EmailLayout): string {
       ),
     ),
   );
-  return `<!DOCTYPE html>${renderToStaticMarkup(tree)}`;
+  return render(tree);
 }

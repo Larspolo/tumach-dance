@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { openDb } from "../src/db";
 import { requestBooking } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
-import { decisionEmail } from "../src/lib/booking-email";
+import { decisionEmail, decisionEmailHtml } from "../src/lib/booking-email";
 import { sendEmail } from "../src/lib/email";
 import { saveHoursRule } from "../src/lib/hours-store";
 
@@ -38,9 +38,10 @@ function booked(locale: string, name = "Ana") {
 const buttons = (html: string) => [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)];
 
 describe("the approval email in HTML", () => {
-  test("greeting, time, the Tikkie and the cancel button; the text stays plain", () => {
+  test("greeting, time, the Tikkie and the cancel button; the text stays plain", async () => {
     const { booking, offer } = booked("en");
-    const mail = decisionEmail(booking, offer, "approved", "https://tumach.dance");
+    const mail = await decisionEmailHtml(booking, offer, "approved", "https://tumach.dance");
+    expect(mail.text).toBe(decisionEmail(booking, offer, "approved", "https://tumach.dance").text);
     const html = mail.html as string;
     expect(html).toContain("Hi Ana,");
     expect(html).toContain("Sunday, October 25, 2026 at 10:00");
@@ -56,20 +57,20 @@ describe("the approval email in HTML", () => {
     for (const m of links) expect(m[0]).toMatch(/min-height:44px/);
   });
 
-  test("Dutch labels; no Tikkie link: no pay button", () => {
+  test("Dutch labels; no Tikkie link: no pay button", async () => {
     const { booking, offer } = booked("nl");
-    const html = decisionEmail({ ...booking, tikkieUrl: null }, offer, "approved").html as string;
+    const html = (await decisionEmailHtml({ ...booking, tikkieUrl: null }, offer, "approved")).html as string;
     expect(html).toContain("Annuleer de boeking");
     expect(html).not.toContain("Betaal met Tikkie");
     expect(html).toContain('lang="nl"');
   });
 
-  test("the name is escaped; the declined email has no HTML", () => {
+  test("the name is escaped; the declined email has no HTML", async () => {
     const { booking, offer } = booked("en", "<script>x</script>");
-    const html = decisionEmail(booking, offer, "approved").html as string;
+    const html = (await decisionEmailHtml(booking, offer, "approved")).html as string;
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;x&lt;/script&gt;");
-    expect(decisionEmail(booking, offer, "declined").html).toBeUndefined();
+    expect((await decisionEmailHtml(booking, offer, "declined")).html).toBeUndefined();
   });
 });
 
