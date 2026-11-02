@@ -9,6 +9,7 @@ import { DateTime } from "luxon";
 import type { Db } from "../db";
 import { bookings, offers } from "../db/schema";
 import { reminderEmail } from "./booking-email";
+import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
 
@@ -50,6 +51,7 @@ export async function checkReminders(db: Db, now = Date.now()): Promise<number[]
       await sendEmail(reminderEmail(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ remindedAt: null }).where(eq(bookings.id, booking.id)).run();
+      await sendEmailFailPush(db, claimed, "reminder");
       throw error;
     }
     sent.push(booking.id);

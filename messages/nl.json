@@ -289,7 +289,14 @@
   "bookingPush": {
     "title": "Nieuwe aanvraag",
     "body": "{name}: {offer}, {when}",
-    "cancelTitle": "Boeking geannuleerd"
+    "cancelTitle": "Boeking geannuleerd",
+    "emailFailTitle": "E-mail niet verstuurd",
+    "emailFailRequest": "{name} kreeg de e-mail over de aanvraag niet.",
+    "emailFailDecision": "{name} kreeg de e-mail met je antwoord niet.",
+    "emailFailCancel": "{name} kreeg de e-mail over de annulering niet.",
+    "emailFailReminder": "{name} kreeg de herinnering niet.",
+    "emailFailPayment": "{name} kreeg de betaalherinnering niet.",
+    "emailFailUnanswered": "{name} kreeg de e-mail over de open aanvraag niet."
   },
   "StudioBookings": {
     "title": "Boekingen",
