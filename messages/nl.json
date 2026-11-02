@@ -339,7 +339,9 @@
     "toPay": "Goedgekeurde boekingen",
     "markPaid": "Betaald",
     "paidOn": "Betaald op {date}",
-    "undo": "Ongedaan maken"
+    "undo": "Ongedaan maken",
+    "whatsapp": "WhatsApp",
+    "whatsappText": "Hoi {name}, over je boeking op {date}: "
   },
   "StudioQuestions": {
     "title": "Voor Nina",
