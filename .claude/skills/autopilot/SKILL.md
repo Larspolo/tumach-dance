@@ -89,6 +89,10 @@ gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Make it a 
 an epic with no open sub-issue starts empty refill runs (#309). When another question already has a follow-up for the
 same problem, make no new ticket: name it in a comment on the epic. Then write one evidence comment (her answer, the
 follow-up numbers) and close with the label `close` (`owner.md`, "Close an issue"); `claim.py N --release`.
+Answer A and the parent epic has no other open sub-issue and its last epic-check comment ends with
+`Close this epic when #N gives A.` (`queue.md`): close the epic in the same run (#552: else a deep run starts only for
+that close). Its evidence comment names that check comment and her answer; label `close`; then the `docs` ticket of its
+roadmap line (`queue.md`).
 
 Ask the owner only with the label `needs-human` and a comment on the issue that needs the answer (owner rule, #862).
 Never ask with PushNotification, in the session, or only in the status report. Details, denied actions, a wrong
