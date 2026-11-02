@@ -145,7 +145,7 @@ export default async function WeekPage({
                     )}{" "}
                     {bookingWhatsappLink(booking) !== null && (
                       <>
-                        <a className={styles.link} href={bookingWhatsappLink(booking) ?? undefined}>
+                        <a className={`${styles.link} ${styles.chat}`} href={bookingWhatsappLink(booking) ?? undefined}>
                           {bookingsT("whatsapp")}
                         </a>{" "}
                       </>

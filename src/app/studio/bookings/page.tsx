@@ -71,7 +71,7 @@ export default async function BookingsPage({
             </p>
             {bookingWhatsappLink(booking) !== null && (
               <p>
-                <a className={styles.link} href={bookingWhatsappLink(booking) ?? undefined}>
+                <a className={`${styles.link} ${styles.chat}`} href={bookingWhatsappLink(booking) ?? undefined}>
                   {t("whatsapp")}
                 </a>
               </p>
