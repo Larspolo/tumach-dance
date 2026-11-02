@@ -103,7 +103,11 @@ the section `## For Nina` with 2 to 4 choices, and the label `for-nina`. Its `##
 page "For Nina" works. After her answer ("Nina's answer: ..."), the page hides the question; a reply of a run does
 not show it again. To ask a follow-up, post a comment with its own section `## For Nina` (#195). Her answer also
 removes `needs-human` (#294), so the ticket is a candidate: the autopilot run acts on it (autopilot step 6, "A question
-for Nina"). The form (`src/lib/nina-question.ts` reads it):
+for Nina"). Ask Nina only what no test can check, and keep it short (owner, #422; `steering/project/PRINCIPLES.md`,
+"Owner involvement" and "Try a feature"): the text before the choices is at most about 60 words (one sentence on what
+is new and at most 3 steps); each choice is one line. No explanation of how the feature works, no "Please try it",
+and no step that the `Try:` link already does. The details for Lars go to `## Context` and `## For the owner`.
+The form (`src/lib/nina-question.ts` reads it):
 
     ## For Nina
     <The question in plain words, no technical word.>

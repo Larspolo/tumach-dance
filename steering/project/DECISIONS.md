@@ -26,3 +26,4 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-10-31 · #257 · Nina gives only her tagline; an agent writes each other text of the site, and asks her about a text only when no text is a good option · other · new
 - 2026-11-01 · #299 · Languages: English and Dutch only; Slovenian is removed (Nina, #179), and /sl links go to the English page · - · new
 - 2026-11-01 · #223 · The site keeps the name, email and phone of a dancer 1 year after the lesson, then removes them · taken · P1
+- 2026-11-02 · #422 · Ask Nina only what no test can check (her taste, a rule of her studio, a step on her own phone, email or calendar), in a short question; an epic whose tests check each criterion gets no question · - · new
