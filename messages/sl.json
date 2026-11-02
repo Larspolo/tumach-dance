@@ -3,8 +3,8 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (sl): the welcome of Nina]",
     "eyebrow": "[Placeholder (sl): short line above the title]",
-    "primaryAction": "[Placeholder (sl): button to the schedule]",
-    "secondaryAction": "[Placeholder (sl): button to the studio]",
+    "primaryAction": "Rezerviraj uro",
+    "secondaryAction": "Oglej si urnik",
     "imageBlock": "[Placeholder (sl): photo of the studio]",
     "about": {
       "title": "[Placeholder (sl): title about the studio]",
@@ -61,7 +61,8 @@
     "about": "[Placeholder (sl): about]",
     "classes": "[Placeholder (sl): classes]",
     "schedule": "[Placeholder (sl): schedule]",
-    "contact": "[Placeholder (sl): contact]"
+    "contact": "[Placeholder (sl): contact]",
+    "book": "Rezerviraj"
   },
   "Footer": {
     "copyright": "© {year}",

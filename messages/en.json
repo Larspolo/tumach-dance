@@ -3,8 +3,8 @@
     "title": "TUMACH",
     "welcome": "[Placeholder (en): the welcome of Nina]",
     "eyebrow": "[Placeholder (en): short line above the title]",
-    "primaryAction": "[Placeholder (en): button to the schedule]",
-    "secondaryAction": "[Placeholder (en): button to the studio]",
+    "primaryAction": "Book a lesson",
+    "secondaryAction": "See the schedule",
     "imageBlock": "[Placeholder (en): photo of the studio]",
     "about": {
       "title": "[Placeholder (en): title about the studio]",
@@ -61,7 +61,8 @@
     "about": "[Placeholder (en): about]",
     "classes": "[Placeholder (en): classes]",
     "schedule": "[Placeholder (en): schedule]",
-    "contact": "[Placeholder (en): contact]"
+    "contact": "[Placeholder (en): contact]",
+    "book": "Book"
   },
   "Footer": {
     "copyright": "© {year}",
