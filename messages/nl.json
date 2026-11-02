@@ -20,14 +20,19 @@
       "label": "Foto's",
       "alt": "Een foto van de dansstudio TUMACH"
     },
+    "offers": {
+      "title": "Prijzen",
+      "label": "(02) Prijzen",
+      "book": "Boek"
+    },
     "classes": {
       "title": "Lessen",
-      "label": "(02) Lessen",
+      "label": "(03) Lessen",
       "none": "Nog geen lessen."
     },
     "schedule": {
       "title": "Elke week",
-      "label": "(03) Rooster",
+      "label": "(04) Rooster",
       "none": "Nog geen lestijden.",
       "days": {
         "mon": "maandag",
@@ -42,7 +47,7 @@
     },
     "contact": {
       "title": "Zeg hallo",
-      "label": "(04) Contact",
+      "label": "(05) Contact",
       "text": "Een vraag over een les, een groepsles of de studio? Stuur me een bericht, dan antwoord ik snel.",
       "name": "Je naam",
       "email": "Je e-mail",
@@ -60,6 +65,7 @@
     "label": "Hoofdmenu",
     "logo": "TUMACH",
     "about": "Over",
+    "offers": "Prijzen",
     "photos": "Foto's",
     "classes": "Lessen",
     "schedule": "Rooster",
