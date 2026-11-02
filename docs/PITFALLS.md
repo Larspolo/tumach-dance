@@ -10,6 +10,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - Headless Chromium has no push service: `pushManager.subscribe` fails. A browser test stubs `PushManager.prototype.subscribe` (`e2e/push.spec.ts`, #25).
 - Better Auth email-otp sends at most 3 codes a minute: a browser test that needs a session uses `storageState: STUDIO_SESSION` of `e2e/studio.setup.ts`, not its own login (#23).
 - The headless shell of Playwright gives `Notification.permission` "denied" after `grantPermissions` (`permissions.query`: "granted"). A test of a permission uses `test.use({ channel: "chromium" })` (#188).
+- A browser test that books on the first day of `/book` (today) fails in the evening: today has one or two free times left. Choose the last day (`e2e/book.spec.ts`, #313).
 
 ## Database
 
@@ -26,3 +27,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 ## Photos
 
 - sharp: `withExif({ IFD0: { Orientation } })` does not set the orientation of a test photo; `withMetadata({ orientation: 6 })` does (`tests/photos.test.ts`, #171).
+
+## Home server
+
+- A Proxmox VM of CPU type `kvm64` has no SSE4 (host: N100): sharp failed at the start. VM 110 is `host` now (`docs/ENVIRONMENT.md`).
