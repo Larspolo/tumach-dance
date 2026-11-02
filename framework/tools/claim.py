@@ -84,7 +84,7 @@ REVIEW_MIN, REVIEW_MAX = REVIEW_CONFIG.get("min_gap", 10), REVIEW_CONFIG.get("ma
 OWNER_GAP = REVIEW_CONFIG.get("owner_gap", 20)   # the gap when an owner session merged a PR since the last review
 ROADMAP = 100               # merged PRs between two reviews of steering/project/ROADMAP.md (#2039)
 ROADMAP_EARLY = 30          # the same while the refill has no source: R < N, each roadmap feature has an epic (#3741)
-ROADMAP_IDLE = 60           # minutes with no merged PR: then the merged count is the gap (no ready ticket, no run merges)
+ROADMAP_IDLE = 60           # minutes with no merged PR (or no live run): then the merged count is the gap (no run merges)
 STATUS = CONFIG["status"]["issue"]   # the status issue: its state comment holds the last reviews
 # The times below find a run that stopped: a stopped run merges nothing, so they stay on the clock (#2039).
 STALE = 30 * 60             # seconds without a claim or beat: the run stopped (usage limit, crash)
@@ -385,9 +385,9 @@ def review_slot(kind, remote="origin", starved=None):
     """(lock key, gap) of the process review (`review`) or the roadmap review (`roadmap`); the key is None when the review
     is not due. For `--review`, `--roadmap` and `usage.due_reviews` (a due review is work of a deep run, #3560).
     starved: a function that is True when the refill has no source (default `starved`); the roadmap gap is then
-    ROADMAP_EARLY, so that the queue does not run empty for 100 merged PRs (#3741). After ROADMAP_IDLE minutes with no
-    merged PR the gap is the merged count (at least 1): with no ready ticket no run merges, and the queue stopped at 27
-    of 30 (2026-10-31). It is read only in that window."""
+    ROADMAP_EARLY, so that the queue does not run empty for 100 merged PRs (#3741). When no more PR merges
+    (`nothing_merges`) the gap is the merged count (at least 1): with no ready ticket no run merges, and the queue
+    stopped at 27 of 30 (2026-10-31). It is read only in that window."""
     body = api(f"issues/{STATUS}")["body"] if on_github(remote) else ""
     state = agent_state(body)
     last, gap = (state.get("last_review"), review_gap(state)) if kind == "review" else \
@@ -397,12 +397,25 @@ def review_slot(kind, remote="origin", starved=None):
     if kind == "roadmap" and on_github(remote):
         last = max(filter(None, (last, last_lock(kind, remote))), default=None)
     merged = merged_since(last, gap, remote)
-    if kind == "roadmap" and merged < gap and (merged >= ROADMAP_EARLY or merged and idle_minutes(last, remote)
-                                               >= ROADMAP_IDLE) and (starved or refill_starved)():
+    if kind == "roadmap" and merged < gap and (merged >= ROADMAP_EARLY or merged and nothing_merges(last, remote)) \
+            and (starved or refill_starved)():
         gap = min(merged, ROADMAP_EARLY)
     if kind == "review" and OWNER_GAP <= merged < gap and owner_since(last, remote):
         gap = OWNER_GAP
     return pr_slot(last, gap, merged, max(gap, REVIEW) if kind == "review" else None), gap
+
+
+def live_runs(remote="origin"):
+    """The runs that hold a beating ticket claim now (`health.beating_claims`); None when git cannot read the claims."""
+    import health  # health imports dashboard, which imports this module
+    return health.beating_claims(datetime.datetime.now(datetime.timezone.utc), remote=remote)
+
+
+def nothing_merges(last, remote="origin"):
+    """True when no PR will merge soon: no run holds a beating claim, or ROADMAP_IDLE minutes passed with no merge after
+    `last` (a run that stopped). Only the clock made the queue stand idle 13 times for about 1 h on 2026-11-01 and
+    2026-11-02 while no run worked (lever 8 of the `improve` skill)."""
+    return live_runs(remote) == 0 or idle_minutes(last, remote) >= ROADMAP_IDLE
 
 
 def refill_starved():
