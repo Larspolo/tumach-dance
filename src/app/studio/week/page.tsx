@@ -11,6 +11,7 @@ import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
+import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
 import { addBlock, cancel, forget, removeBlock } from "./actions";
 import { MovePanel } from "./MovePanel";
@@ -35,6 +36,7 @@ export default async function WeekPage({
   const locale = await setStudioLocale();
   const t = await getTranslations("StudioWeek");
   const offerName = await getTranslations("StudioOffers");
+  const bookingsT = await getTranslations("StudioBookings");
   const params = await searchParams;
   const week = weekOf(params.start);
   // The first tap on "Cancel" asks again; only "Yes, cancel" cancels (#162).
@@ -141,6 +143,13 @@ export default async function WeekPage({
                     ) : (
                       <span className={styles.mark}>{t(booking.paidAt === null ? "approved" : "paid")}</span>
                     )}{" "}
+                    {bookingWhatsappLink(booking) !== null && (
+                      <>
+                        <a className={styles.link} href={bookingWhatsappLink(booking) ?? undefined}>
+                          {bookingsT("whatsapp")}
+                        </a>{" "}
+                      </>
+                    )}
                     {booking.id === asked ? (
                       <form className={styles.form} action={cancel}>
                         <input type="hidden" name="id" value={booking.id} />
