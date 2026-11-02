@@ -46,6 +46,15 @@ function replyToNina(): Pick<Email, "replyTo"> {
   return address ? { replyTo: address } : {};
 }
 
+/** The calendar file of a booking as an email attachment (#166, #385). */
+function icsAttachment(booking: Booking, offer: Offer) {
+  return {
+    filename: "tumach.ics",
+    contentType: "text/calendar",
+    content: bookingEvent(booking, offer, booking.locale),
+  };
+}
+
 /** The email to the dancer of a `requested` booking, in the language of the page (`locale`). */
 export function requestEmail(booking: Booking, offer: Offer, locale: string, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, locale);
@@ -87,7 +96,9 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
     "\n",
   );
   const subject = decision === "approved" ? t("bookingEmail.approvedSubject") : t("bookingEmail.declinedSubject");
-  return { to: booking.email, subject, text, ...replyToNina() };
+  // The calendar file (#385): the dancer adds the lesson with one tap at the approval. Same uid as the reminder.
+  const attachments = decision === "approved" ? [icsAttachment(booking, offer)] : undefined;
+  return { to: booking.email, subject, text, ...(attachments ? { attachments } : {}), ...replyToNina() };
 }
 
 /** Who cancelled a booking: Nina in her app (#162) or the dancer with the link of the email (#164). */
@@ -133,12 +144,13 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.sign"),
   ].join("\n");
-  const ics = {
-    filename: "tumach.ics",
-    contentType: "text/calendar",
-    content: bookingEvent(booking, offer, booking.locale),
+  return {
+    to: booking.email,
+    subject: t("bookingEmail.reminderSubject"),
+    text,
+    attachments: [icsAttachment(booking, offer)],
+    ...replyToNina(),
   };
-  return { to: booking.email, subject: t("bookingEmail.reminderSubject"), text, attachments: [ics], ...replyToNina() };
 }
 
 /** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
