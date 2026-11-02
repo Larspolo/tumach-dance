@@ -45,7 +45,8 @@
       },
       "time": "{from}–{to}",
       "closedDay": "Closed on {date, date, ::dMMMM}.",
-      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}."
+      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}.",
+      "noClass": "No class on {date, date, ::dMMMM}."
     },
     "contact": {
       "title": "Say hello",

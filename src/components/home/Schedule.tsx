@@ -6,17 +6,20 @@ import styles from "./Home.module.css";
 import { SectionHead } from "./SectionHead";
 
 // The weekly times of the visible classes (#98), Monday to Sunday and then by start (`listClassTimes`),
-// and a line for each coming closed period of the studio (#530, `closedNotices`).
+// and a line for each coming closed period of the studio (#530, `closedNotices`). A row names its dates with no class
+// in the next 4 weeks (#532, `classDaysOff`).
 export function Schedule({
   classes,
   times,
   locale,
   closed = [],
+  daysOff = new Map(),
 }: {
   classes: Class[];
   times: ClassTime[];
   locale: string;
   closed?: ClosedNotice[];
+  daysOff?: Map<number, string[]>;
 }) {
   const t = useTranslations("HomePage.schedule");
   const byId = new Map(classes.map((cls) => [cls.id, cls]));
@@ -43,6 +46,11 @@ export function Schedule({
                 <span className={styles.cls}>{localText(cls.name, locale)}</span>
                 <span className={styles.time}>{t("time", { from: time.from, to: time.to })}</span>
                 <span className={styles.who}>{localText(cls.forWhom, locale)}</span>
+                {(daysOff.get(time.id) ?? []).map((date) => (
+                  <span key={date} className={styles.off}>
+                    {t("noClass", { date: noticeDate(date) })}
+                  </span>
+                ))}
               </div>
             );
           })}
