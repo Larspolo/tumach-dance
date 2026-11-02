@@ -40,6 +40,12 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A backup of the data each night, and a tested way to restore it
 - [ ] `site:watch` Lars knows when the live site has a problem
   - Lars gets a message when the live site stops or the nightly backup fails, with no paid service
+- [ ] `site:mail` Nobody misses an email that the site could not send
+  - When an email to a dancer does not go out, Nina gets a push with the name of the dancer, and tells the dancer herself
+  - A server with no email setup shows in the health check, so the site watch tells Lars
+- [ ] `site:updates` The live site gets the security fixes of its libraries
+  - Each week a check finds the known security problems of the libraries of the site and opens a ticket for the agents
+  - The update goes live only after the tests pass, with no step by Lars
 
 ## 2. Nina's studio app
 
@@ -63,6 +69,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `nina:block` Nina keeps a time free of bookings from the site
   - Nina blocks a time on one day in a few taps (a lesson that she gave by WhatsApp or phone, or time for herself); the booking page no longer offers it
   - Nina removes the block, and the time is free again
+- [ ] `nina:move` Nina moves a booking to another free time
+  - Nina moves a requested or approved booking to another free time in a few taps (a dancer asks by WhatsApp for another time); the old time is free at once
+  - The dancer gets one email with the new time, and the calendar file moves the event in the calendar of the dancer
 
 ## 3. Book a lesson or the studio
 
