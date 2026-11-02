@@ -18,6 +18,7 @@ import { type Email, sendEmail } from "./email";
 import { type EmailBlock, emailHtml } from "./email-html";
 import { TIME_ZONE } from "./hours";
 import { siteOrigin } from "./site";
+import { recordError } from "./site-errors";
 import { studioEmail } from "./studio-email";
 
 const MESSAGES = { en, nl } as const;
@@ -394,6 +395,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
     await sendEmail(await requestEmailHtml(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-email] the email of booking ${booking.id} failed:`, error);
+    recordError("email: request", error);
     await sendEmailFailPush(db, booking, "request");
   }
 }
@@ -409,6 +411,7 @@ export async function sendDecisionEmail(db: Db, booking: Booking, decision: Deci
     await sendEmail(await decisionEmailHtml(booking, offer, decision));
   } catch (error) {
     console.error(`[booking-email] the decision email of booking ${booking.id} failed:`, error);
+    recordError("email: decision", error);
     await sendEmailFailPush(db, booking, "decision");
   }
 }
@@ -429,6 +432,7 @@ export async function sendCancelEmail(
     await sendEmail(await cancelEmailHtml(booking, offer, by, wasApproved));
   } catch (error) {
     console.error(`[booking-email] the cancel email of booking ${booking.id} failed:`, error);
+    recordError("email: cancel", error);
     await sendEmailFailPush(db, booking, "cancel");
   }
 }
@@ -444,6 +448,7 @@ export async function sendMoveEmail(db: Db, booking: Booking, from: { start: num
     await sendEmail(await moveEmailHtml(booking, offer, from));
   } catch (error) {
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
+    recordError("email: move", error);
     await sendEmailFailPush(db, booking, "move");
   }
 }

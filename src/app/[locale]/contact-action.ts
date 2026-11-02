@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { getDb } from "@/db";
 import { type Contact, type ContactErrors, parseContact, sendContactMessage } from "@/lib/contact";
 import { clientAddress, spamReason } from "@/lib/contact-spam";
+import { recordError } from "@/lib/site-errors";
 
 /** `values`: the text of the visitor, kept in the form after an error (#152). */
 export type ContactState = {
@@ -36,6 +37,7 @@ export async function sendContact(_prev: ContactState, form: FormData): Promise<
     await sendContactMessage(getDb(), parsed.value);
   } catch (error) {
     console.error("Contact: the email failed", error);
+    recordError("email: contact", error);
     return { status: "failed", errors: {}, values };
   }
   return { status: "sent", errors: {}, values: EMPTY };

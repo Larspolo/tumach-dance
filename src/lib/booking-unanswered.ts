@@ -9,6 +9,7 @@ import { bookings, offers } from "../db/schema";
 import { unansweredEmailHtml } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
+import { recordError } from "./site-errors";
 
 /** A request that started longer ago than this ends with no email. */
 const LATE_MS = 24 * 60 * 60_000;
@@ -35,6 +36,7 @@ export async function checkUnanswered(db: Db, now = Date.now()): Promise<number[
         await sendEmail(await unansweredEmailHtml(claimed, offer));
       } catch (error) {
         console.error(`unanswered email of booking ${booking.id} failed`, error);
+        recordError("email: unanswered", error);
         await sendEmailFailPush(db, claimed, "unanswered");
       }
     }

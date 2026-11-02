@@ -14,6 +14,7 @@ import { type Db, getDb } from "../db";
 import * as schema from "../db/schema";
 import { studioLocale } from "../i18n/studio";
 import { emailTransport, sendEmail } from "./email";
+import { recordError } from "./site-errors";
 import { studioEmail } from "./studio-email";
 
 const DAY = 24 * 60 * 60;
@@ -31,11 +32,16 @@ async function sendCode(email: string, otp: string, headers: Headers | undefined
   const locale = studioLocale(headers ?? new Headers());
   const messages = (await import(`../../messages/${locale}.json`)).default;
   const t = createTranslator({ locale, messages, namespace: "LoginEmail" });
-  await sendEmail({
-    to: email,
-    subject: t("subject", { code: otp }),
-    text: t("text", { code: otp, minutes: CODE_MINUTES }),
-  });
+  try {
+    await sendEmail({
+      to: email,
+      subject: t("subject", { code: otp }),
+      text: t("text", { code: otp, minutes: CODE_MINUTES }),
+    });
+  } catch (error) {
+    recordError("email: login code", error);
+    throw error;
+  }
 }
 
 /** `baseURL`: the address of the site (`BETTER_AUTH_URL`); with https, the session cookie is `Secure`. */

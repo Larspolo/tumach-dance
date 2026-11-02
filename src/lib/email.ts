@@ -65,5 +65,9 @@ export async function sendEmail(email: Email, env: NodeJS.ProcessEnv = process.e
     headers: { Authorization: `Basic ${Buffer.from(`api:${env.MAILGUN_API_KEY}`).toString("base64")}` },
     body,
   });
-  if (!response.ok) throw new Error(`Email: Mailgun answered ${response.status}`);
+  // The reason of Mailgun ("Domain not found", "Forbidden") goes into the error: `/api/health` shows it (#460).
+  if (!response.ok) {
+    const reason = (await response.text().catch(() => "")).replace(/\s+/g, " ").trim().slice(0, 200);
+    throw new Error(`Email: Mailgun answered ${response.status}${reason ? `: ${reason}` : ""}`);
+  }
 }
