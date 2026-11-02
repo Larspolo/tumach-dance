@@ -363,7 +363,14 @@
     "paidOn": "Betaald op {date}",
     "undo": "Ongedaan maken",
     "whatsapp": "WhatsApp",
-    "whatsappText": "Hoi {name}, over je boeking op {date}: "
+    "whatsappText": "Hoi {name}, over je boeking op {date}: ",
+    "undoDecision": "Ongedaan maken",
+    "undone": "Ongedaan: de aanvraag staat weer open. De danser kreeg geen e-mail.",
+    "undoFailed": {
+      "sent": "Te laat: de danser heeft de e-mail al.",
+      "taken": "Een andere danser nam deze tijd in de tussentijd.",
+      "started": "Te laat: de tijd is al begonnen."
+    }
   },
   "StudioQuestions": {
     "title": "Voor Nina",
