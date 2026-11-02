@@ -301,7 +301,9 @@
     "payReminder": "Nina heeft je betaling nog niet ontvangen voor: {offer}, {when}. Heb je al betaald? Dan is alles goed.",
     "unansweredSubject": "Je boekingsaanvraag bij TUMACH",
     "unansweredBody": "Nina kon je aanvraag niet op tijd beantwoorden: {offer}, {when}. De aanvraag is gestopt.",
-    "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}"
+    "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}",
+    "moveSubject": "Je boeking bij TUMACH heeft een nieuwe tijd",
+    "move": "Nina heeft je boeking verplaatst: {offer}. Het was {from}. De nieuwe tijd is {when}."
   },
   "bookingPush": {
     "title": "Nieuwe aanvraag",
