@@ -250,6 +250,7 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     "",
     t("bookingEmail.reminder", { offer: offerLabel, when }),
     "",
+    ...addressLines(t),
     t("bookingEmail.approvedSee"),
     "",
     t("bookingEmail.sign"),
@@ -381,6 +382,9 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
     { text: t("bookingEmail.reminder", { offer: offerLabel, when }) },
+    ...addressLines(t)
+      .filter(Boolean)
+      .map((text) => ({ text })),
     cancelBlock(t, cancelUrl(origin, booking)),
     { text: t("bookingEmail.approvedSee") },
   ]);
