@@ -65,12 +65,14 @@ describe("the approval email in HTML", () => {
     expect(html).toContain('lang="nl"');
   });
 
-  test("the name is escaped; the declined email has no HTML", async () => {
+  test("the name is escaped; the declined email has an HTML part too (#466)", async () => {
     const { booking, offer } = booked("en", "<script>x</script>");
     const html = (await decisionEmailHtml(booking, offer, "approved")).html as string;
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;x&lt;/script&gt;");
-    expect((await decisionEmailHtml(booking, offer, "declined")).html).toBeUndefined();
+    const declined = (await decisionEmailHtml(booking, offer, "declined")).html as string;
+    expect(declined).toContain("&lt;script&gt;x&lt;/script&gt;");
+    expect(declined).not.toContain("<script>");
   });
 });
 
