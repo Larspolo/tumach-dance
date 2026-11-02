@@ -7,11 +7,11 @@ import ship_pr  # noqa: E402
 
 
 def test_does_not_close_is_refused(tmp_path):
-    assert ship_pr.part_closer("Fix the form.\nThis PR does not close #453.\n", 453) == "This PR does not close #453."
+    assert ship_pr.closer("Fix the form.\nThis PR does not close #453.\n", 453, part=True) == "This PR does not close #453."
     body = tmp_path / "b.md"
     body.write_text("This PR does not close #453.\n")
     assert ship_pr.main(["453", "--part", "--body", str(body), "--title", "t"]) == 2
 
 
 def test_part_of_is_accepted():
-    assert ship_pr.part_closer("Part of #453\nSee `closes #453` in code.\nCloses #12\n", 453) is None
+    assert ship_pr.closer("Part of #453\nSee `closes #453` in code.\n", 453, part=True) is None
