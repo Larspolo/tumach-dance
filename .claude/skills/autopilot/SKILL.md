@@ -72,7 +72,7 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
    `python3 framework/tools/merge_main.py --push N` (`conflict.md`), then `ship_pr.py N --ci`.
    Do not merge by hand: CI runs the quick checks (lint and fast tests, about 1 minute) and the browser tests (the build
    and Playwright, job `browser`, about 5 minutes) on each PR, and the Automerge workflow merges the PR when CI is green, removes `in-progress` and deletes the branch. Exit 5: the quick
-   CI is red, go to 9 now (a red PR after the run ends costs a takeover by a cold run, #4784). The CI still runs at
+   CI or a check that Automerge needs (`browser`) is red, go to 9 now (a red PR after the run ends costs a takeover by a cold run, #4784). The CI still runs at
    the time limit: `ship_pr.py N --ci` once, then continue. Still do the levels of the `verify` skill that the change needs (browser tests, screenshots) before the push. Continue
    with step 7 and the next ticket. Step 2 of a later cycle finds a red or conflicted PR.
 9. CI red → find the cause in the printed failed steps and tests, fix, commit, `ship_pr.py N --message MSG.txt`.
