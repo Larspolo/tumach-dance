@@ -1,10 +1,10 @@
-# The live site on the home server (#249). The server pulls each new `live` image (a release tag v*) by itself.
-# Steps for Lars: deploy/README.md.
+# The live site on the home server (#249) at tumach.dance. It runs the same image as the preview (tag `preview`, each
+# merge to main; owner, 2026-10-31), with its own data, keys and updater. Steps for Lars: deploy/README.md.
 name: tumach-live
 
 services:
   site:
-    image: ghcr.io/larspolo/tumach-dance:live
+    image: ghcr.io/larspolo/tumach-dance:preview
     restart: unless-stopped
     env_file: .env
     environment:

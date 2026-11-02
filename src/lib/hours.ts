@@ -66,6 +66,11 @@ function instant(date: DateTime, time: string): number {
   return date.set({ hour, minute }).toMillis();
 }
 
+/** The instant (UTC, epoch milliseconds) of a local date "YYYY-MM-DD" and time "HH:MM" in Europe/Amsterdam. */
+export function localInstant(date: string, time: string): number {
+  return instant(localDate(date), time);
+}
+
 function hoursOf(rule: HoursRule, date: DateTime): DayHours {
   if (rule.closed?.some((c) => localDate(c.from) <= date && date <= localDate(c.to ?? c.from))) return "closed";
   const extra = rule.extraOpen?.find((e) => localDate(e.date).equals(date));

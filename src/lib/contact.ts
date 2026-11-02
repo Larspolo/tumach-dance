@@ -6,14 +6,13 @@ import { desc } from "drizzle-orm";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import { pushSubscriptions } from "../db/schema";
 import { withFallback } from "../i18n/fallback";
 import { studioEmail } from "./auth";
 import { type Email, sendEmail } from "./email";
 
-const MESSAGES = { en, nl: withFallback(nl, en), sl: withFallback(sl, en) };
+const MESSAGES = { en, nl: withFallback(nl, en) };
 
 export type Contact = { name: string; email: string; message: string };
 export type ContactField = keyof Contact;

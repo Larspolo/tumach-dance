@@ -6,7 +6,7 @@ import { getDb } from "@/db";
 import { listBookings, listOpenRequests } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
-import { shownName } from "@/lib/booking-name";
+import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
@@ -38,8 +38,8 @@ export default async function BookingsPage({
   });
   const day = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, day: "numeric", month: "short" });
   const db = getDb();
-  const requests = listOpenRequests(db);
   const now = Date.now();
+  const requests = listOpenRequests(db, now);
   const approved = listBookings(db, now - 30 * DAY, now + 90 * DAY, ["approved"]);
 
   return (
@@ -68,6 +68,7 @@ export default async function BookingsPage({
                 {booking.phone}
               </a>
             </p>
+            {shownNote(booking) !== null && <p className={styles.dancerNote}>{shownNote(booking)}</p>}
             <form className={styles.form} action={decide}>
               <input type="hidden" name="id" value={booking.id} />
               <label className={styles.label}>
