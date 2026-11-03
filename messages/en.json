@@ -126,7 +126,10 @@
     "messagesCount": "Messages ({count} new)",
     "money": "Money",
     "news": "News",
-    "search": "Search bookings"
+    "search": "Search bookings",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "nothing": "Nothing to do now."
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
