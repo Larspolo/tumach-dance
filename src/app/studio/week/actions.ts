@@ -8,6 +8,7 @@ import { removeBlock as deleteBlock } from "@/db/blocks";
 import { addBooking, cancelBooking, changeContact, changePrice, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { cancelDay as cancelDayBookings, sendCancelDayEmails } from "@/lib/booking-cancel-day";
+import { resendAfterContactChange } from "@/lib/booking-change-contact";
 import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
 import { repeatBooking } from "@/lib/booking-repeat";
@@ -155,7 +156,8 @@ export async function cancelDay(form: FormData): Promise<void> {
 
 /**
  * Correct the name, email, phone or price (#761) of one booking (#759). A wrong field opens the panel again with its
- * error and changes nothing. The email of a changed address goes in #760. No email goes for a new price.
+ * error and changes nothing. A new email address gets the last email of the booking again (#760), with the new price.
+ * No email goes for a new price alone.
  */
 export async function fix(form: FormData): Promise<void> {
   const session = await getStudioSession(await headers());
@@ -173,6 +175,7 @@ export async function fix(form: FormData): Promise<void> {
   if (!result.ok && result.reason === "invalid")
     redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=${result.field}`);
   if (result.ok) changePrice(getDb(), id, priceCents);
+  await resendAfterContactChange(getDb(), result);
   revalidatePath("/studio/week");
   redirect(`/studio/week?start=${week.start}`);
 }
