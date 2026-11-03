@@ -105,6 +105,7 @@
   },
   "StudioHome": {
     "offline": "Offline: the list is from {time}.",
+    "needsInternet": "This needs the internet. Nothing has changed. Try again when you are online.",
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",
@@ -566,6 +567,9 @@
     },
     "move": {
       "title": "Choose another time · TUMACH"
+    },
+    "mine": {
+      "title": "Your bookings · TUMACH"
     }
   },
   "StudioNotFound": {
@@ -711,5 +715,13 @@
     "copied": "Copied. Paste it in a message.",
     "languageEn": "English",
     "languageNl": "Dutch"
+  },
+  "MyBookings": {
+    "title": "Your next bookings",
+    "requested": "Waiting for Nina",
+    "approved": "Approved",
+    "cancel": "Cancel or change",
+    "none": "You have no next bookings.",
+    "book": "Book a lesson"
   }
 }
