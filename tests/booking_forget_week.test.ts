@@ -74,6 +74,10 @@ describe("forgetDancerOfBooking", () => {
   test("a booking with no email (already removed) changes nothing", async () => {
     const { db, add } = setup();
     const gone = add(NOW + 48 * HOUR, "", "approved");
+    db.update(bookings)
+      .set({ phone: "", forgottenAt: NOW - HOUR })
+      .where(eq(bookings.id, gone.id))
+      .run();
     expect(await forgetDancerOfBooking(db, gone.id, NOW)).toEqual([]);
     expect(await forgetDancerOfBooking(db, 9999, NOW)).toEqual([]);
   });

@@ -1,26 +1,28 @@
-import { and, gt, inArray, sql } from "drizzle-orm";
+import { and, gt, inArray, isNull, sql } from "drizzle-orm";
 import type { Db } from "@/db";
 import { cancelBooking } from "@/db/bookings";
 import { bookings } from "@/db/schema";
 import { sendCancelEmail } from "@/lib/booking-email";
-import { forgetDancer } from "@/lib/booking-privacy";
+import { forgetWhere } from "@/lib/booking-privacy";
+import { dancerWhere } from "@/lib/same-dancer";
 
 /**
  * Remove the data of the dancer of booking `id` (#363, epic #358): first cancel each coming requested or approved
- * booking of the same email (any case) and send the cancel email, so the dancer knows and the time is free again;
- * then remove the name, email and phone of each booking of that dancer (`forgetDancer`). Gives the removed ids.
- * A booking with no email (already removed) changes nothing.
+ * booking of the same dancer (`dancerWhere`: the email, else the phone digits, #620) and send the cancel email (none
+ * with no email), so the dancer knows and the time is free again; then remove the name, email and phone of each
+ * booking of that dancer. Gives the removed ids. An already removed booking changes nothing.
  */
 export async function forgetDancerOfBooking(db: Db, id: number, now = Date.now()): Promise<number[]> {
   const booking = db.select().from(bookings).where(sql`${bookings.id} = ${id}`).get();
-  const key = booking?.email.trim().toLowerCase() ?? "";
-  if (key === "") return [];
+  if (!booking || booking.forgottenAt !== null) return [];
+  const where = dancerWhere(booking);
   const coming = db
     .select({ id: bookings.id })
     .from(bookings)
     .where(
       and(
-        sql`lower(${bookings.email}) = ${key}`,
+        where,
+        isNull(bookings.forgottenAt),
         inArray(bookings.status, ["requested", "approved"]),
         gt(bookings.start, now),
       ),
@@ -30,5 +32,5 @@ export async function forgetDancerOfBooking(db: Db, id: number, now = Date.now()
     const result = cancelBooking(db, row.id);
     if (result.ok) await sendCancelEmail(db, result.booking);
   }
-  return forgetDancer(db, key, now);
+  return forgetWhere(db, where, now);
 }
