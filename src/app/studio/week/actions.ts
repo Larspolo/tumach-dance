@@ -7,8 +7,9 @@ import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
 import { addBooking, cancelBooking, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
-import { sendCancelEmail, sendMoveEmail } from "@/lib/booking-email";
+import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
+import { repeatBooking } from "@/lib/booking-repeat";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import { addLocalBlock } from "@/lib/week-block";
@@ -112,4 +113,24 @@ export async function addLesson(form: FormData): Promise<void> {
   }
   if (result.reason === "taken" || result.reason === "notSlot") redirect(`${base}&taken=1`);
   redirect(`${base}&day=${String(form.get("day") ?? "")}&to=${to}&wrong=1`);
+}
+
+/**
+ * Repeat one approved booking in the next weeks (#679) and send the dancer one email with the new dates (#678). The
+ * same week shows next with the number of the new bookings and the dates that were not free.
+ */
+export async function repeat(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  const weeks = Number(form.get("weeks"));
+  if (!Number.isInteger(id)) redirect(`/studio/week?start=${week.start}`);
+  const db = getDb();
+  const result = repeatBooking(db, id, weeks);
+  if (!result.ok) redirect(`/studio/week?start=${week.start}`);
+  await sendRepeatEmail(db, result.added);
+  revalidatePath("/studio/week");
+  const skipped = result.skipped.length > 0 ? `&skipped=${result.skipped.join(",")}` : "";
+  redirect(`/studio/week?start=${week.start}&repeated=${result.added.length}${skipped}`);
 }
