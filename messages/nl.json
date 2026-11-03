@@ -702,6 +702,11 @@
   "StudioShare": {
     "free": "Vrije tijden in de komende 7 dagen:",
     "none": "Geen vrije tijd in de komende 7 dagen.",
-    "link": "Boek hier: {link}"
+    "link": "Boek hier: {link}",
+    "share": "Deel vrije tijden",
+    "language": "Taal",
+    "copied": "Gekopieerd. Plak het in een bericht.",
+    "languageEn": "Engels",
+    "languageNl": "Nederlands"
   }
 }
