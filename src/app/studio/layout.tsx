@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { setStudioLocale } from "@/i18n/studio";
+import { OfflineNote } from "./offline-note";
 import styles from "./studio.module.css";
 
 export const metadata: Metadata = {
@@ -20,7 +21,10 @@ export default async function StudioLayout({ children }: { children: ReactNode }
   return (
     <html lang={locale}>
       <body className={styles.body}>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <OfflineNote madeAt={new Date().toISOString()} />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -204,3 +204,11 @@
   aspect-ratio: 1;
   object-fit: cover;
 }
+
+/* The offline line at the top (#747). */
+.offline {
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #efe9df;
+  color: #3a352e;
+}

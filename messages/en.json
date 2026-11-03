@@ -84,6 +84,7 @@
     "passkeyFailed": "The passkey did not work. Log in with a code by email."
   },
   "StudioHome": {
+    "offline": "Offline: the list is from {time}.",
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",
     "logOut": "Log out",

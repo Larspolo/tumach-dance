@@ -84,6 +84,7 @@
     "passkeyFailed": "De passkey werkte niet. Log in met een code per e-mail."
   },
   "StudioHome": {
+    "offline": "Offline: de lijst is van {time}.",
     "title": "Studio",
     "loggedInAs": "Je bent ingelogd als {email}.",
     "logOut": "Uitloggen",
