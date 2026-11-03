@@ -400,6 +400,7 @@
     "cancelledBookAgain": "Boek een andere tijd: {url}",
     "moveSubject": "Je boeking bij TUMACH heeft een nieuwe tijd",
     "move": "Nina heeft je boeking verplaatst: {offer}. Het was {from}. De nieuwe tijd is {when}.",
+    "moveAgain": "Nina keurt de nieuwe tijd eerst goed. Je krijgt een e-mail als ze dat doet.",
     "repeatSubject": "Je lessen bij TUMACH zijn geboekt",
     "repeatBody": "Nina heeft je les opnieuw geboekt op deze data: {offer}.",
     "repeatLine": "{when}: annuleren met {url}",

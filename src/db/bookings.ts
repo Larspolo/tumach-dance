@@ -278,7 +278,7 @@ export function moveBooking(
   db: Db,
   id: number,
   start: number,
-  { now = Date.now() }: { now?: number } = {},
+  { now = Date.now(), request = false }: { now?: number; request?: boolean } = {},
 ): MoveResult {
   return db.transaction(
     (tx): MoveResult => {
@@ -304,7 +304,13 @@ export function moveBooking(
       if (inClass || busyRanges(db, start, end, { except: id }).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
         .update(bookings)
-        .set({ start, end, remindedAt: null, calendarSequence: sql`${bookings.calendarSequence} + 1` })
+        .set({
+          start,
+          end,
+          remindedAt: null,
+          calendarSequence: sql`${bookings.calendarSequence} + 1`,
+          ...(request ? { status: "requested" as const, approvedAt: null, decidedAt: null } : {}),
+        })
         .where(eq(bookings.id, id))
         .returning()
         .get();
@@ -312,6 +318,15 @@ export function moveBooking(
     },
     { behavior: "immediate" },
   );
+}
+
+/**
+ * The move of a booking by the dancer (#649, Nina's answer B on #647): `moveBooking()` that also sets the status back
+ * to `requested` in the same transaction, so that Nina approves the new time again. `paidAt` and `tikkieUrl` stay: a
+ * paid booking stays paid (P11).
+ */
+export function moveBookingToRequest(db: Db, id: number, start: number, options: { now?: number } = {}): MoveResult {
+  return moveBooking(db, id, start, { ...options, request: true });
 }
 
 export type DecideResult =

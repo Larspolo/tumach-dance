@@ -400,6 +400,7 @@
     "cancelledBookAgain": "Book another time: {url}",
     "moveSubject": "Your booking at TUMACH has a new time",
     "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}.",
+    "moveAgain": "Nina approves the new time first. You get an email when she does.",
     "repeatSubject": "Your lessons at TUMACH are booked",
     "repeatBody": "Nina booked your lesson again on these dates: {offer}.",
     "repeatLine": "{when}: cancel with {url}",
