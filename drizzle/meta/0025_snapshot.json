@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f5acfbe4-a4a9-46ad-a0cb-7d17c0ccb547",
+  "id": "324b9ca8-5a2a-4416-b937-1a994d2dd6fe",
   "prevId": "83aba039-044c-428d-be47-578c2f188aeb",
   "tables": {
     "account": {
@@ -230,7 +230,7 @@
           "tableTo": "bookings",
           "columnsFrom": ["booking_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

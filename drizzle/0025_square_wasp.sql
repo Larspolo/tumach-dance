@@ -5,7 +5,7 @@ CREATE TABLE `booking_events` (
 	`kind` text NOT NULL,
 	`by` text NOT NULL,
 	`from_start` integer,
-	FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`booking_id`) REFERENCES `bookings`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE INDEX `booking_events_booking_id_idx` ON `booking_events` (`booking_id`);

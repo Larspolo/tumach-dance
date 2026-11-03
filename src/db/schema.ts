@@ -223,7 +223,8 @@ export const bookings = sqliteTable(
 
 /**
  * One step in the history of a booking (#814): the request, Nina's decision, its undo. Written in the transaction of
- * the change (`src/lib/booking-history.ts`). `fromStart`: the old start of a move (later tickets of #813).
+ * the change (`src/lib/booking-history.ts`). `fromStart`: the old start of a move (later tickets of #813). A delete of
+ * the booking deletes its events.
  */
 export const bookingEvents = sqliteTable(
   "booking_events",
@@ -231,7 +232,7 @@ export const bookingEvents = sqliteTable(
     id: integer("id").primaryKey({ autoIncrement: true }),
     bookingId: integer("booking_id")
       .notNull()
-      .references(() => bookings.id),
+      .references(() => bookings.id, { onDelete: "cascade" }),
     /** UTC, epoch milliseconds. */
     at: integer("at").notNull(),
     kind: text("kind", { enum: ["requested", "added", "approved", "declined", "undone"] }).notNull(),

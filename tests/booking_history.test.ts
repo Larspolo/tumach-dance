@@ -1,12 +1,13 @@
 // The history of a booking (#814): the request, the decision and its undo, in order, with their actor.
 import { rmSync } from "node:fs";
 import Database from "better-sqlite3";
+import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { expect, test } from "vitest";
 import { openDb } from "../src/db";
 import { decideBooking, requestBooking, undoDecision } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
-import { bookings } from "../src/db/schema";
+import { bookingEvents, bookings } from "../src/db/schema";
 import { bookingHistory, eventWhen, recordBookingEvent } from "../src/lib/booking-history";
 
 const at = (local: string) => DateTime.fromISO(local, { zone: "Europe/Amsterdam" }).toMillis();
@@ -107,4 +108,25 @@ test("the migration applies on an empty database and on a database with bookings
   recordBookingEvent(again, 1, "approved", "nina", { at: NOW + 1 });
   expect(bookingHistory(again, 1).map((e) => e.kind)).toEqual(["approved"]);
   rmSync(file, { force: true });
+});
+
+test("a delete of a booking deletes its events", () => {
+  const db = openDb(":memory:");
+  const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 6000, position: 0 });
+  const result = requestBooking(
+    db,
+    {
+      offerId: offer.id,
+      start: at("2026-11-07T14:00"),
+      end: at("2026-11-07T15:00"),
+      name: "Ana",
+      email: "ana@example.com",
+      phone: "+31 6 1234 5678",
+      locale: "nl",
+    },
+    { now: NOW },
+  );
+  if (!result.ok) throw new Error(JSON.stringify(result));
+  db.delete(bookings).where(eq(bookings.id, result.booking.id)).run();
+  expect(db.select().from(bookingEvents).all()).toEqual([]);
 });

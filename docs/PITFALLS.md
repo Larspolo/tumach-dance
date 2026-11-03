@@ -24,6 +24,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - A decision of `decideBooking()` sends its email only after `UNDO_MS` (#572), and the reminders and the payment reminder wait for it (`decisionTold`). A test that approves and then checks a reminder calls `claimDueDecisions(db, now + UNDO_MS)` first (`tests/booking_move_reminder.test.ts`).
 - Two PRs that each add a migration take the same number (`0022_*` twice, PR #603): `merge_main.py` stops on `drizzle/meta/*_snapshot.json`. Take main's `drizzle/` (`git checkout origin/main -- drizzle/meta`), `git rm` your `.sql`, run `npm run db:generate` again, and add the new NOT NULL columns of main to the rows of your tests.
 - SQLite `lower()` changes only A to Z and `trim()` removes only spaces; JavaScript `toLowerCase()` and `trim()` change all letters and white space. A key that SQL and JavaScript must both make (a dancer key, an email) is made on one side only: `pruneDancerNotes()` of `src/db/dancer-notes.ts` makes it in JavaScript (#695).
+- A new table that references `bookings.id` needs `{ onDelete: "cascade" }`: `openDb()` turns on `foreign_keys`, and the e2e tests clean up with `db.delete(bookings)`, so a plain reference fails them with "FOREIGN KEY constraint failed" in CI only (`booking_events`, #814).
 
 ## Next.js
 
