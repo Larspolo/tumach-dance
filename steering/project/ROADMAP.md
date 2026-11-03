@@ -141,6 +141,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:guide` (#774) Nina finds how to do each task of her studio app
   - The studio home links to a guide with a short part for each task of the app (the daily tasks and the rare cases), each with at most 3 steps, in English and Dutch
   - Each new page of the studio app gets its part in the guide (a test)
+- [ ] `nina:history` (#813) Nina sees what happened to each booking
+  - Each booking in her app lists its events with the date and time: the request, the approval or decline, each move with the old time, the cancel, the payment
+  - Each event names who did it: the dancer (with the link in the email), Nina, or the site (a request with no answer in time)
 
 ## 3. Book a lesson or the studio
 
@@ -193,3 +196,5 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:mine` (#742) A dancer sees all of their next lessons from the link in an email
   - Each email of a booking has a link to one page with the next bookings of the same email address (time, offer, status), each with its cancel link; the address has only the token of the booking, no personal data
   - After the data of the dancer goes away, the link shows no booking
+- [ ] `book:how` (#818) A dancer knows how a booking works before the request
+  - The booking form says in a few short lines what happens after the request: Nina answers by email, the payment is a Tikkie after her approval, and the link in each email moves or cancels the booking at any time before the start
