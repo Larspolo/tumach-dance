@@ -3,11 +3,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
+import { listBookings } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { shownName } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
-import { monthMoney, monthOf } from "@/lib/money";
+import { monthMoney, monthOf, monthRange } from "@/lib/money";
 import { LOGIN_PATH } from "@/lib/studio-paths";
+import { pay } from "../bookings/actions";
 import styles from "../studio.module.css";
 
 // The money of one month (#597): the approved bookings, the paid sum and the sum that is not paid yet.
@@ -17,8 +20,24 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
   if (!session) redirect(LOGIN_PATH);
   const locale = await setStudioLocale();
   const t = await getTranslations("StudioMoney");
+  const paidText = await getTranslations("StudioBookings");
+  const weekName = await getTranslations("StudioWeek");
   const nav = monthOf((await searchParams).month);
-  const money = monthMoney(getDb(), nav.month);
+  const db = getDb();
+  const money = monthMoney(db, nav.month);
+  // The approved bookings of the month that are not paid (#599), by start.
+  const { from, to } = monthRange(nav.month);
+  const unpaid = listBookings(db, from, to, ["approved"]).filter(
+    ({ booking }) => booking.paidAt === null && booking.start >= from && booking.start < to,
+  );
+  const when = new Intl.DateTimeFormat(locale, {
+    timeZone: TIME_ZONE,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   // The middle of the month: its name is the same in each time zone.
   const middle = (month: string) => Date.parse(`${month}-15T12:00:00Z`);
   const monthName = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, month: "long", year: "numeric" }).format(
@@ -49,6 +68,27 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
         <dt>{t("open")}</dt>
         <dd data-testid="money-open">{euro.format(money.openCents / 100)}</dd>
       </dl>
+      <h2>{t("unpaidTitle")}</h2>
+      {unpaid.length === 0 ? (
+        <p className={styles.note}>{t("allPaid")}</p>
+      ) : (
+        <ul className={styles.list} aria-label={t("unpaidTitle")}>
+          {unpaid.map(({ booking }) => (
+            <li key={booking.id} className={styles.item}>
+              <p>{when.format(booking.start)}</p>
+              <p>{shownName(booking, weekName("removed"))}</p>
+              <p>{euro.format(booking.priceCents / 100)}</p>
+              <form className={styles.form} action={pay}>
+                <input type="hidden" name="id" value={booking.id} />
+                <input type="hidden" name="back" value={`/studio/money?month=${nav.month}`} />
+                <button className={styles.button} type="submit" name="paid" value="paid">
+                  {paidText("markPaid")}
+                </button>
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }
