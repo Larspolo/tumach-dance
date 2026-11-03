@@ -58,6 +58,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:closed` (#529) Dancers see when a class does not take place or the studio is closed
   - The schedule of the home page names each date in the next 4 weeks on which a class does not take place (a holiday), with no extra step by Nina for a period that she already closed in her hours
   - The home page shows a closed period of the studio from 4 weeks before it until its end, in the language of the page
+- [ ] `site:news` Nina tells the dancers what is new on the home page
+  - Nina writes a short note (a workshop, a new class, a change) in her app in a few taps, with an optional end date; the home page shows it until that date, then hides it by itself
+  - Nina writes the note once; the page of each language shows it
 
 ## 2. Nina's studio app
 
@@ -110,6 +113,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:year` (#626) Nina has the money of a year for her tax return
   - The money page shows the totals of the year (approved bookings, paid, not paid)
   - In one tap Nina downloads the approved bookings of the year as a spreadsheet file (date, time, offer, price, paid or not), with no email or phone of a dancer
+- [ ] `nina:today` The first screen of the studio app shows what Nina must do now
+  - The studio home shows the number of requests that wait for her answer and the lessons of today and tomorrow, each one tap from its booking; with nothing to do, it says so
+- [ ] `nina:find` Nina finds a booking by the name, email or phone of a dancer
+  - One search field in the studio app lists the bookings that match, newest first, each one tap from its booking; a part of a name is enough
 
 ## 3. Book a lesson or the studio
 
@@ -152,3 +159,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:email` (#492) A dancer with a wrong email address still hears from the studio
   - The booking form points out a likely typo in the email address before the request goes
   - When an email to a dancer bounces, Nina gets a push with the name of the dancer and tells the dancer herself
+- [ ] `book:move` (#646) A dancer moves a booking to another free time with the link in the email
+  - The page of the link in the emails to a dancer offers the free times of the same offer; one tap moves the booking, and the old time is free at once
+  - Nina gets a push with the name of the dancer and the old and the new time; the dancer gets one email with the new time, and the calendar file moves the event
+  - A moved approved booking follows the rule that Nina chooses
