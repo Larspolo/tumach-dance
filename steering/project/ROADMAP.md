@@ -123,7 +123,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `nina:sick` (#690) Nina cancels all the lessons of one day when she is sick
   - From a day in her app, Nina cancels each requested and approved booking of that day in two taps; the day closes, so the booking page offers no time on it
   - Each dancer gets one cancel email with a link to book another time, and the calendar file removes the event
-- [ ] `nina:remember` (#691) Nina keeps a private note about a dancer
+- [x] `nina:remember` (#691) Nina keeps a private note about a dancer
   - Nina writes a short note about a dancer (the level, what they practised) in a few taps; each booking of the same dancer shows it, and only Nina sees it
   - The note goes away with the other data of the dancer, and the privacy page names it
 - [ ] `nina:holiday` (#711) Nina knows which bookings fall in a period that she closes
