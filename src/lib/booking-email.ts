@@ -318,6 +318,8 @@ export function reminderEmail(booking: Booking, offer: Offer, origin = siteOrigi
     t("bookingEmail.reminder", { offer: offerLabel, when }),
     "",
     ...addressLines(t),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
+    "",
     t("bookingEmail.approvedSee"),
     "",
     t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
