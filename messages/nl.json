@@ -353,6 +353,8 @@
     "cancelText": "Kun je niet komen? Annuleer de boeking op elk moment voor de start.",
     "cancelButton": "Annuleer de boeking",
     "bookButton": "Boek een andere tijd",
+    "againButton": "Boek nog een les",
+    "againText": "Wil je nog een les? Boek hier: {url}",
     "address": "Waar: {address}"
   },
   "bookingPush": {

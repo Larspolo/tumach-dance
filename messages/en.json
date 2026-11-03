@@ -353,6 +353,8 @@
     "cancelText": "Can you not come? Cancel the booking at any time before the start.",
     "cancelButton": "Cancel the booking",
     "bookButton": "Book another time",
+    "againButton": "Book another lesson",
+    "againText": "Want another lesson? Book it here: {url}",
     "address": "Where: {address}"
   },
   "bookingPush": {
