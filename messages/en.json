@@ -12,10 +12,9 @@
     "about": {
       "title": "About TUMACH",
       "label": "(01) About",
-      "text1": "TUMACH is a small dance studio in Amsterdam. Take a private lesson, join a class, or rent the studio for your own practice.",
-      "text2": "I am Nina, and this is my studio. I teach private lessons and classes, at the pace that suits you.",
-      "text3": "Beginners and experienced dancers are both welcome. We start where you are.",
-      "quote": "Every dancer starts somewhere.",
+      "text1": "TUMACH is a small dance studio (20 square metres) in Amsterdam located close to central station. It is meant for friends to rent for your own practice, to have privates, for solo/duo video projects or photoshoots (RGB lights available in the studio). Max capacity is 3 people.",
+      "text2": "Note that this is a studio in my home, so the vibe is more relaxed and the sound cannot be too loud. Every booking is confirmed by me to ensure I can unlock the door and that the space is free. Hope you love it as much as me!",
+      "quote": "Tumach dance? Never enough.",
       "quoteBy": "Nina"
     },
     "photos": {
@@ -401,6 +400,7 @@
     "cancelledBookAgain": "Book another time: {url}",
     "moveSubject": "Your booking at TUMACH has a new time",
     "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}.",
+    "moveAgain": "Nina approves the new time first. You get an email when she does.",
     "repeatSubject": "Your lessons at TUMACH are booked",
     "repeatBody": "Nina booked your lesson again on these dates: {offer}.",
     "repeatLine": "{when}: cancel with {url}",

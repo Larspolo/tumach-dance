@@ -11,7 +11,6 @@ export function About() {
         <div>
           <p>{t("text1")}</p>
           <p>{t("text2")}</p>
-          <p>{t("text3")}</p>
         </div>
         <blockquote className={styles.pull}>
           {t("quote")}

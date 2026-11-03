@@ -36,7 +36,7 @@ test("moveLink gives each state", () => {
   expect(moveLink(db, "short", NOW).state).toBe("not-found");
   const approved = request(at("2026-11-07T16:00"));
   decideBooking(db, approved.id, "approved", null, NOW);
-  expect(moveLink(db, approved.cancelToken, NOW).state).toBe("approved");
+  expect(moveLink(db, approved.cancelToken, NOW).state).toBe("open");
   const declined = request(at("2026-11-07T18:00"));
   decideBooking(db, declined.id, "declined", null, NOW);
   expect(moveLink(db, declined.cancelToken, NOW).state).toBe("declined");
@@ -56,7 +56,7 @@ test("moveByDancer moves a request, which still waits, and frees the old time", 
   expect(busyRanges(db, to, to + 3_600_000)).toHaveLength(1);
 });
 
-test("moveByDancer refuses a taken time, a started or approved booking and a wrong token", () => {
+test("moveByDancer refuses a taken time, a started booking and a wrong token", () => {
   const { db, booking, request } = setup();
   const other = request(at("2026-11-08T11:00"), "bo@example.com");
   expect(moveByDancer(db, booking.cancelToken, other.start, NOW)).toEqual({ ok: false, state: "taken" });
@@ -64,8 +64,6 @@ test("moveByDancer refuses a taken time, a started or approved booking and a wro
     ok: false,
     state: "started",
   });
-  decideBooking(db, other.id, "approved", null, NOW);
-  expect(moveByDancer(db, other.cancelToken, at("2026-11-08T15:00"), NOW)).toEqual({ ok: false, state: "approved" });
   expect(moveByDancer(db, "y".repeat(43), at("2026-11-08T15:00"), NOW)).toEqual({ ok: false, state: "not-found" });
   expect(db.select().from(bookings).where(eq(bookings.id, booking.id)).get()?.start).toBe(booking.start);
 });

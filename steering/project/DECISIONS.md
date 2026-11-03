@@ -28,3 +28,4 @@ the owner chose another option, `-`: no recommendation) · principle (`P<n>`, or
 - 2026-11-01 · #299 · Languages: English and Dutch only; Slovenian is removed (Nina, #179), and /sl links go to the English page · - · new
 - 2026-11-01 · #223 · The site keeps the name, email and phone of a dancer 1 year after the lesson, then removes them · taken · P1
 - 2026-11-02 · #422 · Ask Nina only what no test can check (her taste, a rule of her studio, a step on her own phone, email or calendar), in a short question; an epic whose tests check each criterion gets no question · - · new
+- 2026-11-03 · #647 · A dancer who moves an approved booking with the link sets it back to requested: Nina approves the new time again; a paid booking stays paid · B · new

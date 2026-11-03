@@ -6,9 +6,9 @@ import { offerLabel } from "@/lib/offer-label";
 import styles from "./Home.module.css";
 import { SectionHead } from "./SectionHead";
 
-// The visible offers with their length and price (#384); each opens the booking page with that offer. No section with no offer
-// and no closed period.
-// Above them a line for each coming closed period of the studio (#530, `closedNotices`), near the "Book" buttons (#792).
+// The visible offers with their length and price (#384); each opens the booking page with that offer, and a line for each
+// coming closed period of the studio (#530, `closedNotices`; here since the schedule left the home page, #794).
+// No section with no offer and no closed period.
 export function Offers({ offers, locale, closed = [] }: { offers: Offer[]; locale: string; closed?: ClosedNotice[] }) {
   const t = useTranslations("HomePage.offers");
   const book = useTranslations("Book");

@@ -1,4 +1,4 @@
-// The home page shows a coming closed period of the studio in the section "Prices" (#530, #792).
+// The home page shows a coming closed period of the studio in the offers section (#530).
 import { expect, test } from "@playwright/test";
 import { DateTime } from "luxon";
 import { type Db, openDb } from "../src/db";
@@ -27,10 +27,10 @@ test("the home page shows a closed period that starts in less than 4 weeks", asy
   test.skip(testInfo.project.name !== "phone", "one look on a phone (390×844)");
   const day = (d: DateTime, locale: string) => d.setLocale(locale).toLocaleString({ day: "numeric", month: "long" });
   await page.goto("/en");
-  const prices = page.locator("#offers");
-  await expect(prices).toContainText(`Closed from ${day(from, "en")} to ${day(to, "en")}.`);
-  await expect(prices).not.toContainText(day(far, "en"));
-  await prices.scrollIntoViewIfNeeded();
+  const offers = page.locator("#offers");
+  await expect(offers).toContainText(`Closed from ${day(from, "en")} to ${day(to, "en")}.`);
+  await expect(offers).not.toContainText(day(far, "en"));
+  await offers.scrollIntoViewIfNeeded();
   await page.screenshot({ path: testInfo.outputPath("home-closed-en.png") });
   await page.goto("/nl");
   await expect(page.locator("#offers")).toContainText(`Gesloten van ${day(from, "nl")} tot en met ${day(to, "nl")}.`);

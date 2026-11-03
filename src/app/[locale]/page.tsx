@@ -18,7 +18,7 @@ import { getHoursRule } from "@/lib/hours-store";
 import { getNewsNote, shownNewsNote } from "@/lib/news-note";
 import { pageMetadata } from "@/lib/page-meta";
 
-// The offers, the closed periods and the photos come from the database at each request, so a change of Nina shows at the next load (#98, #174).
+// The offers and the photos come from the database at each request, so a change of Nina shows at the next load (#98, #174).
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
