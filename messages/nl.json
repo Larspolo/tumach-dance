@@ -599,5 +599,19 @@
       "yes": "ja",
       "no": "nee"
     }
+  },
+  "StudioDancer": {
+    "back": "Terug",
+    "title": "Boekingen van {name}",
+    "link": "Eerdere boekingen",
+    "none": "Nog geen andere boekingen.",
+    "paid": "Betaald",
+    "notPaid": "Niet betaald",
+    "status": {
+      "requested": "Aanvraag",
+      "approved": "Goedgekeurd",
+      "declined": "Afgewezen",
+      "cancelled": "Geannuleerd"
+    }
   }
 }

@@ -9,6 +9,7 @@ import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
+import { phoneDigits } from "@/lib/same-dancer";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import { bookingWhatsappLink } from "@/lib/whatsapp";
@@ -41,6 +42,7 @@ export default async function WeekPage({
   const t = await getTranslations("StudioWeek");
   const offerName = await getTranslations("StudioOffers");
   const bookingsT = await getTranslations("StudioBookings");
+  const dancerT = await getTranslations("StudioDancer");
   const params = await searchParams;
   const week = weekOf(params.start);
   // The first tap on "Cancel" asks again; only "Yes, cancel" cancels (#162).
@@ -168,6 +170,16 @@ export default async function WeekPage({
                         <a className={`${styles.link} ${styles.chat}`} href={bookingWhatsappLink(booking) ?? undefined}>
                           {bookingsT("whatsapp")}
                         </a>{" "}
+                      </>
+                    )}
+                    {(booking.email.trim() !== "" || phoneDigits(booking.phone) !== "") && (
+                      <>
+                        <Link
+                          className={styles.link}
+                          href={`/studio/dancer/${booking.id}?back=${encodeURIComponent(`/studio/week?start=${week.start}`)}`}
+                        >
+                          {dancerT("link")}
+                        </Link>{" "}
                       </>
                     )}
                     {booking.id === asked ? (

@@ -10,6 +10,7 @@ import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
+import { phoneDigits } from "@/lib/same-dancer";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
@@ -30,6 +31,7 @@ export default async function BookingsPage({
   const t = await getTranslations("StudioBookings");
   const offerName = await getTranslations("StudioOffers");
   const weekName = await getTranslations("StudioWeek");
+  const dancerT = await getTranslations("StudioDancer");
   const { done, id, undone, undo: undoError, error } = await searchParams;
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
@@ -90,6 +92,13 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
+            {(booking.email.trim() !== "" || phoneDigits(booking.phone) !== "") && (
+              <p>
+                <Link className={styles.link} href={`/studio/dancer/${booking.id}?back=%2Fstudio%2Fbookings`}>
+                  {dancerT("link")}
+                </Link>
+              </p>
+            )}
             {booking.email !== "" && (
               <p>
                 <a className={styles.link} href={`mailto:${booking.email}`}>
@@ -135,6 +144,13 @@ export default async function BookingsPage({
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
+            {(booking.email.trim() !== "" || phoneDigits(booking.phone) !== "") && (
+              <p>
+                <Link className={styles.link} href={`/studio/dancer/${booking.id}?back=%2Fstudio%2Fbookings`}>
+                  {dancerT("link")}
+                </Link>
+              </p>
+            )}
             <p>
               <a className={styles.link} href={`/api/studio/bookings/${booking.id}.ics`} download>
                 {t("addToCalendar")}
