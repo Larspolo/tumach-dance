@@ -15,7 +15,7 @@ import { localDate, weekOf } from "@/lib/week";
 import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
 import { AddPanel } from "./AddPanel";
-import { addBlock, cancel, forget, removeBlock } from "./actions";
+import { addBlock, cancel, cancelDay, forget, removeBlock } from "./actions";
 import { MovePanel } from "./MovePanel";
 import { RepeatPanel } from "./RepeatPanel";
 
@@ -38,6 +38,8 @@ export default async function WeekPage({
     repeat?: string;
     repeated?: string;
     skipped?: string;
+    cancelDay?: string;
+    dayCancelled?: string;
   }>;
 }) {
   const session = await getStudioSession(await headers());
@@ -60,6 +62,8 @@ export default async function WeekPage({
   const repeated = Number(params.repeated);
   const skipped = (params.skipped ?? "").split(",").filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d));
   const now = Date.now();
+  // The cancel of a whole day (#694): "Cancel this day", then "Yes, cancel the day".
+  const dayCancelled = Number(params.dayCancelled);
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
   const blocks = listBlocks(getDb(), week.from, week.to);
@@ -87,6 +91,11 @@ export default async function WeekPage({
           {t("repeatDone", { count: repeated })}
           {skipped.length > 0 &&
             ` ${t("repeatSkipped", { dates: skipped.map((d) => shortDay.format(new Date(`${d}T12:00:00Z`))).join(", ") })}`}
+        </p>
+      )}
+      {params.dayCancelled !== undefined && Number.isInteger(dayCancelled) && (
+        <p className={styles.note} data-day-cancelled>
+          {t("cancelDayDone", { count: dayCancelled })}
         </p>
       )}
       <p>
@@ -142,6 +151,8 @@ export default async function WeekPage({
       )}
       {week.days.map((day) => {
         const ofDay = bookings.filter(({ booking }) => localDate(booking.start) === day);
+        // The bookings of the day that have not started: only they get the link "Cancel this day" (#694).
+        const coming = ofDay.filter(({ booking }) => booking.start > now).length;
         const blocksOfDay = blocks.filter((block) => localDate(block.start) === day);
         const items = [
           ...ofDay.map((entry) => ({ start: entry.booking.start, entry, block: undefined })),
@@ -150,6 +161,26 @@ export default async function WeekPage({
         return (
           <section key={day} className={styles.item} data-day={day}>
             <h2 className={styles.label}>{dayName.format(new Date(`${day}T12:00:00Z`))}</h2>
+            {coming > 0 &&
+              (params.cancelDay === day ? (
+                <form className={styles.form} action={cancelDay} data-cancel-day={day}>
+                  <input type="hidden" name="day" value={day} />
+                  <input type="hidden" name="start" value={week.start} />
+                  <span>{t("cancelDayAsk", { count: coming })}</span>{" "}
+                  <button className={styles.button} type="submit">
+                    {t("cancelDayYes")}
+                  </button>{" "}
+                  <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
+                    {t("cancelDayNo")}
+                  </Link>
+                </form>
+              ) : (
+                <p>
+                  <Link className={styles.link} href={`/studio/week?start=${week.start}&cancelDay=${day}`}>
+                    {t("cancelDay")}
+                  </Link>
+                </p>
+              ))}
             {items.length === 0 && <p className={styles.note}>{t("free")}</p>}
             <ul className={styles.list}>
               {items.map(({ entry, block }) => {

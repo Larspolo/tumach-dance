@@ -7,6 +7,7 @@ import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
 import { addBooking, cancelBooking, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
+import { cancelDay as cancelDayBookings } from "@/lib/booking-cancel-day";
 import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
 import { repeatBooking } from "@/lib/booking-repeat";
@@ -133,4 +134,20 @@ export async function repeat(form: FormData): Promise<void> {
   revalidatePath("/studio/week");
   const skipped = result.skipped.length > 0 ? `&skipped=${result.skipped.join(",")}` : "";
   redirect(`/studio/week?start=${week.start}&repeated=${result.added.length}${skipped}`);
+}
+
+/**
+ * Cancel each coming booking of one day and close the day (#694, Nina is sick, epic #690), and email each dancer. The
+ * same week shows next with the number of the cancelled bookings.
+ */
+export async function cancelDay(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const db = getDb();
+  const result = cancelDayBookings(db, String(form.get("day") ?? ""));
+  if (!result.ok) redirect(`/studio/week?start=${week.start}`);
+  for (const { booking, wasApproved } of result.cancelled) await sendCancelEmail(db, booking, "nina", wasApproved);
+  revalidatePath("/studio/week");
+  redirect(`/studio/week?start=${week.start}&dayCancelled=${result.cancelled.length}`);
 }

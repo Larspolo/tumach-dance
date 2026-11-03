@@ -458,7 +458,12 @@
     "repeatYes": "Repeat",
     "repeatNo": "No",
     "repeatDone": "{count, plural, one {Added # week.} other {Added # weeks.}}",
-    "repeatSkipped": "Not free: {dates}."
+    "repeatSkipped": "Not free: {dates}.",
+    "cancelDay": "Cancel this day",
+    "cancelDayAsk": "{count, plural, one {Cancel # booking and close this day? Each dancer gets an email.} other {Cancel # bookings and close this day? Each dancer gets an email.}}",
+    "cancelDayYes": "Yes, cancel the day",
+    "cancelDayNo": "No",
+    "cancelDayDone": "{count, plural, one {Cancelled # booking. The day is closed.} other {Cancelled # bookings. The day is closed.}}"
   },
   "StudioFeedback": {
     "back": "Back",
