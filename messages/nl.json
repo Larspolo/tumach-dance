@@ -565,6 +565,9 @@
     },
     "move": {
       "title": "Kies een andere tijd · TUMACH"
+    },
+    "mine": {
+      "title": "Je boekingen · TUMACH"
     }
   },
   "StudioNotFound": {
@@ -710,5 +713,13 @@
     "copied": "Gekopieerd. Plak het in een bericht.",
     "languageEn": "Engels",
     "languageNl": "Nederlands"
+  },
+  "MyBookings": {
+    "title": "Je volgende boekingen",
+    "requested": "Wacht op Nina",
+    "approved": "Goedgekeurd",
+    "cancel": "Annuleren of wijzigen",
+    "none": "Je hebt geen volgende boekingen.",
+    "book": "Boek een les"
   }
 }
