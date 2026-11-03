@@ -3,9 +3,10 @@
 import { and, gt, inArray, isNull } from "drizzle-orm";
 import { DateTime } from "luxon";
 import type { Db } from "@/db";
-import type { Booking } from "@/db/bookings";
+import { type Booking, cancelBooking } from "@/db/bookings";
 import { bookings } from "@/db/schema";
 import { type HoursRule, openRanges, TIME_ZONE } from "@/lib/hours";
+import { getHoursRule } from "@/lib/hours-store";
 
 /**
  * Each `requested` and `approved` booking that has not ended at `now` and is not forgotten, and is not inside one open
@@ -29,4 +30,23 @@ export function bookingsOutsideHours(db: Db, rule: HoursRule, { now = Date.now()
   if (!first || !last) throw new RangeError("A booking has no valid local date");
   const ranges = openRanges(rule, first, last);
   return coming.filter((b) => !ranges.some((r) => r.start <= b.start && b.end <= r.end));
+}
+
+/**
+ * Cancel each booking that is outside the open hours of the stored rule at `now` (#714): the list is read again at
+ * the tap, so a booking that Nina moved inside the hours or that is already cancelled stays as it is. No email here:
+ * `sendCancelDayEmails()` of `booking-cancel-day.ts` sends them.
+ */
+export function cancelOutsideHours(
+  db: Db,
+  { now = Date.now() }: { now?: number } = {},
+): { booking: Booking; wasApproved: boolean }[] {
+  return db.transaction(() => {
+    const cancelled: { booking: Booking; wasApproved: boolean }[] = [];
+    for (const { id } of bookingsOutsideHours(db, getHoursRule(db), { now })) {
+      const result = cancelBooking(db, id);
+      if (result.ok) cancelled.push({ booking: result.booking, wasApproved: result.wasApproved });
+    }
+    return cancelled;
+  });
 }

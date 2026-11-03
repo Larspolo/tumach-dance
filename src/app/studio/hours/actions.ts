@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { getStudioSession } from "@/lib/auth";
+import { sendCancelDayEmails } from "@/lib/booking-cancel-day";
+import { cancelOutsideHours } from "@/lib/bookings-outside-hours";
 import type { HoursRule } from "@/lib/hours";
 import { addClosed, addExtraOpen, removeDate } from "@/lib/hours-dates";
 import { formToRule, readHoursForm } from "@/lib/hours-form";
@@ -55,4 +57,14 @@ export async function openExtraDay(_state: DateState, data: FormData): Promise<D
 export async function removeHoursDate(data: FormData): Promise<void> {
   const kind = data.get("kind") === "closed" ? "closed" : "extra";
   await changeRule((rule) => removeDate(rule, kind, String(data.get("key"))));
+}
+
+/** Cancel the coming bookings outside the open hours (#714) and email each dancer. */
+export async function cancelOutside(): Promise<void> {
+  if (!(await getStudioSession(await headers()))) redirect(LOGIN_PATH);
+  const db = getDb();
+  const cancelled = cancelOutsideHours(db);
+  await sendCancelDayEmails(db, cancelled);
+  revalidatePath("/studio/hours");
+  redirect(`/studio/hours?outsideCancelled=${cancelled.length}`);
 }
