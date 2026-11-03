@@ -107,6 +107,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - The booking is approved at once, keeps the price of its offer, counts on the money page, and Nina marks it paid as each other booking; a dancer with an email gets the usual approval email
 - [ ] `nina:dancer` Nina sees the earlier bookings of a dancer
   - From a booking, one tap shows the other bookings of the same dancer (same email or phone): the date, the offer and paid or not, newest first
+- [ ] `nina:year` Nina has the money of a year for her tax return
+  - The money page shows the totals of the year (approved bookings, paid, not paid)
+  - In one tap Nina downloads the approved bookings of the year as a spreadsheet file (date, time, offer, price, paid or not), with no email or phone of a dancer
 
 ## 3. Book a lesson or the studio
 
