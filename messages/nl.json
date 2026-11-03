@@ -476,7 +476,12 @@
     "cancelDayAsk": "{count, plural, one {# boeking annuleren en deze dag sluiten? Elke danser krijgt een e-mail.} other {# boekingen annuleren en deze dag sluiten? Elke danser krijgt een e-mail.}}",
     "cancelDayYes": "Ja, annuleer de dag",
     "cancelDayNo": "Nee",
-    "cancelDayDone": "{count, plural, one {# boeking geannuleerd. De dag is gesloten.} other {# boekingen geannuleerd. De dag is gesloten.}}"
+    "cancelDayDone": "{count, plural, one {# boeking geannuleerd. De dag is gesloten.} other {# boekingen geannuleerd. De dag is gesloten.}}",
+    "fix": "Wijzigen",
+    "fixSave": "Opslaan",
+    "fixWrongName": "Vul een naam in. Er is niets gewijzigd.",
+    "fixWrongEmail": "Dit e-mailadres klopt niet. Er is niets gewijzigd.",
+    "fixWrongPhone": "Dit telefoonnummer klopt niet. Er is niets gewijzigd."
   },
   "StudioFeedback": {
     "back": "Terug",

@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
-import { addBooking, cancelBooking, moveBooking } from "@/db/bookings";
+import { addBooking, cancelBooking, changeContact, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { cancelDay as cancelDayBookings, sendCancelDayEmails } from "@/lib/booking-cancel-day";
 import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
@@ -150,4 +150,25 @@ export async function cancelDay(form: FormData): Promise<void> {
   await sendCancelDayEmails(db, result.cancelled);
   revalidatePath("/studio/week");
   redirect(`/studio/week?start=${week.start}&dayCancelled=${result.cancelled.length}`);
+}
+
+/**
+ * Correct the name, email or phone of one booking (#759). A wrong field opens the panel again with its error and
+ * changes nothing. The email of a changed address goes in #760.
+ */
+export async function fix(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  if (!Number.isInteger(id)) redirect(`/studio/week?start=${week.start}`);
+  const result = changeContact(getDb(), id, {
+    name: String(form.get("name") ?? ""),
+    email: String(form.get("email") ?? ""),
+    phone: String(form.get("phone") ?? ""),
+  });
+  if (!result.ok && result.reason === "invalid")
+    redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=${result.field}`);
+  revalidatePath("/studio/week");
+  redirect(`/studio/week?start=${week.start}`);
 }
