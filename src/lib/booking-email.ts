@@ -43,10 +43,10 @@ function whenText(lang: string, ms: number): string {
   );
 }
 
-/** The price of `offer` in euro, in the format of `locale`. */
-function priceText(offer: Offer, locale: string): string {
+/** The price in cents in euro, in the format of `locale`. The booking's price (#757), not its offer's: Nina may change the offer. */
+function priceText(priceCents: number, locale: string): string {
   const lang = locale in MESSAGES ? locale : "en";
-  return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
+  return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(priceCents / 100);
 }
 
 /** A booking has an email address to send to; a booking Nina adds for WhatsApp, or one with its data removed, has none (#618). */
@@ -107,8 +107,11 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
           ...addressLines(t),
           // The payment of `book:pay` (#142): the price, and Nina's Tikkie link or that she sends a Tikkie.
           booking.tikkieUrl
-            ? t("bookingEmail.payLink", { price: priceText(offer, booking.locale), url: booking.tikkieUrl })
-            : t("bookingEmail.payLater", { price: priceText(offer, booking.locale) }),
+            ? t("bookingEmail.payLink", {
+                price: priceText(booking.priceCents, booking.locale),
+                url: booking.tikkieUrl,
+              })
+            : t("bookingEmail.payLater", { price: priceText(booking.priceCents, booking.locale) }),
           "",
           t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
           "",
@@ -149,18 +152,17 @@ export async function decisionEmailHtml(
       },
     ]);
   }
-  return { ...email, html: await approvedHtml(booking, offer, t, offerLabel, when, origin) };
+  return { ...email, html: await approvedHtml(booking, t, offerLabel, when, origin) };
 }
 
 function approvedHtml(
   booking: Booking,
-  offer: Offer,
   t: ReturnType<typeof parts>["t"],
   offerLabel: string,
   when: string,
   origin: string,
 ): Promise<string> {
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   return emailHtml({
     lang: booking.locale in MESSAGES ? booking.locale : "en",
     greeting: t("bookingEmail.greeting", { name: booking.name }),
@@ -332,7 +334,7 @@ export function reminderEmail(booking: Booking, offer: Offer, origin = siteOrigi
 /** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
 export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
     "",
@@ -463,7 +465,7 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
 export async function paymentReminderEmailHtml(booking: Booking, offer: Offer): Promise<Email> {
   const email = paymentReminderEmail(booking, offer);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
     { text: t("bookingEmail.payReminder", { offer: offerLabel, when }) },
     booking.tikkieUrl
