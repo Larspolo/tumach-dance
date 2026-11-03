@@ -21,6 +21,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - `drizzle-kit generate` of a new `.notNull()` column with no default gives `ALTER TABLE ADD ... NOT NULL`: SQLite refuses it. Rebuild the table in the migration (`drizzle/0014_outstanding_junta.sql`, #164).
 - Keep `src/db/*.ts` free of imports of `src/lib/push.ts` (also through another module): `tests/examples.test.ts` mocks push with a variable that is not hoisted, and the import of the database layer fails with "Cannot access 'sendPush' before initialization". Put the push in its own module (`booking-limit-push.ts`, #541).
 - A decision of `decideBooking()` sends its email only after `UNDO_MS` (#572), and the reminders and the payment reminder wait for it (`decisionTold`). A test that approves and then checks a reminder calls `claimDueDecisions(db, now + UNDO_MS)` first (`tests/booking_move_reminder.test.ts`).
+- Two PRs that each add a migration take the same number (`0022_*` twice, PR #603): `merge_main.py` stops on `drizzle/meta/*_snapshot.json`. Take main's `drizzle/` (`git checkout origin/main -- drizzle/meta`), `git rm` your `.sql`, run `npm run db:generate` again, and add the new NOT NULL columns of main to the rows of your tests.
 
 ## Next.js
 
