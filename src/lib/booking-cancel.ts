@@ -49,7 +49,7 @@ export function cancelByDancer(
 ): { ok: true; booking: Booking; wasApproved: boolean } | { ok: false; state: Exclude<CancelLink["state"], "open"> } {
   const link = cancelLink(db, token, now);
   if (link.state !== "open") return { ok: false, state: link.state };
-  const result = cancelBooking(db, link.booking.id);
+  const result = cancelBooking(db, link.booking.id, "dancer");
   return result.ok
     ? { ok: true, booking: result.booking, wasApproved: result.wasApproved }
     : { ok: false, state: "cancelled" };

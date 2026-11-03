@@ -456,18 +456,23 @@ export type CancelResult =
  * Cancel a `requested` or `approved` booking (#159): it gets `cancelled` and frees its time, as `busyRanges()` counts
  * only the holding statuses. A paid booking keeps `paidAt` (the refund waits for #139).
  */
-export function cancelBooking(db: Db, id: number): CancelResult {
-  // better-sqlite3 is synchronous: the status read here is the one the `UPDATE` changes.
-  const before = db.select({ status: bookings.status }).from(bookings).where(eq(bookings.id, id)).get();
-  const booking = db
-    .update(bookings)
-    .set({ status: "cancelled" })
-    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
-    .returning()
-    .get();
-  if (booking) return { ok: true, booking, wasApproved: before?.status === "approved" };
-  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
-  return { ok: false, reason: exists ? "not-active" : "not-found" };
+export function cancelBooking(db: Db, id: number, by: "dancer" | "nina", now = Date.now()): CancelResult {
+  return db.transaction((tx): CancelResult => {
+    // better-sqlite3 is synchronous: the status read here is the one the `UPDATE` changes.
+    const before = tx.select({ status: bookings.status }).from(bookings).where(eq(bookings.id, id)).get();
+    const booking = tx
+      .update(bookings)
+      .set({ status: "cancelled" })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
+      .returning()
+      .get();
+    if (booking) {
+      recordBookingEvent(tx, id, "cancelled", by, { at: now });
+      return { ok: true, booking, wasApproved: before?.status === "approved" };
+    }
+    const exists = tx.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+    return { ok: false, reason: exists ? "not-active" : "not-found" };
+  });
 }
 
 export type MarkPaidResult =

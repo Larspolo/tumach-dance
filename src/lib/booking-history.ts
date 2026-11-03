@@ -63,5 +63,6 @@ export function eventWhen(at: number, locale: string): string {
 /** The key of the text of an event in `StudioWeek` (#816): a move names who moved it, with `{from}` the old time. */
 export function eventMessageKey(event: Pick<BookingEvent, "kind" | "by">): string {
   if (event.kind === "moved") return event.by === "dancer" ? "event_moved_dancer" : "event_moved_nina";
+  if (event.kind === "cancelled" && event.by === "nina") return "event_cancelled_nina";
   return `event_${event.kind}`;
 }

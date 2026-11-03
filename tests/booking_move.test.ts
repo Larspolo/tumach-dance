@@ -129,7 +129,7 @@ test("a started booking, a declined or cancelled booking and an unknown id do no
     reason: "not-open",
   });
   const cancelled = book("2026-11-07T18:00");
-  cancelBooking(db, cancelled.id);
+  cancelBooking(db, cancelled.id, "nina");
   expect(moveBooking(db, cancelled.id, at("2026-11-08T14:00"), { now: NOW })).toEqual({
     ok: false,
     reason: "not-open",

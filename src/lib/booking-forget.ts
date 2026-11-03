@@ -29,7 +29,7 @@ export async function forgetDancerOfBooking(db: Db, id: number, now = Date.now()
     )
     .all();
   for (const row of coming) {
-    const result = cancelBooking(db, row.id);
+    const result = cancelBooking(db, row.id, "nina");
     if (result.ok) await sendCancelEmail(db, result.booking);
   }
   return forgetWhere(db, where, now);

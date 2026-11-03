@@ -44,7 +44,7 @@ export function cancelOutsideHours(
   return db.transaction(() => {
     const cancelled: { booking: Booking; wasApproved: boolean }[] = [];
     for (const { id } of bookingsOutsideHours(db, getHoursRule(db), { now })) {
-      const result = cancelBooking(db, id);
+      const result = cancelBooking(db, id, "nina");
       if (result.ok) cancelled.push({ booking: result.booking, wasApproved: result.wasApproved });
     }
     return cancelled;

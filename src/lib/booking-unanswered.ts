@@ -7,6 +7,7 @@ import { and, eq, isNull, lte } from "drizzle-orm";
 import type { Db } from "../db";
 import { bookings, offers } from "../db/schema";
 import { hasEmail, unansweredEmailHtml } from "./booking-email";
+import { recordBookingEvent } from "./booking-history";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { recordError } from "./site-errors";
@@ -24,12 +25,16 @@ export async function checkUnanswered(db: Db, now = Date.now()): Promise<number[
     .all();
   const ended: number[] = [];
   for (const { booking, offer } of rows) {
-    const claimed = db
-      .update(bookings)
-      .set({ status: "declined" })
-      .where(and(eq(bookings.id, booking.id), eq(bookings.status, "requested")))
-      .returning()
-      .get();
+    const claimed = db.transaction((tx) => {
+      const row = tx
+        .update(bookings)
+        .set({ status: "declined" })
+        .where(and(eq(bookings.id, booking.id), eq(bookings.status, "requested")))
+        .returning()
+        .get();
+      if (row) recordBookingEvent(tx, booking.id, "ended", "site", { at: now });
+      return row;
+    });
     if (!claimed) continue;
     if (now - booking.start <= LATE_MS && hasEmail(claimed)) {
       try {

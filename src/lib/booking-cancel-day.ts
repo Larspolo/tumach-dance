@@ -40,7 +40,7 @@ export function cancelDay(db: Db, date: string, { now = Date.now() }: { now?: nu
       .all();
     const cancelled: { booking: Booking; wasApproved: boolean }[] = [];
     for (const { id } of rows) {
-      const result = cancelBooking(db, id);
+      const result = cancelBooking(db, id, "nina");
       if (result.ok) cancelled.push({ booking: result.booking, wasApproved: result.wasApproved });
     }
     const rule = getHoursRule(db);

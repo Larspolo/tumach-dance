@@ -59,7 +59,7 @@ test("cancelled, declined, ended and forgotten bookings are not listed", () => {
   const { db, add } = setup();
   const saturdayClosed: HoursRule = { ...DEFAULT_RULE, weekly: { ...DEFAULT_RULE.weekly, sat: "closed" } };
   const cancelled = add("2026-11-07T18:00");
-  cancelBooking(db, cancelled.id);
+  cancelBooking(db, cancelled.id, "nina");
   const declined = add("2026-11-14T18:00");
   db.update(bookings).set({ status: "requested" }).where(eq(bookings.id, declined.id)).run();
   decideBooking(db, declined.id, "declined", null, NOW);

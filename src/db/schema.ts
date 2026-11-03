@@ -236,7 +236,7 @@ export const bookingEvents = sqliteTable(
     /** UTC, epoch milliseconds. */
     at: integer("at").notNull(),
     kind: text("kind", {
-      enum: ["requested", "added", "approved", "declined", "undone", "moved", "paid", "unpaid"],
+      enum: ["requested", "added", "approved", "declined", "undone", "moved", "paid", "unpaid", "cancelled", "ended"],
     }).notNull(),
     by: text("by", { enum: ["dancer", "nina", "site"] }).notNull(),
     /** UTC, epoch milliseconds; `null` = no move. */

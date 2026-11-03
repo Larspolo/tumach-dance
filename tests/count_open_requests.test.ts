@@ -31,7 +31,7 @@ function book(start: string, decision?: "approved" | "declined" | "cancelled"): 
   };
   const r = requestBooking(db, input, { now: NOW });
   if (!r.ok) throw new Error(`no booking: ${r.reason}`);
-  if (decision === "cancelled") cancelBooking(db, r.booking.id);
+  if (decision === "cancelled") cancelBooking(db, r.booking.id, "nina");
   else if (decision) decideBooking(db, r.booking.id, decision, null, NOW);
   return r.booking.id;
 }

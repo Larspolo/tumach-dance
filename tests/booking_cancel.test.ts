@@ -32,7 +32,7 @@ test("a requested booking is cancelled and frees its time", () => {
   if (!result.ok) throw new Error("the request must be stored");
   const { id } = result.booking;
   expect(busyRanges(db, at("2026-11-07T00:00"), at("2026-11-08T00:00"))).toHaveLength(1);
-  expect(cancelBooking(db, id)).toMatchObject({ ok: true, booking: { id, status: "cancelled" } });
+  expect(cancelBooking(db, id, "nina")).toMatchObject({ ok: true, booking: { id, status: "cancelled" } });
   expect(busyRanges(db, at("2026-11-07T00:00"), at("2026-11-08T00:00"))).toHaveLength(0);
 });
 
@@ -42,7 +42,7 @@ test("an approved booking is cancelled and keeps paidAt when it was paid", () =>
   if (!result.ok) throw new Error("the request must be stored");
   decideBooking(db, result.booking.id, "approved");
   db.update(bookings).set({ paidAt: 123 }).where(eq(bookings.id, result.booking.id)).run();
-  expect(cancelBooking(db, result.booking.id)).toMatchObject({
+  expect(cancelBooking(db, result.booking.id, "nina")).toMatchObject({
     ok: true,
     booking: { status: "cancelled", paidAt: 123 },
   });
@@ -53,10 +53,10 @@ test("a second call and a declined booking are not active; an unknown id is not 
   const requested = requestBooking(db, input("2026-11-07T14:00"), { now: NOW });
   const declined = requestBooking(db, input("2026-11-07T16:00"), { now: NOW });
   if (!requested.ok || !declined.ok) throw new Error("the requests must be stored");
-  cancelBooking(db, requested.booking.id);
-  expect(cancelBooking(db, requested.booking.id)).toEqual({ ok: false, reason: "not-active" });
+  cancelBooking(db, requested.booking.id, "nina");
+  expect(cancelBooking(db, requested.booking.id, "nina")).toEqual({ ok: false, reason: "not-active" });
   decideBooking(db, declined.booking.id, "declined");
-  expect(cancelBooking(db, declined.booking.id)).toEqual({ ok: false, reason: "not-active" });
+  expect(cancelBooking(db, declined.booking.id, "nina")).toEqual({ ok: false, reason: "not-active" });
   expect(db.select().from(bookings).where(eq(bookings.id, declined.booking.id)).get()?.status).toBe("declined");
-  expect(cancelBooking(db, 999)).toEqual({ ok: false, reason: "not-found" });
+  expect(cancelBooking(db, 999, "nina")).toEqual({ ok: false, reason: "not-found" });
 });
