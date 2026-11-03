@@ -126,6 +126,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `nina:remember` (#691) Nina keeps a private note about a dancer
   - Nina writes a short note about a dancer (the level, what they practised) in a few taps; each booking of the same dancer shows it, and only Nina sees it
   - The note goes away with the other data of the dancer, and the privacy page names it
+- [ ] `nina:holiday` (#711) Nina knows which bookings fall in a period that she closes
+  - After Nina closes a date or a period, or changes her weekly hours, the hours page names each coming booking that is now outside her open hours, one tap from its booking; the bookings stay when she does nothing
+  - One button cancels them in at most 2 taps; each dancer gets the usual cancel email with a link to book another time, and the calendar file removes the event
 
 ## 3. Book a lesson or the studio
 
