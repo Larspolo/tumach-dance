@@ -105,7 +105,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:add` (#616) Nina writes a lesson that she agreed by WhatsApp or phone into her app
   - Nina adds a booking for a dancer in a few taps (the offer, a free time, a name; the email and the phone are optional); the booking page no longer offers that time
   - The booking is approved at once, keeps the price of its offer, counts on the money page, and Nina marks it paid as each other booking; a dancer with an email gets the usual approval email
-- [ ] `nina:dancer` Nina sees the earlier bookings of a dancer
+- [x] `nina:dancer` (#621) Nina sees the earlier bookings of a dancer
   - From a booking, one tap shows the other bookings of the same dancer (same email or phone): the date, the offer and paid or not, newest first
 - [x] `nina:year` (#626) Nina has the money of a year for her tax return
   - The money page shows the totals of the year (approved bookings, paid, not paid)
