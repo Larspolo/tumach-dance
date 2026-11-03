@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
 import { bookings } from "@/db/schema";
@@ -28,12 +28,11 @@ export default async function DancerPage({
   const offerName = await getTranslations("StudioOffers");
   const weekName = await getTranslations("StudioWeek");
   const id = Number((await params).id);
-  if (!Number.isInteger(id)) notFound();
   const back = backPath((await searchParams).back ?? null, "/studio/week");
   const db = getDb();
-  const anchor = db.select().from(bookings).where(eq(bookings.id, id)).get();
-  if (!anchor) notFound();
-  const others = dancerBookings(db, id);
+  // A removed or unknown booking shows the calm text: an old link must not end on an error page.
+  const anchor = Number.isInteger(id) ? db.select().from(bookings).where(eq(bookings.id, id)).get() : undefined;
+  const others = anchor ? dancerBookings(db, id) : [];
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
     weekday: "short",
@@ -48,7 +47,7 @@ export default async function DancerPage({
       <Link className={styles.link} href={back}>
         {t("back")}
       </Link>
-      <h1 className={styles.title}>{t("title", { name: shownName(anchor, weekName("removed")) })}</h1>
+      <h1 className={styles.title}>{anchor ? t("title", { name: shownName(anchor, weekName("removed")) }) : t("link")}</h1>
       {others.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list} data-testid="dancer-bookings">
         {others.map(({ booking, offer }) => (

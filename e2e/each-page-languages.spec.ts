@@ -11,6 +11,8 @@ const LOCALES = { en: "en-GB", nl: "nl-NL" } as const;
 const SAMPLES: Record<string, string> = {
   "src/app/[locale]/[...rest]/page.tsx": "/no-such-page",
   "src/app/studio/[...rest]/page.tsx": "/studio/no-such-page",
+  // The first booking of the test database, or the not-found page when it has none.
+  "src/app/studio/dancer/[id]/page.tsx": "/studio/dancer/1?back=%2Fstudio%2Fweek",
 };
 
 // A missing text shows as `Group.key`. Match on the group: a key that is missing in all three files is not in en.json.
