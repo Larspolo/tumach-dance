@@ -356,6 +356,8 @@
     "bookButton": "Book another time",
     "againButton": "Book another lesson",
     "againText": "Want another lesson? Book it here: {url}",
+    "mineLink": "See all your coming bookings with this link: {url}",
+    "mineButton": "See your bookings",
     "address": "Where: {address}"
   },
   "bookingPush": {
