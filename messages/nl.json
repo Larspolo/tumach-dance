@@ -356,6 +356,8 @@
     "bookButton": "Boek een andere tijd",
     "againButton": "Boek nog een les",
     "againText": "Wil je nog een les? Boek hier: {url}",
+    "mineLink": "Bekijk al je komende boekingen met deze link: {url}",
+    "mineButton": "Bekijk je boekingen",
     "address": "Waar: {address}"
   },
   "bookingPush": {

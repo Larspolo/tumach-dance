@@ -14,6 +14,7 @@ import { offers } from "../db/schema";
 import { againUrl } from "./booking-again";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
+import { mineUrl } from "./booking-mine";
 import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
 import { type EmailBlock, emailHtml } from "./email-html";
@@ -80,6 +81,8 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
     "",
     t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
     "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
+    "",
     t("bookingEmail.sign"),
   ].join("\n");
   return { to: booking.email, subject: t("bookingEmail.subject"), text, ...replyToNina() };
@@ -108,6 +111,8 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
             : t("bookingEmail.payLater", { price: priceText(offer, booking.locale) }),
           "",
           t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+          "",
+          t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
           "",
           t("bookingEmail.againText", { url: againUrl(origin, booking) }),
           "",
@@ -174,6 +179,7 @@ function approvedHtml(
         text: t("bookingEmail.cancelText"),
         button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
       },
+      { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
       { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
       { text: t("bookingEmail.approvedSee") },
     ],
@@ -233,6 +239,8 @@ export function moveEmail(booking: Booking, offer: Offer, from: { start: number 
     "",
     t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
     "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
+    "",
     t("bookingEmail.sign"),
   ].join("\n");
   const attachments = booking.status === "approved" ? [icsAttachment(booking, offer)] : undefined;
@@ -265,6 +273,8 @@ export function repeatEmail(added: Booking[], offer: Offer, origin = siteOrigin(
     ...lines,
     "",
     t("bookingEmail.repeatCancel"),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, first) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -303,6 +313,8 @@ export function reminderEmail(booking: Booking, offer: Offer, origin = siteOrigi
     "",
     ...addressLines(t),
     t("bookingEmail.approvedSee"),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
     "",
     t("bookingEmail.againText", { url: againUrl(origin, booking) }),
     "",
@@ -378,6 +390,7 @@ export async function requestEmailHtml(
     { text: t("bookingEmail.body", { offer: offerLabel, when }) },
     { text: t("bookingEmail.soon") },
     cancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
 
@@ -413,6 +426,7 @@ export async function moveEmailHtml(
   return withHtml(email, { lang, name: booking.name, t }, [
     { text: t("bookingEmail.move", { offer: offerLabel, from: whenText(lang, from.start), when }) },
     cancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
 
@@ -439,6 +453,7 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
       .filter(Boolean)
       .map((text) => ({ text })),
     cancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
     { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
     { text: t("bookingEmail.approvedSee") },
   ]);
