@@ -226,7 +226,7 @@ export type ChangeContactResult =
  * Correct the name, email or phone of a `requested` or `approved` booking whose data is not removed (#759). The checks
  * of `addBooking()`: the email and the phone can be empty. A wrong field changes nothing.
  */
-export function changeContact(db: Db, id: number, input: ContactInput): ChangeContactResult {
+export function changeContact(db: Db, id: number, input: ContactInput, now = Date.now()): ChangeContactResult {
   const old = db.select().from(bookings).where(eq(bookings.id, id)).get();
   if (!old || old.forgottenAt !== null || !(HOLDING as readonly string[]).includes(old.status)) {
     return { ok: false, reason: "not-found" };
@@ -241,12 +241,17 @@ export function changeContact(db: Db, id: number, input: ContactInput): ChangeCo
     }
     return { ok: false, reason: "not-found" };
   }
-  const booking = db
-    .update(bookings)
-    .set({ name: fields.name, email: fields.email, phone: fields.phone })
-    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
-    .returning()
-    .get();
+  const booking = db.transaction((tx) => {
+    const changed = tx
+      .update(bookings)
+      .set({ name: fields.name, email: fields.email, phone: fields.phone })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+      .returning()
+      .get();
+    // Nina corrects the contact data in the studio app (#830).
+    if (changed) recordBookingEvent(tx, id, "contact", "nina", { at: now });
+    return changed;
+  });
   if (!booking) return { ok: false, reason: "not-found" };
   return { ok: true, booking, emailChanged: booking.email !== old.email };
 }
@@ -255,14 +260,19 @@ export function changeContact(db: Db, id: number, input: ContactInput): ChangeCo
  * Give one `requested` or `approved` booking another price (#761): a lesson for two, a discount. The offer keeps its
  * price. A price that is not a whole number of cents of 0 or more changes nothing.
  */
-export function changePrice(db: Db, id: number, priceCents: number): Booking | undefined {
+export function changePrice(db: Db, id: number, priceCents: number, now = Date.now()): Booking | undefined {
   if (!Number.isInteger(priceCents) || priceCents < 0) return undefined;
-  return db
-    .update(bookings)
-    .set({ priceCents })
-    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
-    .returning()
-    .get();
+  return db.transaction((tx) => {
+    const changed = tx
+      .update(bookings)
+      .set({ priceCents })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+      .returning()
+      .get();
+    // Nina changes the price in the studio app (#830).
+    if (changed) recordBookingEvent(tx, id, "price", "nina", { at: now });
+    return changed;
+  });
 }
 
 /** `from`: the old time of the booking, for the email and the push of the move (epic #406). */

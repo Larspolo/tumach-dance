@@ -556,7 +556,9 @@
     "event_paid": "Betaling ontvangen",
     "event_unpaid": "Betaling teruggezet door jou",
     "event_moved_dancer": "Verplaatst door de danser van {from}",
-    "event_moved_nina": "Verplaatst door jou van {from}"
+    "event_moved_nina": "Verplaatst door jou van {from}",
+    "event_contact": "Contactgegevens gewijzigd door jou",
+    "event_price": "Prijs gewijzigd door jou"
   },
   "StudioFeedback": {
     "back": "Terug",

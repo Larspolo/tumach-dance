@@ -556,7 +556,9 @@
     "event_paid": "Payment received",
     "event_unpaid": "Payment mark removed by you",
     "event_moved_dancer": "Moved by the dancer from {from}",
-    "event_moved_nina": "Moved by you from {from}"
+    "event_moved_nina": "Moved by you from {from}",
+    "event_contact": "Contact details changed by you",
+    "event_price": "Price changed by you"
   },
   "StudioFeedback": {
     "back": "Back",
