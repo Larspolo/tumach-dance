@@ -1,4 +1,4 @@
-// The guide for Nina (#45): seven parts in each language, a picture or a button name for each step.
+// The guide for Nina (#45): twelve parts in each language, a picture or a button name for each step.
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
@@ -6,7 +6,7 @@ import nl from "../messages/nl.json" with { type: "json" };
 const MESSAGES = { en, nl };
 
 for (const [locale, m] of Object.entries(MESSAGES)) {
-  test(`/${locale}/studio-guide shows the seven parts with their pictures`, async ({ page }) => {
+  test(`/${locale}/studio-guide shows the twelve parts with their pictures`, async ({ page }) => {
     await page.goto(`/${locale}/studio-guide`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(m.StudioGuide.title);
     for (const title of [
@@ -17,6 +17,11 @@ for (const [locale, m] of Object.entries(MESSAGES)) {
       m.StudioGuide.addTitle,
       m.StudioGuide.blockTitle,
       m.StudioGuide.moveTitle,
+      m.StudioGuide.repeatTitle,
+      m.StudioGuide.sickTitle,
+      m.StudioGuide.holidayTitle,
+      m.StudioGuide.fixTitle,
+      m.StudioGuide.forgetTitle,
     ])
       await expect(page.getByRole("heading", { level: 2, name: title })).toBeVisible();
     // The install steps name the button of the browser; the steps of the app have a picture.
@@ -28,6 +33,8 @@ for (const [locale, m] of Object.entries(MESSAGES)) {
     }
     expect(await page.locator("main img").count()).toBe(4);
     await expect(page.locator("#approve li")).toHaveCount(3);
+    await expect(page.locator("#holiday li")).toHaveCount(3);
+    await expect(page.locator("#forget li")).toHaveCount(2);
   });
 }
 
