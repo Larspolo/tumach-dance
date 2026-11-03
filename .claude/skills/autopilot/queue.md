@@ -44,7 +44,10 @@ name each missing item. When `steering/project/PRINCIPLES.md` has the section "T
 (for example a `needs-human` test ticket, or a build); the epic waits for it. Close the epic with a comment only when all criteria are met
 (name the evidence for each, then the label `close`: `owner.md`, "Close an issue", #1740); its line "Roadmap: `<key>`" then gets `[x]` and the epic number in `steering/project/ROADMAP.md`: in the PR of your ticket, else a `docs`, `size:S` ticket (#520: the roadmap review comes only each 100 PRs). When the epic waits only for its own question for Nina #Q (all other criteria met), end the check comment with the
 line `Close this epic when #Q gives A.`: the run that handles her answer A then closes the epic (autopilot, "A question
-for Nina", #552). When an open criterion waits only for an open ticket of another epic (often a question for Nina), add a line
+for Nina", #552). When the epic waits only for one open ticket #N (all other criteria met, its roadmap line in the
+PR of #N), end the check comment with the line `Close this epic when #N merges.`: when #N closes as completed by a
+merged PR, `close.yml` adds the evidence comment and the label `close` (`framework/tools/epic_autoclose.py`, #835),
+and the pacer starts no epic check for it. When an open criterion waits only for an open ticket of another epic (often a question for Nina), add a line
 "Part of #E" to the body of that ticket, outside its section `## For Nina`: else the pacer starts a deep run for the
 epic check of E in each cycle (`usage.refill_need`; 3 empty deep runs for #32 and #158 on 2026-11-01, #318). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
 (E = the epic; exit 1: another run makes its sub-issue, skip the epic, #505). Then make one sub-issue (same priority)
