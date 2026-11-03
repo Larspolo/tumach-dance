@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from agent_config import CONFIG, first_account, owners  # noqa: E402
 from dashboard import api, closes, merges, owner_work, start_after  # noqa: E402
 from feedback import by_owner  # noqa: E402
+from usage import epic_key  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -450,6 +451,19 @@ def milestone_per_week(issues, points):
     return (len(done) / used, len(done), used, sorted({i["milestone"]["title"] for i in done})) if used else None
 
 
+def features_per_week(issues, points):
+    """(closed roadmap epics per 1 % of 7-day quota, closed epics, quota %) or None (#797): the issues with the label
+    `epic` and a line "Roadmap: `key`" that closed as done between the first and the last point of weekly(). The
+    release percent stays flat while each roadmap review adds features, so this counts the finished features."""
+    if len(points) < 2:
+        return None
+    used = sum(b[1] - a[1] for a, b in zip(points, points[1:]) if b[1] > a[1])
+    done = [i for i in issues if "pull_request" not in i and i.get("closed_at") and i.get("state_reason") != "not_planned"
+            and "epic" in {lb["name"] for lb in i.get("labels", [])} and epic_key(i.get("body"))
+            and points[0][0] <= ts(i["closed_at"]) <= points[-1][0]]
+    return (len(done) / used, len(done), used) if used else None
+
+
 def weak_spots(issues, events, prs, runs, since):
     """Counts that cost quality: issues that the owner reopened, bug tickets that name a PR merged since `since` and
     before the bug (rework: a PR that merged later is a blocked PR, not the cause, #5461), bug tickets that name a
@@ -827,6 +841,9 @@ def report(since, runs, jobs, status_comments, comments, prs, files, files_of=No
     mw = milestone_per_week(issues, week)
     out.append("Release milestone per 1 % of 7-day quota (#5552): " + ("-" if mw is None else
                f"{mw[0]:.2f} closed issues ({mw[1]} closed in {', '.join(mw[3]) or '-'}, {mw[2]:g} % used)"))
+    fw = features_per_week(issues, week)
+    out.append("Features per 1 % of 7-day quota: " + ("-" if fw is None else
+               f"{fw[0]:.2f} closed roadmap epics ({fw[1]} closed in {fw[2]:g} % used)"))
     w = weak_spots(issues, issue_events, prs, runs, since)
     out.append("Weak spots: " + ", ".join(f"{k} {v}" for k, v in w.items()))
     lr = lane_rework(issues, prs, status_comments, since)
