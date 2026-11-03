@@ -11,6 +11,7 @@ import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
+import { againUrl } from "./booking-again";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
 import { sendEmailFailPush } from "./booking-push";
@@ -108,6 +109,8 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
           "",
           t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
           "",
+          t("bookingEmail.againText", { url: againUrl(origin, booking) }),
+          "",
           t("bookingEmail.approvedSee"),
         ]
       : [t("bookingEmail.declinedBody", { offer: offerLabel, when }), "", t("bookingEmail.declinedOther")];
@@ -171,6 +174,7 @@ function approvedHtml(
         text: t("bookingEmail.cancelText"),
         button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
       },
+      { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
       { text: t("bookingEmail.approvedSee") },
     ],
     sign: t("bookingEmail.sign"),
@@ -290,7 +294,7 @@ export function unansweredEmail(booking: Booking, offer: Offer, origin = siteOri
 }
 
 /** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
-export function reminderEmail(booking: Booking, offer: Offer): Email {
+export function reminderEmail(booking: Booking, offer: Offer, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -299,6 +303,8 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     "",
     ...addressLines(t),
     t("bookingEmail.approvedSee"),
+    "",
+    t("bookingEmail.againText", { url: againUrl(origin, booking) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -425,7 +431,7 @@ export async function unansweredEmailHtml(booking: Booking, offer: Offer, origin
 
 /** `reminderEmail()` with the HTML part (#440): a button to cancel. */
 export async function reminderEmailHtml(booking: Booking, offer: Offer, origin = siteOrigin()): Promise<Email> {
-  const email = reminderEmail(booking, offer);
+  const email = reminderEmail(booking, offer, origin);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
     { text: t("bookingEmail.reminder", { offer: offerLabel, when }) },
@@ -433,6 +439,7 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
       .filter(Boolean)
       .map((text) => ({ text })),
     cancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
     { text: t("bookingEmail.approvedSee") },
   ]);
 }
