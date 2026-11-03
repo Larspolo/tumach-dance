@@ -16,7 +16,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:book` (#380) A visitor finds the booking and the prices from the home page
   - The home page and the menu have a button that opens the booking page; on a phone it is one tap
   - The home page shows the private lesson and the studio rental with their length and price, each with a link that opens the booking page with that offer
-- [ ] `site:contact` (#149) The contact form sends the message to Nina's email (Mailgun)
+- [x] `site:contact` (#149) The contact form sends the message to Nina's email (Mailgun)
   - A visitor sends a message; Nina gets it in her Gmail and replies to the visitor
   - The form stops spam bots with no puzzle for the visitor
 - [x] `site:photos` (#170) Photos of the studio that Nina adds from her phone
@@ -138,7 +138,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:fix` (#758) Nina corrects the details of one booking
   - From a booking, Nina corrects the name, email or phone of the dancer in a few taps (a typo, the right address after a bounce); the later emails, the WhatsApp link and the search use the new data, and a new email address gets the last email of the booking again
   - Nina gives one booking another price (a lesson for two people, a discount); the week page, the money page and the emails of that booking show it, and the offer keeps its price
-- [ ] `nina:guide` (#774) Nina finds how to do each task of her studio app
+- [x] `nina:guide` (#774) Nina finds how to do each task of her studio app
   - The studio home links to a guide with a short part for each task of the app (the daily tasks and the rare cases), each with at most 3 steps, in English and Dutch
   - Each new page of the studio app gets its part in the guide (a test)
 
