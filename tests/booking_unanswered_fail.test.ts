@@ -39,6 +39,7 @@ function book() {
     .insert(bookings)
     .values({
       offerId,
+      priceCents: 6000,
       start,
       end: start + 60 * MINUTE,
       status: "requested",

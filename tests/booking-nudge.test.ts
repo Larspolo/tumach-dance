@@ -39,6 +39,7 @@ function request(now: number, inHours: number, ageHours: number, change: Partial
     .insert(bookings)
     .values({
       offerId,
+      priceCents: 6000,
       start: now + inHours * HOUR,
       end: now + (inHours + 1) * HOUR,
       status: "requested",

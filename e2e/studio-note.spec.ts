@@ -19,6 +19,7 @@ test("a request with a note shows the note on the bookings and the week page", a
   const start = DateTime.fromISO("2031-07-10T15:00", { zone: TIME_ZONE });
   const values = {
     offerId: offer.id,
+    priceCents: offer.priceCents,
     end: 0,
     email: "note@example.test",
     phone: "+31 6 1234 5678",

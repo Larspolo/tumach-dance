@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e6d85af2-64b1-429d-ae28-6171ffc334c9",
+  "id": "ef11a3f3-e952-446d-8f8e-90f88dd46476",
   "prevId": "6b035e17-fb1f-4895-9f1d-897760b42933",
   "tables": {
     "account": {
@@ -187,6 +187,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "price_cents": {
+          "name": "price_cents",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "start": {
           "name": "start",
           "type": "integer",
@@ -317,13 +324,6 @@
         },
         "decision_mailed_at": {
           "name": "decision_mailed_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "nudged_at": {
-          "name": "nudged_at",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
