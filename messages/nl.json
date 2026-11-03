@@ -693,5 +693,10 @@
     "button": "Zoeken",
     "none": "Geen boeking gevonden.",
     "back": "Terug"
+  },
+  "StudioShare": {
+    "free": "Vrije tijden in de komende 7 dagen:",
+    "none": "Geen vrije tijd in de komende 7 dagen.",
+    "link": "Boek hier: {link}"
   }
 }
