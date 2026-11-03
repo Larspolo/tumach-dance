@@ -160,7 +160,14 @@ export type AddBookingResult = Exclude<BookingResult, { reason: "limit" }>;
 export function addBooking(
   db: Db,
   input: AddBookingInput,
-  { now = Date.now() }: { now?: number } = {},
+  {
+    now = Date.now(),
+    callerMails = false,
+  }: {
+    now?: number;
+    /** The caller sends one email for several bookings (the weekly repeats, #677): no approval email per booking. */
+    callerMails?: boolean;
+  } = {},
 ): AddBookingResult {
   const fields = clean({ ...input, end: input.start, note: null }, { optionalContact: true });
   if ("field" in fields) return { ok: false, reason: "invalid", field: fields.field };
@@ -195,7 +202,7 @@ export function addBooking(
           createdAt: now,
           approvedAt: now,
           decidedAt: now,
-          decisionMailedAt: fields.email ? null : now,
+          decisionMailedAt: fields.email && !callerMails ? null : now,
         })
         .returning()
         .get();
