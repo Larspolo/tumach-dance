@@ -6,6 +6,9 @@
     "primaryAction": "Boek een les",
     "secondaryAction": "Bekijk het rooster",
     "imageBlock": "De dansstudio TUMACH",
+    "news": {
+      "title": "Nieuws"
+    },
     "about": {
       "title": "Over TUMACH",
       "label": "(01) Over",
