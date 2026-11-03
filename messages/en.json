@@ -691,5 +691,10 @@
     "button": "Search",
     "none": "No booking found.",
     "back": "Back"
+  },
+  "StudioShare": {
+    "free": "Free times in the next 7 days:",
+    "none": "No free time in the next 7 days.",
+    "link": "Book here: {link}"
   }
 }
