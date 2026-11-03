@@ -55,3 +55,5 @@
 {"at": "2026-11-03T16:03:20Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-03T02:02:45.620Z", "version": "7e001f6419f11643a8467e79248c6cf51642b872"}
 {"at": "2026-11-03T16:24:30Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-03T02:02:45.620Z", "version": "046b56ce947861c6931783241b90e27bee60670e"}
 {"at": "2026-11-03T16:55:28Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-03T02:02:45.620Z", "version": "12c6bdaec9de0951dedc5cb0e232d467963bcde8"}
+{"at": "2026-11-03T17:16:24Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-03T02:02:45.620Z", "version": "f5bc1331c5d3f8eac73f3c70d08098a8c789e404"}
+{"at": "2026-11-03T17:16:45Z", "site": "preview", "status": 0, "text": "TimeoutError: The read operation timed out"}
