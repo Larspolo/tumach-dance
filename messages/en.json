@@ -632,6 +632,9 @@
     "title": "Bookings of {name}",
     "link": "Earlier bookings",
     "none": "No other bookings yet.",
+    "noteLabel": "Your private note about this dancer (only you see it)",
+    "noteLimit": "Up to {max} characters.",
+    "noteSave": "Save",
     "paid": "Paid",
     "notPaid": "Not paid",
     "status": {
