@@ -196,5 +196,5 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `book:mine` (#742) A dancer sees all of their next lessons from the link in an email
   - Each email of a booking has a link to one page with the next bookings of the same email address (time, offer, status), each with its cancel link; the address has only the token of the booking, no personal data
   - After the data of the dancer goes away, the link shows no booking
-- [ ] `book:how` (#818) A dancer knows how a booking works before the request
+- [x] `book:how` (#818) A dancer knows how a booking works before the request
   - The booking form says in a few short lines what happens after the request: Nina answers by email, the payment is a Tikkie after her approval, and the link in each email moves or cancels the booking at any time before the start

@@ -24,6 +24,7 @@ test.afterAll(() => {
 test("no visible offer shows a link to the contact form", async ({ page }) => {
   await page.goto("/nl/book");
   await expect(page.getByText(nl.Book.noOffers)).toBeVisible();
+  await expect(page.getByText(nl.Book.howAnswer)).toHaveCount(0);
   await expect(page.getByText(nl.Book.contactText)).toBeVisible();
   await page.getByRole("link", { name: nl.Book.contact }).click();
   await expect(page).toHaveURL(/\/nl#contact$/);
