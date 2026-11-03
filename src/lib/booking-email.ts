@@ -79,7 +79,7 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
     "",
     t("bookingEmail.soon"),
     "",
-    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
     "",
     t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
     "",
@@ -383,6 +383,11 @@ function cancelBlock(t: Translator, url: string): EmailBlock {
   return { text: t("bookingEmail.cancelText"), button: { label: t("bookingEmail.cancelButton"), url } };
 }
 
+/** The block of the request email (#650): the move and the cancel. Approved bookings keep `cancelBlock()` (#647). */
+function moveOrCancelBlock(t: Translator, url: string): EmailBlock {
+  return { text: t("bookingEmail.moveOrCancelText"), button: { label: t("bookingEmail.moveOrCancelButton"), url } };
+}
+
 /** The booking page of `locale`: the button to pick another time. */
 const bookUrl = (origin: string, locale: string) => `${origin}/${locale}/book`;
 
@@ -398,7 +403,7 @@ export async function requestEmailHtml(
   return withHtml(email, { lang: langOf(locale), name: booking.name, t }, [
     { text: t("bookingEmail.body", { offer: offerLabel, when }) },
     { text: t("bookingEmail.soon") },
-    cancelBlock(t, cancelUrl(origin, booking)),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
     { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
