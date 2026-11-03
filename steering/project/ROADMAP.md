@@ -117,7 +117,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - The studio home shows the number of requests that wait for her answer and the lessons of today and tomorrow, each one tap from its booking; with nothing to do, it says so
 - [x] `nina:find` (#662) Nina finds a booking by the name, email or phone of a dancer
   - One search field in the studio app lists the bookings that match, newest first, each one tap from its booking; a part of a name is enough
-- [ ] `nina:repeat` (#676) Nina repeats the weekly lesson of a regular dancer
+- [x] `nina:repeat` (#676) Nina repeats the weekly lesson of a regular dancer
   - From an approved booking, Nina repeats it each week for the next weeks in a few taps; a week whose time is not free is not booked, and the app names it
   - Each new booking is a normal approved booking with the same offer, time and price; a dancer with an email gets one email with all the new dates
 - [ ] `nina:sick` (#690) Nina cancels all the lessons of one day when she is sick
