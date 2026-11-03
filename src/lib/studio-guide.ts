@@ -81,4 +81,34 @@ export const GUIDE_PARTS: GuidePart[] = [
     title: "forgetTitle",
     steps: [{ key: "forgetOpen" }, { key: "forgetYes" }],
   },
+  {
+    id: "money",
+    page: "/studio/money",
+    title: "moneyTitle",
+    steps: [{ key: "moneyOpen" }, { key: "moneyPaid" }, { key: "moneyYear" }],
+  },
+  {
+    id: "search",
+    page: "/studio/search",
+    title: "searchTitle",
+    steps: [{ key: "searchOpen" }, { key: "searchType" }],
+  },
+  {
+    id: "note",
+    page: "/studio/dancer/[id]",
+    title: "noteTitle",
+    steps: [{ key: "noteOpen" }, { key: "noteSave" }],
+  },
+  {
+    id: "whatsapp",
+    page: "/studio/bookings",
+    title: "whatsappTitle",
+    steps: [{ key: "whatsappOpen" }, { key: "whatsappSend" }],
+  },
+  {
+    id: "share",
+    page: "/studio/offers",
+    title: "shareTitle",
+    steps: [{ key: "shareOpen" }, { key: "shareSend" }],
+  },
 ];
