@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 
-const SECTIONS = ["about", "classes", "schedule", "contact"] as const;
+const SECTIONS = ["about", "contact"] as const;
 
 test("the home page shows the header and each section with no console error", async ({ page }, testInfo) => {
   const errors: string[] = [];

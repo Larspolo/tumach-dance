@@ -16,7 +16,7 @@ export function Hero({ news }: { news: string | null }) {
           <Link href="/book" className={styles.btn}>
             {t("primaryAction")}
           </Link>
-          <a href="#schedule" className={`${styles.btn} ${styles.ghost}`}>
+          <a href="#offers" className={`${styles.btn} ${styles.ghost}`}>
             {t("secondaryAction")}
           </a>
         </div>

@@ -4,7 +4,7 @@
     "welcome": "Come as you are and dance at your own pace: private lessons, classes and a studio to rent.",
     "eyebrow": "Dance studio · Amsterdam",
     "primaryAction": "Book a lesson",
-    "secondaryAction": "See the schedule",
+    "secondaryAction": "See the prices",
     "imageBlock": "The TUMACH dance studio",
     "news": {
       "title": "News"
@@ -25,34 +25,13 @@
     "offers": {
       "title": "Prices",
       "label": "(02) Prices",
-      "book": "Book"
-    },
-    "classes": {
-      "title": "Classes",
-      "label": "(03) Classes",
-      "none": "No classes yet."
-    },
-    "schedule": {
-      "title": "Every week",
-      "label": "(04) Schedule",
-      "none": "No class times yet.",
-      "days": {
-        "mon": "Monday",
-        "tue": "Tuesday",
-        "wed": "Wednesday",
-        "thu": "Thursday",
-        "fri": "Friday",
-        "sat": "Saturday",
-        "sun": "Sunday"
-      },
-      "time": "{from}–{to}",
+      "book": "Book",
       "closedDay": "Closed on {date, date, ::dMMMM}.",
-      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}.",
-      "noClass": "No class on {date, date, ::dMMMM}."
+      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}."
     },
     "contact": {
       "title": "Say hello",
-      "label": "(05) Contact",
+      "label": "(03) Contact",
       "text": "A question about a lesson, a class or the studio? Send me a message, and I will answer soon.",
       "name": "Your name",
       "email": "Your email",
@@ -75,8 +54,6 @@
     "about": "About",
     "offers": "Prices",
     "photos": "Photos",
-    "classes": "Classes",
-    "schedule": "Schedule",
     "contact": "Contact",
     "book": "Book"
   },
