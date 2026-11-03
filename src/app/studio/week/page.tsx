@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
 import { listBlocks } from "@/db/blocks";
 import { listBookings } from "@/db/bookings";
+import { dancerNotesFor, firstNoteLine } from "@/db/dancer-notes";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { shownName, shownNote } from "@/lib/booking-name";
@@ -65,6 +66,11 @@ export default async function WeekPage({
   // The cancel of a whole day (#694): "Cancel this day", then "Yes, cancel the day".
   const dayCancelled = Number(params.dayCancelled);
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
+  // The first line of Nina's note about each dancer, in one query (#697).
+  const noteOf = dancerNotesFor(
+    getDb(),
+    bookings.map(({ booking }) => booking),
+  );
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
   const blocks = listBlocks(getDb(), week.from, week.to);
   // The form "Keep a time free" (#327): its date is the first day of the week that is not in the past.
@@ -213,6 +219,14 @@ export default async function WeekPage({
                         >
                           {dancerT("link")}
                         </Link>{" "}
+                        {firstNoteLine(noteOf, booking) !== null && (
+                          <Link
+                            className={styles.dancerNote}
+                            href={`/studio/dancer/${booking.id}?back=${encodeURIComponent(`/studio/week?start=${week.start}`)}`}
+                          >
+                            {firstNoteLine(noteOf, booking)}
+                          </Link>
+                        )}{" "}
                       </>
                     )}
                     {booking.id === asked ? (

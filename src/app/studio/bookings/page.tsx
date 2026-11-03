@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
 import { listBookings, listOpenRequests, UNDO_MS } from "@/db/bookings";
+import { dancerNotesFor, firstNoteLine } from "@/db/dancer-notes";
 import { bookings } from "@/db/schema";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
@@ -46,6 +47,11 @@ export default async function BookingsPage({
   const now = Date.now();
   const requests = listOpenRequests(db, now);
   const approved = listBookings(db, now - 30 * DAY, now + 90 * DAY, ["approved"]);
+  // The first line of Nina's note about each dancer, in one query (#697).
+  const noteOf = dancerNotesFor(
+    db,
+    [...requests, ...approved].map(({ booking }) => booking),
+  );
   // The Undo button of the last tap (#573): only while the undo time of the server runs; a later load shows none.
   const decided = Number.isInteger(Number(id))
     ? db
@@ -99,6 +105,13 @@ export default async function BookingsPage({
                 </Link>
               </p>
             )}
+            {firstNoteLine(noteOf, booking) !== null && (
+              <p>
+                <Link className={styles.dancerNote} href={`/studio/dancer/${booking.id}?back=%2Fstudio%2Fbookings`}>
+                  {firstNoteLine(noteOf, booking)}
+                </Link>
+              </p>
+            )}
             {booking.email !== "" && (
               <p>
                 <a className={styles.link} href={`mailto:${booking.email}`}>
@@ -148,6 +161,13 @@ export default async function BookingsPage({
               <p>
                 <Link className={styles.link} href={`/studio/dancer/${booking.id}?back=%2Fstudio%2Fbookings`}>
                   {dancerT("link")}
+                </Link>
+              </p>
+            )}
+            {firstNoteLine(noteOf, booking) !== null && (
+              <p>
+                <Link className={styles.dancerNote} href={`/studio/dancer/${booking.id}?back=%2Fstudio%2Fbookings`}>
+                  {firstNoteLine(noteOf, booking)}
                 </Link>
               </p>
             )}
