@@ -228,7 +228,13 @@ export function cancelEmail(
  * The email to the dancer after Nina moved a booking (#410), in the language of the booking: the old and the new time.
  * An approved booking gets the calendar file with the new time and the next sequence: the event moves in the calendar.
  */
-export function moveEmail(booking: Booking, offer: Offer, from: { start: number }, origin = siteOrigin()): Email {
+export function moveEmail(
+  booking: Booking,
+  offer: Offer,
+  from: { start: number },
+  origin = siteOrigin(),
+  again = false,
+): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -238,6 +244,7 @@ export function moveEmail(booking: Booking, offer: Offer, from: { start: number 
       from: whenText(booking.locale in MESSAGES ? booking.locale : "en", from.start),
       when,
     }),
+    ...(again ? ["", t("bookingEmail.moveAgain")] : []),
     "",
     t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
     "",
@@ -421,12 +428,14 @@ export async function moveEmailHtml(
   offer: Offer,
   from: { start: number },
   origin = siteOrigin(),
+  again = false,
 ): Promise<Email> {
-  const email = moveEmail(booking, offer, from, origin);
+  const email = moveEmail(booking, offer, from, origin, again);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const lang = langOf(booking.locale);
   return withHtml(email, { lang, name: booking.name, t }, [
     { text: t("bookingEmail.move", { offer: offerLabel, from: whenText(lang, from.start), when }) },
+    ...(again ? [{ text: t("bookingEmail.moveAgain") }] : []),
     cancelBlock(t, cancelUrl(origin, booking)),
     { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
@@ -534,14 +543,19 @@ export async function sendCancelEmail(
 
 /**
  * Send the move email after `moveBooking()` gave `ok`. A failed email does not undo the move: the error is logged,
- * and the moved booking stays.
+ * and the moved booking stays. `again`: an approved booking that the dancer moved waits for Nina again (#649).
  */
-export async function sendMoveEmail(db: Db, booking: Booking, from: { start: number; end: number }): Promise<void> {
+export async function sendMoveEmail(
+  db: Db,
+  booking: Booking,
+  from: { start: number; end: number },
+  again = false,
+): Promise<void> {
   if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(await moveEmailHtml(booking, offer, from));
+    await sendEmail(await moveEmailHtml(booking, offer, from, siteOrigin(), again));
   } catch (error) {
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
     recordError("email: move", error);

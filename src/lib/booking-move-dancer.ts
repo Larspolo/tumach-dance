@@ -1,7 +1,7 @@
 // The move of a waiting request by the dancer with the link of the email (#648, epic #646). Only a `requested`
-// booking moves: a moved request still waits for Nina. An approved booking shows "Ask Nina" until #647 is answered.
+// or `approved` booking moves; the moved booking waits for Nina again (Nina's answer B on #647, #649).
 import type { Db } from "../db";
-import { type Booking, moveBooking } from "../db/bookings";
+import { type Booking, moveBookingToRequest } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { cancelLink } from "./booking-cancel";
 
@@ -10,15 +10,13 @@ export type MoveLink =
   | { state: "open" | "approved" | "cancelled" | "declined" | "started"; booking: Booking; offer: Offer }
   | { state: "not-found" };
 
-/** The booking of `token` and its move state at `now`: the states of `cancelLink()`, and `approved`. */
+/** The booking of `token` and its move state at `now`: the states of `cancelLink()`. */
 export function moveLink(db: Db, token: string, now = Date.now()): MoveLink {
-  const link = cancelLink(db, token, now);
-  if (link.state === "open" && link.booking.status === "approved") return { ...link, state: "approved" };
-  return link;
+  return cancelLink(db, token, now);
 }
 
 export type MoveByDancerResult =
-  | { ok: true; booking: Booking; from: { start: number; end: number } }
+  | { ok: true; booking: Booking; from: { start: number; end: number }; wasApproved: boolean }
   | { ok: false; state: Exclude<MoveLink["state"], "open"> | "taken" };
 
 /**
@@ -28,8 +26,8 @@ export type MoveByDancerResult =
 export function moveByDancer(db: Db, token: string, to: number, now = Date.now()): MoveByDancerResult {
   const link = moveLink(db, token, now);
   if (link.state !== "open") return { ok: false, state: link.state };
-  const result = moveBooking(db, link.booking.id, to, { now });
-  if (result.ok) return result;
+  const result = moveBookingToRequest(db, link.booking.id, to, { now });
+  if (result.ok) return { ...result, wasApproved: link.booking.status === "approved" };
   if (result.reason === "taken" || result.reason === "notSlot") return { ok: false, state: "taken" };
   if (result.reason === "started") return { ok: false, state: "started" };
   return { ok: false, state: "cancelled" };
