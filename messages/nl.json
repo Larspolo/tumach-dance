@@ -1,7 +1,7 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen, groepslessen en een studio om te huren.",
+    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen en een studio om te huren.",
     "eyebrow": "Dansstudio · Amsterdam",
     "primaryAction": "Boek een les",
     "secondaryAction": "Bekijk de prijzen",
@@ -32,7 +32,7 @@
     "contact": {
       "title": "Zeg hallo",
       "label": "(03) Contact",
-      "text": "Een vraag over een les, een groepsles of de studio? Stuur me een bericht, dan antwoord ik snel.",
+      "text": "Een vraag over een les of de studio? Stuur me een bericht, dan antwoord ik snel.",
       "name": "Je naam",
       "email": "Je e-mail",
       "message": "Je bericht",
@@ -612,7 +612,7 @@
     "imageAlt": "TUMACH, de dansstudio in Amsterdam",
     "home": {
       "title": "TUMACH · Dansstudio in Amsterdam",
-      "description": "Privélessen, groepslessen en een dansstudio om te huren in Amsterdam. Bekijk de tijden en boek online, zonder account."
+      "description": "Privé-danslessen en een dansstudio om te huren in Amsterdam. Bekijk de prijzen en boek online, zonder account."
     },
     "book": {
       "title": "Les boeken · TUMACH",
