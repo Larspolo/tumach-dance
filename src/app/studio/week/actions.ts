@@ -7,7 +7,7 @@ import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
 import { addBooking, cancelBooking, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
-import { cancelDay as cancelDayBookings } from "@/lib/booking-cancel-day";
+import { cancelDay as cancelDayBookings, sendCancelDayEmails } from "@/lib/booking-cancel-day";
 import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
 import { repeatBooking } from "@/lib/booking-repeat";
@@ -147,7 +147,7 @@ export async function cancelDay(form: FormData): Promise<void> {
   const db = getDb();
   const result = cancelDayBookings(db, String(form.get("day") ?? ""));
   if (!result.ok) redirect(`/studio/week?start=${week.start}`);
-  for (const { booking, wasApproved } of result.cancelled) await sendCancelEmail(db, booking, "nina", wasApproved);
+  await sendCancelDayEmails(db, result.cancelled);
   revalidatePath("/studio/week");
   redirect(`/studio/week?start=${week.start}&dayCancelled=${result.cancelled.length}`);
 }

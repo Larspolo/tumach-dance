@@ -120,7 +120,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:repeat` (#676) Nina repeats the weekly lesson of a regular dancer
   - From an approved booking, Nina repeats it each week for the next weeks in a few taps; a week whose time is not free is not booked, and the app names it
   - Each new booking is a normal approved booking with the same offer, time and price; a dancer with an email gets one email with all the new dates
-- [ ] `nina:sick` (#690) Nina cancels all the lessons of one day when she is sick
+- [x] `nina:sick` (#690) Nina cancels all the lessons of one day when she is sick
   - From a day in her app, Nina cancels each requested and approved booking of that day in two taps; the day closes, so the booking page offers no time on it
   - Each dancer gets one cancel email with a link to book another time, and the calendar file removes the event
 - [x] `nina:remember` (#691) Nina keeps a private note about a dancer
