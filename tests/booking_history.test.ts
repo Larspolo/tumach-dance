@@ -71,7 +71,7 @@ test("a booking with no events gives the events of its row", () => {
     { at: NOW + 20, kind: "paid", by: "site", fromStart: null },
   ]);
   recordBookingEvent(db, row.id, "undone", "nina", { at: NOW + 30 });
-  expect(bookingHistory(db, row.id).map((e) => e.kind)).toEqual(["undone"]);
+  expect(bookingHistory(db, row.id).map((e) => e.kind)).toEqual(["requested", "approved", "paid", "undone"]);
   expect(bookingHistory(db, 999)).toEqual([]);
 });
 
@@ -106,7 +106,7 @@ test("the migration applies on an empty database and on a database with bookings
   const again = openDb(file);
   expect(bookingHistory(again, 1).map((e) => e.kind)).toEqual(["requested"]);
   recordBookingEvent(again, 1, "approved", "nina", { at: NOW + 1 });
-  expect(bookingHistory(again, 1).map((e) => e.kind)).toEqual(["approved"]);
+  expect(bookingHistory(again, 1).map((e) => e.kind)).toEqual(["requested", "approved"]);
   rmSync(file, { force: true });
 });
 
