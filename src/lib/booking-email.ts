@@ -59,9 +59,9 @@ function replyToNina(): Pick<Email, "replyTo"> {
 }
 
 /** The calendar file of a booking as an email attachment (#166, #385). */
-function icsAttachment(booking: Booking, offer: Offer, cancel = false) {
+function icsAttachment(booking: Booking, offer: Offer, cancel = false, filename = "tumach.ics") {
   return {
-    filename: "tumach.ics",
+    filename,
     contentType: "text/calendar",
     content: bookingEvent(booking, offer, booking.locale, cancel),
   };
@@ -228,6 +228,39 @@ export function moveEmail(booking: Booking, offer: Offer, from: { start: number 
     subject: t("bookingEmail.moveSubject"),
     text,
     ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+/**
+ * The one email after `repeatBooking()` (#678): every new date in Amsterdam time with its own cancel link, and one
+ * calendar file per date (one event each, so each lesson imports on its own). In the language of the first booking:
+ * the repeat copies the locale of the source.
+ */
+export function repeatEmail(added: Booking[], offer: Offer, origin = siteOrigin()): Email {
+  const [first] = added;
+  const { t, offerLabel } = parts(first, offer, first.locale);
+  const lang = first.locale in MESSAGES ? first.locale : "en";
+  const lines = added.map((b) =>
+    t("bookingEmail.repeatLine", { when: whenText(lang, b.start), url: cancelUrl(origin, b) }),
+  );
+  const text = [
+    t("bookingEmail.greeting", { name: first.name }),
+    "",
+    t("bookingEmail.repeatBody", { offer: offerLabel }),
+    "",
+    ...lines,
+    "",
+    t("bookingEmail.repeatCancel"),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  const attachments = added.map((b, i) => icsAttachment(b, offer, false, `tumach-${i + 1}.ics`));
+  return {
+    to: first.email,
+    subject: t("bookingEmail.repeatSubject"),
+    text,
+    attachments,
     ...replyToNina(),
   };
 }
@@ -480,5 +513,22 @@ export async function sendMoveEmail(db: Db, booking: Booking, from: { start: num
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
     recordError("email: move", error);
     await sendEmailFailPush(db, booking, "move");
+  }
+}
+
+/**
+ * Send the one email after `repeatBooking()` (#678) with all the new dates. Nothing for no new booking or a dancer
+ * with no email. A failed send does not undo the repeat: the error is logged, and the new bookings stay.
+ */
+export async function sendRepeatEmail(db: Db, added: Booking[]): Promise<void> {
+  const [first] = added;
+  if (!first || !hasEmail(first)) return;
+  try {
+    const offer = db.select().from(offers).where(eq(offers.id, first.offerId)).get();
+    if (!offer) throw new Error(`Booking email: offer ${first.offerId} not found`);
+    await sendEmail(repeatEmail(added, offer));
+  } catch (error) {
+    console.error(`[booking-email] the repeat email of booking ${first.id} failed:`, error);
+    recordError("email: repeat", error);
   }
 }
