@@ -43,6 +43,25 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
 }
 
 /**
+ * The push of a request that the dancer moved with the link (#648): the name, the old and the new time in Amsterdam
+ * time, with a link to the week of the new time.
+ */
+export function movePush(booking: Booking, from: { start: number }, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  const format = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, dateStyle: "medium", timeStyle: "short" });
+  const day = DateTime.fromMillis(booking.start, { zone: TIME_ZONE }).toISODate() ?? undefined;
+  return {
+    title: t("bookingPush.moveTitle"),
+    body: t("bookingPush.moveBody", {
+      name: booking.name,
+      from: format.format(new Date(from.start)),
+      to: format.format(new Date(booking.start)),
+    }),
+    url: `/studio/week?start=${weekOf(day).start}`,
+  };
+}
+
+/**
  * The email of the site to a dancer that can fail (#414, `unanswered`: #421). `bounce`: Mailgun sent an email, and the
  * server of the dancer refused it (#494, `email-bounce.ts`).
  */
@@ -112,6 +131,15 @@ export async function sendCancelPush(db: Db, booking: Booking): Promise<void> {
     await sendPush(db, (locale) => cancelPush(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-push] the cancel push of booking ${booking.id} failed:`, error);
+  }
+}
+
+/** Send the push after `moveByDancer()` gave `ok`. A failed push does not undo the move: the error is logged. */
+export async function sendMovePush(db: Db, booking: Booking, from: { start: number }): Promise<void> {
+  try {
+    await sendPush(db, (locale) => movePush(booking, from, locale));
+  } catch (error) {
+    console.error(`[booking-push] the move push of booking ${booking.id} failed:`, error);
   }
 }
 

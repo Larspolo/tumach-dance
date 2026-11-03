@@ -348,7 +348,9 @@
     "emailFailUnanswered": "{name} kreeg de e-mail over de open aanvraag niet.",
     "emailFailBounce": "De e-mail aan {name} kwam terug: het adres bestaat niet. Vraag {name} om het juiste adres.",
     "limitTitle": "Veel aanvragen vandaag",
-    "limitBody": "De boekingspagina kreeg veel aanvragen in 24 uur, misschien van een bot. Tot morgen neemt ze geen nieuwe aanvragen aan."
+    "limitBody": "De boekingspagina kreeg veel aanvragen in 24 uur, misschien van een bot. Tot morgen neemt ze geen nieuwe aanvragen aan.",
+    "moveTitle": "Aanvraag verzet",
+    "moveBody": "{name} verzette de aanvraag van {from} naar {to}."
   },
   "StudioBookings": {
     "title": "Boekingen",
@@ -483,7 +485,8 @@
     "declined": "Nina heeft deze aanvraag niet aangenomen: er is niets te annuleren.",
     "started": "Deze boeking is begonnen: je kunt hem niet meer annuleren met de link.",
     "contact": "Schrijf Nina",
-    "contactText": "Een vraag, of kun je niet komen?"
+    "contactText": "Een vraag, of kun je niet komen?",
+    "move": "Kies een andere tijd"
   },
   "Privacy": {
     "title": "Privacy",
@@ -523,6 +526,9 @@
     },
     "cancel": {
       "title": "Een boeking annuleren · TUMACH"
+    },
+    "move": {
+      "title": "Kies een andere tijd · TUMACH"
     }
   },
   "StudioNotFound": {
@@ -613,5 +619,19 @@
       "declined": "Afgewezen",
       "cancelled": "Geannuleerd"
     }
+  },
+  "MoveBooking": {
+    "title": "Kies een andere tijd",
+    "booking": "Je aanvraag: {offer}, {when}.",
+    "day": "Tik op een dag:",
+    "time": "Tik op een tijd op {day}:",
+    "ask": "Je aanvraag verzetten naar {day}, {time}?",
+    "yes": "Ja, verzetten",
+    "otherDay": "Een andere dag",
+    "back": "Terug",
+    "none": "Er is geen andere vrije tijd in de komende 4 weken.",
+    "taken": "Iemand nam deze tijd net. Kies een andere tijd.",
+    "done": "Je aanvraag heeft de nieuwe tijd. Nina geeft nog antwoord. Je krijgt een e-mail.",
+    "approved": "Nina heeft deze boeking al goedgekeurd. Vraag Nina om hem te verzetten."
   }
 }
