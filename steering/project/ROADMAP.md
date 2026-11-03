@@ -141,7 +141,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:guide` (#774) Nina finds how to do each task of her studio app
   - The studio home links to a guide with a short part for each task of the app (the daily tasks and the rare cases), each with at most 3 steps, in English and Dutch
   - Each new page of the studio app gets its part in the guide (a test)
-- [ ] `nina:history` (#813) Nina sees what happened to each booking
+- [x] `nina:history` (#813) Nina sees what happened to each booking
   - Each booking in her app lists its events with the date and time: the request, the approval or decline, each move with the old time, the cancel, the payment
   - Each event names who did it: the dancer (with the link in the email), Nina, or the site (a request with no answer in time)
 
