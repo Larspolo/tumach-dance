@@ -702,6 +702,11 @@
   "StudioShare": {
     "free": "Free times in the next 7 days:",
     "none": "No free time in the next 7 days.",
-    "link": "Book here: {link}"
+    "link": "Book here: {link}",
+    "share": "Share free times",
+    "language": "Language",
+    "copied": "Copied. Paste it in a message.",
+    "languageEn": "English",
+    "languageNl": "Dutch"
   }
 }
