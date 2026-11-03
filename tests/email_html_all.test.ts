@@ -62,7 +62,7 @@ function cases(booking: ReturnType<typeof booked>["booking"], offer: ReturnType<
     },
     {
       name: "cancel",
-      plain: cancelEmail(booking, offer),
+      plain: cancelEmail(booking, offer, "nina", false, ORIGIN),
       html: () => cancelEmailHtml(booking, offer, "nina", false, ORIGIN),
     },
     {
