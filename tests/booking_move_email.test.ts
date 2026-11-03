@@ -75,7 +75,7 @@ describe("moveEmail", () => {
     expect(email.text).toContain(
       "Nina moved your booking: Private lesson, 60 min. It was Sunday, October 25, 2026 at 10:00 AM. The new time is Sunday, November 1, 2026 at 2:00 PM.",
     );
-    expect(email.text).toContain("Cancel the booking with this link");
+    expect(email.text).toContain("Move or cancel the booking with this link");
     expect(email.text).toMatch(/https:\/\/tumach\.dance\/en\/booking\/cancel\S+/);
   });
 

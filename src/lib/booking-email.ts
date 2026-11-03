@@ -113,7 +113,7 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
               })
             : t("bookingEmail.payLater", { price: priceText(booking.priceCents, booking.locale) }),
           "",
-          t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+          t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
           "",
           t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
           "",
@@ -177,10 +177,7 @@ function approvedHtml(
             button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
           }
         : { text: t("bookingEmail.payLater", { price }) },
-      {
-        text: t("bookingEmail.cancelText"),
-        button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
-      },
+      moveOrCancelBlock(t, cancelUrl(origin, booking)),
       { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
       { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
       { text: t("bookingEmail.approvedSee") },
@@ -246,7 +243,7 @@ export function moveEmail(
     }),
     ...(again ? ["", t("bookingEmail.moveAgain")] : []),
     "",
-    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
     "",
     t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
     "",
@@ -378,12 +375,7 @@ async function withHtml(
   return { ...email, html };
 }
 
-/** The block with the cancel button (#440), the same text as the cancel link of the plain part. */
-function cancelBlock(t: Translator, url: string): EmailBlock {
-  return { text: t("bookingEmail.cancelText"), button: { label: t("bookingEmail.cancelButton"), url } };
-}
-
-/** The block of the request email (#650): the move and the cancel. Approved bookings keep `cancelBlock()` (#647). */
+/** The block with the move and the cancel button (#650, #647): the same text as the link of the plain part. */
 function moveOrCancelBlock(t: Translator, url: string): EmailBlock {
   return { text: t("bookingEmail.moveOrCancelText"), button: { label: t("bookingEmail.moveOrCancelButton"), url } };
 }
@@ -441,7 +433,7 @@ export async function moveEmailHtml(
   return withHtml(email, { lang, name: booking.name, t }, [
     { text: t("bookingEmail.move", { offer: offerLabel, from: whenText(lang, from.start), when }) },
     ...(again ? [{ text: t("bookingEmail.moveAgain") }] : []),
-    cancelBlock(t, cancelUrl(origin, booking)),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
     { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
@@ -468,7 +460,7 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
     ...addressLines(t)
       .filter(Boolean)
       .map((text) => ({ text })),
-    cancelBlock(t, cancelUrl(origin, booking)),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
     { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
     { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
     { text: t("bookingEmail.approvedSee") },

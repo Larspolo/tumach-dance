@@ -1,6 +1,6 @@
-// The cancel link of the emails (#650): the request email names the move (a waiting request can move), the approved and
-// the reminder email keep the cancel texts (Nina's answer C on #647: an approved booking cannot move). The HTML part and
-// the plain text of each email have the same cancel link.
+// The cancel link of the emails (#650, #805): the request, approved, move and reminder emails name the move (Nina's
+// answer B on #647: an approved booking moves, and the new time waits for her approval again). The HTML part and the
+// plain text of each email have the same link.
 import { DateTime } from "luxon";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { openDb } from "../src/db";
@@ -8,6 +8,7 @@ import { requestBooking } from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
 import {
   decisionEmail,
+  decisionEmailHtml,
   reminderEmail,
   reminderEmailHtml,
   requestEmail,
@@ -92,23 +93,57 @@ describe("request email names the move (#650)", () => {
   });
 });
 
-describe("approved and reminder emails keep the cancel texts (#647 C)", () => {
-  test("the approval email: the cancel link, not the move", () => {
+describe("approved, move and reminder emails name the move (#805)", () => {
+  test("English approval email: the move and the cancel with the link", () => {
     const { booking, offer } = booked("en");
     const email = decisionEmail(booking, offer, "approved", ORIGIN);
-    expect(email.text).toContain("Can you not come? Cancel the booking with this link");
-    expect(email.text).not.toContain("Move or cancel");
+    expect(email.text).toContain(
+      "Another time, or can you not come? Move or cancel the booking with this link, at any time before the start:",
+    );
+    expect(email.text).not.toContain("Can you not come? Cancel the booking with this link");
   });
 
-  test("the reminder email: the cancel button, not the move; the HTML link is the cancel link", async () => {
+  test("Dutch approval email: the move and the cancel with the link", () => {
+    const { booking, offer } = booked("nl");
+    const email = decisionEmail(booking, offer, "approved", ORIGIN);
+    expect(email.text).toContain(
+      "Een andere tijd, of kun je niet komen? Verplaats of annuleer de boeking met deze link",
+    );
+  });
+
+  test("the approval HTML part names the move with the button", async () => {
+    const { booking, offer } = booked("en");
+    const mail = await decisionEmailHtml(booking, offer, "approved", ORIGIN);
+    const html = mail.html as string;
+    expect(html).toContain("Move or cancel the booking</");
+    expect(html).toContain("Another time, or can you not come?");
+    expect(html).not.toContain("Cancel the booking</");
+  });
+
+  test("the Dutch approval HTML part names the move in Dutch", async () => {
+    const { booking, offer } = booked("nl");
+    const mail = await decisionEmailHtml(booking, offer, "approved", ORIGIN);
+    const html = mail.html as string;
+    expect(html).toContain("Boeking verplaatsen of annuleren</");
+    expect(html).toContain("Een andere tijd, of kun je niet komen?");
+  });
+
+  test("the reminder email: the move and the cancel button; the HTML link is the cancel link", async () => {
     // The plain text of the reminder has no cancel link (not changed by #650): only the HTML part is checked here.
     const { booking, offer } = booked("en");
     const plain = reminderEmail(booking, offer, ORIGIN);
     expect(plain.text).not.toMatch(CANCEL_LINK);
     const mail = await reminderEmailHtml(booking, offer, ORIGIN);
     const html = mail.html as string;
-    expect(html).toContain("Cancel the booking</");
-    expect(html).not.toContain("Move or cancel");
+    expect(html).toContain("Move or cancel the booking</");
     expect(html).toMatch(/https:\/\/tumach\.dance\/en\/booking\/cancel\S+/);
+  });
+
+  test("the Dutch reminder HTML part names the move in Dutch", async () => {
+    const { booking, offer } = booked("nl");
+    const mail = await reminderEmailHtml(booking, offer, ORIGIN);
+    const html = mail.html as string;
+    expect(html).toContain("Boeking verplaatsen of annuleren</");
+    expect(html).toContain("Een andere tijd, of kun je niet komen?");
   });
 });
