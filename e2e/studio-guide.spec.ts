@@ -1,4 +1,4 @@
-// The guide for Nina (#45): seventeen parts in each language, a picture or a button name for each step.
+// The guide for Nina (#45): the parts in each language, a picture or a button name for each step.
 import { expect, test } from "@playwright/test";
 import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
@@ -6,7 +6,7 @@ import nl from "../messages/nl.json" with { type: "json" };
 const MESSAGES = { en, nl };
 
 for (const [locale, m] of Object.entries(MESSAGES)) {
-  test(`/${locale}/studio-guide shows the seventeen parts with their pictures`, async ({ page }) => {
+  test(`/${locale}/studio-guide shows the parts with their pictures`, async ({ page }) => {
     await page.goto(`/${locale}/studio-guide`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(m.StudioGuide.title);
     for (const title of [

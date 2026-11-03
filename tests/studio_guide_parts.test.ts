@@ -5,7 +5,7 @@ import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
 
 describe("GUIDE_PARTS", () => {
-  it("has the 17 parts in order", () => {
+  it("has the 25 parts in order", () => {
     expect(GUIDE_PARTS.map((p) => p.id)).toEqual([
       "login",
       "install",
@@ -24,6 +24,14 @@ describe("GUIDE_PARTS", () => {
       "note",
       "whatsapp",
       "share",
+      "hours",
+      "offers",
+      "classes",
+      "news",
+      "photos",
+      "messages",
+      "devices",
+      "nina",
     ]);
   });
   for (const part of GUIDE_PARTS) {
