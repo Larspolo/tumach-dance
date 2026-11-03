@@ -571,6 +571,7 @@
     "count": "Goedgekeurde boekingen",
     "paid": "Betaald",
     "open": "Nog niet betaald",
+    "yearTitle": "Het jaar {year}",
     "unpaidTitle": "Nog niet betaald",
     "allPaid": "Alle boekingen van deze maand zijn betaald.",
     "previous": "← {month}",
