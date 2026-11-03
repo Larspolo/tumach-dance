@@ -2,7 +2,8 @@
 // studio page that it explains, a title key and up to 3 step keys of `StudioGuide` in `messages/`. A step with an
 // image shows the picture `public/guide/<locale>/<image>.png` (`e2e/guide-screenshots.spec.ts`).
 export type GuideStep = { key: string; image?: string };
-export type GuidePart = { id: string; page: string; title: string; steps: GuideStep[] };
+// `also`: other studio pages that the part explains too (the page "For Nina" is `questions` and `feedback`, #779).
+export type GuidePart = { id: string; page: string; also?: string[]; title: string; steps: GuideStep[] };
 
 export const GUIDE_PARTS: GuidePart[] = [
   {
@@ -110,5 +111,54 @@ export const GUIDE_PARTS: GuidePart[] = [
     page: "/studio/offers",
     title: "shareTitle",
     steps: [{ key: "shareOpen" }, { key: "shareSend" }],
+  },
+  {
+    id: "hours",
+    page: "/studio/hours",
+    title: "hoursTitle",
+    steps: [{ key: "hoursOpen" }, { key: "hoursSet" }, { key: "hoursSave" }],
+  },
+  {
+    id: "offers",
+    page: "/studio/offers",
+    title: "offersTitle",
+    steps: [{ key: "offersOpen" }, { key: "offersChange" }, { key: "offersAdd" }],
+  },
+  {
+    id: "classes",
+    page: "/studio/classes",
+    title: "classesTitle",
+    steps: [{ key: "classesOpen" }, { key: "classesAdd" }, { key: "classesTime" }],
+  },
+  {
+    id: "news",
+    page: "/studio/news",
+    title: "newsTitle",
+    steps: [{ key: "newsOpen" }, { key: "newsSave" }, { key: "newsRemove" }],
+  },
+  {
+    id: "photos",
+    page: "/studio/photos",
+    title: "photosTitle",
+    steps: [{ key: "photosOpen" }, { key: "photosAdd" }, { key: "photosRemove" }],
+  },
+  {
+    id: "messages",
+    page: "/studio/messages",
+    title: "messagesTitle",
+    steps: [{ key: "messagesOpen" }, { key: "messagesSend" }],
+  },
+  {
+    id: "devices",
+    page: "/studio/devices",
+    title: "devicesTitle",
+    steps: [{ key: "devicesOpen" }, { key: "devicesLogOut" }],
+  },
+  {
+    id: "nina",
+    page: "/studio/questions",
+    also: ["/studio/feedback"],
+    title: "ninaTitle",
+    steps: [{ key: "ninaQuestions" }, { key: "ninaFeedback" }],
   },
 ];
