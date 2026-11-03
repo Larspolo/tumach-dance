@@ -58,7 +58,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:closed` (#529) Dancers see when a class does not take place or the studio is closed
   - The schedule of the home page names each date in the next 4 weeks on which a class does not take place (a holiday), with no extra step by Nina for a period that she already closed in her hours
   - The home page shows a closed period of the studio from 4 weeks before it until its end, in the language of the page
-- [ ] `site:news` Nina tells the dancers what is new on the home page
+- [x] `site:news` (#652) Nina tells the dancers what is new on the home page
   - Nina writes a short note (a workshop, a new class, a change) in her app in a few taps, with an optional end date; the home page shows it until that date, then hides it by itself
   - Nina writes the note once; the page of each language shows it
 
