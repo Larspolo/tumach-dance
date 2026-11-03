@@ -74,4 +74,6 @@ test("the dancer moves a waiting request in 4 taps, and the old time is free aga
   const day = bookingDays(db, offer).find((d) => d.date === from.date);
   expect(day?.slots.some((s) => s.start === slot.start)).toBe(true);
   await expect.poll(() => emailsTo(email).length).toBe(1);
+  // Leave no extra request on the requests page of Nina: later tests tab through it (whatsapp-tap.spec.ts).
+  db.update(bookings).set({ status: "cancelled" }).where(eq(bookings.id, booking.id)).run();
 });
