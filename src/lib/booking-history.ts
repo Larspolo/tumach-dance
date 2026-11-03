@@ -23,8 +23,9 @@ export function recordBookingEvent(
 }
 
 /**
- * The events of a booking, oldest first. A booking with no events (stored before #814) gives the events of its row:
- * `createdAt` (requested), `approvedAt` (approved) and `paidAt` (paid).
+ * The events of a booking, oldest first. A booking with no `requested` and no `added` event (stored before #814)
+ * also gives the events of its row (#831): `createdAt` (requested), `approvedAt` (approved, when no stored event is
+ * `approved`) and `paidAt` (paid, when no stored event is `paid` or `unpaid`).
  */
 export function bookingHistory(db: DbOrTx, bookingId: number): BookingEvent[] {
   const events = db
@@ -38,13 +39,17 @@ export function bookingHistory(db: DbOrTx, bookingId: number): BookingEvent[] {
     .where(eq(bookingEvents.bookingId, bookingId))
     .orderBy(asc(bookingEvents.at), asc(bookingEvents.id))
     .all();
-  if (events.length > 0) return events;
+  const has = (...kinds: BookingEventKind[]) => events.some((e) => kinds.includes(e.kind));
+  if (has("requested", "added")) return events;
   const row = db.select().from(bookings).where(eq(bookings.id, bookingId)).get();
-  if (!row) return [];
+  if (!row) return events;
   const fromRow: BookingEvent[] = [{ at: row.createdAt, kind: "requested", by: "dancer", fromStart: null }];
-  if (row.approvedAt !== null) fromRow.push({ at: row.approvedAt, kind: "approved", by: "nina", fromStart: null });
-  if (row.paidAt !== null) fromRow.push({ at: row.paidAt, kind: "paid", by: "site", fromStart: null });
-  return fromRow;
+  if (row.approvedAt !== null && !has("approved"))
+    fromRow.push({ at: row.approvedAt, kind: "approved", by: "nina", fromStart: null });
+  if (row.paidAt !== null && !has("paid", "unpaid"))
+    fromRow.push({ at: row.paidAt, kind: "paid", by: "site", fromStart: null });
+  // A stable sort: at the same instant the row events come first, then the stored order.
+  return [...fromRow, ...events].sort((x, y) => x.at - y.at);
 }
 
 /** The date and the time of an event in Amsterdam time, for example "Nov 3, 2026, 14:05" (`locale` "en"). */
