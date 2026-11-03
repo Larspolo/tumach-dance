@@ -453,6 +453,16 @@ export function listOpenRequests(db: Db, now = Date.now()): { booking: Booking; 
     .all();
 }
 
+/** The count of the requests that wait for Nina, the same condition as `listOpenRequests()` (#659). */
+export function countOpenRequests(db: Db, now = Date.now()): number {
+  const row = db
+    .select({ n: sql<number>`count(*)` })
+    .from(bookings)
+    .where(and(eq(bookings.status, "requested"), gt(bookings.start, now)))
+    .get();
+  return row?.n ?? 0;
+}
+
 /** One `approved` booking with its offer (#535: the calendar file of Nina), or null. */
 export function getApprovedBooking(db: Db, id: number): { booking: Booking; offer: Offer } | null {
   return (

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
+import { countOpenRequests } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { getCalendarToken } from "@/lib/calendar-token";
@@ -31,6 +32,8 @@ export default async function StudioPage() {
   const questionCount = await countNinaQuestions();
   // The count of unanswered contact messages (#533).
   const messageCount = countUnanswered(getDb());
+  // The count of the requests that wait for Nina's answer (#659).
+  const requestCount = countOpenRequests(getDb());
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
@@ -39,7 +42,7 @@ export default async function StudioPage() {
       <PushButtons vapidKey={vapidPublicKey()} />
       <p className={styles.tileRow}>
         <Link className={styles.tile} href="/studio/bookings">
-          {t("bookings")}
+          {requestCount ? t("bookingsCount", { count: requestCount }) : t("bookings")}
         </Link>
       </p>
       <p>

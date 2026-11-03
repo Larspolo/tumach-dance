@@ -107,6 +107,7 @@
     "offers": "Offers",
     "hours": "Hours",
     "bookings": "Bookings",
+    "bookingsCount": "Bookings ({count} waiting)",
     "calendarAdd": "Add to my calendar",
     "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
     "calendarRenew": "Make a new address",
