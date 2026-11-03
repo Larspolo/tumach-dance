@@ -26,7 +26,7 @@ test.afterAll(async () => {
 
 test("with no photos the home page has no photo section", async ({ page }) => {
   await page.goto("/en");
-  await expect(page.locator("#classes")).toBeVisible();
+  await expect(page.locator("#about")).toBeVisible();
   await expect(page.locator("#photos")).toHaveCount(0);
 });
 

@@ -1,10 +1,10 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen, groepslessen en een studio om te huren.",
+    "welcome": "Kom zoals je bent en dans in je eigen tempo: privélessen en een studio om te huren.",
     "eyebrow": "Dansstudio · Amsterdam",
     "primaryAction": "Boek een les",
-    "secondaryAction": "Bekijk het rooster",
+    "secondaryAction": "Bekijk de prijzen",
     "imageBlock": "De dansstudio TUMACH",
     "news": {
       "title": "Nieuws"
@@ -26,35 +26,14 @@
     "offers": {
       "title": "Prijzen",
       "label": "(02) Prijzen",
-      "book": "Boek"
-    },
-    "classes": {
-      "title": "Lessen",
-      "label": "(03) Lessen",
-      "none": "Nog geen lessen."
-    },
-    "schedule": {
-      "title": "Elke week",
-      "label": "(04) Rooster",
-      "none": "Nog geen lestijden.",
-      "days": {
-        "mon": "maandag",
-        "tue": "dinsdag",
-        "wed": "woensdag",
-        "thu": "donderdag",
-        "fri": "vrijdag",
-        "sat": "zaterdag",
-        "sun": "zondag"
-      },
-      "time": "{from}–{to}",
+      "book": "Boek",
       "closedDay": "Gesloten op {date, date, ::dMMMM}.",
-      "closedPeriod": "Gesloten van {from, date, ::dMMMM} tot en met {to, date, ::dMMMM}.",
-      "noClass": "Geen les op {date, date, ::dMMMM}."
+      "closedPeriod": "Gesloten van {from, date, ::dMMMM} tot en met {to, date, ::dMMMM}."
     },
     "contact": {
       "title": "Zeg hallo",
-      "label": "(05) Contact",
-      "text": "Een vraag over een les, een groepsles of de studio? Stuur me een bericht, dan antwoord ik snel.",
+      "label": "(03) Contact",
+      "text": "Een vraag over een les of de studio? Stuur me een bericht, dan antwoord ik snel.",
       "name": "Je naam",
       "email": "Je e-mail",
       "message": "Je bericht",
@@ -76,8 +55,6 @@
     "about": "Over",
     "offers": "Prijzen",
     "photos": "Foto's",
-    "classes": "Lessen",
-    "schedule": "Rooster",
     "contact": "Contact",
     "book": "Boeken"
   },
@@ -635,7 +612,7 @@
     "imageAlt": "TUMACH, de dansstudio in Amsterdam",
     "home": {
       "title": "TUMACH · Dansstudio in Amsterdam",
-      "description": "Privélessen, groepslessen en een dansstudio om te huren in Amsterdam. Bekijk de tijden en boek online, zonder account."
+      "description": "Privé-danslessen en een dansstudio om te huren in Amsterdam. Bekijk de prijzen en boek online, zonder account."
     },
     "book": {
       "title": "Les boeken · TUMACH",
