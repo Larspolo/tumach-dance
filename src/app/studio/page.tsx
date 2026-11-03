@@ -42,6 +42,11 @@ export default async function StudioPage() {
           {t("bookings")}
         </Link>
       </p>
+      <p>
+        <Link className={styles.link} href="/studio/money">
+          {t("money")}
+        </Link>
+      </p>
       <p className={styles.tileRow}>
         <Link className={styles.tile} href="/studio/messages">
           {messageCount ? t("messagesCount", { count: messageCount }) : t("messages")}
