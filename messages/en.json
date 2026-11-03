@@ -476,7 +476,12 @@
     "cancelDayAsk": "{count, plural, one {Cancel # booking and close this day? Each dancer gets an email.} other {Cancel # bookings and close this day? Each dancer gets an email.}}",
     "cancelDayYes": "Yes, cancel the day",
     "cancelDayNo": "No",
-    "cancelDayDone": "{count, plural, one {Cancelled # booking. The day is closed.} other {Cancelled # bookings. The day is closed.}}"
+    "cancelDayDone": "{count, plural, one {Cancelled # booking. The day is closed.} other {Cancelled # bookings. The day is closed.}}",
+    "fix": "Change",
+    "fixSave": "Save",
+    "fixWrongName": "Write a name. Nothing was changed.",
+    "fixWrongEmail": "This email is not correct. Nothing was changed.",
+    "fixWrongPhone": "This phone number is not correct. Nothing was changed."
   },
   "StudioFeedback": {
     "back": "Back",

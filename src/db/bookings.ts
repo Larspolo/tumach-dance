@@ -212,6 +212,42 @@ export function addBooking(
   );
 }
 
+export type ContactInput = { name: string; email: string; phone: string };
+
+export type ChangeContactResult =
+  | { ok: true; booking: Booking; emailChanged: boolean }
+  | { ok: false; reason: "not-found" }
+  | { ok: false; reason: "invalid"; field: "name" | "email" | "phone" };
+
+/**
+ * Correct the name, email or phone of a `requested` or `approved` booking whose data is not removed (#759). The checks
+ * of `addBooking()`: the email and the phone can be empty. A wrong field changes nothing.
+ */
+export function changeContact(db: Db, id: number, input: ContactInput): ChangeContactResult {
+  const old = db.select().from(bookings).where(eq(bookings.id, id)).get();
+  if (!old || old.forgottenAt !== null || !(HOLDING as readonly string[]).includes(old.status)) {
+    return { ok: false, reason: "not-found" };
+  }
+  const fields = clean(
+    { ...input, offerId: old.offerId, start: old.start, end: old.end, note: null, locale: old.locale },
+    { optionalContact: true },
+  );
+  if ("field" in fields) {
+    if (fields.field === "name" || fields.field === "email" || fields.field === "phone") {
+      return { ok: false, reason: "invalid", field: fields.field };
+    }
+    return { ok: false, reason: "not-found" };
+  }
+  const booking = db
+    .update(bookings)
+    .set({ name: fields.name, email: fields.email, phone: fields.phone })
+    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+    .returning()
+    .get();
+  if (!booking) return { ok: false, reason: "not-found" };
+  return { ok: true, booking, emailChanged: booking.email !== old.email };
+}
+
 /** `from`: the old time of the booking, for the email and the push of the move (epic #406). */
 export type MoveResult =
   | { ok: true; booking: Booking; from: { start: number; end: number } }

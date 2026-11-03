@@ -17,6 +17,7 @@ import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
 import { AddPanel } from "./AddPanel";
 import { addBlock, cancel, cancelDay, forget, removeBlock } from "./actions";
+import { FixPanel } from "./FixPanel";
 import { MovePanel } from "./MovePanel";
 import { RepeatPanel } from "./RepeatPanel";
 
@@ -37,6 +38,7 @@ export default async function WeekPage({
     offer?: string;
     wrong?: string;
     repeat?: string;
+    fix?: string;
     repeated?: string;
     skipped?: string;
     cancelDay?: string;
@@ -61,6 +63,8 @@ export default async function WeekPage({
   // The repeat of an approved booking in the next weeks (#679): "Repeat", the weeks, then the button.
   const repeating = Number(params.repeat);
   const repeated = Number(params.repeated);
+  // The correction of the name, email or phone (#759): "Change", the fields, then "Save".
+  const fixing = Number(params.fix);
   const skipped = (params.skipped ?? "").split(",").filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d));
   const now = Date.now();
   // The cancel of a whole day (#694): "Cancel this day", then "Yes, cancel the day".
@@ -254,6 +258,16 @@ export default async function WeekPage({
                         </Link>
                       </>
                     )}{" "}
+                    {booking.forgottenAt === null && booking.id !== fixing && (
+                      <>
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&fix=${booking.id}`}>
+                          {t("fix")}
+                        </Link>{" "}
+                      </>
+                    )}
+                    {booking.forgottenAt === null && booking.id === fixing && (
+                      <FixPanel booking={booking} weekStart={week.start} wrong={params.wrong} />
+                    )}
                     {booking.start > now && booking.id === moving && (
                       <MovePanel
                         booking={booking}
