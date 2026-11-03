@@ -6,6 +6,7 @@ import { getDb } from "@/db";
 import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
 import { routing } from "@/i18n/routing";
+import { againFields } from "@/lib/booking-again";
 import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
 import { bookingDays, nextFreeDate } from "@/lib/booking-page";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
@@ -31,6 +32,7 @@ type Search = {
   email?: string;
   phone?: string;
   typo?: string;
+  again?: string;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -51,7 +53,9 @@ export default async function BookPage({
   setRequestLocale(locale);
   const search = await searchParams;
   const t = await getTranslations("Book");
-  const href = (change: Search) => `/${locale}/book?${new URLSearchParams(change as Record<string, string>)}`;
+  // Book again (#725): the token of an earlier booking stays in each link of the next steps.
+  const href = (change: Search) =>
+    `/${locale}/book?${new URLSearchParams({ ...change, ...(search.again ? { again: search.again } : {}) } as Record<string, string>)}`;
 
   if (search.sent) {
     return (
@@ -67,7 +71,10 @@ export default async function BookPage({
 
   const db = getDb();
   const offers = listOffers(db, { visibleOnly: true });
-  const offer = offers.find((o) => String(o.id) === search.offer);
+  // A wrong token or a forgotten booking gives null: the normal empty page.
+  const again = search.again ? againFields(db, search.again) : null;
+  const offerId = search.offer ?? (again ? String(again.offerId) : undefined);
+  const offer = offers.find((o) => String(o.id) === offerId);
   const days = offer ? bookingDays(db, offer) : [];
   const day = days.find((d) => d.date === search.day && d.slots.length > 0);
   const slot = day?.slots.find((s) => String(s.start) === search.start);
@@ -214,7 +221,7 @@ export default async function BookPage({
               <input
                 className={styles.input}
                 name="name"
-                defaultValue={search.name}
+                defaultValue={search.name ?? again?.name}
                 required
                 maxLength={100}
                 autoComplete="name"
@@ -225,7 +232,7 @@ export default async function BookPage({
               <input
                 className={styles.input}
                 name="email"
-                defaultValue={search.email}
+                defaultValue={search.email ?? again?.email}
                 type="email"
                 required
                 maxLength={200}
@@ -237,7 +244,7 @@ export default async function BookPage({
               <input
                 className={styles.input}
                 name="phone"
-                defaultValue={search.phone}
+                defaultValue={search.phone ?? again?.phone}
                 type="tel"
                 required
                 autoComplete="tel"
