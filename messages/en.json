@@ -552,7 +552,10 @@
     "event_cancelled": "Cancelled by the dancer",
     "event_cancelled_nina": "Cancelled by you",
     "event_ended": "Ended by the site: no answer before the start",
-    "event_paid": "Payment received"
+    "event_paid": "Payment received",
+    "event_unpaid": "Payment mark removed by you",
+    "event_moved_dancer": "Moved by the dancer from {from}",
+    "event_moved_nina": "Moved by you from {from}"
   },
   "StudioFeedback": {
     "back": "Back",

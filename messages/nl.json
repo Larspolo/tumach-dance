@@ -552,7 +552,10 @@
     "event_cancelled": "Geannuleerd door de danser",
     "event_cancelled_nina": "Geannuleerd door jou",
     "event_ended": "Beëindigd door de site: geen antwoord voor de start",
-    "event_paid": "Betaling ontvangen"
+    "event_paid": "Betaling ontvangen",
+    "event_unpaid": "Betaling teruggezet door jou",
+    "event_moved_dancer": "Verplaatst door de danser van {from}",
+    "event_moved_nina": "Verplaatst door jou van {from}"
   },
   "StudioFeedback": {
     "back": "Terug",
