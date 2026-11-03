@@ -169,6 +169,13 @@
       "when": 1793664968157,
       "tag": "0023_mixed_lily_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1793684633804,
+      "tag": "0024_typical_vision",
+      "breakpoints": true
     }
   ]
 }
