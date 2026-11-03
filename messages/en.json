@@ -517,6 +517,7 @@
     "bookingWhy": "Nina uses them to answer your request, to send you the emails about your booking (the answer, the reminder and the payment link) and to reach you about the lesson.",
     "bookingWho": "Only Nina sees them. The emails go through our email service, Mailgun.",
     "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address, phone number and note by itself.",
+    "dancerNote": "Nina can keep a short private note about the lessons of a dancer. Only Nina sees it, and the site removes it together with the other data of the dancer.",
     "backup": "Each night the site makes a backup of its data for the case of a fault. A backup keeps a copy of your data for {nights, plural, one {# night} other {# nights}}, then the site removes it.",
     "contactTitle": "A contact message",
     "contactWhat": "The site keeps your name, email address and message so that Nina can answer it in her studio app. It sends a copy to Nina by email. {months, plural, one {# month} other {# months}} after your message, the site removes it by itself.",

@@ -517,6 +517,7 @@
     "bookingWhy": "Nina gebruikt ze om je aanvraag te beantwoorden, om je de e-mails over je boeking te sturen (het antwoord, de herinnering en de betaallink) en om je te bereiken over de les.",
     "bookingWho": "Alleen Nina ziet ze. De e-mails gaan via onze e-maildienst, Mailgun.",
     "keep": "{months, plural, one {# maand} other {# maanden}} na je les verwijdert de site vanzelf je naam, e-mailadres, telefoonnummer en notitie.",
+    "dancerNote": "Nina kan een korte persoonlijke notitie over de lessen van een danser bijhouden. Alleen Nina ziet die, en de site verwijdert hem samen met de andere gegevens van de danser.",
     "backup": "Elke nacht maakt de site een back-up van zijn gegevens voor het geval van een storing. Een back-up bewaart een kopie van je gegevens {nights, plural, one {# nacht} other {# nachten}}, daarna verwijdert de site hem.",
     "contactTitle": "Een contactbericht",
     "contactWhat": "De site bewaart je naam, e-mailadres en bericht, zodat Nina het in haar studio-app kan beantwoorden. Een kopie gaat per e-mail naar Nina. {months, plural, one {# maand} other {# maanden}} na je bericht verwijdert de site het vanzelf.",
