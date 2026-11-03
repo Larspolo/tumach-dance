@@ -17,5 +17,6 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const endpoint = new URL(request.url).searchParams.get("endpoint");
   if (!endpoint) return Response.json({ error: "no endpoint" }, { status: 400 });
-  return Response.json({ known: hasSubscription(getDb(), endpoint) });
+  const session = await getStudioSession(request.headers);
+  return Response.json({ known: hasSubscription(getDb(), endpoint, session?.session.id) });
 }
