@@ -135,9 +135,12 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:offline` (#745) Nina sees her next lessons also with no internet
   - With no internet, the studio app shows the bookings of today and tomorrow as they were at the last open, and says that it is offline and since when
   - With no internet, a tap on Approve, Decline or another change says that it needs the internet and changes nothing
-- [ ] `nina:fix` (#758) Nina corrects the details of one booking
+- [x] `nina:fix` (#758) Nina corrects the details of one booking
   - From a booking, Nina corrects the name, email or phone of the dancer in a few taps (a typo, the right address after a bounce); the later emails, the WhatsApp link and the search use the new data, and a new email address gets the last email of the booking again
   - Nina gives one booking another price (a lesson for two people, a discount); the week page, the money page and the emails of that booking show it, and the offer keeps its price
+- [ ] `nina:guide` (#774) Nina finds how to do each task of her studio app
+  - The studio home links to a guide with a short part for each task of the app (the daily tasks and the rare cases), each with at most 3 steps, in English and Dutch
+  - Each new page of the studio app gets its part in the guide (a test)
 
 ## 3. Book a lesson or the studio
 
