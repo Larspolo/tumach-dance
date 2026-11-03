@@ -13,6 +13,7 @@ import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import { bookingWhatsappLink } from "@/lib/whatsapp";
 import styles from "../studio.module.css";
+import { AddPanel } from "./AddPanel";
 import { addBlock, cancel, forget, removeBlock } from "./actions";
 import { MovePanel } from "./MovePanel";
 
@@ -29,6 +30,9 @@ export default async function WeekPage({
     day?: string;
     to?: string;
     taken?: string;
+    lesson?: string;
+    offer?: string;
+    wrong?: string;
   }>;
 }) {
   const session = await getStudioSession(await headers());
@@ -54,6 +58,7 @@ export default async function WeekPage({
   const blockDate = week.days.find((day) => day >= today) ?? today;
   const dayName = new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
+  const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
 
   return (
     <main className={styles.main}>
@@ -90,12 +95,27 @@ export default async function WeekPage({
             {t("blockSave")}
           </button>
         </form>
-      ) : (
+      ) : params.lesson ? null : (
         <p>
           <Link className={styles.link} href={`/studio/week?start=${week.start}&add=1`}>
             {t("blockAdd")}
+          </Link>{" "}
+          ·{" "}
+          <Link className={styles.link} href={`/studio/week?start=${week.start}&lesson=1`}>
+            {t("lessonAdd")}
           </Link>
         </p>
+      )}
+      {params.lesson && !params.add && (
+        <AddPanel
+          weekStart={week.start}
+          locale={locale}
+          offerId={Number(params.offer)}
+          day={params.day}
+          to={Number(params.to)}
+          taken={params.taken !== undefined}
+          wrong={params.wrong !== undefined}
+        />
       )}
       {week.days.map((day) => {
         const ofDay = bookings.filter(({ booking }) => localDate(booking.start) === day);
@@ -130,7 +150,7 @@ export default async function WeekPage({
                 return (
                   <li key={booking.id}>
                     {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
-                    {shownName(booking, t("removed"))}{" "}
+                    {shownName(booking, t("removed"))} <span data-price>{euro.format(booking.priceCents / 100)}</span>{" "}
                     {shownNote(booking, 80) !== null && (
                       <span className={styles.dancerNote} data-note>
                         {shownNote(booking, 80)}

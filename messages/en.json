@@ -422,7 +422,20 @@
     "moveYes": "Yes, move",
     "moveNo": "No",
     "moveTaken": "This time is no longer free. Choose another time.",
-    "moveNone": "No free time in the next 4 weeks."
+    "moveNone": "No free time in the next 4 weeks.",
+    "lessonAdd": "Add a lesson",
+    "lessonOffer": "Which lesson?",
+    "lessonDay": "On which day?",
+    "lessonWhen": "{offer} on {day} at {time}",
+    "lessonName": "Name",
+    "lessonEmail": "Email (optional)",
+    "lessonPhone": "Phone (optional)",
+    "lessonLanguage": "Language of the emails",
+    "lessonEnglish": "English",
+    "lessonDutch": "Dutch",
+    "lessonWrong": "Check the name, the email and the phone.",
+    "lessonSave": "Add the lesson",
+    "lessonClose": "Close"
   },
   "StudioFeedback": {
     "back": "Back",

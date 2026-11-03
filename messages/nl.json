@@ -422,7 +422,20 @@
     "moveYes": "Ja, verplaats",
     "moveNo": "Nee",
     "moveTaken": "Deze tijd is niet meer vrij. Kies een andere tijd.",
-    "moveNone": "Geen vrije tijd in de komende 4 weken."
+    "moveNone": "Geen vrije tijd in de komende 4 weken.",
+    "lessonAdd": "Les toevoegen",
+    "lessonOffer": "Welke les?",
+    "lessonDay": "Op welke dag?",
+    "lessonWhen": "{offer} op {day} om {time}",
+    "lessonName": "Naam",
+    "lessonEmail": "E-mail (niet verplicht)",
+    "lessonPhone": "Telefoon (niet verplicht)",
+    "lessonLanguage": "Taal van de e-mails",
+    "lessonEnglish": "Engels",
+    "lessonDutch": "Nederlands",
+    "lessonWrong": "Controleer de naam, het e-mailadres en de telefoon.",
+    "lessonSave": "Les toevoegen",
+    "lessonClose": "Sluiten"
   },
   "StudioFeedback": {
     "back": "Terug",
