@@ -86,13 +86,13 @@ export default async function StudioPage() {
           {requestCount ? t("bookingsCount", { count: requestCount }) : t("bookings")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/search">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/search">
           {t("search")}
         </Link>
       </p>
-      <p>
-        <Link className={styles.link} href="/studio/money">
+      <p className={styles.tileRow}>
+        <Link className={styles.tile} href="/studio/money">
           {t("money")}
         </Link>
       </p>
@@ -153,8 +153,8 @@ export default async function StudioPage() {
           {t("feedback")}
         </Link>
       </p>
-      <p className={styles.note}>
-        <a className={styles.link} href={`/${locale}/studio-guide`}>
+      <p className={styles.tileRow}>
+        <a className={styles.tile} href={`/${locale}/studio-guide`}>
           {guide("link")}
         </a>
       </p>
