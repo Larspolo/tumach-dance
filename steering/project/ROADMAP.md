@@ -183,7 +183,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:email` (#492) A dancer with a wrong email address still hears from the studio
   - The booking form points out a likely typo in the email address before the request goes
   - When an email to a dancer bounces, Nina gets a push with the name of the dancer and tells the dancer herself
-- [ ] `book:move` (#646) A dancer moves a booking to another free time with the link in the email
+- [x] `book:move` (#646) A dancer moves a booking to another free time with the link in the email
   - The page of the link in the emails to a dancer offers the free times of the same offer; one tap moves the booking, and the old time is free at once
   - Nina gets a push with the name of the dancer and the old and the new time; the dancer gets one email with the new time, and the calendar file moves the event
   - A moved approved booking follows the rule that Nina chooses
