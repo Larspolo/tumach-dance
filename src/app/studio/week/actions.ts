@@ -165,8 +165,11 @@ export async function fix(form: FormData): Promise<void> {
   const week = weekOf(String(form.get("start") ?? ""));
   const id = Number(form.get("id"));
   if (!Number.isInteger(id)) redirect(`/studio/week?start=${week.start}`);
-  const priceCents = priceCentsOf(form.get("price"));
-  if (priceCents === undefined) redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=price`);
+  // A form with no price field keeps the price.
+  const priceField = form.get("price");
+  const priceCents = priceField === null ? undefined : priceCentsOf(priceField);
+  if (priceField !== null && priceCents === undefined)
+    redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=price`);
   const result = changeContact(getDb(), id, {
     name: String(form.get("name") ?? ""),
     email: String(form.get("email") ?? ""),
@@ -174,8 +177,8 @@ export async function fix(form: FormData): Promise<void> {
   });
   if (!result.ok && result.reason === "invalid")
     redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=${result.field}`);
-  if (result.ok) changePrice(getDb(), id, priceCents);
-  await resendAfterContactChange(getDb(), result);
+  const priced = result.ok && priceCents !== undefined ? changePrice(getDb(), id, priceCents) : undefined;
+  await resendAfterContactChange(getDb(), result.ok && priced ? { ...result, booking: priced } : result);
   revalidatePath("/studio/week");
   redirect(`/studio/week?start=${week.start}`);
 }
