@@ -5,6 +5,7 @@ import { type BrowserContext, expect, type Page, test } from "@playwright/test";
 import { inArray } from "drizzle-orm";
 import { DateTime } from "luxon";
 import en from "../messages/en.json" with { type: "json" };
+import nl from "../messages/nl.json" with { type: "json" };
 import { openDb } from "../src/db";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
@@ -50,32 +51,41 @@ async function offlineReload(context: BrowserContext, page: Page) {
 test.describe("with the shared session", () => {
   test.use({ storageState: STUDIO_SESSION });
 
-  test("the studio home with no internet shows the lessons of today and tomorrow", async ({ page, context }) => {
-    const db = openDb("out/e2e/tumach.db");
-    const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 5000, position: 746 });
-    const startOfToday = DateTime.now().setZone(TIME_ZONE).startOf("day");
-    const stamp = Date.now();
-    const todayName = `Offline today ${stamp}`;
-    const tomorrowName = `Offline tomorrow ${stamp}`;
-    const a = lesson(db, offer.id, startOfToday.set({ hour: 23 }), todayName);
-    const b = lesson(db, offer.id, startOfToday.plus({ days: 1 }).set({ hour: 10 }), tomorrowName);
-    try {
-      await openControlled(page);
-      // A second open with internet: the worker keeps this page (network first).
-      await page.reload();
-      await expect(page.getByRole("link", { name: todayName })).toBeVisible();
-      await offlineReload(context, page);
-      await expect(page.getByRole("heading", { name: en.StudioHome.today, exact: true })).toBeVisible();
-      await expect(page.getByRole("link", { name: todayName })).toBeVisible();
-      await expect(page.getByRole("link", { name: tomorrowName })).toBeVisible();
-      await page.screenshot({ path: "out/screenshots/studio-offline-phone.png", fullPage: true });
-    } finally {
-      await context.setOffline(false);
-      db.delete(bookings)
-        .where(inArray(bookings.id, [a.id, b.id]))
-        .run();
-    }
-  });
+  for (const [locale, texts] of [
+    ["en-GB", en],
+    ["nl-NL", nl],
+  ] as const) {
+    test.describe(locale, () => {
+      test.use({ locale });
+
+      test("the studio home with no internet shows the lessons of today and tomorrow", async ({ page, context }) => {
+        const db = openDb("out/e2e/tumach.db");
+        const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 5000, position: 746 });
+        const startOfToday = DateTime.now().setZone(TIME_ZONE).startOf("day");
+        const stamp = Date.now();
+        const todayName = `Offline today ${stamp}`;
+        const tomorrowName = `Offline tomorrow ${stamp}`;
+        const a = lesson(db, offer.id, startOfToday.set({ hour: 23 }), todayName);
+        const b = lesson(db, offer.id, startOfToday.plus({ days: 1 }).set({ hour: 10 }), tomorrowName);
+        try {
+          await openControlled(page);
+          // A second open with internet: the worker keeps this page (network first).
+          await page.reload();
+          await expect(page.getByRole("link", { name: todayName })).toBeVisible();
+          await offlineReload(context, page);
+          await expect(page.getByRole("heading", { name: texts.StudioHome.today, exact: true })).toBeVisible();
+          await expect(page.getByRole("link", { name: todayName })).toBeVisible();
+          await expect(page.getByRole("link", { name: tomorrowName })).toBeVisible();
+          await page.screenshot({ path: `out/screenshots/studio-offline-phone-${locale}.png`, fullPage: true });
+        } finally {
+          await context.setOffline(false);
+          db.delete(bookings)
+            .where(inArray(bookings.id, [a.id, b.id]))
+            .run();
+        }
+      });
+    });
+  }
 
   test("the login page deletes the kept studio home", async ({ page, context }) => {
     await openControlled(page);
