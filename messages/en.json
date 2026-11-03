@@ -182,7 +182,12 @@
     "allDayShort": "all day",
     "fromShort": "from {time}",
     "outsideTitle": "Outside your hours",
-    "outsideWhy": "These bookings are outside your open hours now."
+    "outsideWhy": "These bookings are outside your open hours now.",
+    "outsideCancel": "Cancel these bookings",
+    "outsideAsk": "{count, plural, one {Cancel # booking? The dancer gets an email.} other {Cancel # bookings? Each dancer gets an email.}}",
+    "outsideYes": "Yes, cancel them",
+    "outsideNo": "No",
+    "outsideCancelled": "{count, plural, one {Cancelled # booking.} other {Cancelled # bookings.}}"
   },
   "StudioOffers": {
     "title": "Offers",

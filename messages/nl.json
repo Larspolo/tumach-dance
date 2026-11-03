@@ -182,7 +182,12 @@
     "allDayShort": "hele dag",
     "fromShort": "vanaf {time}",
     "outsideTitle": "Buiten je tijden",
-    "outsideWhy": "Deze boekingen vallen nu buiten je openingstijden."
+    "outsideWhy": "Deze boekingen vallen nu buiten je openingstijden.",
+    "outsideCancel": "Annuleer deze boekingen",
+    "outsideAsk": "{count, plural, one {# boeking annuleren? De danser krijgt een e-mail.} other {# boekingen annuleren? Elke danser krijgt een e-mail.}}",
+    "outsideYes": "Ja, annuleer ze",
+    "outsideNo": "Nee",
+    "outsideCancelled": "{count, plural, one {# boeking geannuleerd.} other {# boekingen geannuleerd.}}"
   },
   "StudioOffers": {
     "title": "Aanbod",

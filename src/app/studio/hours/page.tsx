@@ -16,13 +16,19 @@ import { getHoursRule } from "@/lib/hours-store";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate } from "@/lib/week";
 import styles from "../studio.module.css";
-import { removeHoursDate } from "./actions";
+import { cancelOutside, removeHoursDate } from "./actions";
 import { CloseForm, ExtraOpenForm } from "./dates-form";
 import { HoursForm } from "./hours-form";
 
 // "Hours" (#23): Nina's weekly rule in two groups, her closed and extra open dates (#24), and the open times of the
 // next 7 days below them.
-export default async function HoursPage() {
+export default async function HoursPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cancelOutside?: string; outsideCancelled?: string }>;
+}) {
+  const params = await searchParams;
+  const outsideCancelled = Number(params.outsideCancelled);
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
   const locale = await setStudioLocale();
@@ -61,6 +67,11 @@ export default async function HoursPage() {
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
+      {params.outsideCancelled !== undefined && Number.isInteger(outsideCancelled) && (
+        <p className={styles.note} data-outside-cancelled>
+          {t("outsideCancelled", { count: outsideCancelled })}
+        </p>
+      )}
       {outside.length > 0 && (
         <section aria-label={t("outsideTitle")}>
           <h2 className={styles.label}>{t("outsideTitle")}</h2>
@@ -79,6 +90,23 @@ export default async function HoursPage() {
               );
             })}
           </ul>
+          {params.cancelOutside === "1" ? (
+            <form className={styles.form} action={cancelOutside} data-cancel-outside>
+              <span>{t("outsideAsk", { count: outside.length })}</span>{" "}
+              <button className={styles.button} type="submit">
+                {t("outsideYes")}
+              </button>{" "}
+              <Link className={styles.link} href="/studio/hours">
+                {t("outsideNo")}
+              </Link>
+            </form>
+          ) : (
+            <p>
+              <Link className={styles.link} href="/studio/hours?cancelOutside=1">
+                {t("outsideCancel")}
+              </Link>
+            </p>
+          )}
         </section>
       )}
       <HoursForm form={form} />
