@@ -458,7 +458,12 @@
     "repeatYes": "Herhalen",
     "repeatNo": "Nee",
     "repeatDone": "{count, plural, one {# week toegevoegd.} other {# weken toegevoegd.}}",
-    "repeatSkipped": "Niet vrij: {dates}."
+    "repeatSkipped": "Niet vrij: {dates}.",
+    "cancelDay": "Annuleer deze dag",
+    "cancelDayAsk": "{count, plural, one {# boeking annuleren en deze dag sluiten? Elke danser krijgt een e-mail.} other {# boekingen annuleren en deze dag sluiten? Elke danser krijgt een e-mail.}}",
+    "cancelDayYes": "Ja, annuleer de dag",
+    "cancelDayNo": "Nee",
+    "cancelDayDone": "{count, plural, one {# boeking geannuleerd. De dag is gesloten.} other {# boekingen geannuleerd. De dag is gesloten.}}"
   },
   "StudioFeedback": {
     "back": "Terug",
