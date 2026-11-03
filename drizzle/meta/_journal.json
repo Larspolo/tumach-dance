@@ -176,6 +176,13 @@
       "when": 1793684633804,
       "tag": "0024_typical_vision",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1793715674871,
+      "tag": "0025_magical_mystique",
+      "breakpoints": true
     }
   ]
 }

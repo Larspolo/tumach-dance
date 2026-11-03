@@ -222,6 +222,27 @@ export const bookings = sqliteTable(
 );
 
 /**
+ * One step in the history of a booking (#814): the request, Nina's decision, its undo. Written in the transaction of
+ * the change (`src/lib/booking-history.ts`). `fromStart`: the old start of a move (later tickets of #813).
+ */
+export const bookingEvents = sqliteTable(
+  "booking_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    bookingId: integer("booking_id")
+      .notNull()
+      .references(() => bookings.id),
+    /** UTC, epoch milliseconds. */
+    at: integer("at").notNull(),
+    kind: text("kind", { enum: ["requested", "added", "approved", "declined", "undone"] }).notNull(),
+    by: text("by", { enum: ["dancer", "nina", "site"] }).notNull(),
+    /** UTC, epoch milliseconds; `null` = no move. */
+    fromStart: integer("from_start"),
+  },
+  (t) => [index("booking_events_booking_id_idx").on(t.bookingId)],
+);
+
+/**
  * A class of the studio (#95). `name`, `text` and `forWhom` are JSON texts of the form `{"en": "...", "nl": "..."}`: `en` is
  * required, the other language is optional (`src/lib/local-text.ts`).
  */

@@ -2,6 +2,7 @@
 import { and, eq, gt, inArray, isNotNull, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
+import { recordBookingEvent } from "../lib/booking-history";
 import { type BookingLimit, bookingLimit } from "../lib/booking-limits";
 import { notBefore } from "../lib/booking-notice";
 import { classRanges } from "../lib/class-ranges";
@@ -132,6 +133,7 @@ export function requestBooking(
         })
         .returning()
         .get();
+      recordBookingEvent(tx, booking.id, "requested", "dancer", { at: now });
       return { ok: true, booking };
     },
     { behavior: "immediate" },
@@ -206,6 +208,7 @@ export function addBooking(
         })
         .returning()
         .get();
+      recordBookingEvent(tx, booking.id, "added", "nina", { at: now });
       return { ok: true, booking };
     },
     { behavior: "immediate" },
@@ -346,17 +349,21 @@ export function decideBooking(
   tikkieUrl: string | null = null,
   now = Date.now(),
 ): DecideResult {
-  const booking = db
-    .update(bookings)
-    .set({
-      status: decision,
-      tikkieUrl: decision === "approved" ? tikkieUrl : null,
-      approvedAt: decision === "approved" ? Date.now() : null,
-      decidedAt: now,
-    })
-    .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
-    .returning()
-    .get();
+  const booking = db.transaction((tx) => {
+    const decided = tx
+      .update(bookings)
+      .set({
+        status: decision,
+        tikkieUrl: decision === "approved" ? tikkieUrl : null,
+        approvedAt: decision === "approved" ? Date.now() : null,
+        decidedAt: now,
+      })
+      .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
+      .returning()
+      .get();
+    if (decided) recordBookingEvent(tx, id, decision, "nina", { at: now });
+    return decided;
+  });
   if (booking) return { ok: true, booking };
   const exists = db
     .select({ status: bookings.status, start: bookings.start })
@@ -410,7 +417,9 @@ export function undoDecision(db: Db, id: number, now = Date.now()): UndoResult {
         .where(and(eq(bookings.id, id), isNull(bookings.decisionMailedAt)))
         .returning()
         .get();
-      return booking ? { ok: true, booking } : { ok: false, reason: "sent" };
+      if (!booking) return { ok: false, reason: "sent" };
+      recordBookingEvent(tx, id, "undone", "nina", { at: now });
+      return { ok: true, booking };
     },
     { behavior: "immediate" },
   );

@@ -8,6 +8,7 @@ import { listBookings } from "@/db/bookings";
 import { dancerNotesFor, firstNoteLine } from "@/db/dancer-notes";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { bookingHistory, eventWhen } from "@/lib/booking-history";
 import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { phoneDigits } from "@/lib/same-dancer";
@@ -309,6 +310,20 @@ export default async function WeekPage({
                         </Link>
                       </>
                     )}
+                    <details data-history>
+                      <summary>{t("history")}</summary>
+                      <ul>
+                        {bookingHistory(getDb(), booking.id).map((event, i) => (
+                          // biome-ignore lint/suspicious/noArrayIndexKey: the events of a booking never change order.
+                          <li key={i} data-event={event.kind}>
+                            {t("historyLine", {
+                              when: eventWhen(event.at, locale),
+                              what: t(`event_${event.kind}`),
+                            })}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
                   </li>
                 );
               })}
