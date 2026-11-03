@@ -104,6 +104,7 @@
     "passkeyFailed": "The passkey did not work. Log in with a code by email."
   },
   "StudioHome": {
+    "offline": "Offline: the list is from {time}.",
     "needsInternet": "This needs the internet. Nothing has changed. Try again when you are online.",
     "title": "Studio",
     "loggedInAs": "You are logged in as {email}.",

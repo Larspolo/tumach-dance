@@ -104,6 +104,7 @@
     "passkeyFailed": "De passkey werkte niet. Log in met een code per e-mail."
   },
   "StudioHome": {
+    "offline": "Offline: de lijst is van {time}.",
     "needsInternet": "Hiervoor is internet nodig. Er is niets veranderd. Probeer het opnieuw als je online bent.",
     "title": "Studio",
     "loggedInAs": "Je bent ingelogd als {email}.",

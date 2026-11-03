@@ -231,6 +231,14 @@
   object-fit: cover;
 }
 
+/* The offline line at the top (#747). */
+.offline {
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #efe9df;
+  color: #3a352e;
+}
+
 /* The language control of the studio app (#314): buttons with the look of the links of the public control. */
 .languageButton {
   background: none;
