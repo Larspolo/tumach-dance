@@ -4,7 +4,7 @@ import type { Db } from "../db/index";
 import { bookingEvents, bookings } from "../db/schema";
 import { TIME_ZONE } from "./hours";
 
-export type BookingEventKind = (typeof bookingEvents.$inferSelect)["kind"] | "paid";
+export type BookingEventKind = (typeof bookingEvents.$inferSelect)["kind"];
 export type BookingEventBy = (typeof bookingEvents.$inferSelect)["by"];
 export type BookingEvent = { at: number; kind: BookingEventKind; by: BookingEventBy; fromStart: number | null };
 
@@ -58,4 +58,10 @@ export function eventWhen(at: number, locale: string): string {
     minute: "2-digit",
     hourCycle: "h23",
   }).format(at);
+}
+
+/** The key of the text of an event in `StudioWeek` (#816): a move names who moved it, with `{from}` the old time. */
+export function eventMessageKey(event: Pick<BookingEvent, "kind" | "by">): string {
+  if (event.kind === "moved") return event.by === "dancer" ? "event_moved_dancer" : "event_moved_nina";
+  return `event_${event.kind}`;
 }
