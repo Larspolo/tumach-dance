@@ -5,7 +5,7 @@ import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
 
 describe("GUIDE_PARTS", () => {
-  it("has the 12 parts in order", () => {
+  it("has the 17 parts in order", () => {
     expect(GUIDE_PARTS.map((p) => p.id)).toEqual([
       "login",
       "install",
@@ -19,6 +19,11 @@ describe("GUIDE_PARTS", () => {
       "holiday",
       "fix",
       "forget",
+      "money",
+      "search",
+      "note",
+      "whatsapp",
+      "share",
     ]);
   });
   for (const part of GUIDE_PARTS) {
@@ -50,6 +55,18 @@ describe("GUIDE_PARTS", () => {
       expect(m.StudioGuide.fixSave).toContain(`"${m.StudioWeek.fixSave}"`);
       expect(m.StudioGuide.forgetOpen).toContain(`"${m.StudioWeek.forget}"`);
       expect(m.StudioGuide.forgetYes).toContain(`"${m.StudioWeek.forgetYes}"`);
+      expect(m.StudioGuide.moneyOpen).toContain(`"${m.StudioHome.money}"`);
+      expect(m.StudioGuide.moneyOpen).toContain(`"${m.StudioMoney.open}"`);
+      expect(m.StudioGuide.moneyPaid).toContain(`"${m.StudioBookings.markPaid}"`);
+      expect(m.StudioGuide.moneyYear).toContain(m.StudioMoney.yearDownload.replace("{year}", "…"));
+      expect(m.StudioGuide.searchOpen).toContain(`"${m.StudioHome.search}"`);
+      expect(m.StudioGuide.searchType).toContain(`"${m.StudioSearch.button}"`);
+      expect(m.StudioGuide.noteOpen).toContain(`"${m.StudioDancer.link}"`);
+      expect(m.StudioGuide.noteSave).toContain(`"${m.StudioDancer.noteSave}"`);
+      expect(m.StudioGuide.whatsappOpen).toContain(`"${m.StudioHome.bookings}"`);
+      expect(m.StudioGuide.whatsappOpen).toContain(`"${m.StudioBookings.whatsapp}"`);
+      expect(m.StudioGuide.shareOpen).toContain(`"${m.StudioHome.offers}"`);
+      expect(m.StudioGuide.shareOpen).toContain(`"${m.StudioShare.share}"`);
     }
   });
 });
