@@ -481,7 +481,9 @@
     "fixSave": "Opslaan",
     "fixWrongName": "Vul een naam in. Er is niets gewijzigd.",
     "fixWrongEmail": "Dit e-mailadres klopt niet. Er is niets gewijzigd.",
-    "fixWrongPhone": "Dit telefoonnummer klopt niet. Er is niets gewijzigd."
+    "fixWrongPhone": "Dit telefoonnummer klopt niet. Er is niets gewijzigd.",
+    "fixPrice": "Prijs (EUR)",
+    "fixWrongPrice": "Schrijf een prijs in euro, zoals 45 of 45,50. Er is niets gewijzigd."
   },
   "StudioFeedback": {
     "back": "Terug",

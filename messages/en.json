@@ -481,7 +481,9 @@
     "fixSave": "Save",
     "fixWrongName": "Write a name. Nothing was changed.",
     "fixWrongEmail": "This email is not correct. Nothing was changed.",
-    "fixWrongPhone": "This phone number is not correct. Nothing was changed."
+    "fixWrongPhone": "This phone number is not correct. Nothing was changed.",
+    "fixPrice": "Price (EUR)",
+    "fixWrongPrice": "Write a price in euro, as 45 or 45.50. Nothing was changed."
   },
   "StudioFeedback": {
     "back": "Back",

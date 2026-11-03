@@ -248,6 +248,20 @@ export function changeContact(db: Db, id: number, input: ContactInput): ChangeCo
   return { ok: true, booking, emailChanged: booking.email !== old.email };
 }
 
+/**
+ * Give one `requested` or `approved` booking another price (#761): a lesson for two, a discount. The offer keeps its
+ * price. A price that is not a whole number of cents of 0 or more changes nothing.
+ */
+export function changePrice(db: Db, id: number, priceCents: number): Booking | undefined {
+  if (!Number.isInteger(priceCents) || priceCents < 0) return undefined;
+  return db
+    .update(bookings)
+    .set({ priceCents })
+    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+    .returning()
+    .get();
+}
+
 /** `from`: the old time of the booking, for the email and the push of the move (epic #406). */
 export type MoveResult =
   | { ok: true; booking: Booking; from: { start: number; end: number } }
