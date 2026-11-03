@@ -41,7 +41,10 @@ def test_roadmap_features_reads_the_goals_and_the_named_epics():
 
 def test_the_open_features_with_no_epic_are_a_source(no_release):
     epics = [epic(3, "site:skeleton"), epic(4, "site:photos")]
-    assert usage.free_sources(no_release, epics=lambda: epics) == ["2 roadmap features with no epic"]   # site:contact, app:login
+    free = lambda numbers: False                                         # noqa: E731
+    assert usage.free_sources(no_release, epics=lambda: epics, holds=free) == ["2 roadmap features with no epic"]   # site:contact, app:login
+    held = lambda numbers: 7 in numbers                                  # noqa: E731  the owner holds #7 (after-release)
+    assert usage.free_sources(no_release, epics=lambda: epics, holds=held) == ["1 roadmap features with no epic"]   # site:contact
 
 
 def test_no_source_when_each_open_feature_has_an_epic(no_release, capsys):

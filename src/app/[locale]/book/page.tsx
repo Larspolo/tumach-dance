@@ -1,9 +1,20 @@
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Turnstile } from "@/components/Turnstile";
 import { getDb } from "@/db";
+import { NOTE_MAX } from "@/db/bookings";
 import { listOffers, type Offer } from "@/db/offers";
-import { bookingDays } from "@/lib/booking-page";
+import { routing } from "@/i18n/routing";
+import { againFields } from "@/lib/booking-again";
+import { BOOKING_ERRORS, type BookingError } from "@/lib/booking-error";
+import { bookingDays, nextFreeDate } from "@/lib/booking-page";
+import { HONEYPOT, STAMP } from "@/lib/contact-fields";
+import { formStamp } from "@/lib/contact-spam";
 import { TIME_ZONE } from "@/lib/hours";
+import { offerLabel } from "@/lib/offer-label";
 import { pageMetadata } from "@/lib/page-meta";
+import { turnstileSiteKey } from "@/lib/turnstile";
 import { sendRequest } from "./actions";
 import styles from "./book.module.css";
 
@@ -11,10 +22,22 @@ import styles from "./book.module.css";
 // params, so the page works on a phone with no JavaScript; the form is a plain HTML form and a server action.
 export const dynamic = "force-dynamic";
 
-type Search = { offer?: string; day?: string; start?: string; error?: string; sent?: string };
+type Search = {
+  offer?: string;
+  day?: string;
+  start?: string;
+  error?: string;
+  sent?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  typo?: string;
+  again?: string;
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   return pageMetadata(await getTranslations({ locale, namespace: "Meta" }), "/book", locale);
 }
 
@@ -26,10 +49,13 @@ export default async function BookPage({
   searchParams: Promise<Search>;
 }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const search = await searchParams;
   const t = await getTranslations("Book");
-  const href = (change: Search) => `/${locale}/book?${new URLSearchParams(change as Record<string, string>)}`;
+  // Book again (#725): the token of an earlier booking stays in each link of the next steps.
+  const href = (change: Search) =>
+    `/${locale}/book?${new URLSearchParams({ ...change, ...(search.again ? { again: search.again } : {}) } as Record<string, string>)}`;
 
   if (search.sent) {
     return (
@@ -45,12 +71,14 @@ export default async function BookPage({
 
   const db = getDb();
   const offers = listOffers(db, { visibleOnly: true });
-  const offer = offers.find((o) => String(o.id) === search.offer);
+  // A wrong token or a forgotten booking gives null: the normal empty page.
+  const again = search.again ? againFields(db, search.again) : null;
+  const offerId = search.offer ?? (again ? String(again.offerId) : undefined);
+  const offer = offers.find((o) => String(o.id) === offerId);
   const days = offer ? bookingDays(db, offer) : [];
   const day = days.find((d) => d.date === search.day && d.slots.length > 0);
   const slot = day?.slots.find((s) => String(s.start) === search.start);
 
-  const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
   const dayName = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     weekday: "short",
@@ -58,22 +86,38 @@ export default async function BookPage({
     month: "short",
   });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
-  const offerName = (o: Offer) => `${t(o.kind, { minutes: o.minutes })} · ${euro.format(o.priceCents / 100)}`;
+  const offerName = (o: Offer) => offerLabel(t, locale, o);
   const dateOf = (date: string) => dayName.format(new Date(`${date}T12:00:00Z`));
-  const error = search.error && ["taken", "invalid", "notSlot"].includes(search.error) ? search.error : undefined;
+  // With no free time in the 4 weeks, the next free day after them, and the day from which the page shows it (#478).
+  const next = offer && days.every((d) => d.slots.length === 0) ? nextFreeDate(db, offer) : null;
+  const error = BOOKING_ERRORS.find((e) => e === search.error);
+  // A dancer with no free time or no offer can ask Nina instead (#477).
+  const contact = (
+    <p className={styles.note}>
+      {t("contactText")}{" "}
+      <a className={styles.link} href={`/${locale}#contact`}>
+        {t("contact")}
+      </a>
+    </p>
+  );
 
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
       {error && (
         <p className={styles.error} role="status">
-          {t(error as "taken" | "invalid" | "notSlot")}
+          {error === "noteLong" ? t("noteLong", { max: NOTE_MAX }) : t(error as Exclude<BookingError, "noteLong">)}
         </p>
       )}
 
       <section className={styles.step}>
         <h2 className={styles.heading}>{t("offer")}</h2>
-        {offers.length === 0 && <p className={styles.note}>{t("noOffers")}</p>}
+        {offers.length === 0 && (
+          <>
+            <p className={styles.note}>{t("noOffers")}</p>
+            {contact}
+          </>
+        )}
         <div className={styles.choices}>
           {offers.map((o) => (
             <a
@@ -91,7 +135,15 @@ export default async function BookPage({
       {offer && (
         <section className={styles.step}>
           <h2 className={styles.heading}>{t("day")}</h2>
-          {days.every((d) => d.slots.length === 0) && <p className={styles.note}>{t("noTimes")}</p>}
+          {days.every((d) => d.slots.length === 0) && (
+            <>
+              <p className={styles.note}>{t("noTimes")}</p>
+              {next && (
+                <p className={styles.note}>{t("nextFree", { date: dateOf(next.date), from: dateOf(next.from) })}</p>
+              )}
+              {contact}
+            </>
+          )}
           <div className={styles.days}>
             {days.map((d) =>
               d.slots.length === 0 ? (
@@ -138,23 +190,78 @@ export default async function BookPage({
             {offerName(offer)} · {dateOf(day.date)} · {time.format(slot.start)}
           </p>
           <form className={styles.form} action={sendRequest}>
+            {search.typo && (
+              <div className={`${styles.error} ${styles.typo}`} role="status">
+                <p>{t("emailTypo", { email: search.typo })}</p>
+                <button className={styles.button} type="submit" name="emailFix" value={search.typo}>
+                  {t("emailUse", { email: search.typo })}
+                </button>
+                <button className={styles.plain} type="submit" name="emailChecked" value="1">
+                  {t("emailKeep")}
+                </button>
+              </div>
+            )}
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="offerId" value={offer.id} />
             <input type="hidden" name="day" value={day.date} />
             <input type="hidden" name="start" value={slot.start} />
             <input type="hidden" name="end" value={slot.end} />
+            <input type="hidden" name={STAMP} value={formStamp("booking")} />
+            <input
+              type="text"
+              name={HONEYPOT}
+              className={styles.honeypot}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              defaultValue=""
+            />
             <label className={styles.field}>
               <span>{t("name")}</span>
-              <input className={styles.input} name="name" required maxLength={100} autoComplete="name" />
+              <input
+                className={styles.input}
+                name="name"
+                defaultValue={search.name ?? again?.name}
+                required
+                maxLength={100}
+                autoComplete="name"
+              />
             </label>
             <label className={styles.field}>
               <span>{t("email")}</span>
-              <input className={styles.input} name="email" type="email" required maxLength={200} autoComplete="email" />
+              <input
+                className={styles.input}
+                name="email"
+                defaultValue={search.email ?? again?.email}
+                type="email"
+                required
+                maxLength={200}
+                autoComplete="email"
+              />
             </label>
             <label className={styles.field}>
               <span>{t("phone")}</span>
-              <input className={styles.input} name="phone" type="tel" required autoComplete="tel" />
+              <input
+                className={styles.input}
+                name="phone"
+                defaultValue={search.phone ?? again?.phone}
+                type="tel"
+                required
+                autoComplete="tel"
+              />
             </label>
+            <label className={styles.field}>
+              <span>{t("note")}</span>
+              <textarea
+                className={styles.input}
+                name="note"
+                rows={3}
+                maxLength={NOTE_MAX}
+                aria-describedby="note-hint"
+              />
+              <small id="note-hint">{t("noteHint", { max: NOTE_MAX })}</small>
+            </label>
+            <Turnstile siteKey={turnstileSiteKey()} language={locale} />
             <button className={styles.button} type="submit">
               {t("send")}
             </button>

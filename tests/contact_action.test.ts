@@ -31,7 +31,7 @@ describe("sendContact", () => {
     contact.sendContactMessage.mockResolvedValueOnce(undefined);
     const state = await sendContact(IDLE, form(good));
     expect(state.status).toBe("sent");
-    expect(contact.sendContactMessage).toHaveBeenCalledWith({}, good);
+    expect(contact.sendContactMessage).toHaveBeenCalledWith({}, good, "en");
   });
 
   test("a bad form gives the field errors, keeps the name and sends nothing", async () => {

@@ -6,10 +6,13 @@ import { getDb } from "@/db";
 import { listOffers } from "@/db/offers";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { freeTimesText } from "@/lib/free-times-text";
 import { OFFER_KINDS, OFFER_MINUTES } from "@/lib/offer-form";
+import { siteOrigin } from "@/lib/site";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../studio.module.css";
 import { changeOffer } from "./actions";
+import { ShareButton } from "./share-button";
 
 // The offers of the studio (#31): Nina adds, changes and hides them. Plain HTML forms and one server action.
 export default async function OffersPage() {
@@ -18,7 +21,10 @@ export default async function OffersPage() {
   const locale = await setStudioLocale();
   const t = await getTranslations("StudioOffers");
   const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
-  const offers = listOffers(getDb());
+  const db = getDb();
+  const offers = listOffers(db);
+  const origin = siteOrigin();
+  const shareLocale = locale === "nl" ? "nl" : "en";
 
   const lengthSelect = (value?: number) => (
     <label className={styles.form}>
@@ -79,6 +85,12 @@ export default async function OffersPage() {
                 </button>
               </form>
             </details>
+            {offer.visible && (
+              <ShareButton
+                locale={shareLocale}
+                texts={{ en: freeTimesText(db, offer, "en", origin), nl: freeTimesText(db, offer, "nl", origin) }}
+              />
+            )}
           </li>
         ))}
       </ul>

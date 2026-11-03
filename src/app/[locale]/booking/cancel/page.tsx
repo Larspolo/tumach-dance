@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getDb } from "@/db";
+import { routing } from "@/i18n/routing";
 import { cancelLink } from "@/lib/booking-cancel";
 import { TIME_ZONE } from "@/lib/hours";
 import styles from "../../book/book.module.css";
@@ -10,8 +13,13 @@ import { cancelWithLink } from "./actions";
 // scanners open links. The button posts the server action, which checks the token and the rule of #163 again.
 export const dynamic = "force-dynamic";
 
-// The token is in the address: no search engine and no referrer gets it.
-export const metadata: Metadata = { robots: { index: false, follow: false }, referrer: "no-referrer" };
+// The token is in the address: no search engine and no referrer gets it. A title names the page for a screen reader (#343).
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  const t = await getTranslations({ locale, namespace: "Meta" });
+  return { title: t("cancel.title"), robots: { index: false, follow: false }, referrer: "no-referrer" };
+}
 
 type Search = { token?: string; done?: string };
 
@@ -23,6 +31,7 @@ export default async function CancelPage({
   searchParams: Promise<Search>;
 }) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const { token = "", done } = await searchParams;
   const t = await getTranslations("CancelBooking");
@@ -73,6 +82,11 @@ export default async function CancelPage({
             {t("button")}
           </button>
         </form>
+      )}
+      {link.state === "open" && booking.status === "requested" && (
+        <a className={styles.link} href={`/${locale}/booking/move?${new URLSearchParams({ token })}`}>
+          {t("move")}
+        </a>
       )}
       {link.state === "cancelled" || link.state === "declined" ? (
         <a className={styles.link} href={`/${locale}/book`}>

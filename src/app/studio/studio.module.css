@@ -27,6 +27,11 @@
   gap: 0.75rem;
 }
 
+/* A section of the start page above another section (the passkey above the notifications). */
+.section {
+  margin-bottom: 1.5rem;
+}
+
 .label {
   font-family: "Space Mono", monospace;
   font-size: 0.8rem;
@@ -101,6 +106,13 @@
   gap: 0.6rem;
   min-height: 44px;
   font-size: 1.05rem;
+}
+
+/* The WhatsApp link of a booking: a tap target of 44 px on a phone (#507). */
+.chat {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .choice input,
@@ -188,6 +200,20 @@
   border-radius: 0.5rem;
 }
 
+/* The choices of a question for Nina: one below the other, as a suggested text can be long (2026-10-31). The radio
+   button stays at the start of the first line. */
+.answers {
+  flex-direction: column;
+}
+
+.answers .choice {
+  align-items: flex-start;
+}
+
+.answers .choice input {
+  flex: none;
+}
+
 /* The grid of the photos (#173): two columns on a phone. */
 .photos {
   display: grid;
@@ -211,4 +237,84 @@
   padding: 0.5rem 0.75rem;
   background: #efe9df;
   color: #3a352e;
+}
+
+/* The language control of the studio app (#314): buttons with the look of the links of the public control. */
+.languageButton {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+/* The links of the error page (#362). */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* The note of a dancer (#388): plain text with its line breaks. */
+.dancerNote {
+  white-space: pre-line;
+  font-style: italic;
+  color: #3a352e;
+}
+
+/* The links of the start page as large boxes in the colors of the theme (Nina, #522): a tap target of a full
+   width, each box with its own color, so that Nina finds a task at a glance. White text on each color has a
+   contrast of 4.5:1 or more. */
+.tileRow {
+  margin: 0 0 0.75rem;
+}
+
+.tile {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.95rem 1rem;
+  border-radius: 0.5rem;
+  background: #a8503a;
+  color: #fbf8f1;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.tileRow:nth-of-type(6n + 2) .tile {
+  background: #7c3527;
+}
+
+.tileRow:nth-of-type(6n + 3) .tile {
+  background: #5c6b3a;
+}
+
+.tileRow:nth-of-type(6n + 4) .tile {
+  background: #3f5a66;
+}
+
+.tileRow:nth-of-type(6n + 5) .tile {
+  background: #8a5a1c;
+}
+
+.tileRow:nth-of-type(6n) .tile {
+  background: #141210;
+}
+
+/* The text of a contact message keeps its lines (#533). */
+.pre {
+  white-space: pre-wrap;
+}
+
+/* The notifications section when the phone gets no push (#580): a calm frame in the colors of the site, no red box. */
+.alert {
+  padding: 1rem;
+  border: 2px solid #a8503a;
+  border-radius: 0.5rem;
+  background: #fbf8f1;
 }

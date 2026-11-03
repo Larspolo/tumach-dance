@@ -18,6 +18,7 @@ function setup() {
     db.insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: s,
         end: s + HOUR,
         status,

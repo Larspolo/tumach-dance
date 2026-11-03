@@ -6,7 +6,6 @@ import { DateTime } from "luxon";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import nl from "../../messages/nl.json";
-import sl from "../../messages/sl.json";
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
@@ -18,12 +17,18 @@ import { weekOf } from "./week";
 
 export const BOOKINGS_PATH = "/studio/bookings";
 
-const MESSAGES = { en, nl: withFallback(nl, en), sl: withFallback(sl, en) };
+const MESSAGES = { en, nl: withFallback(nl, en) };
 
 /** The push of a `requested` booking in the language `locale` of Nina's studio app. */
 export function requestPush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
   const t = createTranslator({ locale, messages: MESSAGES[locale] });
   return { title: t("bookingPush.title"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
+}
+
+/** The one extra push of a request that still waits 12 hours before its start (#594). */
+export function nudgePush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  return { title: t("bookingPush.nudgeTitle"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
 }
 
 /** The push of a booking that the dancer cancelled with the link (#210), with a link to the week of the booking. */
@@ -33,6 +38,64 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
   return {
     title: t("bookingPush.cancelTitle"),
     body: pushBody(booking, offer, locale),
+    url: `/studio/week?start=${weekOf(day).start}`,
+  };
+}
+
+/**
+ * The push of a request that the dancer moved with the link (#648): the name, the old and the new time in Amsterdam
+ * time, with a link to the week of the new time.
+ */
+export function movePush(booking: Booking, from: { start: number }, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  const format = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, dateStyle: "medium", timeStyle: "short" });
+  const day = DateTime.fromMillis(booking.start, { zone: TIME_ZONE }).toISODate() ?? undefined;
+  return {
+    title: t("bookingPush.moveTitle"),
+    body: t("bookingPush.moveBody", {
+      name: booking.name,
+      from: format.format(new Date(from.start)),
+      to: format.format(new Date(booking.start)),
+    }),
+    url: `/studio/week?start=${weekOf(day).start}`,
+  };
+}
+
+/**
+ * The email of the site to a dancer that can fail (#414, `unanswered`: #421). `bounce`: Mailgun sent an email, and the
+ * server of the dancer refused it (#494, `email-bounce.ts`).
+ */
+export type EmailKind = "request" | "decision" | "cancel" | "move" | "reminder" | "payment" | "unanswered" | "bounce";
+
+export const EMAIL_KINDS: EmailKind[] = [
+  "request",
+  "decision",
+  "cancel",
+  "move",
+  "reminder",
+  "payment",
+  "unanswered",
+  "bounce",
+];
+
+const KIND_KEY = {
+  request: "emailFailRequest",
+  decision: "emailFailDecision",
+  cancel: "emailFailCancel",
+  move: "emailFailMove",
+  reminder: "emailFailReminder",
+  payment: "emailFailPayment",
+  unanswered: "emailFailUnanswered",
+  bounce: "emailFailBounce",
+} as const;
+
+/** The push to Nina when an email to a dancer failed (#414): she can tell the dancer by WhatsApp. */
+export function emailFailPush(booking: Booking, kind: EmailKind, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  const day = DateTime.fromMillis(booking.start, { zone: TIME_ZONE }).toISODate() ?? undefined;
+  return {
+    title: t("bookingPush.emailFailTitle"),
+    body: t(`bookingPush.${KIND_KEY[kind]}`, { name: booking.name }),
     url: `/studio/week?start=${weekOf(day).start}`,
   };
 }
@@ -68,5 +131,24 @@ export async function sendCancelPush(db: Db, booking: Booking): Promise<void> {
     await sendPush(db, (locale) => cancelPush(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-push] the cancel push of booking ${booking.id} failed:`, error);
+  }
+}
+
+/** Send the push after `moveByDancer()` gave `ok`. A failed push does not undo the move: the error is logged. */
+export async function sendMovePush(db: Db, booking: Booking, from: { start: number }): Promise<void> {
+  try {
+    await sendPush(db, (locale) => movePush(booking, from, locale));
+  } catch (error) {
+    console.error(`[booking-push] the move push of booking ${booking.id} failed:`, error);
+  }
+}
+
+/** Send the push after an email to a dancer failed. No push for a forgotten booking; a failed push is logged. */
+export async function sendEmailFailPush(db: Db, booking: Booking, kind: EmailKind): Promise<void> {
+  if (booking.forgottenAt) return;
+  try {
+    await sendPush(db, (locale) => emailFailPush(booking, kind, locale));
+  } catch (error) {
+    console.error(`[booking-push] the email fail push of booking ${booking.id} failed:`, error);
   }
 }

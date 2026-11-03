@@ -1,33 +1,41 @@
 {
   "HomePage": {
     "title": "TUMACH",
-    "welcome": "[Placeholder (en): the welcome of Nina]",
-    "eyebrow": "[Placeholder (en): short line above the title]",
-    "primaryAction": "[Placeholder (en): button to the schedule]",
-    "secondaryAction": "[Placeholder (en): button to the studio]",
-    "imageBlock": "[Placeholder (en): photo of the studio]",
+    "welcome": "Come as you are and dance at your own pace: private lessons, classes and a studio to rent.",
+    "eyebrow": "Dance studio · Amsterdam",
+    "primaryAction": "Book a lesson",
+    "secondaryAction": "See the schedule",
+    "imageBlock": "The TUMACH dance studio",
+    "news": {
+      "title": "News"
+    },
     "about": {
-      "title": "[Placeholder (en): title about the studio]",
-      "label": "[Placeholder (en): (01) about]",
-      "text1": "[Placeholder (en): first paragraph about the studio]",
-      "text2": "[Placeholder (en): second paragraph about Nina]",
-      "text3": "[Placeholder (en): third paragraph about the dancers]",
-      "quote": "[Placeholder (en): a short quote of Nina]",
-      "quoteBy": "[Placeholder (en): who said the quote]"
+      "title": "About TUMACH",
+      "label": "(01) About",
+      "text1": "TUMACH is a small dance studio in Amsterdam. Take a private lesson, join a class, or rent the studio for your own practice.",
+      "text2": "I am Nina, and this is my studio. I teach private lessons and classes, at the pace that suits you.",
+      "text3": "Beginners and experienced dancers are both welcome. We start where you are.",
+      "quote": "Every dancer starts somewhere.",
+      "quoteBy": "Nina"
     },
     "photos": {
-      "title": "[Placeholder (en): title of the photos]",
-      "label": "[Placeholder (en): (02) photos]",
-      "alt": "[Placeholder (en): a photo of the studio]"
+      "title": "The studio",
+      "label": "Photos",
+      "alt": "A photo of the TUMACH dance studio"
+    },
+    "offers": {
+      "title": "Prices",
+      "label": "(02) Prices",
+      "book": "Book"
     },
     "classes": {
-      "title": "[Placeholder (en): title of the classes]",
-      "label": "[Placeholder (en): (02) classes]",
+      "title": "Classes",
+      "label": "(03) Classes",
       "none": "No classes yet."
     },
     "schedule": {
-      "title": "[Placeholder (en): title of the schedule]",
-      "label": "[Placeholder (en): (03) schedule]",
+      "title": "Every week",
+      "label": "(04) Schedule",
       "none": "No class times yet.",
       "days": {
         "mon": "Monday",
@@ -38,37 +46,49 @@
         "sat": "Saturday",
         "sun": "Sunday"
       },
-      "time": "{from}–{to}"
+      "time": "{from}–{to}",
+      "closedDay": "Closed on {date, date, ::dMMMM}.",
+      "closedPeriod": "Closed from {from, date, ::dMMMM} to {to, date, ::dMMMM}.",
+      "noClass": "No class on {date, date, ::dMMMM}."
     },
     "contact": {
-      "title": "[Placeholder (en): title of the contact]",
-      "label": "[Placeholder (en): (04) contact]",
-      "text": "[Placeholder (en): invitation to write to Nina]",
-      "name": "[Placeholder (en): name]",
-      "email": "[Placeholder (en): email]",
-      "message": "[Placeholder (en): message]",
-      "send": "[Placeholder (en): send]",
-      "placeLabel": "[Placeholder (en): place]",
-      "place": "[Placeholder (en): address of the studio]",
-      "closing": "[Placeholder (en): closing line]",
-      "thanks": "[Placeholder (en): Thank you, your message is sent]",
-      "failed": "Sending failed, please try again later"
+      "title": "Say hello",
+      "label": "(05) Contact",
+      "text": "A question about a lesson, a class or the studio? Send me a message, and I will answer soon.",
+      "name": "Your name",
+      "email": "Your email",
+      "message": "Your message",
+      "send": "Send",
+      "placeLabel": "Where",
+      "place": "Amsterdam",
+      "closing": "See you in the studio.",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "whatsappLink": "Send me a message",
+      "thanks": "Thank you! Your message is sent.",
+      "failed": "Sending failed, please try again later",
+      "notSent": "Your message was not sent. Wait a few seconds and send it again."
     }
   },
   "Nav": {
     "label": "Main",
     "logo": "TUMACH",
-    "about": "[Placeholder (en): about]",
-    "classes": "[Placeholder (en): classes]",
-    "schedule": "[Placeholder (en): schedule]",
-    "contact": "[Placeholder (en): contact]"
+    "about": "About",
+    "offers": "Prices",
+    "photos": "Photos",
+    "classes": "Classes",
+    "schedule": "Schedule",
+    "contact": "Contact",
+    "book": "Book"
   },
   "Footer": {
     "copyright": "© {year}",
     "domain": "tumach.dance",
-    "tagline": "[Placeholder (en): the tagline of Nina]",
-    "place": "[Placeholder (en): the place]",
-    "privacy": "How we keep your data"
+    "tagline": "Tumach Dance? Never enough!",
+    "place": "Amsterdam",
+    "privacy": "How we keep your data",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp"
   },
   "StudioLogin": {
     "title": "Studio",
@@ -91,6 +111,7 @@
     "offers": "Offers",
     "hours": "Hours",
     "bookings": "Bookings",
+    "bookingsCount": "Bookings ({count} waiting)",
     "calendarAdd": "Add to my calendar",
     "calendarNote": "Your calendar app then shows the bookings and updates them by itself.",
     "calendarRenew": "Make a new address",
@@ -99,13 +120,25 @@
     "questions": "For Nina",
     "questionsCount": "For Nina ({count, plural, one {# question} other {# questions}})",
     "classes": "Classes",
+    "devices": "Devices",
     "feedback": "Feedback",
-    "photos": "Photos"
+    "photos": "Photos",
+    "messages": "Messages",
+    "messagesCount": "Messages ({count} new)",
+    "money": "Money",
+    "news": "News",
+    "search": "Search",
+    "searchButton": "Search",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "nothing": "Nothing to do now."
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
+    "buttonTitle": "Passkey",
     "text": "Add a passkey on this phone. Next time you log in with Face ID or your fingerprint, with no code.",
     "add": "Add a passkey",
+    "added": "The passkey is added. Next time you log in with no code.",
     "notNow": "Not now",
     "failed": "The passkey was not added. You can still log in with a code by email."
   },
@@ -148,7 +181,14 @@
     "wrongPeriod": "The end of the period is before its start.",
     "wrongDate": "This date cannot be saved. Check the date and the time.",
     "allDayShort": "all day",
-    "fromShort": "from {time}"
+    "fromShort": "from {time}",
+    "outsideTitle": "Outside your hours",
+    "outsideWhy": "These bookings are outside your open hours now.",
+    "outsideCancel": "Cancel these bookings",
+    "outsideAsk": "{count, plural, one {Cancel # booking? The dancer gets an email.} other {Cancel # bookings? Each dancer gets an email.}}",
+    "outsideYes": "Yes, cancel them",
+    "outsideNo": "No",
+    "outsideCancelled": "{count, plural, one {Cancelled # booking.} other {Cancelled # bookings.}}"
   },
   "StudioOffers": {
     "title": "Offers",
@@ -181,7 +221,6 @@
     "textIn": "Text in {language}",
     "forWhomIn": "For whom in {language}",
     "nl": "Dutch",
-    "sl": "Slovenian",
     "translations": "Translations",
     "save": "Save",
     "hide": "Hide",
@@ -210,6 +249,7 @@
   "Push": {
     "title": "Notifications",
     "turnOn": "Turn on notifications",
+    "offNote": "This phone gets no notifications of new requests. Tap the button to turn them on.",
     "on": "Notifications are on for this phone.",
     "sendTest": "Send a test",
     "testSent": "The test is on its way. Look at your phone.",
@@ -252,17 +292,30 @@
     "rental": "Studio rental, {minutes} min",
     "noOffers": "There is nothing to book at the moment.",
     "noTimes": "No free time in the next 4 weeks.",
+    "nextFree": "The next free time is on {date}. You can book it from {from}.",
+    "contactText": "A question, or another time?",
+    "contact": "Write to Nina",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
+    "note": "A note for Nina (optional)",
+    "noteHint": "For example what you want to learn, or how many people come. At most {max} characters.",
     "send": "Send the request",
     "sent": "Request sent",
     "sentText": "Nina will look at your request and answer you by email.",
     "again": "Book another time",
     "taken": "Someone else just took this time. Choose another time.",
     "invalid": "Please check your name, email and phone number.",
+    "noteLong": "Your note is longer than {max} characters. Please make it shorter.",
+    "limit": "Too many requests from this connection. Try again in an hour, or send Nina a message.",
+    "limitOpen": "You already have several requests that wait for Nina's answer. Wait for her answer first, or send Nina a message.",
+    "limitDay": "The booking page takes no more requests today. Try again tomorrow, or send Nina a message.",
+    "check": "The check for bots did not work. Wait a few seconds and send the request again.",
     "notSlot": "This time is not free. Choose another time.",
-    "privacy": "How we keep your data"
+    "privacy": "How we keep your data",
+    "emailTypo": "Did you mean {email}?",
+    "emailUse": "Use {email}",
+    "emailKeep": "My address is right"
   },
   "bookingEmail": {
     "subject": "Your booking request at TUMACH",
@@ -285,12 +338,44 @@
     "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
     "cancelledByYou": "You cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "payReminderSubject": "Payment of your booking at TUMACH",
-    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well."
+    "payReminder": "Nina has not received your payment yet for: {offer}, {when}. Did you pay already? Then all is well.",
+    "unansweredSubject": "Your booking request at TUMACH",
+    "unansweredBody": "Nina could not answer your request in time: {offer}, {when}. The request has ended.",
+    "unansweredOther": "You can pick another time on the booking page: {url}",
+    "cancelledBookAgain": "Book another time: {url}",
+    "moveSubject": "Your booking at TUMACH has a new time",
+    "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}.",
+    "repeatSubject": "Your lessons at TUMACH are booked",
+    "repeatBody": "Nina booked your lesson again on these dates: {offer}.",
+    "repeatLine": "{when}: cancel with {url}",
+    "repeatCancel": "Can you not come on one of these dates? Cancel that booking with its link, at any time before the start.",
+    "payPrice": "The price is {price}.",
+    "payButton": "Pay with Tikkie",
+    "cancelText": "Can you not come? Cancel the booking at any time before the start.",
+    "cancelButton": "Cancel the booking",
+    "bookButton": "Book another time",
+    "againButton": "Book another lesson",
+    "againText": "Want another lesson? Book it here: {url}",
+    "address": "Where: {address}"
   },
   "bookingPush": {
     "title": "New booking request",
     "body": "{name}: {offer}, {when}",
-    "cancelTitle": "Booking cancelled"
+    "nudgeTitle": "A request still waits",
+    "cancelTitle": "Booking cancelled",
+    "emailFailTitle": "Email not sent",
+    "emailFailRequest": "{name} did not get the email about the request.",
+    "emailFailDecision": "{name} did not get the email with your answer.",
+    "emailFailCancel": "{name} did not get the email about the cancellation.",
+    "emailFailMove": "{name} did not get the email with the new time.",
+    "emailFailReminder": "{name} did not get the reminder.",
+    "emailFailPayment": "{name} did not get the payment reminder.",
+    "emailFailUnanswered": "{name} did not get the email about the open request.",
+    "emailFailBounce": "The email to {name} bounced: the address does not exist. Ask {name} for the right address.",
+    "limitTitle": "Many booking requests today",
+    "limitBody": "The booking page got many requests in 24 hours, maybe from a bot. It takes no new requests until tomorrow.",
+    "moveTitle": "Request moved",
+    "moveBody": "{name} moved the request from {from} to {to}."
   },
   "StudioBookings": {
     "title": "Bookings",
@@ -304,8 +389,18 @@
     "badLink": "The Tikkie link must start with https://.",
     "toPay": "Approved bookings",
     "markPaid": "Paid",
+    "addToCalendar": "Add to my calendar",
     "paidOn": "Paid on {date}",
-    "undo": "Undo"
+    "undo": "Undo",
+    "whatsapp": "WhatsApp",
+    "whatsappText": "Hi {name}, about your booking on {date}: ",
+    "undoDecision": "Undo",
+    "undone": "Undone: the request is open again. The dancer got no email.",
+    "undoFailed": {
+      "sent": "Too late: the dancer already has the email.",
+      "taken": "Another dancer took this time in the meantime.",
+      "started": "Too late: the time already started."
+    }
   },
   "StudioQuestions": {
     "title": "For Nina",
@@ -334,7 +429,51 @@
     "cancelAsk": "Cancel this booking?",
     "cancelYes": "Yes, cancel",
     "removed": "Name removed",
-    "cancelNo": "No"
+    "cancelNo": "No",
+    "block": "Kept free",
+    "blockRemove": "Remove",
+    "blockAdd": "Keep a time free",
+    "blockDate": "Day",
+    "blockFrom": "From",
+    "blockTo": "To",
+    "blockSave": "Save",
+    "blockWrong": "Choose a day, and an end after the start.",
+    "forget": "Remove the data of this dancer",
+    "forgetAsk": "Remove the name, email and phone of this dancer from each booking, and cancel the coming ones?",
+    "forgetYes": "Yes, remove",
+    "forgetNo": "No",
+    "move": "Move",
+    "moveDay": "Move to which day?",
+    "moveTime": "Which time on {day}?",
+    "moveAsk": "Move this booking to {day} at {time}? The dancer gets an email.",
+    "moveYes": "Yes, move",
+    "moveNo": "No",
+    "moveTaken": "This time is no longer free. Choose another time.",
+    "moveNone": "No free time in the next 4 weeks.",
+    "lessonAdd": "Add a lesson",
+    "lessonOffer": "Which lesson?",
+    "lessonDay": "On which day?",
+    "lessonWhen": "{offer} on {day} at {time}",
+    "lessonName": "Name",
+    "lessonEmail": "Email (optional)",
+    "lessonPhone": "Phone (optional)",
+    "lessonLanguage": "Language of the emails",
+    "lessonEnglish": "English",
+    "lessonDutch": "Dutch",
+    "lessonWrong": "Check the name, the email and the phone.",
+    "lessonSave": "Add the lesson",
+    "lessonClose": "Close",
+    "repeat": "Repeat",
+    "repeatWeeks": "Repeat for how many weeks?",
+    "repeatYes": "Repeat",
+    "repeatNo": "No",
+    "repeatDone": "{count, plural, one {Added # week.} other {Added # weeks.}}",
+    "repeatSkipped": "Not free: {dates}.",
+    "cancelDay": "Cancel this day",
+    "cancelDayAsk": "{count, plural, one {Cancel # booking and close this day? Each dancer gets an email.} other {Cancel # bookings and close this day? Each dancer gets an email.}}",
+    "cancelDayYes": "Yes, cancel the day",
+    "cancelDayNo": "No",
+    "cancelDayDone": "{count, plural, one {Cancelled # booking. The day is closed.} other {Cancelled # bookings. The day is closed.}}"
   },
   "StudioFeedback": {
     "back": "Back",
@@ -360,6 +499,7 @@
     "title": "Photos",
     "back": "Back",
     "none": "No photos yet.",
+    "onSite": "See the photos on the site",
     "choose": "Photos from your phone",
     "add": "Add photos",
     "adding": "Adding…",
@@ -381,19 +521,21 @@
     "declined": "Nina did not take this request: there is nothing to cancel.",
     "started": "This booking has started: you cannot cancel it with the link any more.",
     "contact": "Write to Nina",
-    "contactText": "A question, or you cannot come?"
+    "contactText": "A question, or you cannot come?",
+    "move": "Choose another time"
   },
   "Privacy": {
     "title": "Privacy",
     "intro": "What this site keeps of you, why, who sees it and for how long.",
     "bookingTitle": "A booking",
-    "bookingWhat": "When you book, the site keeps your name, email address, phone number and the language of the site.",
+    "bookingWhat": "When you book, the site keeps your name, email address, phone number, the note you wrote for Nina and the language of the site.",
     "bookingWhy": "Nina uses them to answer your request, to send you the emails about your booking (the answer, the reminder and the payment link) and to reach you about the lesson.",
     "bookingWho": "Only Nina sees them. The emails go through our email service, Mailgun.",
-    "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address and phone number by itself.",
+    "keep": "{months, plural, one {# month} other {# months}} after your lesson, the site removes your name, email address, phone number and note by itself.",
+    "dancerNote": "Nina can keep a short private note about the lessons of a dancer. Only Nina sees it, and the site removes it together with the other data of the dancer.",
     "backup": "Each night the site makes a backup of its data for the case of a fault. A backup keeps a copy of your data for {nights, plural, one {# night} other {# nights}}, then the site removes it.",
     "contactTitle": "A contact message",
-    "contactWhat": "The site keeps no copy of your message: it sends one email to Nina.",
+    "contactWhat": "The site keeps your name, email address and message so that Nina can answer it in her studio app. It sends a copy to Nina by email. {months, plural, one {# month} other {# months}} after your message, the site removes it by itself.",
     "contactSpam": "Against spam, the site keeps the internet address of your device in its memory for at most one hour.",
     "cookiesTitle": "Cookies",
     "cookies": "You need no account. The site uses no tracking and no advertising cookies.",
@@ -404,8 +546,8 @@
   "Meta": {
     "imageAlt": "TUMACH, the dance studio in Amsterdam",
     "home": {
-      "title": "[Placeholder (en): title of the site in a search result]",
-      "description": "[Placeholder (en): description of the site in a search result]"
+      "title": "TUMACH · Dance studio in Amsterdam",
+      "description": "Private dance lessons, classes and a studio to rent in Amsterdam. See the times and book online, with no account."
     },
     "book": {
       "title": "Book a lesson · TUMACH",
@@ -418,6 +560,156 @@
     "guide": {
       "title": "How to use the studio app · TUMACH",
       "description": "Log in, add the studio app to your home screen and turn on notifications."
+    },
+    "cancel": {
+      "title": "Cancel a booking · TUMACH"
+    },
+    "move": {
+      "title": "Choose another time · TUMACH"
     }
+  },
+  "StudioNotFound": {
+    "title": "Page not found",
+    "text": "This page of the studio app does not exist.",
+    "back": "Back to the studio app"
+  },
+  "NotFound": {
+    "pageTitle": "Page not found · TUMACH",
+    "title": "This page is not here",
+    "text": "The address may be old or have a typing error. Take a breath and go on from one of these pages.",
+    "home": "To the home page",
+    "book": "Book a lesson"
+  },
+  "PageError": {
+    "title": "Something went wrong",
+    "text": "This page did not load. Try again, or go on from the start.",
+    "retry": "Try again",
+    "home": "To the home page",
+    "studioHome": "To the start of the app",
+    "code": "Code:"
+  },
+  "StudioMessages": {
+    "title": "Messages",
+    "back": "Back",
+    "none": "No messages yet.",
+    "answer": "Your answer",
+    "send": "Send the answer",
+    "empty": "Write an answer first.",
+    "error": "The answer was not sent. Try again.",
+    "thanks": "Your answer is sent by email.",
+    "answered": "Answered on {when}:",
+    "keep": "The site removes a message {months, plural, one {# month} other {# months}} after it came.",
+    "pushTitle": "New message from {name}"
+  },
+  "ContactAnswer": {
+    "subject": "Your message to TUMACH",
+    "quote": "Your message: {message}"
+  },
+  "Devices": {
+    "back": "Back",
+    "title": "Devices",
+    "intro": "You are logged in on these devices. Do you see one that is not yours? Tell Lars.",
+    "kind": "{type, select, phone {Phone} tablet {Tablet} computer {Computer} other {Device}} · {browser, select, safari {Safari} chrome {Chrome} firefox {Firefox} edge {Edge} other {other browser}}",
+    "thisDevice": "This device",
+    "today": "today",
+    "lastUse": "Last used: {day}",
+    "logOut": "Log out",
+    "confirm": "Log out this device?",
+    "logOutOthers": "Log out all other devices",
+    "confirmOthers": "Log out all other devices?",
+    "yes": "Yes",
+    "no": "No",
+    "failed": "Something went wrong. Try again in a minute."
+  },
+  "StudioMoney": {
+    "back": "Back",
+    "title": "Money of {month}",
+    "count": "Approved bookings",
+    "paid": "Paid",
+    "open": "Not paid yet",
+    "yearTitle": "The year {year}",
+    "unpaidTitle": "Not paid yet",
+    "allPaid": "All bookings of this month are paid.",
+    "previous": "← {month}",
+    "next": "{month} →",
+    "yearDownload": "Download {year} as a spreadsheet",
+    "csv": {
+      "date": "Date",
+      "time": "Time",
+      "offer": "Offer",
+      "price": "Price (EUR)",
+      "paid": "Paid",
+      "yes": "yes",
+      "no": "no"
+    }
+  },
+  "StudioDancer": {
+    "back": "Back",
+    "title": "Bookings of {name}",
+    "link": "Earlier bookings",
+    "none": "No other bookings yet.",
+    "noteLabel": "Your private note about this dancer (only you see it)",
+    "noteLimit": "Up to {max} characters.",
+    "noteSave": "Save",
+    "paid": "Paid",
+    "notPaid": "Not paid",
+    "status": {
+      "requested": "Request",
+      "approved": "Approved",
+      "declined": "Declined",
+      "cancelled": "Cancelled"
+    }
+  },
+  "MoveBooking": {
+    "title": "Choose another time",
+    "booking": "Your request: {offer}, {when}.",
+    "day": "Tap a day:",
+    "time": "Tap a time on {day}:",
+    "ask": "Move your request to {day}, {time}?",
+    "yes": "Yes, move it",
+    "otherDay": "Another day",
+    "back": "Back",
+    "none": "There is no other free time in the next 4 weeks.",
+    "taken": "Someone just took this time. Choose another time.",
+    "done": "Your request has the new time. Nina still answers it. You get an email.",
+    "approved": "Nina already approved this booking. Ask Nina to move it."
+  },
+  "StudioNews": {
+    "title": "News",
+    "intro": "A short note on the home page, for example a holiday or a new class.",
+    "now": "On the home page now",
+    "none": "No note on the home page.",
+    "until": "Shows until {date}.",
+    "noEnd": "Shows with no end date.",
+    "remove": "Remove the note",
+    "text": "Your note",
+    "left": "{count, plural, one {# character left} other {# characters left}}",
+    "endDate": "Show until (optional)",
+    "endDateNote": "Leave empty to show the note until you remove it.",
+    "save": "Save",
+    "saved": "The note is saved.",
+    "removed": "The note is removed.",
+    "error": {
+      "empty": "Type a note first.",
+      "long": "The note is too long. Make it shorter.",
+      "date": "The end date is in the past. Pick today or a later day."
+    }
+  },
+  "StudioSearch": {
+    "title": "Search bookings",
+    "label": "Name, email or phone",
+    "button": "Search",
+    "none": "No booking found.",
+    "back": "Back"
+  },
+  "StudioShare": {
+    "free": "Free times in the next 7 days:",
+    "none": "No free time in the next 7 days.",
+    "link": "Book here: {link}",
+    "share": "Share free times",
+    "language": "Language",
+    "copied": "Copied. Paste it in a message.",
+    "languageEn": "English",
+    "languageNl": "Dutch"
   }
 }

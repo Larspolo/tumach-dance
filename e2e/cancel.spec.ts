@@ -23,6 +23,7 @@ test("Nina cancels an approved booking in two taps", async ({ page }, testInfo) 
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: start.toMillis(),
       end: start.plus({ minutes: 60 }).toMillis(),
       name: "Cancel Dancer",

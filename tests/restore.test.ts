@@ -32,7 +32,17 @@ function addBooking(path: string, name: string) {
     .returning()
     .get();
   db.insert(bookings)
-    .values({ offerId: offer.id, start: 1, end: 2, name, email: "a@b.nl", phone: "1", locale: "nl", createdAt: 1 })
+    .values({
+      offerId: offer.id,
+      priceCents: 5000,
+      start: 1,
+      end: 2,
+      name,
+      email: "a@b.nl",
+      phone: "1",
+      locale: "nl",
+      createdAt: 1,
+    })
     .run();
   return db;
 }

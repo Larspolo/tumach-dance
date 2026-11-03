@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { setStudioLocale } from "@/i18n/studio";
 import { OfflineNote } from "./offline-note";
 import styles from "./studio.module.css";
+import StudioLanguage from "./studio-language";
 
 export const metadata: Metadata = {
   title: "TUMACH studio",
@@ -24,6 +25,7 @@ export default async function StudioLayout({ children }: { children: ReactNode }
         <NextIntlClientProvider>
           <OfflineNote madeAt={new Date().toISOString()} />
           {children}
+          <StudioLanguage />
         </NextIntlClientProvider>
       </body>
     </html>

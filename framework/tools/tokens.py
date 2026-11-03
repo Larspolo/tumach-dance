@@ -21,12 +21,14 @@ thinking and tool input. The rest of the eq (not in the sinks): owner messages, 
 Field `cost`: the API list price of the calls in $, by the model of each call (`PRICES`). The eq weighs a cache read
 0.1, but Opus 5.5 pays 0.05 and Haiku 5.5 pays 5 times more above 100k prompt tokens: compare lanes by the cost.
 Field `verify` (#1704): the wall minutes and the count of the check commands (`pytest`, `ruff`, `mc_check.py`, `mc_shot.py`,
-`render.py`, and `wait`: a loop that waits for the output of a background check), from the time of a tool call to the
-time of its result. A background command has its minutes in the wait loop or the notification, not in its own call.
+`render.py`, `check tool`: a server run of `tools/*_check.py` or `game/run.py`, and `wait`: a loop that waits for the
+output of a background check), from the time of a tool call to the time of its result. A background command has its
+minutes in the wait loop or the notification, not in its own call.
 Field `force` (#3461): the count of the force pushes that failed (`git push --force`, `-f`, `+ref`; #903 forbids them).
-Phases (`--phases`): each tool call gets a phase (`phase()`), and the wall time from the call to the next call of the
-session counts for it. A call `claim.py N` that wins starts ticket N; the time before the first claim counts for
-the first ticket. The phases that runs gave by hand were guesses: 37 minutes for a 6.5-minute run (2026-10-28).
+Phases (`--phases`): each tool call gets a phase (`phase()`), and the wall time from the call to its result counts for
+it; the time from the result to the next call of the session (the model thinks and writes it) counts for the next
+call (#5528). A call `claim.py N` that wins starts ticket N; the time before the first claim counts for the first
+ticket. The phases that runs gave by hand were guesses: 37 minutes for a 6.5-minute run (2026-10-28).
 Run line (`--run-line`, 2026-10-29): the session ID and the branch (they join the reports of one run, its claims and
 the starts of the pacer), the start and wall minutes, the model, the effort, the thinking tokens (a part of `out`),
 the eq of each phase (the eq of a call goes to the phase of its tool calls) and the eq of each claimed ticket.
@@ -108,7 +110,8 @@ def label(name, inp):
 
 CHECKS = (("pytest -m mc", r"pytest\b.*-m\s+['\"]?mc\b"), ("pytest -m slow", r"pytest\b.*-m\s+['\"]?slow\b"),
           ("pytest files", r"pytest\b.*\btests/\S+\.py"), ("pytest", r"\bpytest\b"), ("ruff", r"\bruff\b"),
-          ("mc_check.py", r"mc_check\.py"), ("mc_shot.py", r"mc_shot\.py"), ("render.py", r"render\.py"))
+          ("mc_check.py", r"mc_check\.py"), ("mc_shot.py", r"mc_shot\.py"), ("render.py", r"render\.py"),
+          ("check tool", r"(?<!framework/)tools/\w+_check\.py|\bgame/run\.py\b"))   # a server run (#5424)
 WAIT = r"\buntil\b|\bsleep\b"                 # a wait loop (LEARNINGS #413): its minutes are the minutes of a check
 OUTPUT = r"rc=|\.out\b|\.log\b"               # the output of a background check that a wait loop reads
 HEREDOC = re.compile(r"<<-?\s*['\"]?(\w+)['\"]?.*?^\s*\1\s*$", re.M | re.S)   # text (a PR body, a file), no command
@@ -193,6 +196,7 @@ PHASE_RULES = (("conflict", r"merge_main\.py|unconflict\.py|\bgit merge\b"),
                ("claim", r"claim\.py|cycle_start\.py|dashboard\.py|feedback\.py|usage\.py"),
                ("report", REPORT_FILE),
                ("code", r"\bsed -i\b|\bcat >|\bpython3 - <<|\btee\b"))
+BEAT = re.compile(r"\S*claim\.py\s+\d+\s+--beat\b[^;&|\n]*")   # a keep-alive: the rest of its command gives the phase
 ORDER = ("conflict", "verify", "ci", "code", "claim", "report", "read")   # a call with several tools: the first here
 # a claim: no option but --takeover or --adopt (a brief of the pacer, #189), or --or with the next candidates
 CLAIMED = re.compile(r"claim\.py (\d+)(?:\s+--or((?:\s+\d+)+)|\s+--takeover|\s+--adopt\s+[\w-]+)?(?=\s*(?:$|[;&|)<>\n]|\d>))")
@@ -202,7 +206,7 @@ PHASES = ("read", "claim", "code", "verify", "ci", "conflict", "report")   # the
 def phase(name, inp):
     """The phase of one tool call: read, claim, code, verify, ci, conflict or report."""
     if name == "Bash":
-        cmd = HEREDOC.sub("", inp.get("command", ""))
+        cmd = BEAT.sub("", HEREDOC.sub("", inp.get("command", "")))
         if check(cmd):
             return "verify"
         return next((k for k, rx in PHASE_RULES if re.search(rx, cmd)), "read")
@@ -252,11 +256,11 @@ def calls_line(records, k=5, k_read=3):
 
 def phases(records):
     """{ticket: {phase: minutes}} of one chain of records, in the order of the tickets; the time before the first
-    claim counts for the first ticket (key None when no claim won). Each call gets the time from its call to its
-    tool result (the run time of the tool) and the time from the result before it to its call (the model writes the
-    call, #189). A call with no result keeps the time to the next call."""
-    calls = []                                        # [time, phase, claimed ticket or None, time of the last result]
-    claims, done, index = {}, set(), {}
+    claim counts for the first ticket (key None when no claim won). The gap from a call to the next call splits at
+    the time of its last tool result: the run of the tool counts for its phase, the thinking and writing after the
+    result for the phase of the next call (#5528). With no result time, the whole gap counts for the call."""
+    calls = []                                        # (time, phase, claimed ticket or None, time of the last result)
+    claims, done, ids = {}, set(), {}
     for r in records:
         msg = r.get("message") or {}
         content = msg.get("content")
@@ -266,33 +270,33 @@ def phases(records):
                 ps = [phase(b.get("name", ""), b.get("input") or {}) for b in tools]
                 calls.append([when(r), min(ps, key=ORDER.index), None, None])
                 for b in tools:
-                    index[b.get("id")] = len(calls) - 1
+                    ids[b.get("id")] = len(calls) - 1
                     ns = claim_numbers((b.get("input") or {}).get("command", "")) if b.get("name") == "Bash" else []
                     if ns:
                         claims[b["id"]] = (len(calls) - 1, ns)
         elif r.get("type") == "user" and isinstance(content, list):
             for b in content:
-                if b.get("type") != "tool_result":
-                    continue
-                i = index.get(b.get("tool_use_id"))
-                if i is not None and when(r) is not None:
-                    calls[i][3] = max(calls[i][3] or when(r), when(r))
-                if b.get("tool_use_id") in claims:
+                if b.get("type") == "tool_result" and b.get("tool_use_id") in ids and when(r) is not None:
+                    c = calls[ids[b["tool_use_id"]]]
+                    c[3] = max(c[3] or when(r), when(r))
+                if b.get("type") == "tool_result" and b.get("tool_use_id") in claims:
                     i, ns = claims.pop(b["tool_use_id"])
                     n = won(b, ns)
                     if n is not None and n not in done:
                         done.add(n)
                         calls[i][2] = n
-    out, ticket, last = {}, None, None
+    out, keys, ticket = {}, [], None
     first = next((c[2] for c in calls if c[2] is not None), None)
-    for (t, ph, claimed, res), nxt in zip(calls, calls[1:] + [None]):
-        ticket = claimed if claimed is not None else ticket
-        key = ticket if ticket is not None else first
-        m = out.setdefault(key, dict.fromkeys(PHASES, 0.0))
-        end = res if res is not None else nxt[0] if nxt else t      # its result, else the next call
-        end = max(t, min(end, nxt[0]) if nxt else end)                # never after the next call (parallel calls)
-        m[ph] += (end - (t if last is None else min(last, t))) / 60    # from the result before it to its own result
-        last = end
+    for c in calls:
+        ticket = c[2] if c[2] is not None else ticket
+        keys.append(ticket if ticket is not None else first)
+        out.setdefault(keys[-1], dict.fromkeys(PHASES, 0.0))
+    for i, (t, ph, _, res) in enumerate(calls):
+        end = calls[i + 1][0] if i + 1 < len(calls) else max(t, res or t)   # the last call: up to its result
+        cut = min(max(res, t), end) if res is not None else end
+        out[keys[i]][ph] += (cut - t) / 60
+        if cut < end:                                 # the model thinks and writes the next call
+            out[keys[i + 1]][calls[i + 1][1]] += (end - cut) / 60
     return out
 
 

@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { studioAccounts } from "@/lib/studio-accounts";
 import styles from "./Footer.module.css";
 
 export function Footer() {
@@ -14,6 +15,11 @@ export function Footer() {
       <Link className={styles.link} href="/privacy">
         {t("privacy")}
       </Link>
+      {studioAccounts().map((account) => (
+        <a key={account.kind} className={styles.link} href={account.href} rel="noopener">
+          {t(account.kind)}
+        </a>
+      ))}
     </footer>
   );
 }

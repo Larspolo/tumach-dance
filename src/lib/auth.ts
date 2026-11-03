@@ -14,16 +14,15 @@ import { type Db, getDb } from "../db";
 import * as schema from "../db/schema";
 import { studioLocale } from "../i18n/studio";
 import { emailTransport, sendEmail } from "./email";
+import { recordError } from "./site-errors";
+import { studioEmail } from "./studio-email";
 
 const DAY = 24 * 60 * 60;
 export const SESSION_DAYS = 180;
 export const CODE_MINUTES = 10;
 export const CODE_TRIES = 5;
 
-/** The email of Nina, in lower case. Empty: nobody logs in. */
-export function studioEmail(env: NodeJS.ProcessEnv = process.env): string {
-  return (env.STUDIO_EMAIL ?? "").trim().toLowerCase();
-}
+export { studioEmail } from "./studio-email";
 
 function isStudioEmail(email: unknown): boolean {
   return typeof email === "string" && studioEmail() !== "" && email.trim().toLowerCase() === studioEmail();
@@ -33,11 +32,16 @@ async function sendCode(email: string, otp: string, headers: Headers | undefined
   const locale = studioLocale(headers ?? new Headers());
   const messages = (await import(`../../messages/${locale}.json`)).default;
   const t = createTranslator({ locale, messages, namespace: "LoginEmail" });
-  await sendEmail({
-    to: email,
-    subject: t("subject", { code: otp }),
-    text: t("text", { code: otp, minutes: CODE_MINUTES }),
-  });
+  try {
+    await sendEmail({
+      to: email,
+      subject: t("subject", { code: otp }),
+      text: t("text", { code: otp, minutes: CODE_MINUTES }),
+    });
+  } catch (error) {
+    recordError("email: login code", error);
+    throw error;
+  }
 }
 
 /** `baseURL`: the address of the site (`BETTER_AUTH_URL`); with https, the session cookie is `Secure`. */

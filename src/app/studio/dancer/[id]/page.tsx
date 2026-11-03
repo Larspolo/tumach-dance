@@ -1,0 +1,94 @@
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { getDb } from "@/db";
+import { DANCER_NOTE_MAX, getDancerNote } from "@/db/dancer-notes";
+import { bookings } from "@/db/schema";
+import { setStudioLocale } from "@/i18n/studio";
+import { getStudioSession } from "@/lib/auth";
+import { shownName } from "@/lib/booking-name";
+import { dancerBookings } from "@/lib/dancer-bookings";
+import { TIME_ZONE } from "@/lib/hours";
+import { backPath, LOGIN_PATH } from "@/lib/studio-paths";
+import styles from "../../studio.module.css";
+import { saveDancerNote } from "./actions";
+
+// The earlier bookings of the dancer of one booking (#623, epic #621), newest first. `?back=` is the page before.
+export default async function DancerPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ back?: string }>;
+}) {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const locale = await setStudioLocale();
+  const t = await getTranslations("StudioDancer");
+  const offerName = await getTranslations("StudioOffers");
+  const weekName = await getTranslations("StudioWeek");
+  const id = Number((await params).id);
+  const back = backPath((await searchParams).back ?? null, "/studio/week");
+  const db = getDb();
+  // A removed or unknown booking shows the calm text: an old link must not end on an error page.
+  const anchor = Number.isInteger(id) ? db.select().from(bookings).where(eq(bookings.id, id)).get() : undefined;
+  const others = anchor ? dancerBookings(db, id) : [];
+  const note = anchor ? getDancerNote(db, anchor) : null;
+  const when = new Intl.DateTimeFormat(locale, {
+    timeZone: TIME_ZONE,
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return (
+    <main className={styles.main}>
+      <Link className={styles.link} href={back}>
+        {t("back")}
+      </Link>
+      <h1 className={styles.title}>
+        {anchor ? t("title", { name: shownName(anchor, weekName("removed")) }) : t("link")}
+      </h1>
+      {anchor && (
+        <form className={`${styles.form} ${styles.section}`} action={saveDancerNote} data-dancer-note>
+          <input type="hidden" name="id" value={anchor.id} />
+          <input type="hidden" name="back" value={back} />
+          <label className={styles.label}>
+            {t("noteLabel")}
+            <textarea
+              key={note ?? ""}
+              className={styles.input}
+              name="note"
+              rows={3}
+              maxLength={DANCER_NOTE_MAX}
+              defaultValue={note ?? ""}
+            />
+          </label>
+          <span className={styles.note}>{t("noteLimit", { max: DANCER_NOTE_MAX })}</span>
+          <button className={styles.button} type="submit">
+            {t("noteSave")}
+          </button>
+        </form>
+      )}
+      {others.length === 0 && <p className={styles.note}>{t("none")}</p>}
+      <ul className={styles.list} data-testid="dancer-bookings">
+        {others.map(({ booking, offer }) => (
+          <li key={booking.id} className={styles.item} data-booking={booking.id}>
+            <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
+            <p>{when.format(booking.start)}</p>
+            <p>
+              <span className={styles.mark}>{t(`status.${booking.status}`)}</span>{" "}
+              {booking.status === "approved" && (
+                <span className={styles.mark}>{t(booking.paidAt === null ? "notPaid" : "paid")}</span>
+              )}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}

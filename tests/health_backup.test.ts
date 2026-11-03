@@ -34,7 +34,7 @@ const status = (now: Date, startedAt = new Date(now.getTime() - 100 * HOUR)) =>
 
 test("a backup of 10 hours ago is ok and names its instant", () => {
   backupAt(new Date(NOW.getTime() - 10 * HOUR));
-  expect(status(NOW)).toEqual({ ok: true, backupAt: "2026-06-10T02:00:00.000Z" });
+  expect(status(NOW)).toEqual({ ok: true, backupAt: "2026-06-10T02:00:00.000Z", email: true, push: false });
 });
 
 test("a backup of 37 hours ago is not ok; the newest file counts", () => {
@@ -47,12 +47,22 @@ test("a backup of 37 hours ago is not ok; the newest file counts", () => {
 test("other files in the folder are no backup", () => {
   backupAt(new Date(NOW.getTime() - HOUR), "tumach-2026-06-10.db.tmp");
   mkdirSync(join(dir, "photos"));
-  expect(status(NOW)).toEqual({ ok: false, backupAt: null });
+  expect(status(NOW)).toEqual({ ok: false, backupAt: null, email: true, push: false });
 });
 
 test("no backup is ok for a server that started 2 hours ago, not for one of 40 hours ago", () => {
-  expect(status(NOW, new Date(NOW.getTime() - 2 * HOUR))).toEqual({ ok: true, backupAt: null });
-  expect(status(NOW, new Date(NOW.getTime() - 40 * HOUR))).toEqual({ ok: false, backupAt: null });
+  expect(status(NOW, new Date(NOW.getTime() - 2 * HOUR))).toEqual({
+    ok: true,
+    backupAt: null,
+    email: true,
+    push: false,
+  });
+  expect(status(NOW, new Date(NOW.getTime() - 40 * HOUR))).toEqual({
+    ok: false,
+    backupAt: null,
+    email: true,
+    push: false,
+  });
 });
 
 test("a missing backup folder is no backup and one error line", () => {
@@ -61,6 +71,8 @@ test("a missing backup folder is no backup and one error line", () => {
   expect(healthStatus(db, { dir: missing, now: NOW, startedAt: new Date(NOW.getTime() - 40 * HOUR) })).toEqual({
     ok: false,
     backupAt: null,
+    email: true,
+    push: false,
   });
   expect(log).toHaveBeenCalledTimes(1);
 });
@@ -71,7 +83,7 @@ test.each(["2026-10-25", "2026-03-29"])(
     const written = DateTime.fromISO(`${night}T03:00`, { zone: "Europe/Amsterdam" }).toJSDate();
     backupAt(written);
     const later = new Date(written.getTime() + 30 * HOUR);
-    expect(status(later)).toEqual({ ok: true, backupAt: written.toISOString() });
+    expect(status(later)).toEqual({ ok: true, backupAt: written.toISOString(), email: true, push: false });
     expect(status(new Date(written.getTime() + 37 * HOUR)).ok).toBe(false);
   },
 );

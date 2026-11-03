@@ -1,10 +1,10 @@
 // Push notifications to the phone of Nina (#25): the Push API of the browser and `web-push` with the VAPID keys of
 // the `.env`. Later features (new bookings, questions) send with `sendPush`.
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { hasLocale } from "next-intl";
 import webpush from "web-push";
 import type { Db } from "../db";
-import { pushSubscriptions } from "../db/schema";
+import { pushSubscriptions, session } from "../db/schema";
 import { routing } from "../i18n/routing";
 
 export type PushMessage = { title: string; body: string; url?: string };
@@ -39,9 +39,32 @@ export function saveSubscription(
   sub: Subscription,
   now = Date.now(),
   locale: PushLocale = routing.defaultLocale,
+  sessionId: string | null = null,
 ): void {
-  const row = { endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth, createdAt: now, locale };
+  // The login of the device (#586): its end deletes the push (`ON DELETE CASCADE`).
+  const row = {
+    endpoint: sub.endpoint,
+    p256dh: sub.keys.p256dh,
+    auth: sub.keys.auth,
+    createdAt: now,
+    locale,
+    sessionId,
+  };
   db.insert(pushSubscriptions).values(row).onConflictDoUpdate({ target: pushSubscriptions.endpoint, set: row }).run();
+}
+
+/**
+ * True when the server has the push of this device for the login of the request (#570, #605): the studio app makes a
+ * new push when not. A row with no session or of an old session gives false.
+ */
+export function hasSubscription(db: Db, endpoint: string, sessionId: string | null | undefined): boolean {
+  if (!sessionId) return false;
+  const row = db
+    .select()
+    .from(pushSubscriptions)
+    .where(and(eq(pushSubscriptions.endpoint, endpoint), eq(pushSubscriptions.sessionId, sessionId)))
+    .get();
+  return row !== undefined;
 }
 
 /**
@@ -50,7 +73,18 @@ export function saveSubscription(
  */
 export async function sendPush(db: Db, message: PushMessage | ((locale: PushLocale) => PushMessage)): Promise<number> {
   if (!configure()) throw new Error("VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT are not set");
-  const rows = db.select().from(pushSubscriptions).all();
+  // Only a device with a live login (#605): no push to a row with no session or with an expired session.
+  const rows = db
+    .select({
+      endpoint: pushSubscriptions.endpoint,
+      p256dh: pushSubscriptions.p256dh,
+      auth: pushSubscriptions.auth,
+      locale: pushSubscriptions.locale,
+    })
+    .from(pushSubscriptions)
+    .innerJoin(session, eq(pushSubscriptions.sessionId, session.id))
+    .where(gt(session.expiresAt, new Date()))
+    .all();
   let sent = 0;
   for (const row of rows) {
     const locale = hasLocale(routing.locales, row.locale) ? row.locale : routing.defaultLocale;
