@@ -39,7 +39,7 @@ test("no subscription: the note and the button are at the top", async ({ page, c
   await expect(button).toBeVisible();
   const buttonBox = await button.boundingBox();
   const noteBox = await note.boundingBox();
-  const tileBox = await page.getByRole("link", { name: en.StudioHome.bookings, exact: true }).boundingBox();
+  const tileBox = await page.getByRole("link", { name: new RegExp(`^${en.StudioHome.bookings}`) }).boundingBox();
   expect(buttonBox && noteBox && tileBox).toBeTruthy();
   if (!buttonBox || !noteBox || !tileBox) return;
   expect(buttonBox.y + buttonBox.height).toBeLessThanOrEqual(844);

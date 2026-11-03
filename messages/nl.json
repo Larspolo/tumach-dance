@@ -110,6 +110,7 @@
     "offers": "Aanbod",
     "hours": "Uren",
     "bookings": "Boekingen",
+    "bookingsCount": "Boekingen ({count} wachten)",
     "calendarAdd": "Zet in mijn agenda",
     "calendarNote": "Je agenda-app toont dan de boekingen en werkt ze zelf bij.",
     "calendarRenew": "Maak een nieuw adres",
