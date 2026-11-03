@@ -42,9 +42,11 @@ test("Nina repeats an approved booking for 4 weeks and sees the week that was no
   db.insert(bookings)
     .values(row("Repeat Dancer", "approved", slot.start))
     .run();
-  db.insert(bookings)
+  const asked = db
+    .insert(bookings)
     .values(row("Asking Dancer", "requested", day.slots[0].start))
-    .run();
+    .returning()
+    .get();
   // Nina keeps the time of the third week free.
   const blocked = start.plus({ weeks: 2 });
   addBlock(db, { start: blocked.toMillis(), end: blocked.plus({ hours: 1 }).toMillis() });
