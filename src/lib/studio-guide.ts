@@ -74,7 +74,7 @@ export const GUIDE_PARTS: GuidePart[] = [
     id: "fix",
     page: "/studio/week",
     title: "fixTitle",
-    steps: [{ key: "fixOpen" }, { key: "fixSave" }],
+    steps: [{ key: "fixOpen" }, { key: "fixSave" }, { key: "historyOpen" }],
   },
   {
     id: "forget",
