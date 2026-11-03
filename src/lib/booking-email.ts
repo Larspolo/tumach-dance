@@ -47,6 +47,11 @@ function priceText(offer: Offer, locale: string): string {
   return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
 }
 
+/** A booking has an email address to send to; a booking Nina adds for WhatsApp, or one with its data removed, has none (#618). */
+export function hasEmail(booking: Pick<Booking, "email">): boolean {
+  return booking.email !== "";
+}
+
 /** Reply goes to Nina's Gmail (#375): the dancer's answer reaches her. No value: no Reply-To. */
 function replyToNina(): Pick<Email, "replyTo"> {
   const address = studioEmail();
@@ -427,6 +432,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
  * logged, and Nina's decision stays.
  */
 export async function sendDecisionEmail(db: Db, booking: Booking, decision: Decision): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
@@ -448,6 +454,7 @@ export async function sendCancelEmail(
   by: CancelledBy = "nina",
   wasApproved = false,
 ): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
@@ -464,6 +471,7 @@ export async function sendCancelEmail(
  * and the moved booking stays.
  */
 export async function sendMoveEmail(db: Db, booking: Booking, from: { start: number; end: number }): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);

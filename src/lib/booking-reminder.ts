@@ -9,7 +9,7 @@ import { DateTime } from "luxon";
 import type { Db } from "../db";
 import { decisionTold } from "../db/bookings";
 import { bookings, offers } from "../db/schema";
-import { reminderEmailHtml } from "./booking-email";
+import { hasEmail, reminderEmailHtml } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { TIME_ZONE } from "./hours";
@@ -52,7 +52,7 @@ export async function checkReminders(db: Db, now = Date.now()): Promise<number[]
       .get();
     if (!claimed) continue;
     try {
-      await sendEmail(await reminderEmailHtml(claimed, offer));
+      if (hasEmail(claimed)) await sendEmail(await reminderEmailHtml(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ remindedAt: null }).where(eq(bookings.id, booking.id)).run();
       recordError("email: reminder", error);

@@ -6,7 +6,7 @@
 import { and, eq, isNull, lte } from "drizzle-orm";
 import type { Db } from "../db";
 import { bookings, offers } from "../db/schema";
-import { unansweredEmailHtml } from "./booking-email";
+import { hasEmail, unansweredEmailHtml } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { recordError } from "./site-errors";
@@ -31,7 +31,7 @@ export async function checkUnanswered(db: Db, now = Date.now()): Promise<number[
       .returning()
       .get();
     if (!claimed) continue;
-    if (now - booking.start <= LATE_MS) {
+    if (now - booking.start <= LATE_MS && hasEmail(claimed)) {
       try {
         await sendEmail(await unansweredEmailHtml(claimed, offer));
       } catch (error) {
