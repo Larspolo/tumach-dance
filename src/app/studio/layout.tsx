@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { setStudioLocale } from "@/i18n/studio";
 import NeedsInternet from "./needs-internet";
+import { OfflineCache } from "./offline-cache";
 import styles from "./studio.module.css";
 import StudioLanguage from "./studio-language";
 
@@ -26,6 +27,7 @@ export default async function StudioLayout({ children }: { children: ReactNode }
           <NeedsInternet />
           {children}
           <StudioLanguage />
+          <OfflineCache />
         </NextIntlClientProvider>
       </body>
     </html>
