@@ -1,10 +1,11 @@
 // The removal of the personal data of old bookings (#224, epoch #222 `book:privacy`): the name, email and phone of a
 // booking that ended more than `KEEP_MONTHS` ago. The offer, the time, the status and the payment stay for the counts.
-import { and, isNull, lt, sql } from "drizzle-orm";
+import { and, isNull, lt, type SQL, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import type { Db } from "../db";
 import { bookings } from "../db/schema";
 import { TIME_ZONE } from "./hours";
+import { dancerWhere } from "./same-dancer";
 
 /** The months that the site keeps the personal data of a booking after its end. Nina's answer can change it. */
 export const KEEP_MONTHS = 12;
@@ -35,8 +36,12 @@ export function forgetOldBookings(db: Db, now = Date.now()): number[] {
  * An empty email changes nothing.
  */
 export function forgetDancer(db: Db, email: string, now = Date.now()): number[] {
-  const key = email.trim().toLowerCase();
-  if (key === "") return [];
+  if (email.trim() === "") return [];
+  return forgetWhere(db, dancerWhere({ id: -1, email, phone: "" }), now);
+}
+
+/** Clear the personal data of each booking that matches `where` (see `dancerWhere`) and still has it; give the ids. */
+export function forgetWhere(db: Db, where: SQL, now = Date.now()): number[] {
   return db
     .update(bookings)
     .set({
@@ -47,7 +52,7 @@ export function forgetDancer(db: Db, email: string, now = Date.now()): number[] 
       cancelToken: sql`lower(hex(randomblob(32)))`,
       forgottenAt: now,
     })
-    .where(and(sql`lower(${bookings.email}) = ${key}`, isNull(bookings.forgottenAt)))
+    .where(and(where, isNull(bookings.forgottenAt)))
     .returning({ id: bookings.id })
     .all()
     .map((row) => row.id);
