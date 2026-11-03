@@ -46,6 +46,7 @@ const PHONE = /^\+?[\d\s()./-]+$/;
 /** The first field that is wrong, with the clean values. Simple checks (P1): the email to Nina is the real check. */
 function clean(
   input: BookingInput,
+  { optionalContact = false }: { optionalContact?: boolean } = {},
 ):
   | { field: "name" | "email" | "phone" | "note" | "locale" }
   | { name: string; email: string; phone: string; note: string | null } {
@@ -55,8 +56,9 @@ function clean(
   const note = String(input.note ?? "").trim();
   const digits = phone.replace(/\D/g, "").length;
   if (!name || name.length > 100) return { field: "name" };
-  if (email.length > 200 || !EMAIL.test(email)) return { field: "email" };
-  if (!PHONE.test(phone) || digits < 6 || digits > 15) return { field: "phone" };
+  // A lesson that Nina adds (#617) can have no email or phone: she has the dancer's WhatsApp.
+  if (!(optionalContact && !email) && (email.length > 200 || !EMAIL.test(email))) return { field: "email" };
+  if (!(optionalContact && !phone) && (!PHONE.test(phone) || digits < 6 || digits > 15)) return { field: "phone" };
   if (note.length > NOTE_MAX) return { field: "note" };
   if (!(routing.locales as readonly string[]).includes(input.locale)) return { field: "locale" };
   return { name, email, phone, note: note || null };
@@ -127,6 +129,73 @@ export function requestBooking(
           ...fields,
           locale: input.locale,
           createdAt: now,
+        })
+        .returning()
+        .get();
+      return { ok: true, booking };
+    },
+    { behavior: "immediate" },
+  );
+}
+
+/** A lesson that Nina agreed by WhatsApp or phone (#617). The end is `start` + the minutes of the offer. */
+export type AddBookingInput = {
+  offerId: number;
+  start: number;
+  name: string;
+  /** Empty = no email: then no approval email. */
+  email: string;
+  /** Empty = no phone. */
+  phone: string;
+  locale: string;
+};
+
+export type AddBookingResult = Exclude<BookingResult, { reason: "limit" }>;
+
+/**
+ * Store a lesson that Nina adds as an `approved` booking (#617), on a free time as `requestBooking()` (one
+ * `BEGIN IMMEDIATE` transaction), also for a hidden offer. No booking limit: it stops bots, not Nina (#541). With an
+ * email, `claimDueDecisions()` sends the usual approval email after `UNDO_MS`; with no email, no email goes.
+ */
+export function addBooking(
+  db: Db,
+  input: AddBookingInput,
+  { now = Date.now() }: { now?: number } = {},
+): AddBookingResult {
+  const fields = clean({ ...input, end: input.start, note: null }, { optionalContact: true });
+  if ("field" in fields) return { ok: false, reason: "invalid", field: fields.field };
+  if (!Number.isInteger(input.start)) return { ok: false, reason: "notSlot" };
+  const { start } = input;
+  return db.transaction(
+    (tx): AddBookingResult => {
+      const offer = tx.select().from(offers).where(eq(offers.id, input.offerId)).get();
+      if (!offer) return { ok: false, reason: "invalid", field: "offerId" };
+      const end = start + offer.minutes * 60_000;
+      const date = DateTime.fromMillis(start, { zone: TIME_ZONE }).toISODate();
+      if (!date) return { ok: false, reason: "notSlot" };
+      const open = openRanges(getHoursRule(db), date, date);
+      const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
+      if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      const booking = tx
+        .insert(bookings)
+        .values({
+          offerId: offer.id,
+          priceCents: offer.priceCents,
+          start,
+          end,
+          status: "approved",
+          name: fields.name,
+          email: fields.email,
+          phone: fields.phone,
+          note: null,
+          locale: input.locale,
+          createdAt: now,
+          approvedAt: now,
+          decidedAt: now,
+          decisionMailedAt: fields.email ? null : now,
         })
         .returning()
         .get();
