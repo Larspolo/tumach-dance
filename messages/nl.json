@@ -120,7 +120,8 @@
     "photos": "Foto's",
     "messages": "Berichten",
     "messagesCount": "Berichten ({count} nieuw)",
-    "money": "Geld"
+    "money": "Geld",
+    "news": "Nieuws"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -633,5 +634,26 @@
     "taken": "Iemand nam deze tijd net. Kies een andere tijd.",
     "done": "Je aanvraag heeft de nieuwe tijd. Nina geeft nog antwoord. Je krijgt een e-mail.",
     "approved": "Nina heeft deze boeking al goedgekeurd. Vraag Nina om hem te verzetten."
+  },
+  "StudioNews": {
+    "title": "Nieuws",
+    "intro": "Een korte mededeling op de homepage, bijvoorbeeld een vakantie of een nieuwe les.",
+    "now": "Nu op de homepage",
+    "none": "Geen mededeling op de homepage.",
+    "until": "Zichtbaar tot en met {date}.",
+    "noEnd": "Zichtbaar zonder einddatum.",
+    "remove": "Mededeling verwijderen",
+    "text": "Je mededeling",
+    "left": "{count, plural, one {Nog # teken} other {Nog # tekens}}",
+    "endDate": "Zichtbaar tot (niet verplicht)",
+    "endDateNote": "Laat leeg om de mededeling te tonen tot je hem verwijdert.",
+    "save": "Opslaan",
+    "saved": "De mededeling is opgeslagen.",
+    "removed": "De mededeling is verwijderd.",
+    "error": {
+      "empty": "Typ eerst een mededeling.",
+      "long": "De mededeling is te lang. Maak hem korter.",
+      "date": "De einddatum is voorbij. Kies vandaag of een latere dag."
+    }
   }
 }
