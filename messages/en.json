@@ -411,7 +411,7 @@
     "cancelled": "Nina cancelled your booking: {offer}, {when}. You can pick another time on the booking page.",
     "reminderSubject": "Reminder: your booking at TUMACH",
     "reminder": "A reminder of your booking: {offer}, {when}.",
-    "sign": "TUMACH",
+    "sign": "Nina",
     "payLink": "The price is {price}. Please pay with this Tikkie: {url}",
     "payLater": "The price is {price}. Nina sends you a Tikkie to pay.",
     "cancelLink": "Can you not come? Cancel the booking with this link, at any time before the start: {url}",
