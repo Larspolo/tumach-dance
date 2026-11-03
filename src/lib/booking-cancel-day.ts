@@ -1,10 +1,11 @@
 // Nina is sick (#692, epic #690): cancel each booking of one Amsterdam day and close the day. Own code: no library
-// does this; it uses `cancelBooking()` and the hours rule. No email here: the caller sends them.
+// does this; it uses `cancelBooking()` and the hours rule. No email in `cancelDay()`: `sendCancelDayEmails()` sends them.
 import { and, gt, gte, inArray, isNull, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import type { Db } from "@/db";
 import { type Booking, cancelBooking } from "@/db/bookings";
 import { bookings } from "@/db/schema";
+import { sendCancelEmail } from "@/lib/booking-email";
 import { TIME_ZONE } from "@/lib/hours";
 import { getHoursRule, saveHoursRule } from "@/lib/hours-store";
 
@@ -49,4 +50,12 @@ export function cancelDay(db: Db, date: string, { now = Date.now() }: { now?: nu
     }
     return { ok: true as const, cancelled };
   });
+}
+
+/** Email each dancer of the bookings that `cancelDay()` cancelled (#709): the cancel email of each, by Nina. */
+export async function sendCancelDayEmails(
+  db: Db,
+  cancelled: { booking: Booking; wasApproved: boolean }[],
+): Promise<void> {
+  for (const { booking, wasApproved } of cancelled) await sendCancelEmail(db, booking, "nina", wasApproved);
 }
