@@ -541,7 +541,15 @@
     "fixWrongEmail": "This email is not correct. Nothing was changed.",
     "fixWrongPhone": "This phone number is not correct. Nothing was changed.",
     "fixPrice": "Price (EUR)",
-    "fixWrongPrice": "Write a price in euro, as 45 or 45.50. Nothing was changed."
+    "fixWrongPrice": "Write a price in euro, as 45 or 45.50. Nothing was changed.",
+    "history": "What happened",
+    "historyLine": "{when}: {what}",
+    "event_requested": "Request sent by the dancer",
+    "event_added": "Lesson added by you",
+    "event_approved": "Approved by you",
+    "event_declined": "Declined by you",
+    "event_undone": "Decision undone by you",
+    "event_paid": "Payment received"
   },
   "StudioFeedback": {
     "back": "Back",

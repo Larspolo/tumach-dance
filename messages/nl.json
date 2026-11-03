@@ -541,7 +541,15 @@
     "fixWrongEmail": "Dit e-mailadres klopt niet. Er is niets gewijzigd.",
     "fixWrongPhone": "Dit telefoonnummer klopt niet. Er is niets gewijzigd.",
     "fixPrice": "Prijs (EUR)",
-    "fixWrongPrice": "Schrijf een prijs in euro, zoals 45 of 45,50. Er is niets gewijzigd."
+    "fixWrongPrice": "Schrijf een prijs in euro, zoals 45 of 45,50. Er is niets gewijzigd.",
+    "history": "Wat er gebeurde",
+    "historyLine": "{when}: {what}",
+    "event_requested": "Aanvraag verstuurd door de danser",
+    "event_added": "Les toegevoegd door jou",
+    "event_approved": "Goedgekeurd door jou",
+    "event_declined": "Afgewezen door jou",
+    "event_undone": "Besluit teruggedraaid door jou",
+    "event_paid": "Betaling ontvangen"
   },
   "StudioFeedback": {
     "back": "Terug",

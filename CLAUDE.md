@@ -31,6 +31,7 @@ Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy 
 - `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the move of a waiting request by the dancer (`booking-move-dancer.ts`, page `booking/move`), the questions for Nina of a ticket (`nina-question.ts`), the contact messages and Nina's answer (`contact-store.ts`, page `src/app/studio/messages/`), the push of a bounced email (`email-bounce.ts`), the limits of the booking requests per email address and per day (`booking-limits.ts`, #541), the Content-Security-Policy (`csp.ts`, its nonce in `src/proxy.ts`), the Cloudflare Turnstile check of the public forms (`turnstile.ts`, widget `src/components/Turnstile.tsx`, #564).
   The cancel of each booking of one day and its close (`booking-cancel-day.ts`, #692).
   The next bookings of a dancer from the token of one booking (`booking-mine.ts`, page `booking/mine`, #743).
+  The history of a booking, "What happened" on the week page (`booking-history.ts`, table `booking_events`, #814).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
