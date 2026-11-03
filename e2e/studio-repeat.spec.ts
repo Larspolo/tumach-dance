@@ -1,6 +1,8 @@
 // Nina repeats an approved booking from the week page on her phone (#679): "Repeat", keep 4 weeks, tap Repeat (2 taps).
 // The next week shows the new lesson, a week with a block is named as not free, and a requested booking has no Repeat.
+
 import { expect, test } from "@playwright/test";
+import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import en from "../messages/en.json" with { type: "json" };
 import { openDb } from "../src/db";
@@ -51,6 +53,8 @@ test("Nina repeats an approved booking for 4 weeks and sees the week that was no
   await page.goto(`/studio/week?start=${weekOf(day.date).start}`);
   const asking = page.locator("li", { hasText: "Asking Dancer" });
   await expect(asking.getByRole("link", { name: en.StudioWeek.repeat, exact: true })).toHaveCount(0);
+  // Remove the request again: the Tab test of the requests page counts its links (whatsapp-tap.spec.ts).
+  db.delete(bookings).where(eq(bookings.id, asked.id)).run();
   const item = page.locator("li", { hasText: "Repeat Dancer" });
   await item.getByRole("link", { name: en.StudioWeek.repeat, exact: true }).click();
   await expect(item.getByLabel(en.StudioWeek.repeatWeeks)).toHaveValue("4");
