@@ -570,6 +570,8 @@
     "title": "Money of {month}",
     "count": "Approved bookings",
     "paid": "Paid",
-    "open": "Not paid yet"
+    "open": "Not paid yet",
+    "unpaidTitle": "Not paid yet",
+    "allPaid": "All bookings of this month are paid."
   }
 }

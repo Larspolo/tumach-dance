@@ -6,7 +6,7 @@ import { getDb } from "@/db";
 import { decideBooking, markPaid, undoDecision, unmarkPaid } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { sendAfterUndoTime } from "@/lib/decision-mail";
-import { LOGIN_PATH } from "@/lib/studio-paths";
+import { backPath, LOGIN_PATH } from "@/lib/studio-paths";
 import { tikkieLink } from "@/lib/tikkie";
 
 /**
@@ -53,5 +53,6 @@ export async function pay(form: FormData): Promise<void> {
   // A second tap (or another device) changes nothing: `markPaid()` keeps the first `paidAt`.
   if (form.get("paid") === "undo") unmarkPaid(getDb(), id);
   else markPaid(getDb(), id);
-  redirect("/studio/bookings");
+  // The money page sends its own path (#599): only a studio path.
+  redirect(backPath(form.get("back"), "/studio/bookings"));
 }
