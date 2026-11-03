@@ -65,6 +65,16 @@ export default async function StudioPage() {
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
       {/* At the top: a phone with no push shows it in the first screen (#580). One instance: it repairs (#570). */}
       <PushButtons vapidKey={vapidPublicKey()} />
+      {/* The search of the bookings from the first screen (#665, epic #662): the same form as the search page (#664). */}
+      <form className={styles.form} method="get" action="/studio/search">
+        <label className={styles.label}>
+          {t("search")}
+          <input className={styles.input} type="search" name="q" />
+        </label>
+        <button className={styles.button} type="submit">
+          {t("searchButton")}
+        </button>
+      </form>
       {dayList(t("today"), today)}
       {dayList(t("tomorrow"), tomorrow)}
       {requestCount === 0 && today.length === 0 && tomorrow.length === 0 && (
