@@ -17,6 +17,7 @@ import styles from "../studio.module.css";
 import { AddPanel } from "./AddPanel";
 import { addBlock, cancel, forget, removeBlock } from "./actions";
 import { MovePanel } from "./MovePanel";
+import { RepeatPanel } from "./RepeatPanel";
 
 // The bookings of a week, per day (#102): the requests and the approved bookings, Monday to Sunday.
 export default async function WeekPage({
@@ -34,6 +35,9 @@ export default async function WeekPage({
     lesson?: string;
     offer?: string;
     wrong?: string;
+    repeat?: string;
+    repeated?: string;
+    skipped?: string;
   }>;
 }) {
   const session = await getStudioSession(await headers());
@@ -51,6 +55,10 @@ export default async function WeekPage({
   const forgetAsked = Number(params.forget);
   // The move of a booking that has not started (#411): a day, a time, then "Yes, move".
   const moving = Number(params.move);
+  // The repeat of an approved booking in the next weeks (#679): "Repeat", the weeks, then the button.
+  const repeating = Number(params.repeat);
+  const repeated = Number(params.repeated);
+  const skipped = (params.skipped ?? "").split(",").filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d));
   const now = Date.now();
   const bookings = listBookings(getDb(), week.from, week.to, ["requested", "approved"]);
   // The times that Nina keeps free (#326): on the day of their start, in the order of time with the bookings.
@@ -61,6 +69,12 @@ export default async function WeekPage({
   const dayName = new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
   const euro = new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" });
+  const shortDay = new Intl.DateTimeFormat(locale, {
+    timeZone: "UTC",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
 
   return (
     <main className={styles.main}>
@@ -68,6 +82,13 @@ export default async function WeekPage({
         {t("back")}
       </Link>
       <h1 className={styles.title}>{t("title")}</h1>
+      {params.repeated !== undefined && Number.isInteger(repeated) && (
+        <p className={styles.note} data-repeated>
+          {t("repeatDone", { count: repeated })}
+          {skipped.length > 0 &&
+            ` ${t("repeatSkipped", { dates: skipped.map((d) => shortDay.format(new Date(`${d}T12:00:00Z`))).join(", ") })}`}
+        </p>
+      )}
       <p>
         <Link className={styles.link} href={`/studio/week?start=${week.previous}`}>
           {t("previous")}
@@ -217,6 +238,16 @@ export default async function WeekPage({
                         to={Number(params.to)}
                         taken={params.taken !== undefined}
                       />
+                    )}
+                    {booking.status === "approved" && booking.id !== repeating && (
+                      <>
+                        <Link className={styles.link} href={`/studio/week?start=${week.start}&repeat=${booking.id}`}>
+                          {t("repeat")}
+                        </Link>{" "}
+                      </>
+                    )}
+                    {booking.status === "approved" && booking.id === repeating && (
+                      <RepeatPanel booking={booking} weekStart={week.start} />
                     )}
                     {booking.email === "" ? null : booking.id === forgetAsked ? (
                       <form className={styles.form} action={forget}>

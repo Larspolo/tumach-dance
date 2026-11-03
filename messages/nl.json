@@ -451,7 +451,13 @@
     "lessonDutch": "Nederlands",
     "lessonWrong": "Controleer de naam, het e-mailadres en de telefoon.",
     "lessonSave": "Les toevoegen",
-    "lessonClose": "Sluiten"
+    "lessonClose": "Sluiten",
+    "repeat": "Herhalen",
+    "repeatWeeks": "Hoeveel weken herhalen?",
+    "repeatYes": "Herhalen",
+    "repeatNo": "Nee",
+    "repeatDone": "{count, plural, one {# week toegevoegd.} other {# weken toegevoegd.}}",
+    "repeatSkipped": "Niet vrij: {dates}."
   },
   "StudioFeedback": {
     "back": "Terug",

@@ -451,7 +451,13 @@
     "lessonDutch": "Dutch",
     "lessonWrong": "Check the name, the email and the phone.",
     "lessonSave": "Add the lesson",
-    "lessonClose": "Close"
+    "lessonClose": "Close",
+    "repeat": "Repeat",
+    "repeatWeeks": "Repeat for how many weeks?",
+    "repeatYes": "Repeat",
+    "repeatNo": "No",
+    "repeatDone": "{count, plural, one {Added # week.} other {Added # weeks.}}",
+    "repeatSkipped": "Not free: {dates}."
   },
   "StudioFeedback": {
     "back": "Back",
