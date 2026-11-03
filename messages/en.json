@@ -6,6 +6,9 @@
     "primaryAction": "Book a lesson",
     "secondaryAction": "See the schedule",
     "imageBlock": "The TUMACH dance studio",
+    "news": {
+      "title": "News"
+    },
     "about": {
       "title": "About TUMACH",
       "label": "(01) About",

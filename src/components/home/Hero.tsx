@@ -1,8 +1,9 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import styles from "./Home.module.css";
+import { NewsNote } from "./NewsNote";
 
-export function Hero() {
+export function Hero({ news }: { news: string | null }) {
   const t = useTranslations("HomePage");
   return (
     <header className={styles.hero}>
@@ -10,6 +11,7 @@ export function Hero() {
         <div className={styles.eyebrow}>{t("eyebrow")}</div>
         <h1 className={styles.title}>{t("title")}</h1>
         <p className={styles.heroSub}>{t("welcome")}</p>
+        {news !== null && <NewsNote text={news} />}
         <div className={styles.actions}>
           <Link href="/book" className={styles.btn}>
             {t("primaryAction")}

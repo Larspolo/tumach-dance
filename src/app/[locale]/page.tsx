@@ -19,6 +19,7 @@ import { routing } from "@/i18n/routing";
 import { classDaysOff } from "@/lib/class-days-off";
 import { closedNotices } from "@/lib/closed-notice";
 import { getHoursRule } from "@/lib/hours-store";
+import { getNewsNote, shownNewsNote } from "@/lib/news-note";
 import { pageMetadata } from "@/lib/page-meta";
 
 // The classes and the photos come from the database at each request, so a change of Nina shows at the next load (#98, #174).
@@ -41,11 +42,14 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   const photos = listPhotos(db);
   const rule = getHoursRule(db);
   const closed = closedNotices(rule, Date.now());
+  // Read at each request with the time of now, as the closed notice: a note ends at its end date with no deploy.
+  const note = getNewsNote(db);
+  const news = note === null ? null : shownNewsNote(note, Date.now());
   const daysOff = classDaysOff(rule, times, Date.now());
   return (
     <main className={styles.main}>
       <StudioJsonLd locale={locale} />
-      <Hero />
+      <Hero news={news} />
       <About />
       <Offers offers={offers} locale={locale} />
       <Photos photos={photos} />
