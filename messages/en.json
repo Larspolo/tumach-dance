@@ -348,7 +348,9 @@
     "emailFailUnanswered": "{name} did not get the email about the open request.",
     "emailFailBounce": "The email to {name} bounced: the address does not exist. Ask {name} for the right address.",
     "limitTitle": "Many booking requests today",
-    "limitBody": "The booking page got many requests in 24 hours, maybe from a bot. It takes no new requests until tomorrow."
+    "limitBody": "The booking page got many requests in 24 hours, maybe from a bot. It takes no new requests until tomorrow.",
+    "moveTitle": "Request moved",
+    "moveBody": "{name} moved the request from {from} to {to}."
   },
   "StudioBookings": {
     "title": "Bookings",
@@ -483,7 +485,8 @@
     "declined": "Nina did not take this request: there is nothing to cancel.",
     "started": "This booking has started: you cannot cancel it with the link any more.",
     "contact": "Write to Nina",
-    "contactText": "A question, or you cannot come?"
+    "contactText": "A question, or you cannot come?",
+    "move": "Choose another time"
   },
   "Privacy": {
     "title": "Privacy",
@@ -523,6 +526,9 @@
     },
     "cancel": {
       "title": "Cancel a booking · TUMACH"
+    },
+    "move": {
+      "title": "Choose another time · TUMACH"
     }
   },
   "StudioNotFound": {
@@ -613,5 +619,19 @@
       "declined": "Declined",
       "cancelled": "Cancelled"
     }
+  },
+  "MoveBooking": {
+    "title": "Choose another time",
+    "booking": "Your request: {offer}, {when}.",
+    "day": "Tap a day:",
+    "time": "Tap a time on {day}:",
+    "ask": "Move your request to {day}, {time}?",
+    "yes": "Yes, move it",
+    "otherDay": "Another day",
+    "back": "Back",
+    "none": "There is no other free time in the next 4 weeks.",
+    "taken": "Someone just took this time. Choose another time.",
+    "done": "Your request has the new time. Nina still answers it. You get an email.",
+    "approved": "Nina already approved this booking. Ask Nina to move it."
   }
 }
