@@ -262,6 +262,11 @@ export default async function BookPage({
               <small id="note-hint">{t("noteHint", { max: NOTE_MAX })}</small>
             </label>
             <Turnstile siteKey={turnstileSiteKey()} language={locale} />
+            <ul className={styles.how}>
+              <li>{t("howAnswer")}</li>
+              <li>{t("howPay")}</li>
+              <li>{t("howMove")}</li>
+            </ul>
             <button className={styles.button} type="submit">
               {t("send")}
             </button>

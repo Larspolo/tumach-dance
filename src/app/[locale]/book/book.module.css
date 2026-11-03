@@ -144,3 +144,11 @@
   height: 1px;
   overflow: hidden;
 }
+
+/* What happens after the request, above the send button (#819): small grey text, as the note hint. */
+.how {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.85rem;
+  color: #6b6358;
+}
