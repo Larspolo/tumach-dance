@@ -11,9 +11,19 @@ import { STUDIO_SESSION } from "./studio-session";
 
 test.use({ storageState: STUDIO_SESSION });
 
-// Press Tab until the link has the focus (at most 80 presses), then expect it.
-async function tabTo(page: import("@playwright/test").Page, link: import("@playwright/test").Locator) {
-  for (let i = 0; i < 80; i++) {
+// Start at the list item of the booking, press Tab until the link has the focus (at most 20 presses), then expect it.
+// All tests share one database: a walk from the top of the page met more bookings of other tests in each new spec
+// and failed after 80 presses in 3 PRs (#767). A tabindex of -1 lets the item take the focus, but not by Tab.
+async function tabTo(
+  page: import("@playwright/test").Page,
+  item: import("@playwright/test").Locator,
+  link: import("@playwright/test").Locator,
+) {
+  await item.evaluate((el: HTMLElement) => {
+    el.tabIndex = -1;
+    el.focus();
+  });
+  for (let i = 0; i < 20; i++) {
     if (await link.evaluate((el) => el === document.activeElement)) break;
     await page.keyboard.press("Tab");
   }
@@ -58,17 +68,18 @@ test("the WhatsApp link of a booking is a 44 px tap target, reachable by Tab, wi
   await expect(requestLink).toBeVisible();
   const requestBox = await requestLink.boundingBox();
   expect(requestBox?.height ?? 0).toBeGreaterThanOrEqual(44);
-  await tabTo(page, requestLink);
+  await tabTo(page, request, requestLink);
   const requestAxe = await new AxeBuilder({ page }).disableRules(["color-contrast"]).analyze();
   expect(requestAxe.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
 
   // The week page.
   await page.goto("/studio/week?start=2033-06-14");
-  const weekLink = page.locator('section[data-day="2033-06-15"]').getByRole("link", { name: "WhatsApp" });
+  const weekItem = page.locator('section[data-day="2033-06-15"] li', { hasText: "Tap Approved" });
+  const weekLink = weekItem.getByRole("link", { name: "WhatsApp" });
   await expect(weekLink).toBeVisible();
   const weekBox = await weekLink.boundingBox();
   expect(weekBox?.height ?? 0).toBeGreaterThanOrEqual(44);
-  await tabTo(page, weekLink);
+  await tabTo(page, weekItem, weekLink);
   const weekAxe = await new AxeBuilder({ page }).disableRules(["color-contrast"]).analyze();
   expect(weekAxe.violations.filter((v) => v.impact === "serious" || v.impact === "critical")).toEqual([]);
 });
