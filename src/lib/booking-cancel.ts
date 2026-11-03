@@ -20,7 +20,7 @@ export type CancelLink =
   | { state: "not-found" };
 
 /** A token of a link: base64url (new bookings) or hex (the rows of the migration), never an empty or long text. */
-const TOKEN = /^[A-Za-z0-9_-]{32,128}$/;
+export const TOKEN = /^[A-Za-z0-9_-]{32,128}$/;
 
 /** The booking of `token`, by the unique index of `cancel_token`, and its state at `now`. */
 export function cancelLink(db: Db, token: string, now = Date.now()): CancelLink {
