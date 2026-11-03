@@ -4,7 +4,7 @@ import type { Booking } from "@/db/bookings";
 import styles from "../studio.module.css";
 import { fix } from "./actions";
 
-/** The correction of the name, email or phone of a booking (#759): the current values, change one, tap "Save". */
+/** The correction of the name, email, phone or price (#761) of a booking (#759): the current values, change one, tap "Save". */
 export async function FixPanel({ booking, weekStart, wrong }: { booking: Booking; weekStart: string; wrong?: string }) {
   const t = await getTranslations("StudioWeek");
   return (
@@ -44,9 +44,22 @@ export async function FixPanel({ booking, weekStart, wrong }: { booking: Booking
           defaultValue={booking.phone}
         />
       </label>
+      <label className={styles.label}>
+        {t("fixPrice")}
+        <input
+          className={styles.input}
+          name="price"
+          inputMode="decimal"
+          required
+          pattern="\d+([.,]\d{1,2})?"
+          autoComplete="off"
+          defaultValue={(booking.priceCents / 100).toFixed(2)}
+        />
+      </label>
       {wrong === "name" && <p className={styles.error}>{t("fixWrongName")}</p>}
       {wrong === "email" && <p className={styles.error}>{t("fixWrongEmail")}</p>}
       {wrong === "phone" && <p className={styles.error}>{t("fixWrongPhone")}</p>}
+      {wrong === "price" && <p className={styles.error}>{t("fixWrongPrice")}</p>}
       <button className={styles.button} type="submit">
         {t("fixSave")}
       </button>{" "}
