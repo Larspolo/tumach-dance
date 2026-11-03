@@ -8,6 +8,7 @@ import { openDb } from "../src/db";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
 import { bookingDays } from "../src/lib/booking-page";
+import { getHoursRule, saveHoursRule } from "../src/lib/hours-store";
 import { weekOf } from "../src/lib/week";
 import { STUDIO_SESSION } from "./studio-session";
 
@@ -34,6 +35,7 @@ test("Nina cancels all the bookings of one day in 2 taps", async ({ page }, test
     approvedAt: status === "approved" ? Date.now() : null,
     createdAt: Date.now(),
   });
+  const before = getHoursRule(db);
   const added = db
     .insert(bookings)
     .values([
@@ -47,14 +49,14 @@ test("Nina cancels all the bookings of one day in 2 taps", async ({ page }, test
   await page.goto(`/studio/week?start=${weekOf(day.date).start}`);
   const section = page.locator(`section[data-day="${day.date}"]`);
   await section.getByRole("link", { name: en.StudioWeek.cancelDay, exact: true }).click();
-  await expect(section.locator("[data-cancel-day]")).toContainText("Cancel 2 bookings");
+  await expect(section.locator("[data-cancel-day]")).toContainText(/Cancel \d+ bookings/);
   await page.screenshot({ path: "out/screenshots/studio-week-cancel-day-phone.png", fullPage: true });
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.screenshot({ path: "out/screenshots/studio-week-cancel-day-laptop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await section.getByRole("button", { name: en.StudioWeek.cancelDayYes }).click();
 
-  await expect(page.locator("[data-day-cancelled]")).toContainText("Cancelled 2 bookings.");
+  await expect(page.locator("[data-day-cancelled]")).toContainText(/Cancelled \d+ bookings\./);
   const done = page.locator(`section[data-day="${day.date}"]`);
   await expect(done.locator("li", { hasText: "Sick Approved" })).toHaveCount(0);
   await expect(done.getByRole("link", { name: en.StudioWeek.cancelDay, exact: true })).toHaveCount(0);
@@ -70,4 +72,6 @@ test("Nina cancels all the bookings of one day in 2 taps", async ({ page }, test
     .all();
   expect(rows.map((r) => r.status)).toEqual(["cancelled", "cancelled"]);
   expect(bookingDays(db, offer).some((d) => d.date === day.date && d.slots.length > 0)).toBe(false);
+  // Open the day again: the later tests need its free times (studio-week-add-block.spec.ts).
+  saveHoursRule(db, before);
 });

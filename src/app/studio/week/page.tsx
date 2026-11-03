@@ -151,7 +151,8 @@ export default async function WeekPage({
       )}
       {week.days.map((day) => {
         const ofDay = bookings.filter(({ booking }) => localDate(booking.start) === day);
-        // The bookings of the day that have not started: only they get the link "Cancel this day" (#694).
+        // The bookings of the day that have not started: only they get the link "Cancel this day" (#694), after the list
+        // (the Tab order of the bookings stays the same).
         const coming = ofDay.filter(({ booking }) => booking.start > now).length;
         const blocksOfDay = blocks.filter((block) => localDate(block.start) === day);
         const items = [
@@ -161,26 +162,6 @@ export default async function WeekPage({
         return (
           <section key={day} className={styles.item} data-day={day}>
             <h2 className={styles.label}>{dayName.format(new Date(`${day}T12:00:00Z`))}</h2>
-            {coming > 0 &&
-              (params.cancelDay === day ? (
-                <form className={styles.form} action={cancelDay} data-cancel-day={day}>
-                  <input type="hidden" name="day" value={day} />
-                  <input type="hidden" name="start" value={week.start} />
-                  <span>{t("cancelDayAsk", { count: coming })}</span>{" "}
-                  <button className={styles.button} type="submit">
-                    {t("cancelDayYes")}
-                  </button>{" "}
-                  <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
-                    {t("cancelDayNo")}
-                  </Link>
-                </form>
-              ) : (
-                <p>
-                  <Link className={styles.link} href={`/studio/week?start=${week.start}&cancelDay=${day}`}>
-                    {t("cancelDay")}
-                  </Link>
-                </p>
-              ))}
             {items.length === 0 && <p className={styles.note}>{t("free")}</p>}
             <ul className={styles.list}>
               {items.map(({ entry, block }) => {
@@ -304,6 +285,26 @@ export default async function WeekPage({
                 );
               })}
             </ul>
+            {coming > 0 &&
+              (params.cancelDay === day ? (
+                <form className={styles.form} action={cancelDay} data-cancel-day={day}>
+                  <input type="hidden" name="day" value={day} />
+                  <input type="hidden" name="start" value={week.start} />
+                  <span>{t("cancelDayAsk", { count: coming })}</span>{" "}
+                  <button className={styles.button} type="submit">
+                    {t("cancelDayYes")}
+                  </button>{" "}
+                  <Link className={styles.link} href={`/studio/week?start=${week.start}`}>
+                    {t("cancelDayNo")}
+                  </Link>
+                </form>
+              ) : (
+                <p>
+                  <Link className={styles.link} href={`/studio/week?start=${week.start}&cancelDay=${day}`}>
+                    {t("cancelDay")}
+                  </Link>
+                </p>
+              ))}
           </section>
         );
       })}
