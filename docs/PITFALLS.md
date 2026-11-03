@@ -13,6 +13,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - A browser test that books on the first day of `/book` (today) fails in the evening: today has one or two free times left. Choose the last day (`e2e/book.spec.ts`, #313).
 - `globals.css` has `scroll-behavior: smooth`: `window.scrollTo(0, 0)` before a screenshot animates, and the image catches the page halfway. Use `{ top: 0, behavior: "instant" }` (#453).
 - With `javaScriptEnabled: false`, a `click()` just after a `fill()` low on the page can wait 30 s on "element is not stable": the smooth scroll to the field still runs, and each retry starts a new one. Wait until `window.scrollY` stops (`scrollEnds` of `e2e/book-email-typo-nojs.spec.ts`, #508).
+- A test that taps "Log out" with `storageState: STUDIO_SESSION` ends the shared session for all later tests: log in with its own code and its own `x-forwarded-for` (`e2e/studio-offline.spec.ts`, #746). `context.setOffline(true)` also stops the `fetch` of a service worker; a navigation that the worker fetches has `redirect: "manual"`, so a redirect is an `opaqueredirect` with status 0.
 
 ## Database
 
