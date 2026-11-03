@@ -32,11 +32,17 @@ jobs:
       - name: Fast tests
         run: python3 -m pytest -q && npx vitest run
 
-  browser:
+  browser-shard:
     # The build and the browser tests (verify level 3) on the merged tree of the PR (pull_request checks out the merge
-    # with main). The repository is public: the minutes are free.
+    # with main). The repository is public: the minutes are free. Three shards on three machines (#766): one worker
+    # took 6.4 minutes for 343 tests, more than the wait of `ship_pr.py`. Each shard has its own server, database and
+    # login, so the one worker of `playwright.config.ts` (#31) still holds in each shard.
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,11 +53,26 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Browser tests
-        run: npx playwright test
+        run: npx playwright test --shard=${{ matrix.shard }}/3
       - name: Keep the report of a failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results
+          name: playwright-results-${{ matrix.shard }}
           path: test-results/
           retention-days: 7
+
+  browser:
+    # The check that Automerge, `ship_pr.py` (GATES) and `cycle_start.py` read: green only when each shard is green.
+    needs: browser-shard
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check the shards
+        run: |
+          result="${{ needs.browser-shard.result }}"
+          if [ "$result" != success ]; then
+            echo "::error::A shard of the browser tests is $result: open the failed job browser-shard of this run"
+            exit 1
+          fi
