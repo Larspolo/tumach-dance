@@ -180,7 +180,9 @@
     "wrongPeriod": "The end of the period is before its start.",
     "wrongDate": "This date cannot be saved. Check the date and the time.",
     "allDayShort": "all day",
-    "fromShort": "from {time}"
+    "fromShort": "from {time}",
+    "outsideTitle": "Outside your hours",
+    "outsideWhy": "These bookings are outside your open hours now."
   },
   "StudioOffers": {
     "title": "Offers",

@@ -1,15 +1,20 @@
 import { DateTime } from "luxon";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
+import { listOffers } from "@/db/offers";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
+import { shownName } from "@/lib/booking-name";
+import { bookingsOutsideHours } from "@/lib/bookings-outside-hours";
 import { openRanges, TIME_ZONE } from "@/lib/hours";
 import { type DateKind, dateKey, upcoming } from "@/lib/hours-dates";
 import { ruleToForm } from "@/lib/hours-form";
 import { getHoursRule } from "@/lib/hours-store";
 import { LOGIN_PATH } from "@/lib/studio-paths";
+import { localDate } from "@/lib/week";
 import styles from "../studio.module.css";
 import { removeHoursDate } from "./actions";
 import { CloseForm, ExtraOpenForm } from "./dates-form";
@@ -24,6 +29,11 @@ export default async function HoursPage() {
   const t = await getTranslations("StudioHours");
   const rule = getHoursRule(getDb());
   const form = ruleToForm(rule);
+  // The coming bookings outside the open hours (#713): shown each time the page opens while they exist.
+  const outside = bookingsOutsideHours(getDb(), rule);
+  const offers = new Map(listOffers(getDb()).map((o) => [o.id, o]));
+  const offerName = await getTranslations("StudioOffers");
+  const weekName = await getTranslations("StudioWeek");
 
   const today = DateTime.now().setZone(TIME_ZONE).startOf("day");
   const ranges = openRanges(rule, today.toISODate() ?? "", today.plus({ days: 6 }).toISODate() ?? "");
@@ -51,6 +61,26 @@ export default async function HoursPage() {
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>{t("title")}</h1>
+      {outside.length > 0 && (
+        <section aria-label={t("outsideTitle")}>
+          <h2 className={styles.label}>{t("outsideTitle")}</h2>
+          <p>{t("outsideWhy")}</p>
+          <ul className={styles.list} aria-label={t("outsideWhy")}>
+            {outside.map((b) => {
+              const offer = offers.get(b.offerId);
+              return (
+                <li key={b.id}>
+                  <Link className={styles.link} href={`/studio/week?start=${localDate(b.start)}#booking-${b.id}`}>
+                    {day.format(b.start)} · {time.format(b.start)}
+                    {offer ? ` · ${offerName(offer.kind, { minutes: offer.minutes })}` : ""} ·{" "}
+                    {shownName(b, weekName("removed"))}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
       <HoursForm form={form} />
       <h2 className={styles.label}>{t("closedDates")}</h2>
       <ul className={styles.list} aria-label={t("closedDates")}>
