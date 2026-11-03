@@ -47,7 +47,9 @@ export default async function DancerPage({
       <Link className={styles.link} href={back}>
         {t("back")}
       </Link>
-      <h1 className={styles.title}>{anchor ? t("title", { name: shownName(anchor, weekName("removed")) }) : t("link")}</h1>
+      <h1 className={styles.title}>
+        {anchor ? t("title", { name: shownName(anchor, weekName("removed")) }) : t("link")}
+      </h1>
       {others.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list} data-testid="dancer-bookings">
         {others.map(({ booking, offer }) => (
