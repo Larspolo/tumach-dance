@@ -89,3 +89,31 @@ export function pruneDancerNotes(db: Db): number {
   if (gone.length === 0) return 0;
   return db.delete(dancerNotes).where(inArray(dancerNotes.key, gone)).run().changes;
 }
+
+/** The notes of the dancers of these bookings, found in one query: the key of the dancer -> the note. */
+export function dancerNotesFor(db: Db, refs: DancerRef[]): Map<string, string> {
+  const notes = new Map<string, string>();
+  const keys = [...new Set(refs.map(dancerKey).filter((key): key is string => key !== null))];
+  if (keys.length === 0) return notes;
+  for (const row of db
+    .select({ key: dancerNotes.key, text: dancerNotes.text })
+    .from(dancerNotes)
+    .where(inArray(dancerNotes.key, keys))
+    .all()) {
+    notes.set(row.key, row.text);
+  }
+  return notes;
+}
+
+/**
+ * The first line of the note of the dancer of `booking` (from `dancerNotesFor()`), at most `max` characters and then
+ * "…"; `null` when the dancer has no note or the first line is empty (#697).
+ */
+export function firstNoteLine(notes: Map<string, string>, booking: DancerRef, max = 80): string | null {
+  const key = dancerKey(booking);
+  const text = key === null ? undefined : notes.get(key);
+  if (text === undefined) return null;
+  const line = (text.split("\n")[0] ?? "").trim();
+  if (line === "") return null;
+  return line.length > max ? `${line.slice(0, max).trimEnd()}…` : line;
+}
