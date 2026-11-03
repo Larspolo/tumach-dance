@@ -549,6 +549,9 @@
     "event_approved": "Approved by you",
     "event_declined": "Declined by you",
     "event_undone": "Decision undone by you",
+    "event_cancelled": "Cancelled by the dancer",
+    "event_cancelled_nina": "Cancelled by you",
+    "event_ended": "Ended by the site: no answer before the start",
     "event_paid": "Payment received"
   },
   "StudioFeedback": {

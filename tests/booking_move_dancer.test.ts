@@ -40,7 +40,7 @@ test("moveLink gives each state", () => {
   const declined = request(at("2026-11-07T18:00"));
   decideBooking(db, declined.id, "declined", null, NOW);
   expect(moveLink(db, declined.cancelToken, NOW).state).toBe("declined");
-  cancelBooking(db, booking.id);
+  cancelBooking(db, booking.id, "nina");
   expect(moveLink(db, booking.cancelToken, NOW).state).toBe("cancelled");
 });
 

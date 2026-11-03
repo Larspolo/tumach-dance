@@ -549,6 +549,9 @@
     "event_approved": "Goedgekeurd door jou",
     "event_declined": "Afgewezen door jou",
     "event_undone": "Besluit teruggedraaid door jou",
+    "event_cancelled": "Geannuleerd door de danser",
+    "event_cancelled_nina": "Geannuleerd door jou",
+    "event_ended": "Beëindigd door de site: geen antwoord voor de start",
     "event_paid": "Betaling ontvangen"
   },
   "StudioFeedback": {

@@ -118,7 +118,7 @@ test("a requested, cancelled or forgotten booking, or a wrong number of weeks, a
   expect(repeatBooking(db, source.id, 2, { now })).toEqual({ ok: false, reason: "not-approved" });
 
   db.update(bookings).set({ status: "approved" }).where(eq(bookings.id, source.id)).run();
-  expect(cancelBooking(db, source.id).ok).toBe(true);
+  expect(cancelBooking(db, source.id, "nina").ok).toBe(true);
   expect(repeatBooking(db, source.id, 2, { now })).toEqual({ ok: false, reason: "not-approved" });
 
   db.update(bookings).set({ status: "approved" }).where(eq(bookings.id, source.id)).run();

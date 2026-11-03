@@ -235,7 +235,9 @@ export const bookingEvents = sqliteTable(
       .references(() => bookings.id, { onDelete: "cascade" }),
     /** UTC, epoch milliseconds. */
     at: integer("at").notNull(),
-    kind: text("kind", { enum: ["requested", "added", "approved", "declined", "undone"] }).notNull(),
+    kind: text("kind", {
+      enum: ["requested", "added", "approved", "declined", "undone", "cancelled", "ended"],
+    }).notNull(),
     by: text("by", { enum: ["dancer", "nina", "site"] }).notNull(),
     /** UTC, epoch milliseconds; `null` = no move. */
     fromStart: integer("from_start"),

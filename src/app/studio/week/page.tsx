@@ -318,7 +318,11 @@ export default async function WeekPage({
                           <li key={i} data-event={event.kind}>
                             {t("historyLine", {
                               when: eventWhen(event.at, locale),
-                              what: t(`event_${event.kind}`),
+                              what: t(
+                                event.kind === "cancelled" && event.by === "nina"
+                                  ? "event_cancelled_nina"
+                                  : `event_${event.kind}`,
+                              ),
                             })}
                           </li>
                         ))}

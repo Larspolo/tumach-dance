@@ -25,7 +25,7 @@ export async function cancel(form: FormData): Promise<void> {
   const id = Number(form.get("id"));
   if (Number.isInteger(id)) {
     const db = getDb();
-    const result = cancelBooking(db, id);
+    const result = cancelBooking(db, id, "nina");
     // A second tap (or another device) finds the booking already cancelled: show the week again.
     if (result.ok) await sendCancelEmail(db, result.booking, "nina", result.wasApproved);
   }

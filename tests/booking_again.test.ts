@@ -50,7 +50,7 @@ test("the token of an approved booking gives the fields", () => {
 
 test("the token of a cancelled booking gives the fields", () => {
   const { db, offer, booking } = setup();
-  cancelBooking(db, booking.id);
+  cancelBooking(db, booking.id, "nina");
   expect(againFields(db, booking.cancelToken)).toEqual(expected(offer.id));
 });
 

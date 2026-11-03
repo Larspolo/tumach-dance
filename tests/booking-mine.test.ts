@@ -40,7 +40,7 @@ function setup() {
   add("2026-11-08T14:00", "other@example.com");
   add("2026-10-10T14:00", "ana@example.com", "approved");
   const cancelled = add("2026-11-21T14:00", "ana@example.com");
-  cancelBooking(db, cancelled.id);
+  cancelBooking(db, cancelled.id, "nina");
   return { db, first, later };
 }
 

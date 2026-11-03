@@ -39,7 +39,7 @@ test("cancels the requested and approved bookings of the day, keeps the others, 
   db.update(bookings).set({ status: "requested" }).where(eq(bookings.id, declined.id)).run();
   decideBooking(db, declined.id, "declined", null, now);
   const old = add("2026-11-07T18:00", now);
-  cancelBooking(db, old.id);
+  cancelBooking(db, old.id, "nina");
   const forgotten = add("2026-11-07T20:00", now);
   db.update(bookings).set({ forgottenAt: now }).where(eq(bookings.id, forgotten.id)).run();
   const before = add("2026-11-06T21:00", now);
