@@ -129,14 +129,23 @@ describe("approved, move and reminder emails name the move (#805)", () => {
   });
 
   test("the reminder email: the move and the cancel button; the HTML link is the cancel link", async () => {
-    // The plain text of the reminder has no cancel link (not changed by #650): only the HTML part is checked here.
     const { booking, offer } = booked("en");
     const plain = reminderEmail(booking, offer, ORIGIN);
-    expect(plain.text).not.toMatch(CANCEL_LINK);
+    expect(plain.text).toContain("Move or cancel the booking with this link");
     const mail = await reminderEmailHtml(booking, offer, ORIGIN);
     const html = mail.html as string;
     expect(html).toContain("Move or cancel the booking</");
     expect(html).toMatch(/https:\/\/tumach\.dance\/en\/booking\/cancel\S+/);
+    expect(linkOf(mail.text)).toBe(linkOf(plain.text));
+  });
+
+  test("the Dutch reminder plain text names the move with the same link", () => {
+    const { booking, offer } = booked("nl");
+    const plain = reminderEmail(booking, offer, ORIGIN);
+    expect(plain.text).toContain(
+      "Een andere tijd, of kun je niet komen? Verplaats of annuleer de boeking met deze link",
+    );
+    expect(plain.text).toMatch(CANCEL_LINK);
   });
 
   test("the Dutch reminder HTML part names the move in Dutch", async () => {
