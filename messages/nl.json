@@ -119,7 +119,8 @@
     "feedback": "Feedback",
     "photos": "Foto's",
     "messages": "Berichten",
-    "messagesCount": "Berichten ({count} nieuw)"
+    "messagesCount": "Berichten ({count} nieuw)",
+    "money": "Geld"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
@@ -562,5 +563,12 @@
     "yes": "Ja",
     "no": "Nee",
     "failed": "Er ging iets mis. Probeer het over een minuut opnieuw."
+  },
+  "StudioMoney": {
+    "back": "Terug",
+    "title": "Geld van {month}",
+    "count": "Goedgekeurde boekingen",
+    "paid": "Betaald",
+    "open": "Nog niet betaald"
   }
 }

@@ -119,7 +119,8 @@
     "feedback": "Feedback",
     "photos": "Photos",
     "messages": "Messages",
-    "messagesCount": "Messages ({count} new)"
+    "messagesCount": "Messages ({count} new)",
+    "money": "Money"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -562,5 +563,12 @@
     "yes": "Yes",
     "no": "No",
     "failed": "Something went wrong. Try again in a minute."
+  },
+  "StudioMoney": {
+    "back": "Back",
+    "title": "Money of {month}",
+    "count": "Approved bookings",
+    "paid": "Paid",
+    "open": "Not paid yet"
   }
 }
