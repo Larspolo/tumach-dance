@@ -317,6 +317,7 @@ export function moveBooking(
         .where(eq(bookings.id, id))
         .returning()
         .get();
+      recordBookingEvent(tx, id, "moved", request ? "dancer" : "nina", { at: now, fromStart: before.start });
       return { ok: true, booking, from: { start: before.start, end: before.end } };
     },
     { behavior: "immediate" },
@@ -478,12 +479,17 @@ export type MarkPaidResult =
  * not yet paid: a second call (a provider can call its webhook twice) gets `already-paid` and keeps the first time.
  */
 export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
-  const booking = db
-    .update(bookings)
-    .set({ paidAt: now })
-    .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
-    .returning()
-    .get();
+  const booking = db.transaction((tx) => {
+    const paid = tx
+      .update(bookings)
+      .set({ paidAt: now })
+      .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
+      .returning()
+      .get();
+    // Nina marks the payment in the studio app (#816).
+    if (paid) recordBookingEvent(tx, id, "paid", "nina", { at: now });
+    return paid;
+  });
   if (booking) return { ok: true, booking };
   const exists = db.select().from(bookings).where(eq(bookings.id, id)).get();
   if (!exists) return { ok: false, reason: "not-found" };
@@ -494,13 +500,17 @@ export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
 export type UnmarkPaidResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-paid" };
 
 /** Clear `paidAt` after a wrong tap on "Paid" (#143). A second call gets `not-paid` and changes nothing. */
-export function unmarkPaid(db: Db, id: number): UnmarkPaidResult {
-  const booking = db
-    .update(bookings)
-    .set({ paidAt: null })
-    .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
-    .returning()
-    .get();
+export function unmarkPaid(db: Db, id: number, now = Date.now()): UnmarkPaidResult {
+  const booking = db.transaction((tx) => {
+    const unpaid = tx
+      .update(bookings)
+      .set({ paidAt: null })
+      .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
+      .returning()
+      .get();
+    if (unpaid) recordBookingEvent(tx, id, "unpaid", "nina", { at: now });
+    return unpaid;
+  });
   if (booking) return { ok: true, booking };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-paid" : "not-found" };

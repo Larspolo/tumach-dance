@@ -8,7 +8,7 @@ import { listBookings } from "@/db/bookings";
 import { dancerNotesFor, firstNoteLine } from "@/db/dancer-notes";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
-import { bookingHistory, eventWhen } from "@/lib/booking-history";
+import { bookingHistory, eventMessageKey, eventWhen } from "@/lib/booking-history";
 import { shownName, shownNote } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
 import { phoneDigits } from "@/lib/same-dancer";
@@ -318,7 +318,9 @@ export default async function WeekPage({
                           <li key={i} data-event={event.kind}>
                             {t("historyLine", {
                               when: eventWhen(event.at, locale),
-                              what: t(`event_${event.kind}`),
+                              what: t(eventMessageKey(event), {
+                                from: event.fromStart === null ? "" : eventWhen(event.fromStart, locale),
+                              }),
                             })}
                           </li>
                         ))}
