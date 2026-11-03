@@ -180,7 +180,9 @@
     "wrongPeriod": "Het einde van de periode ligt voor het begin.",
     "wrongDate": "Deze datum kan niet worden opgeslagen. Controleer de datum en de tijd.",
     "allDayShort": "hele dag",
-    "fromShort": "vanaf {time}"
+    "fromShort": "vanaf {time}",
+    "outsideTitle": "Buiten je tijden",
+    "outsideWhy": "Deze boekingen vallen nu buiten je openingstijden."
   },
   "StudioOffers": {
     "title": "Aanbod",
