@@ -79,6 +79,11 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
         <dt>{t("open")}</dt>
         <dd data-testid="money-year-open">{euro.format(yearTotals.openCents / 100)}</dd>
       </dl>
+      <p>
+        <a className={styles.link} href={`/api/studio/money/${year}.csv`} download data-testid="money-year-download">
+          {t("yearDownload", { year })}
+        </a>
+      </p>
       <h2>{t("unpaidTitle")}</h2>
       {unpaid.length === 0 ? (
         <p className={styles.note}>{t("allPaid")}</p>

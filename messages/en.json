@@ -588,6 +588,16 @@
     "unpaidTitle": "Not paid yet",
     "allPaid": "All bookings of this month are paid.",
     "previous": "← {month}",
-    "next": "{month} →"
+    "next": "{month} →",
+    "yearDownload": "Download {year} as a spreadsheet",
+    "csv": {
+      "date": "Date",
+      "time": "Time",
+      "offer": "Offer",
+      "price": "Price (EUR)",
+      "paid": "Paid",
+      "yes": "yes",
+      "no": "no"
+    }
   }
 }

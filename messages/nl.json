@@ -588,6 +588,16 @@
     "unpaidTitle": "Nog niet betaald",
     "allPaid": "Alle boekingen van deze maand zijn betaald.",
     "previous": "← {month}",
-    "next": "{month} →"
+    "next": "{month} →",
+    "yearDownload": "Download {year} als spreadsheet",
+    "csv": {
+      "date": "Datum",
+      "time": "Tijd",
+      "offer": "Aanbod",
+      "price": "Prijs (EUR)",
+      "paid": "Betaald",
+      "yes": "ja",
+      "no": "nee"
+    }
   }
 }
