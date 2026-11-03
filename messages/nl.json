@@ -125,7 +125,10 @@
     "messages": "Berichten",
     "messagesCount": "Berichten ({count} nieuw)",
     "money": "Geld",
-    "news": "Nieuws"
+    "news": "Nieuws",
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "nothing": "Nu niets te doen."
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",
