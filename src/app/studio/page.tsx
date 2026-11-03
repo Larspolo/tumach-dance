@@ -32,6 +32,7 @@ export default async function StudioPage() {
   const t = await getTranslations("StudioHome");
   const offerName = await getTranslations("StudioOffers");
   const weekName = await getTranslations("StudioWeek");
+  const guide = await getTranslations("StudioGuide");
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
   // The calendar app of the phone opens a `webcal://` address and polls the feed of #103 by itself.
   const calendarUrl = `webcal://${requestHeaders.get("host")}/api/calendar/${getCalendarToken(getDb())}.ics`;
@@ -151,6 +152,11 @@ export default async function StudioPage() {
         <Link className={styles.tile} href="/studio/feedback">
           {t("feedback")}
         </Link>
+      </p>
+      <p className={styles.note}>
+        <a className={styles.link} href={`/${locale}/studio-guide`}>
+          {guide("link")}
+        </a>
       </p>
       <PasskeyOffer />
       <LogOutButton />
