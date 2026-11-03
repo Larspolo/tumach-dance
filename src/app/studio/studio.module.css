@@ -310,3 +310,16 @@
   border-radius: 0.5rem;
   background: #fbf8f1;
 }
+
+/* The stop of a change with no internet (#748): fixed at the top, so Nina sees it at each place of the page. */
+.needsInternet {
+  position: fixed;
+  inset: 0.75rem 0.75rem auto;
+  z-index: 10;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: #141210;
+  color: #fff;
+  border-radius: 0.5rem;
+  text-align: center;
+}

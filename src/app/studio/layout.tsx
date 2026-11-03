@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { setStudioLocale } from "@/i18n/studio";
+import NeedsInternet from "./needs-internet";
 import styles from "./studio.module.css";
 import StudioLanguage from "./studio-language";
 
@@ -22,6 +23,7 @@ export default async function StudioLayout({ children }: { children: ReactNode }
     <html lang={locale}>
       <body className={styles.body}>
         <NextIntlClientProvider>
+          <NeedsInternet />
           {children}
           <StudioLanguage />
         </NextIntlClientProvider>
