@@ -411,7 +411,7 @@
     "cancelled": "Nina heeft je boeking geannuleerd: {offer}, {when}. Je kunt een andere tijd kiezen op de boekingspagina.",
     "reminderSubject": "Herinnering: je boeking bij TUMACH",
     "reminder": "Een herinnering aan je boeking: {offer}, {when}.",
-    "sign": "TUMACH",
+    "sign": "Nina",
     "payLink": "De prijs is {price}. Betaal met deze Tikkie: {url}",
     "payLater": "De prijs is {price}. Nina stuurt je een Tikkie om te betalen.",
     "cancelLink": "Kun je niet komen? Annuleer de boeking met deze link, op elk moment voor de start: {url}",
