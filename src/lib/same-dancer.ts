@@ -13,7 +13,7 @@ export function phoneDigits(phone: string): string {
 }
 
 /** The SQL of the digits of the phone column (SQLite has no regex replace: one `replace` per mark). */
-function phoneDigitsSql(): SQL {
+export function phoneDigitsSql(): SQL {
   let expression: SQL = sql`${bookings.phone}`;
   for (const mark of PHONE_MARKS) expression = sql`replace(${expression}, ${mark}, '')`;
   return expression;
