@@ -51,4 +51,34 @@ export const GUIDE_PARTS: GuidePart[] = [
     title: "moveTitle",
     steps: [{ key: "moveOpen" }, { key: "moveChoose" }, { key: "moveYes" }],
   },
+  {
+    id: "repeat",
+    page: "/studio/week",
+    title: "repeatTitle",
+    steps: [{ key: "repeatOpen" }, { key: "repeatChoose" }, { key: "repeatSave" }],
+  },
+  {
+    id: "sick",
+    page: "/studio/week",
+    title: "sickTitle",
+    steps: [{ key: "sickOpen" }, { key: "sickYes" }],
+  },
+  {
+    id: "holiday",
+    page: "/studio/hours",
+    title: "holidayTitle",
+    steps: [{ key: "holidayClose" }, { key: "holidayList" }, { key: "holidayCancel" }],
+  },
+  {
+    id: "fix",
+    page: "/studio/week",
+    title: "fixTitle",
+    steps: [{ key: "fixOpen" }, { key: "fixSave" }],
+  },
+  {
+    id: "forget",
+    page: "/studio/week",
+    title: "forgetTitle",
+    steps: [{ key: "forgetOpen" }, { key: "forgetYes" }],
+  },
 ];

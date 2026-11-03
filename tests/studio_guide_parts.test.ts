@@ -5,7 +5,7 @@ import en from "../messages/en.json" with { type: "json" };
 import nl from "../messages/nl.json" with { type: "json" };
 
 describe("GUIDE_PARTS", () => {
-  it("has the 7 parts in order", () => {
+  it("has the 12 parts in order", () => {
     expect(GUIDE_PARTS.map((p) => p.id)).toEqual([
       "login",
       "install",
@@ -14,6 +14,11 @@ describe("GUIDE_PARTS", () => {
       "add",
       "block",
       "move",
+      "repeat",
+      "sick",
+      "holiday",
+      "fix",
+      "forget",
     ]);
   });
   for (const part of GUIDE_PARTS) {
@@ -32,6 +37,19 @@ describe("GUIDE_PARTS", () => {
       expect(m.StudioGuide.blockOpen).toContain(`"${m.StudioWeek.blockAdd}"`);
       expect(m.StudioGuide.moveOpen).toContain(`"${m.StudioWeek.move}"`);
       expect(m.StudioGuide.moveYes).toContain(`"${m.StudioWeek.moveYes}"`);
+      expect(m.StudioGuide.repeatOpen).toContain(`"${m.StudioWeek.repeat}"`);
+      expect(m.StudioGuide.repeatSave).toContain(`"${m.StudioWeek.repeatYes}"`);
+      expect(m.StudioGuide.sickOpen).toContain(`"${m.StudioWeek.cancelDay}"`);
+      expect(m.StudioGuide.sickYes).toContain(`"${m.StudioWeek.cancelDayYes}"`);
+      expect(m.StudioGuide.holidayClose).toContain(`"${m.StudioHome.hours}"`);
+      expect(m.StudioGuide.holidayClose).toContain(`"${m.StudioHours.close}"`);
+      expect(m.StudioGuide.holidayList).toContain(`"${m.StudioHours.outsideTitle}"`);
+      expect(m.StudioGuide.holidayCancel).toContain(`"${m.StudioHours.outsideCancel}"`);
+      expect(m.StudioGuide.holidayCancel).toContain(`"${m.StudioHours.outsideYes}"`);
+      expect(m.StudioGuide.fixOpen).toContain(`"${m.StudioWeek.fix}"`);
+      expect(m.StudioGuide.fixSave).toContain(`"${m.StudioWeek.fixSave}"`);
+      expect(m.StudioGuide.forgetOpen).toContain(`"${m.StudioWeek.forget}"`);
+      expect(m.StudioGuide.forgetYes).toContain(`"${m.StudioWeek.forgetYes}"`);
     }
   });
 });
