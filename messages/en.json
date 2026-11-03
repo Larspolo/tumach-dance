@@ -599,5 +599,19 @@
       "yes": "yes",
       "no": "no"
     }
+  },
+  "StudioDancer": {
+    "back": "Back",
+    "title": "Bookings of {name}",
+    "link": "Earlier bookings",
+    "none": "No other bookings yet.",
+    "paid": "Paid",
+    "notPaid": "Not paid",
+    "status": {
+      "requested": "Request",
+      "approved": "Approved",
+      "declined": "Declined",
+      "cancelled": "Cancelled"
+    }
   }
 }
