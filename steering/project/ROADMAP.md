@@ -132,9 +132,12 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:share` (#723) Nina sends her free times to a dancer by WhatsApp
   - In her app, Nina picks an offer and in one tap shares a short list of its free times of the next 7 days with the link to its booking page, by the share sheet of her phone (WhatsApp, a text message), in English or Dutch
   - The list has only the times that the booking page offers
-- [ ] `nina:offline` Nina sees her next lessons also with no internet
+- [x] `nina:offline` (#745) Nina sees her next lessons also with no internet
   - With no internet, the studio app shows the bookings of today and tomorrow as they were at the last open, and says that it is offline and since when
   - With no internet, a tap on Approve, Decline or another change says that it needs the internet and changes nothing
+- [ ] `nina:fix` (#758) Nina corrects the details of one booking
+  - From a booking, Nina corrects the name, email or phone of the dancer in a few taps (a typo, the right address after a bounce); the later emails, the WhatsApp link and the search use the new data, and a new email address gets the last email of the booking again
+  - Nina gives one booking another price (a lesson for two people, a discount); the week page, the money page and the emails of that booking show it, and the offer keeps its price
 
 ## 3. Book a lesson or the studio
 
@@ -184,6 +187,6 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:again` (#722) A dancer books the next lesson in a few taps
   - The approval email and the reminder have a button that opens the booking page with the same offer and the name, email and phone of the dancer filled in; the address has no personal data
   - After the data of the dancer goes away, the link opens the normal empty booking page
-- [ ] `book:mine` A dancer sees all of their next lessons from the link in an email
+- [ ] `book:mine` (#742) A dancer sees all of their next lessons from the link in an email
   - Each email of a booking has a link to one page with the next bookings of the same email address (time, offer, status), each with its cancel link; the address has only the token of the booking, no personal data
   - After the data of the dancer goes away, the link shows no booking
