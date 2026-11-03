@@ -571,6 +571,7 @@
     "count": "Approved bookings",
     "paid": "Paid",
     "open": "Not paid yet",
+    "yearTitle": "The year {year}",
     "unpaidTitle": "Not paid yet",
     "allPaid": "All bookings of this month are paid.",
     "previous": "← {month}",

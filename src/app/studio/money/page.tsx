@@ -8,7 +8,7 @@ import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { shownName } from "@/lib/booking-name";
 import { TIME_ZONE } from "@/lib/hours";
-import { monthMoney, monthOf, monthRange } from "@/lib/money";
+import { monthMoney, monthOf, monthRange, yearMoney } from "@/lib/money";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { pay } from "../bookings/actions";
 import styles from "../studio.module.css";
@@ -25,6 +25,8 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
   const nav = monthOf((await searchParams).month);
   const db = getDb();
   const money = monthMoney(db, nav.month);
+  const year = Number(nav.month.slice(0, 4));
+  const yearTotals = yearMoney(db, year);
   // The approved bookings of the month that are not paid (#599), by start.
   const { from, to } = monthRange(nav.month);
   const unpaid = listBookings(db, from, to, ["approved"]).filter(
@@ -67,6 +69,15 @@ export default async function MoneyPage({ searchParams }: { searchParams: Promis
         <dd data-testid="money-paid">{euro.format(money.paidCents / 100)}</dd>
         <dt>{t("open")}</dt>
         <dd data-testid="money-open">{euro.format(money.openCents / 100)}</dd>
+      </dl>
+      <h2>{t("yearTitle", { year })}</h2>
+      <dl>
+        <dt>{t("count")}</dt>
+        <dd data-testid="money-year-count">{yearTotals.count}</dd>
+        <dt>{t("paid")}</dt>
+        <dd data-testid="money-year-paid">{euro.format(yearTotals.paidCents / 100)}</dd>
+        <dt>{t("open")}</dt>
+        <dd data-testid="money-year-open">{euro.format(yearTotals.openCents / 100)}</dd>
       </dl>
       <h2>{t("unpaidTitle")}</h2>
       {unpaid.length === 0 ? (
