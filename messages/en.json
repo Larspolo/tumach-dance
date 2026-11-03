@@ -120,7 +120,8 @@
     "photos": "Photos",
     "messages": "Messages",
     "messagesCount": "Messages ({count} new)",
-    "money": "Money"
+    "money": "Money",
+    "news": "News"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",
@@ -633,5 +634,26 @@
     "taken": "Someone just took this time. Choose another time.",
     "done": "Your request has the new time. Nina still answers it. You get an email.",
     "approved": "Nina already approved this booking. Ask Nina to move it."
+  },
+  "StudioNews": {
+    "title": "News",
+    "intro": "A short note on the home page, for example a holiday or a new class.",
+    "now": "On the home page now",
+    "none": "No note on the home page.",
+    "until": "Shows until {date}.",
+    "noEnd": "Shows with no end date.",
+    "remove": "Remove the note",
+    "text": "Your note",
+    "left": "{count, plural, one {# character left} other {# characters left}}",
+    "endDate": "Show until (optional)",
+    "endDateNote": "Leave empty to show the note until you remove it.",
+    "save": "Save",
+    "saved": "The note is saved.",
+    "removed": "The note is removed.",
+    "error": {
+      "empty": "Type a note first.",
+      "long": "The note is too long. Make it shorter.",
+      "date": "The end date is in the past. Pick today or a later day."
+    }
   }
 }
