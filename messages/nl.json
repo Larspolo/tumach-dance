@@ -632,6 +632,9 @@
     "title": "Boekingen van {name}",
     "link": "Eerdere boekingen",
     "none": "Nog geen andere boekingen.",
+    "noteLabel": "Je eigen notitie over deze danser (alleen jij ziet die)",
+    "noteLimit": "Maximaal {max} tekens.",
+    "noteSave": "Opslaan",
     "paid": "Betaald",
     "notPaid": "Niet betaald",
     "status": {

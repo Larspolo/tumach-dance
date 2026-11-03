@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getDb } from "@/db";
+import { DANCER_NOTE_MAX, getDancerNote } from "@/db/dancer-notes";
 import { bookings } from "@/db/schema";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
@@ -12,6 +13,7 @@ import { dancerBookings } from "@/lib/dancer-bookings";
 import { TIME_ZONE } from "@/lib/hours";
 import { backPath, LOGIN_PATH } from "@/lib/studio-paths";
 import styles from "../../studio.module.css";
+import { saveDancerNote } from "./actions";
 
 // The earlier bookings of the dancer of one booking (#623, epic #621), newest first. `?back=` is the page before.
 export default async function DancerPage({
@@ -33,6 +35,7 @@ export default async function DancerPage({
   // A removed or unknown booking shows the calm text: an old link must not end on an error page.
   const anchor = Number.isInteger(id) ? db.select().from(bookings).where(eq(bookings.id, id)).get() : undefined;
   const others = anchor ? dancerBookings(db, id) : [];
+  const note = anchor ? getDancerNote(db, anchor) : null;
   const when = new Intl.DateTimeFormat(locale, {
     timeZone: TIME_ZONE,
     weekday: "short",
@@ -50,6 +53,27 @@ export default async function DancerPage({
       <h1 className={styles.title}>
         {anchor ? t("title", { name: shownName(anchor, weekName("removed")) }) : t("link")}
       </h1>
+      {anchor && (
+        <form className={`${styles.form} ${styles.section}`} action={saveDancerNote} data-dancer-note>
+          <input type="hidden" name="id" value={anchor.id} />
+          <input type="hidden" name="back" value={back} />
+          <label className={styles.label}>
+            {t("noteLabel")}
+            <textarea
+              key={note ?? ""}
+              className={styles.input}
+              name="note"
+              rows={3}
+              maxLength={DANCER_NOTE_MAX}
+              defaultValue={note ?? ""}
+            />
+          </label>
+          <span className={styles.note}>{t("noteLimit", { max: DANCER_NOTE_MAX })}</span>
+          <button className={styles.button} type="submit">
+            {t("noteSave")}
+          </button>
+        </form>
+      )}
       {others.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list} data-testid="dancer-bookings">
         {others.map(({ booking, offer }) => (
