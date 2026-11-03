@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
-import { cancelBooking, moveBooking } from "@/db/bookings";
+import { addBooking, cancelBooking, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
 import { sendCancelEmail, sendMoveEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
@@ -84,4 +84,32 @@ export async function move(form: FormData): Promise<void> {
     redirect(`/studio/week?start=${week.start}&move=${id}&taken=1`);
   }
   redirect(`/studio/week?start=${week.start}`);
+}
+
+/**
+ * Add a lesson that Nina agreed by WhatsApp or phone (#619) as an approved booking. With an email, the timer sends the
+ * approval email (`claimDueDecisions()`). A time that another booking took meanwhile shows the free times again.
+ */
+export async function addLesson(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const offerId = Number(form.get("offerId"));
+  const to = Number(form.get("to"));
+  const locale = form.get("locale") === "nl" ? "nl" : "en";
+  const result = addBooking(getDb(), {
+    offerId,
+    start: to,
+    name: String(form.get("name") ?? ""),
+    email: String(form.get("email") ?? ""),
+    phone: String(form.get("phone") ?? ""),
+    locale,
+  });
+  const base = `/studio/week?start=${week.start}&lesson=1&offer=${offerId}`;
+  if (result.ok) {
+    revalidatePath("/studio/week");
+    redirect(`/studio/week?start=${weekOf(localDate(result.booking.start)).start}`);
+  }
+  if (result.reason === "taken" || result.reason === "notSlot") redirect(`${base}&taken=1`);
+  redirect(`${base}&day=${String(form.get("day") ?? "")}&to=${to}&wrong=1`);
 }
