@@ -184,12 +184,21 @@ export type CancelledBy = "nina" | "dancer";
  * The email to the dancer after a booking is cancelled (#160), in the language of the booking. An approved booking
  * (`wasApproved`, #386) gets the cancel file that removes its event from the calendar of the dancer.
  */
-export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina", wasApproved = false): Email {
+export function cancelEmail(
+  booking: Booking,
+  offer: Offer,
+  by: CancelledBy = "nina",
+  wasApproved = false,
+  origin = siteOrigin(),
+): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const bookAgain =
+    by === "nina" ? [t("bookingEmail.cancelledBookAgain", { url: bookUrl(origin, booking.locale) })] : [];
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
     "",
     t(by === "dancer" ? "bookingEmail.cancelledByYou" : "bookingEmail.cancelled", { offer: offerLabel, when }),
+    ...bookAgain,
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -374,7 +383,7 @@ export async function cancelEmailHtml(
   wasApproved = false,
   origin = siteOrigin(),
 ): Promise<Email> {
-  const email = cancelEmail(booking, offer, by, wasApproved);
+  const email = cancelEmail(booking, offer, by, wasApproved, origin);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const lang = langOf(booking.locale);
   return withHtml(email, { lang, name: booking.name, t }, [

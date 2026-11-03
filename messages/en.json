@@ -334,6 +334,7 @@
     "unansweredSubject": "Your booking request at TUMACH",
     "unansweredBody": "Nina could not answer your request in time: {offer}, {when}. The request has ended.",
     "unansweredOther": "You can pick another time on the booking page: {url}",
+    "cancelledBookAgain": "Book another time: {url}",
     "moveSubject": "Your booking at TUMACH has a new time",
     "move": "Nina moved your booking: {offer}. It was {from}. The new time is {when}.",
     "repeatSubject": "Your lessons at TUMACH are booked",

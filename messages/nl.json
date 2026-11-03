@@ -334,6 +334,7 @@
     "unansweredSubject": "Je boekingsaanvraag bij TUMACH",
     "unansweredBody": "Nina kon je aanvraag niet op tijd beantwoorden: {offer}, {when}. De aanvraag is gestopt.",
     "unansweredOther": "Je kunt een andere tijd kiezen op de boekingspagina: {url}",
+    "cancelledBookAgain": "Boek een andere tijd: {url}",
     "moveSubject": "Je boeking bij TUMACH heeft een nieuwe tijd",
     "move": "Nina heeft je boeking verplaatst: {offer}. Het was {from}. De nieuwe tijd is {when}.",
     "repeatSubject": "Je lessen bij TUMACH zijn geboekt",
