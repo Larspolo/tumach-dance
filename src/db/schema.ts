@@ -303,3 +303,16 @@ export const contactMessages = sqliteTable(
   },
   (t) => [index("contact_messages_created_idx").on(t.createdAt)],
 );
+
+/**
+ * Nina's private note about one dancer (#695, epic #691 `nina:remember`): the level, what they practised. One row per
+ * dancer key of `dancerKey()` (`src/db/dancer-notes.ts`): the email in lower case, else `phone:` and the phone digits,
+ * the rule of `dancerWhere()`. Not the note of the dancer to Nina (`bookings.note`). `pruneDancerNotes()` removes a
+ * note when no booking of its dancer keeps its data (the forget, the old data).
+ */
+export const dancerNotes = sqliteTable("dancer_notes", {
+  key: text("key").primaryKey(),
+  text: text("text").notNull(),
+  /** UTC, epoch milliseconds. */
+  updatedAt: integer("updated_at").notNull(),
+});

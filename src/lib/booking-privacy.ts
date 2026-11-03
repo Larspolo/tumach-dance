@@ -3,6 +3,7 @@
 import { and, isNull, lt, type SQL, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import type { Db } from "../db";
+import { forgetDancerNotes, pruneDancerNotes } from "../db/dancer-notes";
 import { bookings } from "../db/schema";
 import { TIME_ZONE } from "./hours";
 import { dancerWhere } from "./same-dancer";
@@ -13,7 +14,7 @@ export const KEEP_MONTHS = 12;
 /** Clear the personal data of each old booking that still has it; give the ids. A second call changes nothing. */
 export function forgetOldBookings(db: Db, now = Date.now()): number[] {
   const limit = DateTime.fromMillis(now, { zone: TIME_ZONE }).minus({ months: KEEP_MONTHS }).toMillis();
-  return db
+  const ids = db
     .update(bookings)
     .set({
       name: "",
@@ -28,6 +29,9 @@ export function forgetOldBookings(db: Db, now = Date.now()): number[] {
     .returning({ id: bookings.id })
     .all()
     .map((row) => row.id);
+  // Nina's note about a dancer goes when no booking of the dancer keeps its data (#695); a newer booking keeps it.
+  if (ids.length > 0) pruneDancerNotes(db);
+  return ids;
 }
 
 /**
@@ -42,6 +46,9 @@ export function forgetDancer(db: Db, email: string, now = Date.now()): number[] 
 
 /** Clear the personal data of each booking that matches `where` (see `dancerWhere`) and still has it; give the ids. */
 export function forgetWhere(db: Db, where: SQL, now = Date.now()): number[] {
+  const filter = and(where, isNull(bookings.forgottenAt));
+  // Nina's note about this dancer goes too (#695): the keys of the rows before they lose the email and the phone.
+  forgetDancerNotes(db, db.select({ email: bookings.email, phone: bookings.phone }).from(bookings).where(filter).all());
   return db
     .update(bookings)
     .set({
@@ -52,7 +59,7 @@ export function forgetWhere(db: Db, where: SQL, now = Date.now()): number[] {
       cancelToken: sql`lower(hex(randomblob(32)))`,
       forgottenAt: now,
     })
-    .where(and(where, isNull(bookings.forgottenAt)))
+    .where(filter)
     .returning({ id: bookings.id })
     .all()
     .map((row) => row.id);
