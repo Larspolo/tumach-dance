@@ -336,6 +336,7 @@
   "bookingPush": {
     "title": "New booking request",
     "body": "{name}: {offer}, {when}",
+    "nudgeTitle": "A request still waits",
     "cancelTitle": "Booking cancelled",
     "emailFailTitle": "Email not sent",
     "emailFailRequest": "{name} did not get the email about the request.",

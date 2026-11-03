@@ -1,7 +1,8 @@
 // The timer of the booking emails (#165): `src/instrumentation.ts` starts it at each start of the server, also with
-// no `GITHUB_TOKEN`. It checks now and every 5 minutes: the reminder the day before, the payment reminder (#167), the end of an unanswered request (#340), the decision email after its undo time (#572), and the removal
+// no `GITHUB_TOKEN`. It checks now and every 5 minutes: the reminder the day before, the payment reminder (#167), the end of an unanswered request (#340), the decision email after its undo time (#572), the extra push to Nina for a request that still waits (#594), and the removal
 // of the personal data of old bookings (#224) and of old contact messages (#533). Each 15 minutes it reads the bounced emails of Mailgun (#494).
 import type { Db } from "../db";
+import { checkNudges } from "./booking-nudge";
 import { forgetOldBookings } from "./booking-privacy";
 import { checkReminders } from "./booking-reminder";
 import { checkUnanswered } from "./booking-unanswered";
@@ -26,6 +27,7 @@ export function startBookingTimer(db: Db): NodeJS.Timeout {
       sendDueDecisionEmails(db),
       checkReminders(db),
       checkUnanswered(db),
+      checkNudges(db),
       checkPaymentReminders(db),
       Promise.resolve().then(() => forgetOldBookings(db)),
       Promise.resolve().then(() => forgetOldMessages(db)),

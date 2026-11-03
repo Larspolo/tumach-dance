@@ -210,6 +210,8 @@ export const bookings = sqliteTable(
     decidedAt: integer("decided_at"),
     /** UTC, epoch milliseconds; the claim of the decision email (#572), set before the send: one email only. */
     decisionMailedAt: integer("decision_mailed_at"),
+    /** UTC, epoch milliseconds; the one extra push to Nina for a request that still waits (#594), `null` = none. */
+    nudgedAt: integer("nudged_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
