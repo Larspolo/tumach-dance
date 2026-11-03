@@ -570,6 +570,8 @@
     "title": "Geld van {month}",
     "count": "Goedgekeurde boekingen",
     "paid": "Betaald",
-    "open": "Nog niet betaald"
+    "open": "Nog niet betaald",
+    "previous": "← {month}",
+    "next": "{month} →"
   }
 }
