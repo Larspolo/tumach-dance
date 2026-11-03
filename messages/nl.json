@@ -572,6 +572,8 @@
     "paid": "Betaald",
     "open": "Nog niet betaald",
     "unpaidTitle": "Nog niet betaald",
-    "allPaid": "Alle boekingen van deze maand zijn betaald."
+    "allPaid": "Alle boekingen van deze maand zijn betaald.",
+    "previous": "← {month}",
+    "next": "{month} →"
   }
 }

@@ -33,3 +33,22 @@ export function monthMoney(db: Db, month: string): MonthMoney {
   }
   return result;
 }
+
+export type MonthNav = { month: string; previous: string; next: string };
+
+/**
+ * The month of the money page (#598) from `?month=YYYY-MM`, with the month before and after. A wrong or missing value
+ * gives the current month in Amsterdam time.
+ */
+export function monthOf(param: string | undefined, now = Date.now()): MonthNav {
+  let start = DateTime.fromMillis(now, { zone: TIME_ZONE }).startOf("month");
+  if (param && /^\d{4}-\d{2}$/.test(param)) {
+    const asked = DateTime.fromFormat(param, "yyyy-MM", { zone: TIME_ZONE });
+    if (asked.isValid) start = asked.startOf("month");
+  }
+  return {
+    month: start.toFormat("yyyy-MM"),
+    previous: start.minus({ months: 1 }).toFormat("yyyy-MM"),
+    next: start.plus({ months: 1 }).toFormat("yyyy-MM"),
+  };
+}

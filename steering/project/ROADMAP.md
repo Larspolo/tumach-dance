@@ -95,10 +95,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:undo` (#568) Nina takes back a wrong tap on Approve or Decline
   - For 1 minute after the tap, Nina undoes the decision with one tap, and the dancer gets no email of it
   - Approve and Decline stay one tap each
-- [ ] `nina:devices` Nina logs out a lost phone
+- [x] `nina:devices` (#584) Nina logs out a lost phone
   - The studio app lists each device where Nina is logged in, with its kind and its last use; Nina logs out one device, or all other devices, in two taps
   - A logged-out device gets no push of a new request
-- [ ] `nina:nudge` A request that still waits reminds Nina once more
+- [x] `nina:nudge` (#593) A request that still waits reminds Nina once more
   - When a request has no answer some hours before its start, Nina gets one more push with the name of the dancer and the time; never more than one, with no setting
 - [ ] `nina:money` Nina sees the money of each month
   - The studio app shows for each month the number of approved bookings, the sum that is paid and the sum that is not paid yet, with the bookings that are not paid

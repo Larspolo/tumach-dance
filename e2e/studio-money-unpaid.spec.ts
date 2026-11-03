@@ -50,7 +50,7 @@ test("one tap on Mark paid moves an unpaid booking from the list and the open su
     await page.setViewportSize({ width: 390, height: 844 });
 
     await item.getByRole("button", { name: en.StudioBookings.markPaid, exact: true }).click();
-    await expect(page).toHaveURL(/\/studio\/money$/);
+    await expect(page).toHaveURL(/\/studio\/money\?month=\d{4}-\d{2}$/);
     await expect(page.locator("li", { hasText: name })).toHaveCount(0);
     await expect(page.getByTestId("money-paid")).toHaveText(euro.format((before.paidCents + 5990) / 100));
     await expect(page.getByTestId("money-open")).toHaveText(euro.format((before.openCents - 5990) / 100));
