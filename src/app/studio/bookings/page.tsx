@@ -88,7 +88,7 @@ export default async function BookingsPage({
       {requests.length === 0 && <p className={styles.note}>{t("none")}</p>}
       <ul className={styles.list}>
         {requests.map(({ booking, offer }) => (
-          <li key={booking.id} className={styles.item}>
+          <li key={booking.id} id={`booking-${booking.id}`} className={styles.item}>
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
@@ -140,7 +140,7 @@ export default async function BookingsPage({
       {approved.length > 0 && <h2 className={styles.title}>{t("toPay")}</h2>}
       <ul className={styles.list}>
         {approved.map(({ booking, offer }) => (
-          <li key={booking.id} className={styles.item}>
+          <li key={booking.id} id={`booking-${booking.id}`} className={styles.item}>
             <strong>{offerName(offer.kind, { minutes: offer.minutes })}</strong>
             <p>{when.format(booking.start)}</p>
             <p>{shownName(booking, weekName("removed"))}</p>
