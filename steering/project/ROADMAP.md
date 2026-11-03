@@ -129,6 +129,9 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `nina:holiday` (#711) Nina knows which bookings fall in a period that she closes
   - After Nina closes a date or a period, or changes her weekly hours, the hours page names each coming booking that is now outside her open hours, one tap from its booking; the bookings stay when she does nothing
   - One button cancels them in at most 2 taps; each dancer gets the usual cancel email with a link to book another time, and the calendar file removes the event
+- [ ] `nina:share` (#723) Nina sends her free times to a dancer by WhatsApp
+  - In her app, Nina picks an offer and in one tap shares a short list of its free times of the next 7 days with the link to its booking page, by the share sheet of her phone (WhatsApp, a text message), in English or Dutch
+  - The list has only the times that the booking page offers
 
 ## 3. Book a lesson or the studio
 
@@ -175,3 +178,6 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - The page of the link in the emails to a dancer offers the free times of the same offer; one tap moves the booking, and the old time is free at once
   - Nina gets a push with the name of the dancer and the old and the new time; the dancer gets one email with the new time, and the calendar file moves the event
   - A moved approved booking follows the rule that Nina chooses
+- [ ] `book:again` (#722) A dancer books the next lesson in a few taps
+  - The approval email and the reminder have a button that opens the booking page with the same offer and the name, email and phone of the dancer filled in; the address has no personal data
+  - After the data of the dancer goes away, the link opens the normal empty booking page
