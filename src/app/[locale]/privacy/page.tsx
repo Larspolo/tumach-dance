@@ -32,6 +32,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
         <p>{t("bookingWhy")}</p>
         <p>{t("bookingWho")}</p>
         <p>{t("keep", { months: KEEP_MONTHS })}</p>
+        <p>{t("dancerNote")}</p>
         <p>{t("backup", { nights: BACKUP_KEEP_NIGHTS })}</p>
       </section>
       <section className={styles.part}>
