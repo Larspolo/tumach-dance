@@ -11,7 +11,7 @@ export function isStudioPath(pathname: string): boolean {
  * fallback. No other site (`//host`), no backslash and no `..`, so a form field cannot send Nina away.
  */
 export function backPath(value: FormDataEntryValue | null, fallback: string): string {
-  if (typeof value !== "string" || !/^\/studio\/[A-Za-z0-9/?=&_-]*$/.test(value) || value.includes("..")) {
+  if (typeof value !== "string" || !/^\/studio\/[A-Za-z0-9/?=&%_-]*$/.test(value) || /\.\.|%2e/i.test(value)) {
     return fallback;
   }
   return value;

@@ -126,6 +126,7 @@
     "messagesCount": "Messages ({count} new)",
     "money": "Money",
     "news": "News",
+    "search": "Search",
     "today": "Today",
     "tomorrow": "Tomorrow",
     "nothing": "Nothing to do now."
@@ -662,5 +663,12 @@
       "long": "The note is too long. Make it shorter.",
       "date": "The end date is in the past. Pick today or a later day."
     }
+  },
+  "StudioSearch": {
+    "title": "Search bookings",
+    "label": "Name, email or phone",
+    "button": "Search",
+    "none": "No booking found.",
+    "back": "Back"
   }
 }

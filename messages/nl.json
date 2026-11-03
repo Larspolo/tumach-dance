@@ -126,6 +126,7 @@
     "messagesCount": "Berichten ({count} nieuw)",
     "money": "Geld",
     "news": "Nieuws",
+    "search": "Zoeken",
     "today": "Vandaag",
     "tomorrow": "Morgen",
     "nothing": "Nu niets te doen."
@@ -662,5 +663,12 @@
       "long": "De mededeling is te lang. Maak hem korter.",
       "date": "De einddatum is voorbij. Kies vandaag of een latere dag."
     }
+  },
+  "StudioSearch": {
+    "title": "Boekingen zoeken",
+    "label": "Naam, e-mail of telefoon",
+    "button": "Zoeken",
+    "none": "Geen boeking gevonden.",
+    "back": "Terug"
   }
 }

@@ -150,7 +150,7 @@ export default async function WeekPage({
                 if (!entry) return null;
                 const { booking, offer } = entry;
                 return (
-                  <li key={booking.id}>
+                  <li key={booking.id} id={`booking-${booking.id}`}>
                     {time.format(booking.start)} {offerName(offer.kind, { minutes: offer.minutes })},{" "}
                     {shownName(booking, t("removed"))} <span data-price>{euro.format(booking.priceCents / 100)}</span>{" "}
                     {shownNote(booking, 80) !== null && (
