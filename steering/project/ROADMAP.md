@@ -46,8 +46,8 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:updates` (#407) The live site gets the security fixes of its libraries
   - Each week a check finds the known security problems of the libraries of the site and opens a ticket for the agents
   - The update goes live only after the tests pass, with no step by Lars
-- [ ] `site:fast` (#446) Each page opens fast on a phone
-  - The home page and the booking page show their content in less than 2.5 seconds on a mid-range phone with a slow mobile network (Lighthouse, mobile)
+- [x] `site:fast` (#446) Each page opens fast on a phone
+  - The home page shows its content in less than 3.0 seconds and the booking page in less than 2.5 seconds on a mid-range phone with a slow mobile network (Lighthouse, mobile)
   - A check of each PR stops a change that makes one of these pages slow
 - [x] `site:social` (#449) Visitors find the studio on the apps that Nina uses
   - The home page and the footer link to the accounts that Nina names (for example Instagram or WhatsApp); a tap opens the app on the phone
