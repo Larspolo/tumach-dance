@@ -4,7 +4,14 @@ import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { beforeEach, expect, test, vi } from "vitest";
 import { type Db, openDb } from "../src/db";
-import { type BookingInput, decideBooking, moveBooking, requestBooking } from "../src/db/bookings";
+import {
+  type BookingInput,
+  claimDueDecisions,
+  decideBooking,
+  moveBooking,
+  requestBooking,
+  UNDO_MS,
+} from "../src/db/bookings";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
 import { checkReminders } from "../src/lib/booking-reminder";
@@ -43,6 +50,8 @@ function book(start: string, now: number) {
   const result = requestBooking(db, input, { now });
   if (!result.ok) throw new Error(`no booking: ${result.reason}`);
   decideBooking(db, result.booking.id, "approved", null, now);
+  // The approval email goes when the undo time ends (#572); the reminders wait for it.
+  claimDueDecisions(db, now + UNDO_MS);
   return result.booking;
 }
 

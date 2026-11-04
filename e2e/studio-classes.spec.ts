@@ -13,7 +13,7 @@ test.describe("with a session", () => {
 
   test("Nina adds a class, changes its text and hides it", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "phone", "the classes are for the phone");
-    await page.goto("/studio");
+    await page.goto("/studio/setup");
     await page.getByRole("link", { name: en.StudioHome.classes }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioClasses.title);
 

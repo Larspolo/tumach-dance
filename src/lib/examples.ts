@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { decideBooking, requestBooking } from "../db/bookings";
 import type { Db } from "../db/index";
 import { addOffer, listOffers } from "../db/offers";
-import { loadedExamples } from "../db/schema";
+import { bookings, loadedExamples } from "../db/schema";
 import { bookingDays } from "./booking-page";
 import type { ExampleName, NinaQuestion } from "./nina-question";
 import { type SiteEnv, siteEnv } from "./site";
@@ -59,7 +59,11 @@ function seedBookings(db: Db, now: number): number {
     );
     if (!result.ok) break;
     added++;
-    if (i > EXAMPLE_BOOKINGS / 2) decideBooking(db, result.booking.id, "approved", null, now);
+    if (i > EXAMPLE_BOOKINGS / 2) {
+      decideBooking(db, result.booking.id, "approved", null, now);
+      // No decision email after the undo time (#572): example data sends no email.
+      db.update(bookings).set({ decisionMailedAt: now }).where(eq(bookings.id, result.booking.id)).run();
+    }
   }
   return added;
 }

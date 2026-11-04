@@ -13,7 +13,7 @@ test.describe("with a session", () => {
   test.use({ storageState: STUDIO_SESSION });
 
   test("Nina sends feedback and sees the thank-you text", async ({ page }, testInfo) => {
-    await page.goto("/studio");
+    await page.goto("/studio/testing");
     await page.getByRole("link", { name: en.StudioHome.feedback }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioFeedback.title);
     await page.getByLabel(en.StudioFeedback.label).fill("Please add a class on Friday.");

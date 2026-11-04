@@ -49,7 +49,7 @@ describe("the approval email in HTML", () => {
     expect(links.map((m) => m[1])).toContain(TIKKIE);
     expect(links.some((m) => m[1].startsWith("https://tumach.dance/en/booking/cancel"))).toBe(true);
     expect(html).toContain("Pay with Tikkie");
-    expect(html).toContain("Cancel the booking</");
+    expect(html).toContain("Move or cancel the booking</");
     expect(html).toContain("color-scheme");
     expect(mail.text).not.toContain("<");
     expect(mail.text).toContain(`Please pay with this Tikkie: ${TIKKIE}`);
@@ -60,7 +60,7 @@ describe("the approval email in HTML", () => {
   test("Dutch labels; no Tikkie link: no pay button", async () => {
     const { booking, offer } = booked("nl");
     const html = (await decisionEmailHtml({ ...booking, tikkieUrl: null }, offer, "approved")).html as string;
-    expect(html).toContain("Annuleer de boeking");
+    expect(html).toContain("Boeking verplaatsen of annuleren");
     expect(html).not.toContain("Betaal met Tikkie");
     expect(html).toContain('lang="nl"');
   });

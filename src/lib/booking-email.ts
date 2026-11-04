@@ -5,14 +5,16 @@
 
 import { eq } from "drizzle-orm";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { offers } from "../db/schema";
+import { againUrl } from "./booking-again";
 import { cancelUrl } from "./booking-cancel";
 import { bookingEvent } from "./booking-ics";
+import { mineUrl } from "./booking-mine";
 import { sendEmailFailPush } from "./booking-push";
 import { type Email, sendEmail } from "./email";
 import { type EmailBlock, emailHtml } from "./email-html";
@@ -41,10 +43,15 @@ function whenText(lang: string, ms: number): string {
   );
 }
 
-/** The price of `offer` in euro, in the format of `locale`. */
-function priceText(offer: Offer, locale: string): string {
+/** The price in cents in euro, in the format of `locale`. The booking's price (#757), not its offer's: Nina may change the offer. */
+function priceText(priceCents: number, locale: string): string {
   const lang = locale in MESSAGES ? locale : "en";
-  return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(offer.priceCents / 100);
+  return new Intl.NumberFormat(lang, { style: "currency", currency: "EUR" }).format(priceCents / 100);
+}
+
+/** A booking has an email address to send to; a booking Nina adds for WhatsApp, or one with its data removed, has none (#618). */
+export function hasEmail(booking: Pick<Booking, "email">): boolean {
+  return booking.email !== "";
 }
 
 /** Reply goes to Nina's Gmail (#375): the dancer's answer reaches her. No value: no Reply-To. */
@@ -54,9 +61,9 @@ function replyToNina(): Pick<Email, "replyTo"> {
 }
 
 /** The calendar file of a booking as an email attachment (#166, #385). */
-function icsAttachment(booking: Booking, offer: Offer, cancel = false) {
+function icsAttachment(booking: Booking, offer: Offer, cancel = false, filename = "tumach.ics") {
   return {
-    filename: "tumach.ics",
+    filename,
     contentType: "text/calendar",
     content: bookingEvent(booking, offer, booking.locale, cancel),
   };
@@ -72,7 +79,9 @@ export function requestEmail(booking: Booking, offer: Offer, locale: string, ori
     "",
     t("bookingEmail.soon"),
     "",
-    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -98,10 +107,17 @@ export function decisionEmail(booking: Booking, offer: Offer, decision: Decision
           ...addressLines(t),
           // The payment of `book:pay` (#142): the price, and Nina's Tikkie link or that she sends a Tikkie.
           booking.tikkieUrl
-            ? t("bookingEmail.payLink", { price: priceText(offer, booking.locale), url: booking.tikkieUrl })
-            : t("bookingEmail.payLater", { price: priceText(offer, booking.locale) }),
+            ? t("bookingEmail.payLink", {
+                price: priceText(booking.priceCents, booking.locale),
+                url: booking.tikkieUrl,
+              })
+            : t("bookingEmail.payLater", { price: priceText(booking.priceCents, booking.locale) }),
           "",
-          t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+          t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
+          "",
+          t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
+          "",
+          t("bookingEmail.againText", { url: againUrl(origin, booking) }),
           "",
           t("bookingEmail.approvedSee"),
         ]
@@ -136,18 +152,17 @@ export async function decisionEmailHtml(
       },
     ]);
   }
-  return { ...email, html: await approvedHtml(booking, offer, t, offerLabel, when, origin) };
+  return { ...email, html: await approvedHtml(booking, t, offerLabel, when, origin) };
 }
 
 function approvedHtml(
   booking: Booking,
-  offer: Offer,
   t: ReturnType<typeof parts>["t"],
   offerLabel: string,
   when: string,
   origin: string,
 ): Promise<string> {
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   return emailHtml({
     lang: booking.locale in MESSAGES ? booking.locale : "en",
     greeting: t("bookingEmail.greeting", { name: booking.name }),
@@ -162,10 +177,9 @@ function approvedHtml(
             button: { label: t("bookingEmail.payButton"), url: booking.tikkieUrl },
           }
         : { text: t("bookingEmail.payLater", { price }) },
-      {
-        text: t("bookingEmail.cancelText"),
-        button: { label: t("bookingEmail.cancelButton"), url: cancelUrl(origin, booking) },
-      },
+      moveOrCancelBlock(t, cancelUrl(origin, booking)),
+      { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
+      { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
       { text: t("bookingEmail.approvedSee") },
     ],
     sign: t("bookingEmail.sign"),
@@ -179,12 +193,21 @@ export type CancelledBy = "nina" | "dancer";
  * The email to the dancer after a booking is cancelled (#160), in the language of the booking. An approved booking
  * (`wasApproved`, #386) gets the cancel file that removes its event from the calendar of the dancer.
  */
-export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "nina", wasApproved = false): Email {
+export function cancelEmail(
+  booking: Booking,
+  offer: Offer,
+  by: CancelledBy = "nina",
+  wasApproved = false,
+  origin = siteOrigin(),
+): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
+  const bookAgain =
+    by === "nina" ? [t("bookingEmail.cancelledBookAgain", { url: bookUrl(origin, booking.locale) })] : [];
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
     "",
     t(by === "dancer" ? "bookingEmail.cancelledByYou" : "bookingEmail.cancelled", { offer: offerLabel, when }),
+    ...bookAgain,
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -202,7 +225,13 @@ export function cancelEmail(booking: Booking, offer: Offer, by: CancelledBy = "n
  * The email to the dancer after Nina moved a booking (#410), in the language of the booking: the old and the new time.
  * An approved booking gets the calendar file with the new time and the next sequence: the event moves in the calendar.
  */
-export function moveEmail(booking: Booking, offer: Offer, from: { start: number }, origin = siteOrigin()): Email {
+export function moveEmail(
+  booking: Booking,
+  offer: Offer,
+  from: { start: number },
+  origin = siteOrigin(),
+  again = false,
+): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -212,8 +241,11 @@ export function moveEmail(booking: Booking, offer: Offer, from: { start: number 
       from: whenText(booking.locale in MESSAGES ? booking.locale : "en", from.start),
       when,
     }),
+    ...(again ? ["", t("bookingEmail.moveAgain")] : []),
     "",
-    t("bookingEmail.cancelLink", { url: cancelUrl(origin, booking) }),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -223,6 +255,41 @@ export function moveEmail(booking: Booking, offer: Offer, from: { start: number 
     subject: t("bookingEmail.moveSubject"),
     text,
     ...(attachments ? { attachments } : {}),
+    ...replyToNina(),
+  };
+}
+
+/**
+ * The one email after `repeatBooking()` (#678): every new date in Amsterdam time with its own cancel link, and one
+ * calendar file per date (one event each, so each lesson imports on its own). In the language of the first booking:
+ * the repeat copies the locale of the source.
+ */
+export function repeatEmail(added: Booking[], offer: Offer, origin = siteOrigin()): Email {
+  const [first] = added;
+  const { t, offerLabel } = parts(first, offer, first.locale);
+  const lang = first.locale in MESSAGES ? first.locale : "en";
+  const lines = added.map((b) =>
+    t("bookingEmail.repeatLine", { when: whenText(lang, b.start), url: cancelUrl(origin, b) }),
+  );
+  const text = [
+    t("bookingEmail.greeting", { name: first.name }),
+    "",
+    t("bookingEmail.repeatBody", { offer: offerLabel }),
+    "",
+    ...lines,
+    "",
+    t("bookingEmail.repeatCancel"),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, first) }),
+    "",
+    t("bookingEmail.sign"),
+  ].join("\n");
+  const attachments = added.map((b, i) => icsAttachment(b, offer, false, `tumach-${i + 1}.ics`));
+  return {
+    to: first.email,
+    subject: t("bookingEmail.repeatSubject"),
+    text,
+    attachments,
     ...replyToNina(),
   };
 }
@@ -243,7 +310,7 @@ export function unansweredEmail(booking: Booking, offer: Offer, origin = siteOri
 }
 
 /** The reminder to the dancer the day before an approved booking (#165), in the language of the booking. */
-export function reminderEmail(booking: Booking, offer: Offer): Email {
+export function reminderEmail(booking: Booking, offer: Offer, origin = siteOrigin()): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
@@ -251,7 +318,13 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
     t("bookingEmail.reminder", { offer: offerLabel, when }),
     "",
     ...addressLines(t),
+    t("bookingEmail.moveOrCancelLink", { url: cancelUrl(origin, booking) }),
+    "",
     t("bookingEmail.approvedSee"),
+    "",
+    t("bookingEmail.mineLink", { url: mineUrl(origin, booking) }),
+    "",
+    t("bookingEmail.againText", { url: againUrl(origin, booking) }),
     "",
     t("bookingEmail.sign"),
   ].join("\n");
@@ -267,7 +340,7 @@ export function reminderEmail(booking: Booking, offer: Offer): Email {
 /** The payment reminder to a dancer who did not pay an approved booking (#167), in the language of the booking. */
 export function paymentReminderEmail(booking: Booking, offer: Offer): Email {
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   const text = [
     t("bookingEmail.greeting", { name: booking.name }),
     "",
@@ -304,9 +377,9 @@ async function withHtml(
   return { ...email, html };
 }
 
-/** The block with the cancel button (#440), the same text as the cancel link of the plain part. */
-function cancelBlock(t: Translator, url: string): EmailBlock {
-  return { text: t("bookingEmail.cancelText"), button: { label: t("bookingEmail.cancelButton"), url } };
+/** The block with the move and the cancel button (#650, #647): the same text as the link of the plain part. */
+function moveOrCancelBlock(t: Translator, url: string): EmailBlock {
+  return { text: t("bookingEmail.moveOrCancelText"), button: { label: t("bookingEmail.moveOrCancelButton"), url } };
 }
 
 /** The booking page of `locale`: the button to pick another time. */
@@ -324,7 +397,8 @@ export async function requestEmailHtml(
   return withHtml(email, { lang: langOf(locale), name: booking.name, t }, [
     { text: t("bookingEmail.body", { offer: offerLabel, when }) },
     { text: t("bookingEmail.soon") },
-    cancelBlock(t, cancelUrl(origin, booking)),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
 
@@ -336,7 +410,7 @@ export async function cancelEmailHtml(
   wasApproved = false,
   origin = siteOrigin(),
 ): Promise<Email> {
-  const email = cancelEmail(booking, offer, by, wasApproved);
+  const email = cancelEmail(booking, offer, by, wasApproved, origin);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const lang = langOf(booking.locale);
   return withHtml(email, { lang, name: booking.name, t }, [
@@ -353,13 +427,16 @@ export async function moveEmailHtml(
   offer: Offer,
   from: { start: number },
   origin = siteOrigin(),
+  again = false,
 ): Promise<Email> {
-  const email = moveEmail(booking, offer, from, origin);
+  const email = moveEmail(booking, offer, from, origin, again);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   const lang = langOf(booking.locale);
   return withHtml(email, { lang, name: booking.name, t }, [
     { text: t("bookingEmail.move", { offer: offerLabel, from: whenText(lang, from.start), when }) },
-    cancelBlock(t, cancelUrl(origin, booking)),
+    ...(again ? [{ text: t("bookingEmail.moveAgain") }] : []),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
   ]);
 }
 
@@ -378,14 +455,16 @@ export async function unansweredEmailHtml(booking: Booking, offer: Offer, origin
 
 /** `reminderEmail()` with the HTML part (#440): a button to cancel. */
 export async function reminderEmailHtml(booking: Booking, offer: Offer, origin = siteOrigin()): Promise<Email> {
-  const email = reminderEmail(booking, offer);
+  const email = reminderEmail(booking, offer, origin);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
   return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
     { text: t("bookingEmail.reminder", { offer: offerLabel, when }) },
     ...addressLines(t)
       .filter(Boolean)
       .map((text) => ({ text })),
-    cancelBlock(t, cancelUrl(origin, booking)),
+    moveOrCancelBlock(t, cancelUrl(origin, booking)),
+    { text: "", button: { label: t("bookingEmail.mineButton"), url: mineUrl(origin, booking) } },
+    { text: "", button: { label: t("bookingEmail.againButton"), url: againUrl(origin, booking) } },
     { text: t("bookingEmail.approvedSee") },
   ]);
 }
@@ -394,7 +473,7 @@ export async function reminderEmailHtml(booking: Booking, offer: Offer, origin =
 export async function paymentReminderEmailHtml(booking: Booking, offer: Offer): Promise<Email> {
   const email = paymentReminderEmail(booking, offer);
   const { t, offerLabel, when } = parts(booking, offer, booking.locale);
-  const price = priceText(offer, booking.locale);
+  const price = priceText(booking.priceCents, booking.locale);
   return withHtml(email, { lang: langOf(booking.locale), name: booking.name, t }, [
     { text: t("bookingEmail.payReminder", { offer: offerLabel, when }) },
     booking.tikkieUrl
@@ -427,6 +506,7 @@ export async function sendRequestEmail(db: Db, booking: Booking, locale: string)
  * logged, and Nina's decision stays.
  */
 export async function sendDecisionEmail(db: Db, booking: Booking, decision: Decision): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
@@ -448,6 +528,7 @@ export async function sendCancelEmail(
   by: CancelledBy = "nina",
   wasApproved = false,
 ): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
@@ -461,16 +542,39 @@ export async function sendCancelEmail(
 
 /**
  * Send the move email after `moveBooking()` gave `ok`. A failed email does not undo the move: the error is logged,
- * and the moved booking stays.
+ * and the moved booking stays. `again`: an approved booking that the dancer moved waits for Nina again (#649).
  */
-export async function sendMoveEmail(db: Db, booking: Booking, from: { start: number; end: number }): Promise<void> {
+export async function sendMoveEmail(
+  db: Db,
+  booking: Booking,
+  from: { start: number; end: number },
+  again = false,
+): Promise<void> {
+  if (!hasEmail(booking)) return;
   try {
     const offer = db.select().from(offers).where(eq(offers.id, booking.offerId)).get();
     if (!offer) throw new Error(`Booking email: offer ${booking.offerId} not found`);
-    await sendEmail(await moveEmailHtml(booking, offer, from));
+    await sendEmail(await moveEmailHtml(booking, offer, from, siteOrigin(), again));
   } catch (error) {
     console.error(`[booking-email] the move email of booking ${booking.id} failed:`, error);
     recordError("email: move", error);
     await sendEmailFailPush(db, booking, "move");
+  }
+}
+
+/**
+ * Send the one email after `repeatBooking()` (#678) with all the new dates. Nothing for no new booking or a dancer
+ * with no email. A failed send does not undo the repeat: the error is logged, and the new bookings stay.
+ */
+export async function sendRepeatEmail(db: Db, added: Booking[]): Promise<void> {
+  const [first] = added;
+  if (!first || !hasEmail(first)) return;
+  try {
+    const offer = db.select().from(offers).where(eq(offers.id, first.offerId)).get();
+    if (!offer) throw new Error(`Booking email: offer ${first.offerId} not found`);
+    await sendEmail(repeatEmail(added, offer));
+  } catch (error) {
+    console.error(`[booking-email] the repeat email of booking ${first.id} failed:`, error);
+    recordError("email: repeat", error);
   }
 }

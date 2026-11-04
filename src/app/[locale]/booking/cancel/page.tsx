@@ -83,6 +83,11 @@ export default async function CancelPage({
           </button>
         </form>
       )}
+      {link.state === "open" && booking.status === "requested" && (
+        <a className={styles.link} href={`/${locale}/booking/move?${new URLSearchParams({ token })}`}>
+          {t("move")}
+        </a>
+      )}
       {link.state === "cancelled" || link.state === "declined" ? (
         <a className={styles.link} href={`/${locale}/book`}>
           {tBook("again")}

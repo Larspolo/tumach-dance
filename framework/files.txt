@@ -123,6 +123,7 @@ framework/tests/test_tokens.py
 framework/tests/test_tokens_verify.py
 framework/tests/test_tokens_cost.py
 framework/tests/test_tokens_phases.py
+framework/tests/test_tokens_node_checks.py
 framework/tests/test_run_data.py
 framework/tests/test_unconflict.py
 framework/tests/test_automerge_failure.py

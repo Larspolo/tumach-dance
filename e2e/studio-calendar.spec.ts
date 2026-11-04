@@ -10,13 +10,14 @@ test("the calendar link has the feed address, and a new address stops the old on
   request,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the phone project (390×844) only");
-  await page.goto("/studio");
+  await page.goto("/studio/setup");
   const link = page.getByRole("link", { name: en.StudioHome.calendarAdd });
   const old = (await link.getAttribute("href")) ?? "";
   expect(old).toMatch(/^webcal:\/\/[^/]+\/api\/calendar\/[\w-]+\.ics$/);
   const oldPath = new URL(old.replace("webcal://", "http://")).pathname;
   expect((await request.get(oldPath)).status()).toBe(200);
-  await page.screenshot({ path: testInfo.outputPath("studio-calendar.png"), fullPage: true });
+  // Viewport only: a full-page capture of the phone project failed in CI (Page.captureScreenshot, #717).
+  await page.screenshot({ path: testInfo.outputPath("studio-calendar.png") });
 
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: en.StudioHome.calendarRenew }).click();

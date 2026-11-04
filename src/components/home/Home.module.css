@@ -211,56 +211,6 @@
   color: var(--rust-deep);
 }
 
-.schedule {
-  background: var(--paper-2);
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-}
-
-.sched {
-  border: 1px solid var(--ink);
-  background: var(--cream);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 130px 1fr auto auto;
-  gap: 1rem;
-  align-items: center;
-  padding: 1.3rem 1.6rem;
-  border-bottom: 1px solid var(--line);
-}
-
-.row:last-child {
-  border-bottom: none;
-}
-
-.day {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--rust-deep);
-}
-
-.cls {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.time {
-  font-family: var(--font-space-mono), monospace;
-  font-size: 0.85rem;
-  color: #4a443c;
-}
-
-.who {
-  font-family: var(--font-fraunces-italic), Georgia, serif;
-  font-style: italic;
-  font-size: 0.92rem;
-  color: #6a6358;
-}
-
 .contact {
   background: var(--ink);
   color: var(--cream);
@@ -352,17 +302,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .row {
-    grid-template-columns: 1fr auto;
-    row-gap: 0.3rem;
-  }
-
-  .who {
-    grid-column: 1 / -1;
-  }
-}
-
 .contact .fieldError {
   color: var(--rust);
   font-size: 0.9rem;
@@ -423,14 +362,34 @@
   color: var(--rust-light);
 }
 
-/* A coming closed period of the studio (#530): a calm line above the schedule. */
-.off {
-  grid-column: 1 / -1;
-  font-size: 0.86rem;
-  color: #6a6358;
-}
-
+/* A coming closed period of the studio (#530): a calm line above the offers (#794). */
 .closed {
   margin: 0 0 0.75rem;
   color: #6a6358;
+}
+
+/* The note of Nina in the hero (#655): a calm block with a thin line, in the type of the site. */
+.news {
+  max-width: 34ch;
+  margin: 0 0 2rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--ink);
+  background: var(--cream);
+}
+
+.newsTitle {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin: 0 0 0.35rem;
+}
+
+.newsText {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 300;
+  color: #3a352e;
+  white-space: pre-line;
 }

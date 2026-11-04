@@ -85,14 +85,17 @@ report of step 8, and the `Usage:` line (of the brief, else of the first `cycle_
 branch. Read the comments. No "Nina's answer:" after the last section `## For Nina`: add `needs-human` again and pick
 the next ticket. Else act on her answer: a good answer (often A) closes the ticket; a problem or a wish that she names
 gets a follow-up ticket (`ticket` skill, `P1`, her words in a quote). Make it a sub-issue of the epic of the question
-(`gh api repos/OWNER/NAME/issues/N/parent`; `github.md`, "Add a sub-issue"; a full epic: "Part of #E" in the body):
+(`gh api repos/OWNER/NAME/issues/N/parent`; `github.md`, "Add a sub-issue"; a full epic or an epic that closes now
+under the close rule below: "Part of #E" in the body):
 an epic with no open sub-issue starts empty refill runs (#309). When another question already has a follow-up for the
 same problem, make no new ticket: name it in a comment on the epic. Then write one evidence comment (her answer, the
 follow-up numbers) and close with the label `close` (`owner.md`, "Close an issue"); `claim.py N --release`.
 Answer A and the parent epic has no other open sub-issue and its last epic-check comment ends with
 `Close this epic when #N gives A.` (`queue.md`): close the epic in the same run (#552: else a deep run starts only for
-that close). Its evidence comment names that check comment and her answer; label `close`; then the `docs` ticket of its
-roadmap line (`queue.md`).
+that close). A follow-up that this step made from her answer does not count as "other open sub-issue" (her wish is not
+a criterion of the epic, #796): give it "Part of #E" in its body and no sub-issue link, so that `usage.refill_need`
+does not count a closed parent. Its evidence comment names that check comment and her answer; label `close`; then the
+`docs` ticket of its roadmap line (`queue.md`).
 
 Ask the owner only with the label `needs-human` and a comment on the issue that needs the answer (owner rule, #862).
 Never ask with PushNotification, in the session, or only in the status report. Details, denied actions, a wrong

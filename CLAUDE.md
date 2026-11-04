@@ -23,19 +23,22 @@ Put scratch output in the scratchpad or in `out/`. Never commit a database, a `.
 
 Next.js 16 (App Router) in TypeScript with next-intl (`src/i18n/`, locale proxy `src/proxy.ts`). Keep this map up to date.
 
-- `src/app/[locale]/` – the public pages (home, classes, book, the cancel link of a dancer `booking/cancel`, privacy) in each language.
-- `src/app/studio/` – Nina's studio app: login, bookings, messages, the week (`week.ts`), hours, offers, photos, the page "For Nina". No locale in its
+- `src/app/[locale]/` – the public pages (home, classes, book, the cancel link of a dancer `booking/cancel` and its move page `booking/move`, privacy) in each language.
+- `src/app/studio/` – Nina's studio app: login, bookings, messages, money (`src/lib/money.ts`), the week (`week.ts`), the earlier bookings of a dancer (`dancer/[id]`), the search of the bookings (`search`, `src/lib/booking-search.ts`), hours, offers, photos, the page "For Nina". No locale in its
   address (`src/i18n/studio.ts`). `src/proxy.ts` guards `/studio/*` and `/api/studio/*` (`src/lib/studio-guard.ts`).
 - `src/app/api/` – the route handlers (push, email, payment, the answers of Nina).
 - `src/components/` – shared page parts (the "test site" banner).
-- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the questions for Nina of a ticket (`nina-question.ts`), the contact messages and Nina's answer (`contact-store.ts`, page `src/app/studio/messages/`), the push of a bounced email (`email-bounce.ts`), the limits of the booking requests per email address and per day (`booking-limits.ts`, #541), the Content-Security-Policy (`csp.ts`, its nonce in `src/proxy.ts`).
+- `src/lib/` – the logic with no page: open hours to free slots, bookings, email, push, payment, the calendar feed (`calendar-*.ts`, the calendar file of a booking `booking-ics.ts`, route `src/app/api/calendar/`), the timer of the booking reminders (`booking-timer.ts`), the cancel link and its rule (`booking-cancel.ts`), the move of a waiting request by the dancer (`booking-move-dancer.ts`, page `booking/move`), the questions for Nina of a ticket (`nina-question.ts`), the contact messages and Nina's answer (`contact-store.ts`, page `src/app/studio/messages/`), the push of a bounced email (`email-bounce.ts`), the limits of the booking requests per email address and per day (`booking-limits.ts`, #541), the Content-Security-Policy (`csp.ts`, its nonce in `src/proxy.ts`), the Cloudflare Turnstile check of the public forms (`turnstile.ts`, widget `src/components/Turnstile.tsx`, #564).
+  The cancel of each booking of one day and its close (`booking-cancel-day.ts`, #692).
+  The next bookings of a dancer from the token of one booking (`booking-mine.ts`, page `booking/mine`, #743).
+  The history of a booking, "What happened" on the week page (`booking-history.ts`, table `booking_events`, #814).
   `auth.ts`: the
   login (Better Auth, code by email); `email.ts`: send an email. The settings of the server: `.env.example`.
 - `src/db/` – the database schema and access (SQLite on the home server, Drizzle). `drizzle/` – the SQL migrations
   (`npm run db:generate` after a change of `src/db/schema.ts`); `src/instrumentation.ts` applies them at the start.
 - `messages/` – the texts, one file per language (`en`, `nl`).
 - `public/` – the images, the app icons (`public/icons/`, made by `scripts/make-icons.ts`) and the service worker
-  (push). The app manifest: `src/app/manifest.ts`.
+  (push, the studio home with no internet `src/app/studio/offline-cache.tsx`, #746). The app manifest: `src/app/manifest.ts`.
 - `tests/` – Vitest tests (`*.test.ts`) and pytest tests of the agent tools. `e2e/` – Playwright tests.
 - `Dockerfile`, `deploy/` – the image and the compose files of the home server (preview and live).
 - `scripts/lighthouse.mjs` – the speed of the home and booking pages on a phone (#447); the job `browser` of CI runs it on each PR with a margin and a TTFB budget (#448).

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { type ContactState, sendContact } from "@/app/[locale]/contact-action";
 import type { ContactField } from "@/lib/contact";
 import { HONEYPOT, STAMP } from "@/lib/contact-fields";
+import { Turnstile } from "../Turnstile";
 import styles from "./Home.module.css";
 
 const IDLE: ContactState = { status: "idle", errors: {}, values: { name: "", email: "", message: "" } };
@@ -11,7 +12,8 @@ const IDLE: ContactState = { status: "idle", errors: {}, values: { name: "", ema
 // The contact form of the home page (#152). A server action: the form also sends before the JavaScript loads.
 // After a send the thank-you text replaces the fields; after an error the text of the visitor stays.
 // `stamp`: the signed time of the page; the honeypot field is out of reach of a person (#151, `contact-spam.ts`).
-export function ContactForm({ stamp }: { stamp: string }) {
+// `siteKey`: the Turnstile widget (#564), "" when it is off.
+export function ContactForm({ stamp, siteKey = "" }: { stamp: string; siteKey?: string }) {
   const t = useTranslations("HomePage.contact");
   const tAll = useTranslations();
   const locale = useLocale();
@@ -98,6 +100,7 @@ export function ContactForm({ stamp }: { stamp: string }) {
         />
         {message.error}
       </div>
+      <Turnstile siteKey={siteKey} language={locale} />
       <button type="submit" className={styles.btn} disabled={pending}>
         {t("send")}
       </button>

@@ -39,6 +39,7 @@ function book(start: string, change: Partial<typeof bookings.$inferInsert> = {})
     .insert(bookings)
     .values({
       offerId,
+      priceCents: 6000,
       start: at(start),
       end: at(start) + HOUR,
       status: "approved",

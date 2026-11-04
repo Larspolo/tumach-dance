@@ -231,6 +231,14 @@
   object-fit: cover;
 }
 
+/* The offline line at the top (#747). */
+.offline {
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #efe9df;
+  color: #3a352e;
+}
+
 /* The language control of the studio app (#314): buttons with the look of the links of the public control. */
 .languageButton {
   background: none;
@@ -258,8 +266,7 @@
 }
 
 /* The links of the start page as large boxes in the colors of the theme (Nina, #522): a tap target of a full
-   width, each box with its own color, so that Nina finds a task at a glance. White text on each color has a
-   contrast of 4.5:1 or more. */
+   width, all in one color (Nina, #786). White text on it has a contrast of 4.5:1 or more. */
 .tileRow {
   margin: 0 0 0.75rem;
 }
@@ -278,27 +285,28 @@
   text-decoration: none;
 }
 
-.tileRow:nth-of-type(6n + 2) .tile {
-  background: #7c3527;
-}
-
-.tileRow:nth-of-type(6n + 3) .tile {
-  background: #5c6b3a;
-}
-
-.tileRow:nth-of-type(6n + 4) .tile {
-  background: #3f5a66;
-}
-
-.tileRow:nth-of-type(6n + 5) .tile {
-  background: #8a5a1c;
-}
-
-.tileRow:nth-of-type(6n) .tile {
-  background: #141210;
-}
-
 /* The text of a contact message keeps its lines (#533). */
 .pre {
   white-space: pre-wrap;
+}
+
+/* The notifications section when the phone gets no push (#580): a calm frame in the colors of the site, no red box. */
+.alert {
+  padding: 1rem;
+  border: 2px solid #a8503a;
+  border-radius: 0.5rem;
+  background: #fbf8f1;
+}
+
+/* The stop of a change with no internet (#748): fixed at the top, so Nina sees it at each place of the page. */
+.needsInternet {
+  position: fixed;
+  inset: 0.75rem 0.75rem auto;
+  z-index: 10;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: #141210;
+  color: #fff;
+  border-radius: 0.5rem;
+  text-align: center;
 }

@@ -4,8 +4,8 @@
 import { desc, eq, lt } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Db } from "../db";
 import { contactMessages } from "../db/schema";
 import { withFallback } from "../i18n/fallback";

@@ -4,8 +4,8 @@
 import { eq } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Db } from "../db";
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
@@ -25,6 +25,12 @@ export function requestPush(booking: Booking, offer: Offer, locale: PushLocale):
   return { title: t("bookingPush.title"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
 }
 
+/** The one extra push of a request that still waits 12 hours before its start (#594). */
+export function nudgePush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  return { title: t("bookingPush.nudgeTitle"), body: pushBody(booking, offer, locale), url: BOOKINGS_PATH };
+}
+
 /** The push of a booking that the dancer cancelled with the link (#210), with a link to the week of the booking. */
 export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): PushMessage {
   const t = createTranslator({ locale, messages: MESSAGES[locale] });
@@ -32,6 +38,25 @@ export function cancelPush(booking: Booking, offer: Offer, locale: PushLocale): 
   return {
     title: t("bookingPush.cancelTitle"),
     body: pushBody(booking, offer, locale),
+    url: `/studio/week?start=${weekOf(day).start}`,
+  };
+}
+
+/**
+ * The push of a request that the dancer moved with the link (#648): the name, the old and the new time in Amsterdam
+ * time, with a link to the week of the new time.
+ */
+export function movePush(booking: Booking, from: { start: number }, locale: PushLocale): PushMessage {
+  const t = createTranslator({ locale, messages: MESSAGES[locale] });
+  const format = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, dateStyle: "medium", timeStyle: "short" });
+  const day = DateTime.fromMillis(booking.start, { zone: TIME_ZONE }).toISODate() ?? undefined;
+  return {
+    title: t("bookingPush.moveTitle"),
+    body: t("bookingPush.moveBody", {
+      name: booking.name,
+      from: format.format(new Date(from.start)),
+      to: format.format(new Date(booking.start)),
+    }),
     url: `/studio/week?start=${weekOf(day).start}`,
   };
 }
@@ -106,6 +131,15 @@ export async function sendCancelPush(db: Db, booking: Booking): Promise<void> {
     await sendPush(db, (locale) => cancelPush(booking, offer, locale));
   } catch (error) {
     console.error(`[booking-push] the cancel push of booking ${booking.id} failed:`, error);
+  }
+}
+
+/** Send the push after `moveByDancer()` gave `ok`. A failed push does not undo the move: the error is logged. */
+export async function sendMovePush(db: Db, booking: Booking, from: { start: number }): Promise<void> {
+  try {
+    await sendPush(db, (locale) => movePush(booking, from, locale));
+  } catch (error) {
+    console.error(`[booking-push] the move push of booking ${booking.id} failed:`, error);
   }
 }
 

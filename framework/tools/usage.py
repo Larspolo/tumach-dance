@@ -184,7 +184,7 @@ def pending(started, lines, now, minutes=PENDING, refill_lane="deep"):
     return {task: n - made.get(task, 0) for task, n in started.items() if n - made.get(task, 0) > 0}
 
 
-def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=lambda: [], now=None):
+def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=lambda: [], now=None, closing=lambda e: False):
     """The reason of the refill runs, or "" when they have no work (#3547): an open epic with no open sub-issue and no
     open "Part of #E" ticket (the epic check; a release epic with an open ticket in its milestone has work), the tickets with
     `rank` after a release (release.yml gives it to the next release epic too: the `roadmap` skill, "Release cycle"),
@@ -193,7 +193,24 @@ def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=
     runs in one hour found none with R >= N (2026-10-29), and one with R < N found no source (#3560). issues: the open
     issues and PRs; due, reviews, free: the release checks with no ticket, the due reviews and the other sources
     (free_sources), read only when needed. An epic made less than 10 minutes ago gets no epic check: its run splits it
-    itself (#328). now: Unix seconds (default: the time now)."""
+    itself (#328). now: Unix seconds (default: the time now). closing(E): True when close.yml closes the epic E by
+    itself (`epic_autoclose.ready`, #835): its check run would only add the label `close`."""
+    import dashboard
+    epics = [n for n in epic_checks(issues, now) if not closing(n)]
+    if epics:
+        return "epic check " + ", ".join(f"#{n}" for n in epics)
+    if rank := sum(dashboard.RANK in dashboard.labels(i) for i in issues if "pull_request" not in i):
+        return f"rank {rank} tickets after the release"                  # and the next release epic (`roadmap` skill)
+    if checks := due():
+        return f"{len(checks)} release checks"
+    if kinds := reviews():
+        return " and ".join(kinds) + " due"
+    return f"ready {ready} < target {target}: " + ", ".join(sources) if ready < target and (sources := free()) else ""
+
+
+def epic_checks(issues, now=None):
+    """The open epics that wait for an epic check (`refill_need`): no open sub-issue, no open "Part of #E" ticket and
+    no release milestone ticket, no hold, older than NEW_EPIC_WAIT. now: Unix seconds (default: the time now)."""
     import dashboard
     work = {int(n) for i in issues if "pull_request" not in i for n in re.findall(r"Part of #(\d+)", i.get("body") or "")}
     work |= {i["number"] for i in issues if dashboard.RELEASE in dashboard.labels(i)
@@ -204,15 +221,16 @@ def refill_need(ready, target, issues, due=lambda: [], reviews=lambda: [], free=
     epics = [i["number"] for i in issues if "epic" in dashboard.labels(i) and i["number"] not in work and not subs(i)
              and not {dashboard.MUTED, dashboard.AFTER, dashboard.RANK, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)
              and now - made(i) >= NEW_EPIC_WAIT]
-    if epics:
-        return "epic check " + ", ".join(f"#{n}" for n in epics)
-    if rank := sum(dashboard.RANK in dashboard.labels(i) for i in issues if "pull_request" not in i):
-        return f"rank {rank} tickets after the release"                  # and the next release epic (`roadmap` skill)
-    if checks := due():
-        return f"{len(checks)} release checks"
-    if kinds := reviews():
-        return " and ".join(kinds) + " due"
-    return f"ready {ready} < target {target}: " + ", ".join(sources) if ready < target and (sources := free()) else ""
+    return epics
+
+
+def autoclosing(epic):
+    """True when close.yml closes the epic by itself (`epic_autoclose.ready`); a missing tool or an error: False."""
+    try:
+        import epic_autoclose                               # not in an older bootstrap copy
+    except ImportError:
+        return False
+    return bool(epic_autoclose.ready(epic))
 
 
 def release_due():
@@ -483,7 +501,8 @@ def fire(usage, now, burn=BURN, burn7=None, skip=(), status=None, started=None, 
     target = target_runs(usage, now, burn, burn7=burn7) if target is None else target
     reviews = functools.cache(lambda: due_reviews(starved=lambda: target is not None and ready < target
                                                   and not free_sources()))
-    need = refill_need(ready, target, open_all, release_due, free=free_sources, reviews=reviews)   # reviews after checks
+    need = refill_need(ready, target, open_all, release_due, free=free_sources, reviews=reviews,
+                       closing=autoclosing)   # reviews after checks
     only_review = False
     if need and refill_recent(refs, now) and ready >= target // 2:
         # A refill runs now or ran; a near-empty queue refills at once. A due review skips the gap (owner, 2026-10-29):

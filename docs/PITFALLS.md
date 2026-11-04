@@ -13,6 +13,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - A browser test that books on the first day of `/book` (today) fails in the evening: today has one or two free times left. Choose the last day (`e2e/book.spec.ts`, #313).
 - `globals.css` has `scroll-behavior: smooth`: `window.scrollTo(0, 0)` before a screenshot animates, and the image catches the page halfway. Use `{ top: 0, behavior: "instant" }` (#453).
 - With `javaScriptEnabled: false`, a `click()` just after a `fill()` low on the page can wait 30 s on "element is not stable": the smooth scroll to the field still runs, and each retry starts a new one. Wait until `window.scrollY` stops (`scrollEnds` of `e2e/book-email-typo-nojs.spec.ts`, #508).
+- A test that taps "Log out" with `storageState: STUDIO_SESSION` ends the shared session for all later tests: log in with its own code and its own `x-forwarded-for` (`e2e/studio-offline.spec.ts`, #746). `context.setOffline(true)` also stops the `fetch` of a service worker; a navigation that the worker fetches has `redirect: "manual"`, so a redirect is an `opaqueredirect` with status 0.
 
 ## Database
 
@@ -20,6 +21,10 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - `PRAGMA journal_mode = WAL` ignores the busy timeout: two starts on a new database get `SQLITE_BUSY`. Use `setWalMode` of `src/db/wal.ts`; a race test of processes waits for one start instant, else it passes by chance (#180).
 - `drizzle-kit generate` of a new `.notNull()` column with no default gives `ALTER TABLE ADD ... NOT NULL`: SQLite refuses it. Rebuild the table in the migration (`drizzle/0014_outstanding_junta.sql`, #164).
 - Keep `src/db/*.ts` free of imports of `src/lib/push.ts` (also through another module): `tests/examples.test.ts` mocks push with a variable that is not hoisted, and the import of the database layer fails with "Cannot access 'sendPush' before initialization". Put the push in its own module (`booking-limit-push.ts`, #541).
+- A decision of `decideBooking()` sends its email only after `UNDO_MS` (#572), and the reminders and the payment reminder wait for it (`decisionTold`). A test that approves and then checks a reminder calls `claimDueDecisions(db, now + UNDO_MS)` first (`tests/booking_move_reminder.test.ts`).
+- Two PRs that each add a migration take the same number (`0022_*` twice, PR #603): `merge_main.py` stops on `drizzle/meta/*_snapshot.json`. Take main's `drizzle/` (`git checkout origin/main -- drizzle/meta`), `git rm` your `.sql`, run `npm run db:generate` again, and add the new NOT NULL columns of main to the rows of your tests.
+- SQLite `lower()` changes only A to Z and `trim()` removes only spaces; JavaScript `toLowerCase()` and `trim()` change all letters and white space. A key that SQL and JavaScript must both make (a dancer key, an email) is made on one side only: `pruneDancerNotes()` of `src/db/dancer-notes.ts` makes it in JavaScript (#695).
+- A new table that references `bookings.id` needs `{ onDelete: "cascade" }`: `openDb()` turns on `foreign_keys`, and the e2e tests clean up with `db.delete(bookings)`, so a plain reference fails them with "FOREIGN KEY constraint failed" in CI only (`booking_events`, #814).
 
 ## Next.js
 

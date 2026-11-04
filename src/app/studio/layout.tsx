@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { setStudioLocale } from "@/i18n/studio";
+import NeedsInternet from "./needs-internet";
+import { OfflineCache } from "./offline-cache";
+import { OfflineNote } from "./offline-note";
 import styles from "./studio.module.css";
 import StudioLanguage from "./studio-language";
 
@@ -22,8 +25,11 @@ export default async function StudioLayout({ children }: { children: ReactNode }
     <html lang={locale}>
       <body className={styles.body}>
         <NextIntlClientProvider>
+          <OfflineNote madeAt={new Date().toISOString()} />
+          <NeedsInternet />
           {children}
           <StudioLanguage />
+          <OfflineCache />
         </NextIntlClientProvider>
       </body>
     </html>

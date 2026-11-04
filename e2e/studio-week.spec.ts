@@ -25,6 +25,7 @@ test.describe("with a session", () => {
     db.insert(bookings)
       .values({
         offerId: offer.id,
+        priceCents: offer.priceCents,
         start: start.toMillis(),
         end: start.plus({ minutes: 90 }).toMillis(),
         name: "Week Dancer",
@@ -36,8 +37,7 @@ test.describe("with a session", () => {
       })
       .run();
 
-    await page.goto("/studio");
-    await page.getByRole("link", { name: en.StudioHome.week }).click();
+    await page.goto("/studio/week");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioWeek.title);
 
     await page.goto("/studio/week?start=2031-06-11");

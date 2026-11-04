@@ -36,6 +36,7 @@ test("Nina moves an approved booking to another free time in 4 taps", async ({ p
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: slot.start,
       end: slot.end,
       name: "Move Dancer",
@@ -52,6 +53,7 @@ test("Nina moves an approved booking to another free time in 4 taps", async ({ p
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: from.slots[from.slots.length - 1].start,
       end: from.slots[from.slots.length - 1].end,
       name: "Cancelled Dancer",
@@ -97,6 +99,7 @@ test("a started booking has no Move link", async ({ page }, testInfo) => {
   db.insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start,
       end: start + 30 * 60_000,
       name: "Started Dancer",
@@ -126,6 +129,7 @@ test("Nina moves a requested booking in 4 taps, and it stays requested", async (
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: from.slots[1].start,
       end: from.slots[1].end,
       name: "Requested Mover",

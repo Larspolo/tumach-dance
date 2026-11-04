@@ -5,10 +5,14 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db";
 import { removeBlock as deleteBlock } from "@/db/blocks";
-import { cancelBooking, moveBooking } from "@/db/bookings";
+import { addBooking, cancelBooking, changeContact, changePrice, moveBooking } from "@/db/bookings";
 import { getStudioSession } from "@/lib/auth";
-import { sendCancelEmail, sendMoveEmail } from "@/lib/booking-email";
+import { cancelDay as cancelDayBookings, sendCancelDayEmails } from "@/lib/booking-cancel-day";
+import { resendAfterContactChange } from "@/lib/booking-change-contact";
+import { sendCancelEmail, sendMoveEmail, sendRepeatEmail } from "@/lib/booking-email";
 import { forgetDancerOfBooking } from "@/lib/booking-forget";
+import { repeatBooking } from "@/lib/booking-repeat";
+import { priceCentsOf } from "@/lib/offer-form";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { localDate, weekOf } from "@/lib/week";
 import { addLocalBlock } from "@/lib/week-block";
@@ -21,7 +25,7 @@ export async function cancel(form: FormData): Promise<void> {
   const id = Number(form.get("id"));
   if (Number.isInteger(id)) {
     const db = getDb();
-    const result = cancelBooking(db, id);
+    const result = cancelBooking(db, id, "nina");
     // A second tap (or another device) finds the booking already cancelled: show the week again.
     if (result.ok) await sendCancelEmail(db, result.booking, "nina", result.wasApproved);
   }
@@ -83,5 +87,98 @@ export async function move(form: FormData): Promise<void> {
   if (result.reason === "taken" || result.reason === "notSlot") {
     redirect(`/studio/week?start=${week.start}&move=${id}&taken=1`);
   }
+  redirect(`/studio/week?start=${week.start}`);
+}
+
+/**
+ * Add a lesson that Nina agreed by WhatsApp or phone (#619) as an approved booking. With an email, the timer sends the
+ * approval email (`claimDueDecisions()`). A time that another booking took meanwhile shows the free times again.
+ */
+export async function addLesson(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const offerId = Number(form.get("offerId"));
+  const to = Number(form.get("to"));
+  const locale = form.get("locale") === "nl" ? "nl" : "en";
+  const result = addBooking(getDb(), {
+    offerId,
+    start: to,
+    name: String(form.get("name") ?? ""),
+    email: String(form.get("email") ?? ""),
+    phone: String(form.get("phone") ?? ""),
+    locale,
+  });
+  const base = `/studio/week?start=${week.start}&lesson=1&offer=${offerId}`;
+  if (result.ok) {
+    revalidatePath("/studio/week");
+    redirect(`/studio/week?start=${weekOf(localDate(result.booking.start)).start}`);
+  }
+  if (result.reason === "taken" || result.reason === "notSlot") redirect(`${base}&taken=1`);
+  redirect(`${base}&day=${String(form.get("day") ?? "")}&to=${to}&wrong=1`);
+}
+
+/**
+ * Repeat one approved booking in the next weeks (#679) and send the dancer one email with the new dates (#678). The
+ * same week shows next with the number of the new bookings and the dates that were not free.
+ */
+export async function repeat(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  const weeks = Number(form.get("weeks"));
+  if (!Number.isInteger(id)) redirect(`/studio/week?start=${week.start}`);
+  const db = getDb();
+  const result = repeatBooking(db, id, weeks);
+  if (!result.ok) redirect(`/studio/week?start=${week.start}`);
+  await sendRepeatEmail(db, result.added);
+  revalidatePath("/studio/week");
+  const skipped = result.skipped.length > 0 ? `&skipped=${result.skipped.join(",")}` : "";
+  redirect(`/studio/week?start=${week.start}&repeated=${result.added.length}${skipped}`);
+}
+
+/**
+ * Cancel each coming booking of one day and close the day (#694, Nina is sick, epic #690), and email each dancer. The
+ * same week shows next with the number of the cancelled bookings.
+ */
+export async function cancelDay(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const db = getDb();
+  const result = cancelDayBookings(db, String(form.get("day") ?? ""));
+  if (!result.ok) redirect(`/studio/week?start=${week.start}`);
+  await sendCancelDayEmails(db, result.cancelled);
+  revalidatePath("/studio/week");
+  redirect(`/studio/week?start=${week.start}&dayCancelled=${result.cancelled.length}`);
+}
+
+/**
+ * Correct the name, email, phone or price (#761) of one booking (#759). A wrong field opens the panel again with its
+ * error and changes nothing. A new email address gets the last email of the booking again (#760), with the new price.
+ * No email goes for a new price alone.
+ */
+export async function fix(form: FormData): Promise<void> {
+  const session = await getStudioSession(await headers());
+  if (!session) redirect(LOGIN_PATH);
+  const week = weekOf(String(form.get("start") ?? ""));
+  const id = Number(form.get("id"));
+  if (!Number.isInteger(id)) redirect(`/studio/week?start=${week.start}`);
+  // A form with no price field keeps the price.
+  const priceField = form.get("price");
+  const priceCents = priceField === null ? undefined : priceCentsOf(priceField);
+  if (priceField !== null && priceCents === undefined)
+    redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=price`);
+  const result = changeContact(getDb(), id, {
+    name: String(form.get("name") ?? ""),
+    email: String(form.get("email") ?? ""),
+    phone: String(form.get("phone") ?? ""),
+  });
+  if (!result.ok && result.reason === "invalid")
+    redirect(`/studio/week?start=${week.start}&fix=${id}&wrong=${result.field}`);
+  const priced = result.ok && priceCents !== undefined ? changePrice(getDb(), id, priceCents) : undefined;
+  await resendAfterContactChange(getDb(), result.ok && priced ? { ...result, booking: priced } : result);
+  revalidatePath("/studio/week");
   redirect(`/studio/week?start=${week.start}`);
 }

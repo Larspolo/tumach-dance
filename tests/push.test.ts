@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import { afterAll, beforeEach, expect, test, vi } from "vitest";
 import { openDb } from "../src/db";
-import { pushSubscriptions } from "../src/db/schema";
+import { pushSubscriptions, session, user } from "../src/db/schema";
 
 const sendNotification = vi.fn();
 vi.mock("web-push", () => ({ default: { setVapidDetails: vi.fn(), sendNotification } }));
@@ -25,7 +25,11 @@ afterAll(() => vi.unstubAllEnvs());
 
 test("sendPush sends to each subscription and deletes a subscription that answers 410", async () => {
   const db = openDb(":memory:");
-  for (const n of [1, 2, 3]) saveSubscription(db, sub(n));
+  const now = new Date();
+  db.insert(user).values({ id: "nina", name: "Nina", email: "n@example.test", createdAt: now, updatedAt: now }).run();
+  const expiresAt = new Date(Date.now() + 3_600_000);
+  db.insert(session).values({ id: "s", token: "t", userId: "nina", expiresAt, createdAt: now, updatedAt: now }).run();
+  for (const n of [1, 2, 3]) saveSubscription(db, sub(n), 1, "en", "s");
   sendNotification.mockImplementation(async ({ endpoint }: { endpoint: string }) => {
     if (endpoint.endsWith("/2")) throw Object.assign(new Error("gone"), { statusCode: 410 });
     return { statusCode: 201 };
@@ -47,7 +51,7 @@ test("a device that subscribes again replaces its row", () => {
   saveSubscription(db, sub(1), 1000);
   saveSubscription(db, { ...sub(1), keys: { p256dh: "new", auth: "new" } }, 2000);
   expect(db.select().from(pushSubscriptions).all()).toEqual([
-    { endpoint: sub(1).endpoint, p256dh: "new", auth: "new", createdAt: 2000, locale: "en" },
+    { endpoint: sub(1).endpoint, p256dh: "new", auth: "new", createdAt: 2000, locale: "en", sessionId: null },
   ]);
 });
 

@@ -23,6 +23,7 @@ function addBooking(start: DateTime, email: string) {
     .insert(bookings)
     .values({
       offerId: offer.id,
+      priceCents: offer.priceCents,
       start: start.toMillis(),
       end: start.plus({ minutes: 60 }).toMillis(),
       name: "Link Dancer",
@@ -52,7 +53,8 @@ test("the dancer cancels an approved booking with the link", async ({ page }) =>
   await expect(page.getByText(en.CancelBooking.noRefund)).toBeVisible();
   // Opening the link (GET) changes nothing: a mail scanner opens it too.
   expect(booking.status()).toBe("approved");
-  await page.screenshot({ path: "out/screenshots/cancel-link-phone.png", fullPage: true });
+  // Viewport only: a full-page capture of the phone project failed in CI (Page.captureScreenshot, #717).
+  await page.screenshot({ path: "out/screenshots/cancel-link-phone.png" });
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.screenshot({ path: "out/screenshots/cancel-link-laptop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });

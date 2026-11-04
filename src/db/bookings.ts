@@ -1,7 +1,8 @@
 // The booking requests of dancers (#34). A `requested` or `approved` booking holds its time.
-import { and, eq, gt, inArray, isNotNull, isNull, lt, ne, sql } from "drizzle-orm";
+import { and, eq, gt, inArray, isNotNull, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import { DateTime } from "luxon";
 import { routing } from "../i18n/routing";
+import { recordBookingEvent } from "../lib/booking-history";
 import { type BookingLimit, bookingLimit } from "../lib/booking-limits";
 import { notBefore } from "../lib/booking-notice";
 import { classRanges } from "../lib/class-ranges";
@@ -46,6 +47,7 @@ const PHONE = /^\+?[\d\s()./-]+$/;
 /** The first field that is wrong, with the clean values. Simple checks (P1): the email to Nina is the real check. */
 function clean(
   input: BookingInput,
+  { optionalContact = false }: { optionalContact?: boolean } = {},
 ):
   | { field: "name" | "email" | "phone" | "note" | "locale" }
   | { name: string; email: string; phone: string; note: string | null } {
@@ -55,8 +57,9 @@ function clean(
   const note = String(input.note ?? "").trim();
   const digits = phone.replace(/\D/g, "").length;
   if (!name || name.length > 100) return { field: "name" };
-  if (email.length > 200 || !EMAIL.test(email)) return { field: "email" };
-  if (!PHONE.test(phone) || digits < 6 || digits > 15) return { field: "phone" };
+  // A lesson that Nina adds (#617) can have no email or phone: she has the dancer's WhatsApp.
+  if (!(optionalContact && !email) && (email.length > 200 || !EMAIL.test(email))) return { field: "email" };
+  if (!(optionalContact && !phone) && (!PHONE.test(phone) || digits < 6 || digits > 15)) return { field: "phone" };
   if (note.length > NOTE_MAX) return { field: "note" };
   if (!(routing.locales as readonly string[]).includes(input.locale)) return { field: "locale" };
   return { name, email, phone, note: note || null };
@@ -118,13 +121,158 @@ export function requestBooking(
       if (limit) return { ok: false, reason: "limit", limit };
       const booking = tx
         .insert(bookings)
-        .values({ offerId: offer.id, start, end, status: "requested", ...fields, locale: input.locale, createdAt: now })
+        .values({
+          offerId: offer.id,
+          priceCents: offer.priceCents,
+          start,
+          end,
+          status: "requested",
+          ...fields,
+          locale: input.locale,
+          createdAt: now,
+        })
         .returning()
         .get();
+      recordBookingEvent(tx, booking.id, "requested", "dancer", { at: now });
       return { ok: true, booking };
     },
     { behavior: "immediate" },
   );
+}
+
+/** A lesson that Nina agreed by WhatsApp or phone (#617). The end is `start` + the minutes of the offer. */
+export type AddBookingInput = {
+  offerId: number;
+  start: number;
+  name: string;
+  /** Empty = no email: then no approval email. */
+  email: string;
+  /** Empty = no phone. */
+  phone: string;
+  locale: string;
+};
+
+export type AddBookingResult = Exclude<BookingResult, { reason: "limit" }>;
+
+/**
+ * Store a lesson that Nina adds as an `approved` booking (#617), on a free time as `requestBooking()` (one
+ * `BEGIN IMMEDIATE` transaction), also for a hidden offer. No booking limit: it stops bots, not Nina (#541). With an
+ * email, `claimDueDecisions()` sends the usual approval email after `UNDO_MS`; with no email, no email goes.
+ */
+export function addBooking(
+  db: Db,
+  input: AddBookingInput,
+  {
+    now = Date.now(),
+    callerMails = false,
+  }: {
+    now?: number;
+    /** The caller sends one email for several bookings (the weekly repeats, #677): no approval email per booking. */
+    callerMails?: boolean;
+  } = {},
+): AddBookingResult {
+  const fields = clean({ ...input, end: input.start, note: null }, { optionalContact: true });
+  if ("field" in fields) return { ok: false, reason: "invalid", field: fields.field };
+  if (!Number.isInteger(input.start)) return { ok: false, reason: "notSlot" };
+  const { start } = input;
+  return db.transaction(
+    (tx): AddBookingResult => {
+      const offer = tx.select().from(offers).where(eq(offers.id, input.offerId)).get();
+      if (!offer) return { ok: false, reason: "invalid", field: "offerId" };
+      const end = start + offer.minutes * 60_000;
+      const date = DateTime.fromMillis(start, { zone: TIME_ZONE }).toISODate();
+      if (!date) return { ok: false, reason: "notSlot" };
+      const open = openRanges(getHoursRule(db), date, date);
+      const slots = freeSlots(open, [], offer.minutes, { notBefore: notBefore(now) });
+      if (!slots.some((s) => s.start === start && s.end === end)) return { ok: false, reason: "notSlot" };
+      const classes = classRanges(listClassTimes(db, { visibleOnly: true }), date, date);
+      const inClass = classes.some((c) => c.start < end && start < c.end);
+      if (inClass || busyRanges(db, start, end).length > 0) return { ok: false, reason: "taken" };
+      const booking = tx
+        .insert(bookings)
+        .values({
+          offerId: offer.id,
+          priceCents: offer.priceCents,
+          start,
+          end,
+          status: "approved",
+          name: fields.name,
+          email: fields.email,
+          phone: fields.phone,
+          note: null,
+          locale: input.locale,
+          createdAt: now,
+          approvedAt: now,
+          decidedAt: now,
+          decisionMailedAt: fields.email && !callerMails ? null : now,
+        })
+        .returning()
+        .get();
+      recordBookingEvent(tx, booking.id, "added", "nina", { at: now });
+      return { ok: true, booking };
+    },
+    { behavior: "immediate" },
+  );
+}
+
+export type ContactInput = { name: string; email: string; phone: string };
+
+export type ChangeContactResult =
+  | { ok: true; booking: Booking; emailChanged: boolean }
+  | { ok: false; reason: "not-found" }
+  | { ok: false; reason: "invalid"; field: "name" | "email" | "phone" };
+
+/**
+ * Correct the name, email or phone of a `requested` or `approved` booking whose data is not removed (#759). The checks
+ * of `addBooking()`: the email and the phone can be empty. A wrong field changes nothing.
+ */
+export function changeContact(db: Db, id: number, input: ContactInput, now = Date.now()): ChangeContactResult {
+  const old = db.select().from(bookings).where(eq(bookings.id, id)).get();
+  if (!old || old.forgottenAt !== null || !(HOLDING as readonly string[]).includes(old.status)) {
+    return { ok: false, reason: "not-found" };
+  }
+  const fields = clean(
+    { ...input, offerId: old.offerId, start: old.start, end: old.end, note: null, locale: old.locale },
+    { optionalContact: true },
+  );
+  if ("field" in fields) {
+    if (fields.field === "name" || fields.field === "email" || fields.field === "phone") {
+      return { ok: false, reason: "invalid", field: fields.field };
+    }
+    return { ok: false, reason: "not-found" };
+  }
+  const booking = db.transaction((tx) => {
+    const changed = tx
+      .update(bookings)
+      .set({ name: fields.name, email: fields.email, phone: fields.phone })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+      .returning()
+      .get();
+    // Nina corrects the contact data in the studio app (#830).
+    if (changed) recordBookingEvent(tx, id, "contact", "nina", { at: now });
+    return changed;
+  });
+  if (!booking) return { ok: false, reason: "not-found" };
+  return { ok: true, booking, emailChanged: booking.email !== old.email };
+}
+
+/**
+ * Give one `requested` or `approved` booking another price (#761): a lesson for two, a discount. The offer keeps its
+ * price. A price that is not a whole number of cents of 0 or more changes nothing.
+ */
+export function changePrice(db: Db, id: number, priceCents: number, now = Date.now()): Booking | undefined {
+  if (!Number.isInteger(priceCents) || priceCents < 0) return undefined;
+  return db.transaction((tx) => {
+    const changed = tx
+      .update(bookings)
+      .set({ priceCents })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING), isNull(bookings.forgottenAt)))
+      .returning()
+      .get();
+    // Nina changes the price in the studio app (#830).
+    if (changed) recordBookingEvent(tx, id, "price", "nina", { at: now });
+    return changed;
+  });
 }
 
 /** `from`: the old time of the booking, for the email and the push of the move (epic #406). */
@@ -143,7 +291,7 @@ export function moveBooking(
   db: Db,
   id: number,
   start: number,
-  { now = Date.now() }: { now?: number } = {},
+  { now = Date.now(), request = false }: { now?: number; request?: boolean } = {},
 ): MoveResult {
   return db.transaction(
     (tx): MoveResult => {
@@ -169,14 +317,30 @@ export function moveBooking(
       if (inClass || busyRanges(db, start, end, { except: id }).length > 0) return { ok: false, reason: "taken" };
       const booking = tx
         .update(bookings)
-        .set({ start, end, remindedAt: null, calendarSequence: sql`${bookings.calendarSequence} + 1` })
+        .set({
+          start,
+          end,
+          remindedAt: null,
+          calendarSequence: sql`${bookings.calendarSequence} + 1`,
+          ...(request ? { status: "requested" as const, approvedAt: null, decidedAt: null } : {}),
+        })
         .where(eq(bookings.id, id))
         .returning()
         .get();
+      recordBookingEvent(tx, id, "moved", request ? "dancer" : "nina", { at: now, fromStart: before.start });
       return { ok: true, booking, from: { start: before.start, end: before.end } };
     },
     { behavior: "immediate" },
   );
+}
+
+/**
+ * The move of a booking by the dancer (#649, Nina's answer B on #647): `moveBooking()` that also sets the status back
+ * to `requested` in the same transaction, so that Nina approves the new time again. `paidAt` and `tikkieUrl` stay: a
+ * paid booking stays paid (P11).
+ */
+export function moveBookingToRequest(db: Db, id: number, start: number, options: { now?: number } = {}): MoveResult {
+  return moveBooking(db, id, start, { ...options, request: true });
 }
 
 export type DecideResult =
@@ -196,16 +360,21 @@ export function decideBooking(
   tikkieUrl: string | null = null,
   now = Date.now(),
 ): DecideResult {
-  const booking = db
-    .update(bookings)
-    .set({
-      status: decision,
-      tikkieUrl: decision === "approved" ? tikkieUrl : null,
-      approvedAt: decision === "approved" ? Date.now() : null,
-    })
-    .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
-    .returning()
-    .get();
+  const booking = db.transaction((tx) => {
+    const decided = tx
+      .update(bookings)
+      .set({
+        status: decision,
+        tikkieUrl: decision === "approved" ? tikkieUrl : null,
+        approvedAt: decision === "approved" ? Date.now() : null,
+        decidedAt: now,
+      })
+      .where(and(eq(bookings.id, id), eq(bookings.status, "requested"), gt(bookings.start, now)))
+      .returning()
+      .get();
+    if (decided) recordBookingEvent(tx, id, decision, "nina", { at: now });
+    return decided;
+  });
   if (booking) return { ok: true, booking };
   const exists = db
     .select({ status: bookings.status, start: bookings.start })
@@ -217,6 +386,77 @@ export function decideBooking(
   return { ok: false, reason: "not-requested" };
 }
 
+/** The time after a tap on Approve or Decline in which Nina can undo it; the decision email goes after it (#572). */
+export const UNDO_MS = 60_000;
+
+/**
+ * The bookings whose dancer has the decision email, or never waits for one: a decision before #572 (no `decidedAt`).
+ * The reminders and the payment reminder leave out the others, so no reminder comes before the decision email.
+ */
+export const decisionTold = or(isNull(bookings.decidedAt), isNotNull(bookings.decisionMailedAt));
+
+export type UndoResult =
+  | { ok: true; booking: Booking }
+  | { ok: false; reason: "not-found" | "not-decided" | "sent" | "started" | "taken" };
+
+/**
+ * Undo Nina's decision of the last `UNDO_MS` (#572): the booking is `requested` again, and the dancer gets no
+ * decision email. `sent`: the email went out, or the undo time ended. `taken`: a declined time that another booking,
+ * a block or a class took in the meantime. One `BEGIN IMMEDIATE` transaction checks and updates; the claim of the
+ * email (`claimDueDecisions()`) is one `UPDATE` that needs `decidedAt` and a `null` `decisionMailedAt`, so an undo
+ * and a send never both happen.
+ */
+export function undoDecision(db: Db, id: number, now = Date.now()): UndoResult {
+  return db.transaction(
+    (tx): UndoResult => {
+      const before = tx.select().from(bookings).where(eq(bookings.id, id)).get();
+      if (!before) return { ok: false, reason: "not-found" };
+      if ((before.status !== "approved" && before.status !== "declined") || before.decidedAt === null) {
+        return { ok: false, reason: "not-decided" };
+      }
+      if (before.decisionMailedAt !== null || now - before.decidedAt >= UNDO_MS) return { ok: false, reason: "sent" };
+      if (before.start <= now) return { ok: false, reason: "started" };
+      const date = DateTime.fromMillis(before.start, { zone: TIME_ZONE }).toISODate();
+      const classes = date ? classRanges(listClassTimes(db, { visibleOnly: true }), date, date) : [];
+      const inClass = classes.some((c) => c.start < before.end && before.start < c.end);
+      if (inClass || busyRanges(db, before.start, before.end, { except: id }).length > 0) {
+        return { ok: false, reason: "taken" };
+      }
+      const booking = tx
+        .update(bookings)
+        .set({ status: "requested", approvedAt: null, tikkieUrl: null, decidedAt: null })
+        .where(and(eq(bookings.id, id), isNull(bookings.decisionMailedAt)))
+        .returning()
+        .get();
+      if (!booking) return { ok: false, reason: "sent" };
+      recordBookingEvent(tx, id, "undone", "nina", { at: now });
+      return { ok: true, booking };
+    },
+    { behavior: "immediate" },
+  );
+}
+
+/**
+ * Claim the decisions whose undo time ended and whose email did not go (#572): one `UPDATE` sets `decisionMailedAt`,
+ * so two callers at the same moment (the short timer of the tap and the booking timer) never claim one booking twice.
+ * A booking that Nina cancelled in the undo time is not claimed: the dancer gets only the cancel email.
+ */
+export function claimDueDecisions(db: Db, now = Date.now()): Booking[] {
+  return db
+    .update(bookings)
+    .set({ decisionMailedAt: now })
+    .where(
+      and(
+        inArray(bookings.status, ["approved", "declined"]),
+        isNotNull(bookings.decidedAt),
+        lte(bookings.decidedAt, now - UNDO_MS),
+        isNull(bookings.decisionMailedAt),
+      ),
+    )
+    .returning()
+    .all();
+}
+
 /** `wasApproved`: the booking was approved before the cancel (its calendar file reached the dancer, #386). */
 export type CancelResult =
   | { ok: true; booking: Booking; wasApproved: boolean }
@@ -226,18 +466,23 @@ export type CancelResult =
  * Cancel a `requested` or `approved` booking (#159): it gets `cancelled` and frees its time, as `busyRanges()` counts
  * only the holding statuses. A paid booking keeps `paidAt` (the refund waits for #139).
  */
-export function cancelBooking(db: Db, id: number): CancelResult {
-  // better-sqlite3 is synchronous: the status read here is the one the `UPDATE` changes.
-  const before = db.select({ status: bookings.status }).from(bookings).where(eq(bookings.id, id)).get();
-  const booking = db
-    .update(bookings)
-    .set({ status: "cancelled" })
-    .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
-    .returning()
-    .get();
-  if (booking) return { ok: true, booking, wasApproved: before?.status === "approved" };
-  const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
-  return { ok: false, reason: exists ? "not-active" : "not-found" };
+export function cancelBooking(db: Db, id: number, by: "dancer" | "nina", now = Date.now()): CancelResult {
+  return db.transaction((tx): CancelResult => {
+    // better-sqlite3 is synchronous: the status read here is the one the `UPDATE` changes.
+    const before = tx.select({ status: bookings.status }).from(bookings).where(eq(bookings.id, id)).get();
+    const booking = tx
+      .update(bookings)
+      .set({ status: "cancelled" })
+      .where(and(eq(bookings.id, id), inArray(bookings.status, HOLDING)))
+      .returning()
+      .get();
+    if (booking) {
+      recordBookingEvent(tx, id, "cancelled", by, { at: now });
+      return { ok: true, booking, wasApproved: before?.status === "approved" };
+    }
+    const exists = tx.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
+    return { ok: false, reason: exists ? "not-active" : "not-found" };
+  });
 }
 
 export type MarkPaidResult =
@@ -249,12 +494,17 @@ export type MarkPaidResult =
  * not yet paid: a second call (a provider can call its webhook twice) gets `already-paid` and keeps the first time.
  */
 export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
-  const booking = db
-    .update(bookings)
-    .set({ paidAt: now })
-    .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
-    .returning()
-    .get();
+  const booking = db.transaction((tx) => {
+    const paid = tx
+      .update(bookings)
+      .set({ paidAt: now })
+      .where(and(eq(bookings.id, id), eq(bookings.status, "approved"), isNull(bookings.paidAt)))
+      .returning()
+      .get();
+    // Nina marks the payment in the studio app (#816).
+    if (paid) recordBookingEvent(tx, id, "paid", "nina", { at: now });
+    return paid;
+  });
   if (booking) return { ok: true, booking };
   const exists = db.select().from(bookings).where(eq(bookings.id, id)).get();
   if (!exists) return { ok: false, reason: "not-found" };
@@ -265,13 +515,17 @@ export function markPaid(db: Db, id: number, now = Date.now()): MarkPaidResult {
 export type UnmarkPaidResult = { ok: true; booking: Booking } | { ok: false; reason: "not-found" | "not-paid" };
 
 /** Clear `paidAt` after a wrong tap on "Paid" (#143). A second call gets `not-paid` and changes nothing. */
-export function unmarkPaid(db: Db, id: number): UnmarkPaidResult {
-  const booking = db
-    .update(bookings)
-    .set({ paidAt: null })
-    .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
-    .returning()
-    .get();
+export function unmarkPaid(db: Db, id: number, now = Date.now()): UnmarkPaidResult {
+  const booking = db.transaction((tx) => {
+    const unpaid = tx
+      .update(bookings)
+      .set({ paidAt: null })
+      .where(and(eq(bookings.id, id), isNotNull(bookings.paidAt)))
+      .returning()
+      .get();
+    if (unpaid) recordBookingEvent(tx, id, "unpaid", "nina", { at: now });
+    return unpaid;
+  });
   if (booking) return { ok: true, booking };
   const exists = db.select({ id: bookings.id }).from(bookings).where(eq(bookings.id, id)).get();
   return { ok: false, reason: exists ? "not-paid" : "not-found" };
@@ -303,6 +557,16 @@ export function listOpenRequests(db: Db, now = Date.now()): { booking: Booking; 
     .where(and(eq(bookings.status, "requested"), gt(bookings.start, now)))
     .orderBy(bookings.start)
     .all();
+}
+
+/** The count of the requests that wait for Nina, the same condition as `listOpenRequests()` (#659). */
+export function countOpenRequests(db: Db, now = Date.now()): number {
+  const row = db
+    .select({ n: sql<number>`count(*)` })
+    .from(bookings)
+    .where(and(eq(bookings.status, "requested"), gt(bookings.start, now)))
+    .get();
+  return row?.n ?? 0;
 }
 
 /** One `approved` booking with its offer (#535: the calendar file of Nina), or null. */

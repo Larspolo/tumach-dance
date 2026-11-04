@@ -131,6 +131,8 @@ export const pushSubscriptions = sqliteTable("push_subscriptions", {
   createdAt: integer("created_at").notNull(),
   /** The language of the studio app on the device (#69): the push texts of a timer have no request. */
   locale: text("locale").notNull().default("en"),
+  /** The login of the device (#586): the end of the login deletes the push. NULL for a push of before #586. */
+  sessionId: text("session_id").references(() => session.id, { onDelete: "cascade" }),
 });
 
 /** A question for Nina (a GitHub issue) that has had its push (#69). The row comes before the push: one push only. */
@@ -163,6 +165,8 @@ export const bookings = sqliteTable(
     offerId: integer("offer_id")
       .notNull()
       .references(() => offers.id),
+    /** The price of the offer at the time of the request (#596): a later change of the offer does not change it. */
+    priceCents: integer("price_cents").notNull(),
     /** UTC, epoch milliseconds; `end` is exclusive. */
     start: integer("start").notNull(),
     end: integer("end").notNull(),
@@ -199,6 +203,15 @@ export const bookings = sqliteTable(
     forgottenAt: integer("forgotten_at"),
     /** The SEQUENCE of the calendar event of the booking (#409): one more at each move, so a calendar takes the new time. */
     calendarSequence: integer("calendar_sequence").notNull().default(0),
+    /**
+     * UTC, epoch milliseconds; the tap of Nina on Approve or Decline (#572). The decision email waits `UNDO_MS` after
+     * it. `null` = no decision, or a decision before #572 (its email went at once).
+     */
+    decidedAt: integer("decided_at"),
+    /** UTC, epoch milliseconds; the claim of the decision email (#572), set before the send: one email only. */
+    decisionMailedAt: integer("decision_mailed_at"),
+    /** UTC, epoch milliseconds; the one extra push to Nina for a request that still waits (#594), `null` = none. */
+    nudgedAt: integer("nudged_at"),
   },
   (t) => [
     index("bookings_start_idx").on(t.start),
@@ -206,6 +219,43 @@ export const bookings = sqliteTable(
     check("bookings_status", sql`${t.status} IN ('requested', 'approved', 'declined', 'cancelled')`),
     check("bookings_range", sql`${t.end} > ${t.start}`),
   ],
+);
+
+/**
+ * One step in the history of a booking (#814): the request, Nina's decision, its undo. Written in the transaction of
+ * the change (`src/lib/booking-history.ts`). `fromStart`: the old start of a move (later tickets of #813). A delete of
+ * the booking deletes its events.
+ */
+export const bookingEvents = sqliteTable(
+  "booking_events",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    bookingId: integer("booking_id")
+      .notNull()
+      .references(() => bookings.id, { onDelete: "cascade" }),
+    /** UTC, epoch milliseconds. */
+    at: integer("at").notNull(),
+    kind: text("kind", {
+      enum: [
+        "requested",
+        "added",
+        "approved",
+        "declined",
+        "undone",
+        "moved",
+        "paid",
+        "unpaid",
+        "cancelled",
+        "ended",
+        "contact",
+        "price",
+      ],
+    }).notNull(),
+    by: text("by", { enum: ["dancer", "nina", "site"] }).notNull(),
+    /** UTC, epoch milliseconds; `null` = no move. */
+    fromStart: integer("from_start"),
+  },
+  (t) => [index("booking_events_booking_id_idx").on(t.bookingId)],
 );
 
 /**
@@ -290,3 +340,16 @@ export const contactMessages = sqliteTable(
   },
   (t) => [index("contact_messages_created_idx").on(t.createdAt)],
 );
+
+/**
+ * Nina's private note about one dancer (#695, epic #691 `nina:remember`): the level, what they practised. One row per
+ * dancer key of `dancerKey()` (`src/db/dancer-notes.ts`): the email in lower case, else `phone:` and the phone digits,
+ * the rule of `dancerWhere()`. Not the note of the dancer to Nina (`bookings.note`). `pruneDancerNotes()` removes a
+ * note when no booking of its dancer keeps its data (the forget, the old data).
+ */
+export const dancerNotes = sqliteTable("dancer_notes", {
+  key: text("key").primaryKey(),
+  text: text("text").notNull(),
+  /** UTC, epoch milliseconds. */
+  updatedAt: integer("updated_at").notNull(),
+});

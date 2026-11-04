@@ -6,8 +6,9 @@
 // reminder. A failed send clears it again: the next check tries again.
 import { and, eq, gt, isNotNull, isNull } from "drizzle-orm";
 import type { Db } from "../db";
+import { decisionTold } from "../db/bookings";
 import { bookings, offers } from "../db/schema";
-import { paymentReminderEmailHtml } from "./booking-email";
+import { hasEmail, paymentReminderEmailHtml } from "./booking-email";
 import { sendEmailFailPush } from "./booking-push";
 import { sendEmail } from "./email";
 import { recordError } from "./site-errors";
@@ -32,7 +33,7 @@ export async function checkPaymentReminders(db: Db, now = Date.now()): Promise<n
     .select({ booking: bookings, offer: offers })
     .from(bookings)
     .innerJoin(offers, eq(offers.id, bookings.offerId))
-    .where(and(unpaid, isNotNull(bookings.approvedAt), gt(bookings.start, now)))
+    .where(and(unpaid, decisionTold, isNotNull(bookings.approvedAt), gt(bookings.start, now)))
     .all();
   const sent: number[] = [];
   for (const { booking, offer } of rows) {
@@ -45,7 +46,7 @@ export async function checkPaymentReminders(db: Db, now = Date.now()): Promise<n
       .get();
     if (!claimed) continue;
     try {
-      await sendEmail(await paymentReminderEmailHtml(claimed, offer));
+      if (hasEmail(claimed)) await sendEmail(await paymentReminderEmailHtml(claimed, offer));
     } catch (error) {
       db.update(bookings).set({ paymentRemindedAt: null }).where(eq(bookings.id, booking.id)).run();
       recordError("email: payment", error);
