@@ -85,12 +85,15 @@ def loop_gaps(runs, since, until):
 
 
 def idle_queue(cycles, until):
-    """(longest, sum) in hours of the idle stretches of the pacer `cycles` (dicts of `pacer/YYYY-MM-DD.jsonl`): the
-    consecutive cycles with `target` > 0, no claim and no started run, from the first one to the next cycle that is not
-    idle (or `until`). The queue stood still for hours on 2026-10-31 while the pacer loop ran (#5199). A paused
-    project is not idle."""
-    stretches, start = [], None
-    for c in sorted(cycles, key=lambda c: c["at"]):
+    """(longest, sum, no work) in hours of the idle stretches of the pacer `cycles` (dicts of `pacer/YYYY-MM-DD.jsonl`):
+    the consecutive cycles with `target` > 0, no claim and no started run, from the first one to the next cycle that is
+    not idle (or `until`). The queue stood still for hours on 2026-10-31 while the pacer loop ran (#5199). A paused
+    project is not idle. "No work": the hours of the idle cycles with `ready` 0 and `refill` 0, each until the next
+    cycle: the queue had no ticket and the refill no source (each ticket waited for the owner, 19.7 h on 2026-11-03,
+    #854), so no fault of the pacer."""
+    stretches, start, dry = [], None, 0.0
+    rows = sorted(cycles, key=lambda c: c["at"])
+    for i, c in enumerate(rows):
         idle = (c.get("target", 0) > 0 and not c.get("claims") and not sum((c.get("started") or {}).values())
                 and "paused True" not in c.get("line", ""))
         if idle and start is None:
@@ -98,9 +101,12 @@ def idle_queue(cycles, until):
         elif not idle and start is not None:
             stretches.append((ts(c["at"]) - start).total_seconds() / 3600)
             start = None
+        if idle and not c.get("ready") and not c.get("refill"):
+            end = ts(rows[i + 1]["at"]) if i + 1 < len(rows) else until
+            dry += max(0.0, (end - ts(c["at"])).total_seconds() / 3600)
     if start is not None:
         stretches.append(max(0.0, (until - start).total_seconds() / 3600))
-    return max(stretches, default=0.0), sum(stretches)
+    return max(stretches, default=0.0), sum(stretches), dry
 
 
 def held(r):
@@ -781,8 +787,9 @@ def report(since, runs, jobs, status_comments, comments, prs, files, files_of=No
         out.append(f"  {name}: {k}, {fmt(m)}, {fmt(mx)}, {fail}")
     if loop is not None:                        # a dead pacer loop starts no run (#4647): (longest, sum, hours)
         out.append(f"Pacer loop gaps (no live run, #4647): longest {loop[0]:.1f} h, sum {loop[1]:.1f} h of {loop[2]:.1f} h")
-    if idle is not None:                        # the loop runs, but it starts nothing (#5199): (longest, sum)
-        out.append(f"Idle queue (target > 0, no claim, no start): longest {idle[0]:.1f} h, sum {idle[1]:.1f} h")
+    if idle is not None:                        # the loop runs, but it starts nothing (#5199): (longest, sum, no work)
+        out.append(f"Idle queue (target > 0, no claim, no start): longest {idle[0]:.1f} h, sum {idle[1]:.1f} h"
+                   f" (no work: {idle[2]:.1f} h, #854)")
     held, again = held_runs(runs)
     out.append("Runs held by GitHub (#4645): " + (", ".join(f"{k} {v}" for k, v in sorted(held.items())) or "0")
                + " · started again by hand: " + (", ".join(f"{k} {v}" for k, v in sorted(again.items())) or "0"))
