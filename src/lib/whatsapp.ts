@@ -1,7 +1,7 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import { TIME_ZONE } from "./hours";
 
 const MESSAGES = { en, nl } as const;
