@@ -26,7 +26,7 @@ test("summarize gives the medians and no budget problem under the budget", () =>
     lcp: 2500,
     cls: 0.1,
   });
-  expect(s).toEqual({ lcp: 2000, cls: 0.01, tbt: 100, kb: 100, over: [] });
+  expect(s).toEqual({ lcp: 2000, ttfb: Number.NaN, cls: 0.01, tbt: 100, kb: 100, runs: [2000, 3000, 1000], over: [] });
 });
 
 test("summarize names each budget that the median is over", () => {
@@ -50,6 +50,7 @@ test("parseArgs reads the runs, the url and the budgets", () => {
     runs: 1,
     url: "http://x",
     budget: { lcp: 2500, cls: 0.1 },
+    margin: 0,
     json: undefined,
   });
   expect(() => parseArgs(["--foo", "1"])).toThrow();

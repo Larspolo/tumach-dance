@@ -35,6 +35,7 @@ Lessons for some tickets only (moved from `docs/LEARNINGS.md`, #459). Read the s
 - `pkill -f "next start"` misses the server: its process is `next-server`. A server that still runs on the port answers with the old build (#453).
 - The LCP median of 3 Lighthouse runs of one build moves up to 0.5 s from run to run: compare a change with `--runs 5` of main and of the branch, one after the other (#491).
 - The CSP nonce reaches the page only in the request headers: `NextResponse.next({ request: { headers } })`. A plain `NextResponse.next()` (`studio-guard.ts`) drops it, and the scripts of the page do not run. The CSP of `src/proxy.ts` replaces the one of `next.config.ts` (one header, #491).
+- The simulated LCP of Lighthouse leaves out the server time: a home page 3 s slower on the server kept its LCP (2.6 s) and only `server-response-time` showed 3.0 s. Check a server change with `--ttfb` of `scripts/lighthouse.mjs` (#448).
 
 ## Photos
 

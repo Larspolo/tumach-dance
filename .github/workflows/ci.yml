@@ -38,7 +38,7 @@ jobs:
     # took 6.4 minutes for 343 tests, more than the wait of `ship_pr.py`. Each shard has its own server, database and
     # login, so the one worker of `playwright.config.ts` (#31) still holds in each shard.
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -54,6 +54,22 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Browser tests
         run: npx playwright test --shard=${{ matrix.shard }}/3
+      - name: Speed on a phone
+        # The home and the booking page in Lighthouse mobile on the build of the browser tests (#448, epic #446). It also
+        # runs when a browser test failed. The margin: one run of a page can be about 1 s slower than the next (a frame
+        # stall of headless Chromium), so the exact budget of scripts/lighthouse.mjs fails PRs that change nothing. The
+        # simulated LCP leaves out the server time, so --ttfb fails a page that is slow on the server.
+        # Only in shard 1: one table per PR (#766 split the job in 3 shards).
+        if: ${{ !cancelled() && matrix.shard == 1 }}
+        run: |
+          export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          # pipefail: with no pipefail the status of the pipe is the status of tee (0), and the step never fails.
+          set -o pipefail
+          { echo '### Speed on a phone (Lighthouse mobile)'; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          status=0
+          node scripts/lighthouse.mjs --runs 5 --margin 1000 --ttfb 600 --cls 0.1 | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
       - name: Keep the report of a failure
         if: failure()
         uses: actions/upload-artifact@v4
