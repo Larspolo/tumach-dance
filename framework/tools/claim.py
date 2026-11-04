@@ -53,7 +53,7 @@ Parallel runs read the same `runs` counter of the status issue, so "every 5th ru
 the last review (`last_review` in the state comment of #1). A review with no change doubles the gap (50, 100, 200
 merged PRs), a change sets it back to 50 (`--reviewed`). `--roadmap` locks the roadmap review the same way, 100 merged
 PRs after `last_roadmap` or its newest lock ref (#3352: a write of the body can be lost), 30 while the refill has no
-source (#3741), or the merged count after 60 minutes with no merged PR (no ready ticket: no run merges). A gap counts
+source (#3741), or the merged count with no live run and no ready ticket (#851), or after 60 minutes with no merged PR. A gap counts
 merged PRs, not minutes: the speed of the project changes (#2039). The other times of this tool stay in seconds: a run that stopped
 merges nothing, so only the clock finds it.
 
@@ -414,8 +414,21 @@ def live_runs(remote="origin"):
 def nothing_merges(last, remote="origin"):
     """True when no PR will merge soon: no run holds a beating claim, or ROADMAP_IDLE minutes passed with no merge after
     `last` (a run that stopped). Only the clock made the queue stand idle 13 times for about 1 h on 2026-11-01 and
-    2026-11-02 while no run worked (lever 8 of the `improve` skill)."""
-    return live_runs(remote) == 0 or idle_minutes(last, remote) >= ROADMAP_IDLE
+    2026-11-02 while no run worked (lever 8 of the `improve` skill). A ready ticket counts as a live run (#851): the
+    pacer starts its run in the same cycle, and its claim made the review not due for the deep run of that cycle (5
+    of 47 deep runs found no work on 2026-11-03)."""
+    return live_runs(remote) == 0 and not ready_tickets(remote) or idle_minutes(last, remote) >= ROADMAP_IDLE
+
+
+def ready_tickets(remote="origin"):
+    """The number of ready tickets of all lanes (`dashboard.candidates`), from one page of the open issues; None when
+    GitHub cannot be read (then `nothing_merges` keeps its result from before #851)."""
+    import dashboard
+    try:
+        return len(dashboard.candidates(api("issues?state=open&per_page=100"), reserved=()))
+    except (Exception, SystemExit) as e:                # claim.fail exits 2 on a GitHub error
+        print(f"ready tickets: {e}", file=sys.stderr)
+        return None
 
 
 def refill_starved():
