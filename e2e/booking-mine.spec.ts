@@ -6,6 +6,7 @@ import nl from "../messages/nl.json" with { type: "json" };
 import { openDb } from "../src/db";
 import { addOffer } from "../src/db/offers";
 import { bookings } from "../src/db/schema";
+import { requestEmail } from "../src/lib/booking-email";
 import { TIME_ZONE } from "../src/lib/hours";
 
 test.beforeEach(({ page }, testInfo) => {
@@ -13,11 +14,19 @@ test.beforeEach(({ page }, testInfo) => {
   return page.setViewportSize({ width: 390, height: 844 });
 });
 
+// The path of the next-bookings link in the request email of a booking (#755).
+function mineLink(text: string): string {
+  const link = text.match(/https?:\/\/\S+\/booking\/mine\?token=\S+/)?.[0];
+  if (!link) throw new Error("the email has no link to the next bookings");
+  const url = new URL(link);
+  return url.pathname + url.search;
+}
+
 function addBookings() {
   const db = openDb("out/e2e/tumach.db");
   const offer = addOffer(db, { kind: "lesson", minutes: 60, priceCents: 6000, position: 96 });
   const email = `mine-${Date.now()}@example.test`;
-  const add = (local: string, status: "requested" | "approved") => {
+  const add = (local: string, status: "requested" | "approved", locale: "en" | "nl") => {
     const start = DateTime.fromISO(local, { zone: TIME_ZONE });
     return db
       .insert(bookings)
@@ -28,7 +37,7 @@ function addBookings() {
         name: "Mine Dancer",
         email,
         phone: "+31 6 1234 5678",
-        locale: "en",
+        locale,
         status,
         priceCents: 6000,
         createdAt: Date.now(),
@@ -36,12 +45,12 @@ function addBookings() {
       .returning()
       .get();
   };
-  return [add("2033-05-18T15:00", "approved"), add("2033-05-11T15:00", "requested")];
+  return { offer, later: add("2033-05-18T15:00", "approved", "nl"), first: add("2033-05-11T15:00", "requested", "en") };
 }
 
 test("the page of a token shows the next bookings with their cancel links", async ({ page }) => {
-  const [later, first] = addBookings();
-  await page.goto(`/en/booking/mine?token=${first.cancelToken}`);
+  const { offer, later, first } = addBookings();
+  await page.goto(mineLink(requestEmail(first, offer, "en").text));
   await expect(page.getByRole("heading", { name: en.MyBookings.title })).toBeVisible();
   const items = page.getByRole("listitem");
   await expect(items).toHaveCount(2);
@@ -57,7 +66,7 @@ test("the page of a token shows the next bookings with their cancel links", asyn
   await page.screenshot({ path: "out/screenshots/booking-mine-laptop.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
 
-  await page.goto(`/nl/booking/mine?token=${later.cancelToken}`);
+  await page.goto(mineLink(requestEmail(later, offer, "nl").text));
   await expect(page.getByRole("heading", { name: nl.MyBookings.title })).toBeVisible();
   await expect(page.getByRole("link", { name: nl.MyBookings.cancel })).toHaveCount(2);
 });

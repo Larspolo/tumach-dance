@@ -4,8 +4,8 @@
 // the same time (two timers after a fast restart) and a check after a restart send no second push.
 import { eq } from "drizzle-orm";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Db } from "../db";
 import { notifiedQuestions } from "../db/schema";
 import { withFallback } from "../i18n/fallback";

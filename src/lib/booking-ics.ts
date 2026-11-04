@@ -2,8 +2,8 @@
 // The location is the address of the studio (`STUDIO_ADDRESS`, #540); with no setting the event has none.
 import { createEvents } from "ics";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Booking } from "../db/bookings";
 import type { Offer } from "../db/offers";
 import { studioAddress } from "./studio-email";

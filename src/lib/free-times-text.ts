@@ -1,8 +1,8 @@
 // The text of the free times of one offer for the next 7 days, which Nina can send to a dancer (#727, epic #723).
 import { DateTime } from "luxon";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import nl from "../../messages/nl.json";
+import en from "../../messages/en.json" with { type: "json" };
+import nl from "../../messages/nl.json" with { type: "json" };
 import type { Db } from "../db";
 import type { Offer } from "../db/offers";
 import { withFallback } from "../i18n/fallback";
