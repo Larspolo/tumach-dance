@@ -20,7 +20,7 @@ waits again). Exit 2: the lint or a test fails, a change of data
 files only adds a test (`docs/extend.md`), or the prose of the message or body closes another ticket (#472;
 nothing committed or pushed). Exit 3: the
 guard or the push fails (do not push by hand). Exit 4: no commit to ship, or the PR call fails. Exit 5: the quick CI
-is red, or a check of GATES (`browser`) during the wait for the merge: it prints the failed steps and tests;
+is red, or a check of GATES (`[ci] gates` of `agent.toml`) during the wait for the merge: it prints the failed steps and tests;
 fix them, commit and run it again.
 After a green quick CI it reads the PR until Automerge merged it, up to the same time limit (#5584): in 3 of 9
 takeovers of 100 merged PRs on 2026-11-01, main moved during the CI wait, the merge of Automerge found a conflict 0 to 2
@@ -43,7 +43,8 @@ from agent_config import CONFIG  # noqa: E402
 
 push = merge_main.push
 QUICK = "quick"                                     # the check of ci.yml that Automerge waits for
-GATES = ("browser",)    # the other checks of ci.yml that Automerge needs green (#221): red after a green quick CI, the
+GATES = tuple(CONFIG.get("ci", {}).get("gates", ()))   # `[ci] gates` of agent.toml: the other checks of ci.yml
+#                         that Automerge needs green (#221; none: only `quick`). Red after a green quick CI, the
 #                         wait for the merge ended at the time limit with "Automerge merges it", and a cold run took
 #                         the PR over (7 of 10 red CI runs and 5 of 8 takeovers in 100 PRs, process review 2026-11-02)
 WAIT = 9          # minutes: the quick CI of a PR took 6.2 (median) and 7.2 (p90) minutes on 2026-10-30 (#4784)
@@ -200,10 +201,10 @@ def ci(number, sha, deadline, pr=None):
         m = wait_merge(pr, deadline, red=lambda: gate.append(red_gate(sha)) or gate[-1])
         if m == "red":
             c = gate[-1]
-            print(f"{c.get('name') or GATES[0]} CI failure")
+            print(f"{c.get('name') or 'gate'} CI failure")
         else:
-            print(conflict(number) if m == "dirty" else f"PR #{pr}: {m}" + (": Automerge merges it when the "
-                  f"{', '.join(GATES)} check is green too" if m == "open" else ""))
+            print(conflict(number) if m == "dirty" else f"PR #{pr}: {m}" + (": Automerge merges it" + (f" when the "
+                  f"{', '.join(GATES)} check is green too" if GATES else "") if m == "open" else ""))
             return 6 if m == "dirty" else 0
     print("\n".join(failures(c)) or "no failed step: open the run of the check")
     print(f"fix it, commit and run `python3 framework/tools/ship_pr.py {number}` again (autopilot step 6.9)")

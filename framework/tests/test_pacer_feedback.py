@@ -1,4 +1,4 @@
-"""#294: owner comments (and Nina's answers) wait while each pacer run gets a brief, because a brief skips step 3.
+"""#294: owner comments wait while each pacer run gets a brief, because a brief skips step 3.
 One main run per cycle gets no brief then, and does the feedback step itself."""
 import os
 import sys
