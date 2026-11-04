@@ -12,7 +12,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - A visitor selects the language on each page; the first visit uses the language of the browser
   - Each text is in a data file per language; a missing text shows the English text
 - [x] `site:schedule` (#94) The classes and the weekly schedule come from data that Nina changes
-  - Nina changes a class or a time on her phone, and the site shows it at once
+  - Nina changes a class or a time on her phone, and the booking page keeps that time free at once; the home page shows no classes (Nina removed them, #792)
 - [x] `site:book` (#380) A visitor finds the booking and the prices from the home page
   - The home page and the menu have a button that opens the booking page; on a phone it is one tap
   - The home page shows the private lesson and the studio rental with their length and price, each with a link that opens the booking page with that offer
@@ -56,7 +56,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
   - No other site can show a page of the site or of the studio app in a frame; the browser uses only HTTPS
   - The browser runs only the scripts of the site, and the pages stay as fast as before
 - [x] `site:closed` (#529) Dancers see when a class does not take place or the studio is closed
-  - The schedule of the home page names each date in the next 4 weeks on which a class does not take place (a holiday), with no extra step by Nina for a period that she already closed in her hours
+  - The home page has no schedule since Nina removed the classes (#792), so it names no holiday of a class
   - The home page shows a closed period of the studio from 4 weeks before it until its end, in the language of the page
 - [x] `site:news` (#652) Nina tells the dancers what is new on the home page
   - Nina writes a short note (a workshop, a new class, a change) in her app in a few taps, with an optional end date; the home page shows it until that date, then hides it by itself
