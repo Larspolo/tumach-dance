@@ -108,7 +108,11 @@
     "searchButton": "Search",
     "today": "Today",
     "tomorrow": "Tomorrow",
-    "nothing": "Nothing to do now."
+    "nothing": "Nothing to do now.",
+    "setup": "Setup",
+    "testing": "Testing",
+    "testingCount": "Testing ({count, plural, one {# question} other {# questions}})",
+    "back": "Back"
   },
   "PasskeyOffer": {
     "title": "Log in faster next time",

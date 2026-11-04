@@ -61,7 +61,7 @@ test("a subscription that the server knows: no note", async ({ page, context }, 
   });
   expect(saved.ok()).toBe(true);
   await fakePush(page, known, `${known}-new`);
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await expect(page.getByText(en.Push.on)).toBeVisible();
   await expect(page.getByText(en.Push.offNote)).toHaveCount(0);
 });

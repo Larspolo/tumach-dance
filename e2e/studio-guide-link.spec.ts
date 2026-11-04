@@ -12,7 +12,7 @@ function choose(page: Page, name: string) {
 
 test("one tap on the studio home opens the guide in English", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the studio app is for the phone");
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await page.getByRole("link", { name: en.StudioGuide.link }).click(); // tap 1
   await expect(page).toHaveURL(/\/en\/studio-guide$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioGuide.title);
@@ -20,7 +20,7 @@ test("one tap on the studio home opens the guide in English", async ({ page }, t
 
 test("with the studio language Dutch the guide link opens the Dutch guide", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the studio app is for the phone");
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await choose(page, "Nederlands");
   await expect(page.locator("html")).toHaveAttribute("lang", "nl");
   await page.getByRole("link", { name: nl.StudioGuide.link }).click();

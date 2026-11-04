@@ -15,7 +15,7 @@ test.describe("with a session", () => {
 
   test("Nina sets weekends all day, weekdays from 17:00, not on Thursday", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "phone", "the hours are set on a phone");
-    await page.goto("/studio");
+    await page.goto("/studio/setup");
     await page.getByRole("link", { name: en.StudioHome.hours }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(h.title);
     const weekdays = page.getByRole("group", { name: h.weekdays });
