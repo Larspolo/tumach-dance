@@ -13,7 +13,7 @@ test.describe("with a session", () => {
 
   test("Nina answers a question", async ({ page, request }, testInfo) => {
     test.skip(testInfo.project.name !== "phone", "the questions are for the phone");
-    await page.goto("/studio");
+    await page.goto("/studio/testing");
     await page.getByRole("link", { name: en.StudioHome.questions }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioQuestions.title);
 

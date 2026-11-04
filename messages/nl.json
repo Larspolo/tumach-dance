@@ -108,7 +108,11 @@
     "searchButton": "Zoeken",
     "today": "Vandaag",
     "tomorrow": "Morgen",
-    "nothing": "Nu niets te doen."
+    "nothing": "Nu niets te doen.",
+    "setup": "Instellen",
+    "testing": "Testen",
+    "testingCount": "Testen ({count, plural, one {# vraag} other {# vragen}})",
+    "back": "Terug"
   },
   "PasskeyOffer": {
     "title": "Volgende keer sneller inloggen",

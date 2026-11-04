@@ -12,5 +12,5 @@ export async function renewCalendar(): Promise<void> {
   const session = await getStudioSession(await headers());
   if (!session) redirect(LOGIN_PATH);
   renewCalendarToken(getDb());
-  redirect("/studio");
+  redirect("/studio/setup");
 }

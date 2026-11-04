@@ -34,7 +34,7 @@ test("Nina turns on notifications and the server stores her phone", async ({ pag
         }),
       }) as unknown as PushSubscription;
   });
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
 
   const before = subscriptions();
   await page.getByRole("button", { name: en.Push.turnOn }).click();

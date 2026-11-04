@@ -50,11 +50,14 @@ async function repair(
 }
 
 // Push notifications of the studio app (#25): turn them on (the browser asks only after a tap) and send a test.
-export function PushButtons({ vapidKey }: { vapidKey?: string }) {
+// `alertOnly` (the home, #838): show the block only when push needs a tap; the test button is on the testing page.
+export function PushButtons({ vapidKey, alertOnly = false }: { vapidKey?: string; alertOnly?: boolean }) {
   const t = useTranslations("Push");
   const [state, setState] = useState<State>("loading");
   const [message, setMessage] = useState<string>();
   const [busy, setBusy] = useState(false);
+  // On the home, the block stays after a tap on "Turn on" (the note "on"), and goes when push was on at the load.
+  const [turnedOn, setTurnedOn] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -95,6 +98,7 @@ export function PushButtons({ vapidKey }: { vapidKey?: string }) {
       });
       if (!response.ok) throw new Error(`subscribe ${response.status}`);
       setState("on");
+      setTurnedOn(true);
     } catch {
       setMessage(t("failed"));
     } finally {
@@ -116,6 +120,7 @@ export function PushButtons({ vapidKey }: { vapidKey?: string }) {
   }
 
   if (state === "loading") return null;
+  if (alertOnly && ((state === "on" && !turnedOn) || state === "unsupported")) return null;
   return (
     <section
       className={`${styles.form} ${styles.section} ${state === "off" || state === "denied" ? styles.alert : ""}`}
@@ -130,7 +135,8 @@ export function PushButtons({ vapidKey }: { vapidKey?: string }) {
           {t("turnOn")}
         </button>
       )}
-      {state === "on" && (
+      {state === "on" && alertOnly && <p className={styles.note}>{t("on")}</p>}
+      {state === "on" && !alertOnly && (
         <>
           <p className={styles.note}>{t("on")}</p>
           <button className={styles.button} type="button" disabled={busy} onClick={sendTest}>

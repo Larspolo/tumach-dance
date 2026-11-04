@@ -36,7 +36,7 @@ test("a subscription that the server does not know is replaced and posted", asyn
   const old = `https://push.example.test/lost-${Date.now()}`;
   await fakePush(page, old);
   const posted = page.waitForRequest((r) => r.method() === "POST" && r.url().endsWith("/api/studio/push/subscribe"));
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   expect((await posted).postDataJSON().endpoint).toBe(`${old}-new`);
   await expect(page.getByText(en.Push.on)).toBeVisible();
   expect(await pushLog(page)).toEqual([`unsubscribe ${old}`, "subscribe"]);
@@ -53,7 +53,7 @@ test("a subscription that the server knows is not replaced", async ({ page, cont
   });
   expect(saved.ok()).toBe(true);
   await fakePush(page, known);
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await expect(page.getByText(en.Push.on)).toBeVisible();
   expect(await pushLog(page)).toEqual([]);
 });
