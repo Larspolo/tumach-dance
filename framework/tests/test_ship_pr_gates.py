@@ -1,4 +1,4 @@
-"""framework/tools/ship_pr.py also sees a red `browser` check while it waits for the merge (process review
+"""framework/tools/ship_pr.py also sees a red check of `[ci] gates` (`agent.toml`; here `browser`) while it waits for the merge (process review
 2026-11-02): Automerge needs it green (#221), but the wait ended at the time limit with "Automerge merges it", the run
 ended, and a cold run took the red PR over (7 of 10 red CI runs, 5 of 8 takeovers in 100 merged PRs)."""
 import dashboard
@@ -16,6 +16,7 @@ def test_a_red_gate_ends_the_wait_for_the_merge():
 
 
 def test_red_gate_takes_only_a_failed_check(monkeypatch):
+    monkeypatch.setattr(ship, "GATES", ("browser",))
     runs = {"browser": {"id": 3, "name": "browser", "status": "in_progress", "conclusion": None}}
     monkeypatch.setattr(ship, "quick", lambda sha, name="quick": runs.get(name))
     assert ship.red_gate("abc") is None
@@ -27,6 +28,7 @@ def test_red_gate_takes_only_a_failed_check(monkeypatch):
 
 def test_a_red_browser_check_after_the_green_quick_ci_gives_exit_5(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(repo(tmp_path))
+    monkeypatch.setattr(ship, "GATES", ("browser",))
     fake_github(monkeypatch, open_prs=[{"number": 9}])
     api = dashboard.api
 

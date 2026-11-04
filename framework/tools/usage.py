@@ -37,12 +37,11 @@ import sys
 import time
 
 import agent_config
-
-NEW_EPIC_WAIT = 10 * 60   # seconds: an epic made less than this ago is split by its run first (#328)
 from agent_config import CONFIG
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "tools"))   # the project tools: release.py (#4195)
 
+NEW_EPIC_WAIT = 10 * 60   # seconds: an epic made less than this ago is split by its run first (#328)
 BURN = 0.03         # share of the 5-hour quota that one run uses per hour (16 runs used about 50 % per hour, 2026-10-25)
 BURN7 = 0.005       # share of the 7-day quota that one run uses per hour (0.0053 measured on 2026-10-27, #1695)
 MID, MID_LEFT = 0.90, 2.0   # aim: this share is used this many hours before the 5-hour window resets (#587)
@@ -217,7 +216,8 @@ def epic_checks(issues, now=None):
              and dashboard.release_scope(i, issues)[2]}             # a release epic with open milestone tickets has work
     subs = lambda i: (s := i.get("sub_issues_summary") or {}).get("total", 0) - s.get("completed", 0)   # open sub-issues
     now = time.time() if now is None else now
-    made = lambda i: datetime.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00")).timestamp()
+    made = lambda i: datetime.datetime.fromisoformat(i["created_at"].replace("Z", "+00:00")).timestamp() \
+        if i.get("created_at") else 0                    # no time (a partial record): an old epic
     epics = [i["number"] for i in issues if "epic" in dashboard.labels(i) and i["number"] not in work and not subs(i)
              and not {dashboard.MUTED, dashboard.AFTER, dashboard.RANK, dashboard.CLOSE, "needs-human"} & dashboard.labels(i)
              and now - made(i) >= NEW_EPIC_WAIT]
@@ -227,7 +227,7 @@ def epic_checks(issues, now=None):
 def autoclosing(epic):
     """True when close.yml closes the epic by itself (`epic_autoclose.ready`); a missing tool or an error: False."""
     try:
-        import epic_autoclose                               # not in an older bootstrap copy
+        import epic_autoclose  # not in an older bootstrap copy
     except ImportError:
         return False
     return bool(epic_autoclose.ready(epic))
@@ -236,7 +236,7 @@ def autoclosing(epic):
 def release_due():
     """The release checks with no ticket (`release.due`), or [] when the read fails: the pacer must still start runs."""
     try:
-        import release                                      # not in a bootstrap copy (`framework/tools/bootstrap.py`)
+        import release  # not in a bootstrap copy (`framework/tools/bootstrap.py`)
     except ImportError:                                     # a project with no release tool has no release checks (#153)
         return []
     try:
@@ -502,7 +502,7 @@ def fire(usage, now, burn=BURN, burn7=None, skip=(), status=None, started=None, 
     reviews = functools.cache(lambda: due_reviews(starved=lambda: target is not None and ready < target
                                                   and not free_sources()))
     need = refill_need(ready, target, open_all, release_due, free=free_sources, reviews=reviews,
-                       closing=autoclosing)   # reviews after checks
+                       now=now.timestamp() if hasattr(now, "timestamp") else now, closing=autoclosing)   # reviews after checks
     only_review = False
     if need and refill_recent(refs, now) and ready >= target // 2:
         # A refill runs now or ran; a near-empty queue refills at once. A due review skips the gap (owner, 2026-10-29):

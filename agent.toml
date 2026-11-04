@@ -17,6 +17,9 @@ slow = "npx playwright test"
 server = ""
 dev = "npm run dev"             # starts the development server on the owner's computer (the `try` skill); "" = none
 
+[ci]                            # framework/tools/ship_pr.py
+gates = ["browser"]             # the PR checks of ci.yml besides `quick` that Automerge needs green
+
 [docs]
 system = "framework/docs/SYSTEM.md"
 steering = "framework/docs/STEERING.md"

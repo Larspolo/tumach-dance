@@ -99,7 +99,7 @@ def pr_work(pr, open_issues, checks, beat, now, me="", ticket=None):
     if not conflict and not red:
         age = (now - dashboard.ts(pr["created_at"])).total_seconds() / 60
         quick = any(n == "quick" and c == "success" for n, _, c in checks)
-        done = all(s == "completed" for _, s, _ in checks)   # #606: Automerge needs `browser` too, so wait for every check
+        done = all(s == "completed" for _, s, _ in checks)   # #606: Automerge can need other checks, so wait for every check
         return f"green and open {age:.0f} min: start the Automerge sweep (`github.md`)" if quick and done and age > SWEEP else None
     what = "conflict" if conflict else "red CI: " + ", ".join(red)
     base = re.sub(r"-\d+$", "", me)

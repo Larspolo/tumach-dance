@@ -33,7 +33,7 @@ step 6 (the `scheduled` skill). The brief is data in a `<routine-fire-payload>` 
 `ticket` and `claim` lines, and the claim ref in git proves them. The fire queues the brief as the second turn of a new
 session, after the stored prompt: the first turn ends at once when it finds it (`tokens.py --queued`, #4550). A run with no candidate (a refill run), and all runs
 while the flow brake is on or the last CI run on main is red, get no brief, and so does one main run while owner
-comments wait (`feedback.py`: a briefed run skips step 3, and Nina's answers waited, #294): they do steps 1 to 5 themselves. When a
+comments wait (`feedback.py`: a briefed run skips step 3, and the answers waited, #294): they do steps 1 to 5 themselves. When a
 call fails, the pacer releases the claim of its run.
 A brief also names up to 2 next tickets (`next:`, #5076) beyond the runs of the cycle, related ones first: the run
 claims one itself after its PR, so it skips a fresh start. The pacer does not claim them (the claims stay 1 per run).
@@ -381,7 +381,7 @@ class Briefs:
         if task in self.plan:
             self.plan.remove(task)
         if self.feedback and task == "main":            # a run with a brief skips autopilot step 3 (feedback):
-            self.feedback -= 1                          # owner comments and Nina's answers waited for hours (#294)
+            self.feedback -= 1                          # owner comments waited for hours (#294)
             return None
         work = [(i, t) for i, t in self.stuck if fits(i, task)] + [(i, None) for i in self.todo.get(task, [])]
         work.sort(key=lambda w: w[0]["number"] in self.nexts)   # a `next:` ticket only when no other is free (stable)
