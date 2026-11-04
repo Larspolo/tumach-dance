@@ -7,8 +7,7 @@ test.use({ storageState: STUDIO_SESSION });
 
 test("the tile opens the devices and the page marks this device", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the phone project only");
-  await page.goto("/studio");
-  await page.getByRole("link", { name: en.StudioHome.devices, exact: true }).click();
+  await page.goto("/studio/devices");
   await expect(page).toHaveURL(/\/studio\/devices$/);
   await expect(page.getByRole("heading", { name: en.Devices.title })).toBeVisible();
   const current = page.getByRole("listitem").filter({ hasText: en.Devices.thisDevice });

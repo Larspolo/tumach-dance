@@ -31,7 +31,7 @@ test.afterAll(clear);
 
 test("Nina adds two photos at once and removes one with two taps", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the photo page is for the phone");
-  await page.goto("/studio");
+  await page.goto("/studio/setup");
   await page.getByRole("link", { name: en.StudioHome.photos }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioPhotos.title);
   await expect(page.getByText(en.StudioPhotos.none)).toBeVisible();

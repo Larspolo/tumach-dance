@@ -21,7 +21,7 @@ async function checkParts(page: Page, m: typeof en) {
 
 test("the guide from the studio home has each part in English", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the studio app is for the phone");
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await page.getByRole("link", { name: en.StudioGuide.link }).click();
   await expect(page).toHaveURL(/\/en\/studio-guide$/);
   await checkParts(page, en);
@@ -29,7 +29,7 @@ test("the guide from the studio home has each part in English", async ({ page },
 
 test("the guide from the studio home has each part in Dutch", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the studio app is for the phone");
-  await page.goto("/studio");
+  await page.goto("/studio/testing");
   await page.getByTestId("language-switcher").getByText("Nederlands", { exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "nl");
   await page.getByRole("link", { name: nl.StudioGuide.link }).click();

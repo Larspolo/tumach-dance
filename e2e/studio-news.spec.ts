@@ -18,8 +18,7 @@ test.describe("with a session", () => {
 
   test("Nina saves, changes and removes the note", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "phone", "the studio app is for the phone");
-    await page.goto("/studio");
-    await page.getByRole("link", { name: en.StudioHome.news }).click(); // tap 1
+    await page.goto("/studio/news");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.StudioNews.title);
 
     await page.getByLabel(en.StudioNews.text).fill("Closed for a holiday."); // tap 2 and type

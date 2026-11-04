@@ -10,7 +10,7 @@ test("the calendar link has the feed address, and a new address stops the old on
   request,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "phone", "the phone project (390×844) only");
-  await page.goto("/studio");
+  await page.goto("/studio/setup");
   const link = page.getByRole("link", { name: en.StudioHome.calendarAdd });
   const old = (await link.getAttribute("href")) ?? "";
   expect(old).toMatch(/^webcal:\/\/[^/]+\/api\/calendar\/[\w-]+\.ics$/);

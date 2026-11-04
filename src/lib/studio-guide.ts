@@ -67,6 +67,7 @@ export const GUIDE_PARTS: GuidePart[] = [
   {
     id: "holiday",
     page: "/studio/hours",
+    also: ["/studio/setup"],
     title: "holidayTitle",
     steps: [{ key: "holidayClose" }, { key: "holidayList" }, { key: "holidayCancel" }],
   },
@@ -157,7 +158,7 @@ export const GUIDE_PARTS: GuidePart[] = [
   {
     id: "nina",
     page: "/studio/questions",
-    also: ["/studio/feedback"],
+    also: ["/studio/feedback", "/studio/testing"],
     title: "ninaTitle",
     steps: [{ key: "ninaQuestions" }, { key: "ninaFeedback" }],
   },

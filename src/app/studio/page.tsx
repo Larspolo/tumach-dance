@@ -7,7 +7,6 @@ import { countOpenRequests } from "@/db/bookings";
 import { setStudioLocale } from "@/i18n/studio";
 import { getStudioSession } from "@/lib/auth";
 import { shownName } from "@/lib/booking-name";
-import { getCalendarToken } from "@/lib/calendar-token";
 import { countUnanswered } from "@/lib/contact-store";
 import { countNinaQuestions } from "@/lib/github";
 import { TIME_ZONE } from "@/lib/hours";
@@ -15,12 +14,10 @@ import { vapidPublicKey } from "@/lib/push";
 import { LOGIN_PATH } from "@/lib/studio-paths";
 import { type DayLesson, lessonsOfDays } from "@/lib/studio-today";
 import { LogOutButton } from "./log-out-button";
-import { PasskeyOffer } from "./passkey-offer";
 import { PushButtons } from "./push-buttons";
-import { RenewCalendarButton } from "./renew-calendar-button";
 import styles from "./studio.module.css";
 
-// The start page of the studio app: the links to the bookings (#76), the hours (#23), the offers, the questions (#68),
+// The start page of the studio app (five tiles, Nina #838): the links to the bookings (#76), the hours (#23), the offers, the questions (#68),
 // the classes (#96), the photos (#173) and the news
 // note of the home page (#654).
 export default async function StudioPage() {
@@ -32,10 +29,7 @@ export default async function StudioPage() {
   const t = await getTranslations("StudioHome");
   const offerName = await getTranslations("StudioOffers");
   const weekName = await getTranslations("StudioWeek");
-  const guide = await getTranslations("StudioGuide");
   const time = new Intl.DateTimeFormat(locale, { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit" });
-  // The calendar app of the phone opens a `webcal://` address and polls the feed of #103 by itself.
-  const calendarUrl = `webcal://${requestHeaders.get("host")}/api/calendar/${getCalendarToken(getDb())}.ics`;
   // The number of open questions shows Nina at once that a question waits (#130).
   const questionCount = await countNinaQuestions();
   // The count of unanswered contact messages (#533).
@@ -65,17 +59,7 @@ export default async function StudioPage() {
       <h1 className={styles.title}>{t("title")}</h1>
       <p className={styles.note}>{t("loggedInAs", { email: session.user.email })}</p>
       {/* At the top: a phone with no push shows it in the first screen (#580). One instance: it repairs (#570). */}
-      <PushButtons vapidKey={vapidPublicKey()} />
-      {/* The search of the bookings from the first screen (#665, epic #662): the same form as the search page (#664). */}
-      <form className={styles.form} method="get" action="/studio/search">
-        <label className={styles.label}>
-          {t("search")}
-          <input className={styles.input} type="search" name="q" />
-        </label>
-        <button className={styles.button} type="submit">
-          {t("searchButton")}
-        </button>
-      </form>
+      <PushButtons vapidKey={vapidPublicKey()} alertOnly />
       {dayList(t("today"), today)}
       {dayList(t("tomorrow"), tomorrow)}
       {requestCount === 0 && today.length === 0 && tomorrow.length === 0 && (
@@ -87,8 +71,8 @@ export default async function StudioPage() {
         </Link>
       </p>
       <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/search">
-          {t("search")}
+        <Link className={styles.tile} href="/studio/messages">
+          {messageCount ? t("messagesCount", { count: messageCount }) : t("messages")}
         </Link>
       </p>
       <p className={styles.tileRow}>
@@ -97,68 +81,15 @@ export default async function StudioPage() {
         </Link>
       </p>
       <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/messages">
-          {messageCount ? t("messagesCount", { count: messageCount }) : t("messages")}
+        <Link className={styles.tile} href="/studio/setup">
+          {t("setup")}
         </Link>
       </p>
       <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/week">
-          {t("week")}
+        <Link className={styles.tile} href="/studio/testing">
+          {questionCount ? t("testingCount", { count: questionCount }) : t("testing")}
         </Link>
       </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/hours">
-          {t("hours")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/offers">
-          {t("offers")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/news">
-          {t("news")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/photos">
-          {t("photos")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/classes">
-          {t("classes")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/questions">
-          {questionCount ? t("questionsCount", { count: questionCount }) : t("questions")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <a className={styles.tile} href={calendarUrl}>
-          {t("calendarAdd")}
-        </a>
-      </p>
-      <p className={styles.note}>{t("calendarNote")}</p>
-      <RenewCalendarButton />
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/devices">
-          {t("devices")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <Link className={styles.tile} href="/studio/feedback">
-          {t("feedback")}
-        </Link>
-      </p>
-      <p className={styles.tileRow}>
-        <a className={styles.tile} href={`/${locale}/studio-guide`}>
-          {guide("link")}
-        </a>
-      </p>
-      <PasskeyOffer />
       <LogOutButton />
     </main>
   );
