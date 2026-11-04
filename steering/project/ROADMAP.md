@@ -27,8 +27,8 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `site:texts` (#257) Real texts on each public page, in each language
   - An agent writes a sensible text for each section; Nina gives only her tagline (owner, 2026-10-31)
   - No page shows a placeholder
-- [ ] `site:where` (#338) Dancers know where the studio is
-  - The home page, the emails of an approved booking and the calendar file of a booking give the address, in the places that Nina chooses; a page has a link that opens the map on the phone
+- [x] `site:where` (#338) Dancers know where the studio is
+  - The address is in the approval email, the reminder and the calendar files of a booking (no page, #342)
 - [x] `site:access` (#339) Each visitor can read the site and book, also with a screen reader, a large text or only the keyboard
   - Each page of the site and of the studio app has no serious barrier (a check with axe)
   - A dancer books a lesson with only the keyboard
@@ -49,7 +49,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [ ] `site:fast` (#446) Each page opens fast on a phone
   - The home page and the booking page show their content in less than 2.5 seconds on a mid-range phone with a slow mobile network (Lighthouse, mobile)
   - A check of each PR stops a change that makes one of these pages slow
-- [ ] `site:social` (#449) Visitors find the studio on the apps that Nina uses
+- [x] `site:social` (#449) Visitors find the studio on the apps that Nina uses
   - The home page and the footer link to the accounts that Nina names (for example Instagram or WhatsApp); a tap opens the app on the phone
   - Search engines know the accounts of the studio
 - [x] `site:secure` (#489) The site and the studio app keep out the common attacks of the web
