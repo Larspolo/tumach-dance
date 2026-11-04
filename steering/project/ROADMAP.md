@@ -193,7 +193,7 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `book:again` (#722) A dancer books the next lesson in a few taps
   - The approval email and the reminder have a button that opens the booking page with the same offer and the name, email and phone of the dancer filled in; the address has no personal data
   - After the data of the dancer goes away, the link opens the normal empty booking page
-- [ ] `book:mine` (#742) A dancer sees all of their next lessons from the link in an email
+- [x] `book:mine` (#742) A dancer sees all of their next lessons from the link in an email
   - Each email of a booking has a link to one page with the next bookings of the same email address (time, offer, status), each with its cancel link; the address has only the token of the booking, no personal data
   - After the data of the dancer goes away, the link shows no booking
 - [x] `book:how` (#818) A dancer knows how a booking works before the request
