@@ -3,3 +3,5 @@
 {"at": "2026-11-05T02:02:40Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-05T02:01:33.341Z", "version": "635c71f447f49d32338978dc82b6c01c3cb9b59f"}
 {"at": "2026-11-05T02:36:18Z", "site": "live", "status": 522, "text": "error code: 522"}
 {"at": "2026-11-05T02:36:38Z", "site": "preview", "status": 522, "text": "error code: 522"}
+{"at": "2026-11-05T02:53:58Z", "site": "live", "status": 200, "ok": true, "email": true, "push": true, "backupAt": "2026-11-05T02:01:33.341Z", "version": "635c71f447f49d32338978dc82b6c01c3cb9b59f", "errors": [{"where": "email: bounce check", "message": "TypeError: fetch failed | cause: ConnectTimeoutError: Connect Timeout Error (attempted address: api.eu.mailgun.net:443, timeout: 10000ms)", "at": "2026-11-05T02:46:44.012Z"}]}
+{"at": "2026-11-05T02:53:59Z", "site": "preview", "status": 404, "text": "404 page not found"}
