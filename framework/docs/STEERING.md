@@ -101,7 +101,7 @@ ticket with numbered steps.
 The runs are paced without you. `framework/tools/usage.py` reads the usage of your subscription (the 5-hour and 7-day windows,
 as the Claude Code CLI reports them) and computes the number of runs: fast to 90 % of the 5-hour window 2 hours before
 its reset, then slower to 98 % at the reset (your decision, 2026-10-26), and not the week faster than it passes
-when `week_guard` in `agent.toml` is `true` (now `false`: only the 5-hour window counts, your decision, 2026-11-01).
+when `week_guard` in `agent.toml` is `true` (now `true`, with `week_free = 0`: the weekly pace counts from the start of the week, your decision, 2026-11-13).
 You do not need to send percentages.
 A run of the scheduled task cannot start other runs (#566). So the workflow `pacer.yml` (#3193, #3194) runs
 `framework/tools/pacer.py` every 10 minutes: it computes the runs that the target misses (`usage.fire`, at most `max_fire` of
