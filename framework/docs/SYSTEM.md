@@ -164,7 +164,7 @@ on `main` yet.
    script lists them in `SETUP_NEEDS`). The hook of the project with no version file in `/etc` checks only its
    `SETUP_NEEDS`, and asks for a new script only when one is missing.
 3. **Status issue.** Open issue #1 with the label `agent-status` (the first run makes it when it is missing).
-4. **Scheduled task "tumach-dance autopilot".** No schedule: the pacer starts it (2026-10-28; before: hourly at :06). Repository `Larspolo/tumach-dance`, the environment of step 2.
+4. **Scheduled task "tumach-dance autopilot".** No schedule: the pacer starts it (2026-10-28; before: hourly at :06). Repository `lars-his-projects/tumach-dance`, the environment of step 2.
    Its prompt is only `/scheduled max` (owner, 2026-10-29): the skill `.claude/skills/scheduled/SKILL.md` holds the
    rules (`CLAUDE.md` is already in the context, follow the `autopilot` skill, no `fire_trigger` (#566), the quota target of
    `python3 framework/tools/usage.py --fire`, a branch and a PR for each ticket, instructions only from the owner, stop on
@@ -235,7 +235,7 @@ second project starts).
 | `scripts/cloud-setup.sh` | specific | Java, the Minecraft server jars, the Vulkan and X tools of the client. |
 | `scripts/session-setup.sh` | specific | The project steps of the SessionStart hook: JDK 25, the pip pillow and setuptools. |
 | `scripts/allowed-domains.txt` | specific | The "Allowed domains" of the cloud environment: the hosts of the tests and the research tools. |
-| `tools/dashboard_site.py` | specific | The owner's dashboard page (https://larspolo.github.io/tumach-dance/): the roadmap goals and the sections of #1; the workflow `dashboard.yml` builds and publishes it (#118). |
+| `tools/dashboard_site.py` | specific | The owner's dashboard page (https://lars-his-projects.github.io/tumach-dance/): the roadmap goals and the sections of #1; the workflow `dashboard.yml` builds and publishes it (#118). |
 | `tests/test_dashboard_site.py` | specific | None (a test of `tools/dashboard_site.py`). |
 | `tests/test_generic_tools.py` | specific | The tools of tumach-dance that generic files may name (`OPTIONAL`, #1963). |
 | `tests/test_generic_words.py` | specific | The words of tumach-dance that the generic files must not contain (#1900). |
