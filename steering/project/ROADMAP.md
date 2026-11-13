@@ -144,6 +144,10 @@ The goals of tumach-dance and their features: done (`[x]`) or missing (`[ ]`). T
 - [x] `nina:history` (#813) Nina sees what happened to each booking
   - Each booking in her app lists its events with the date and time: the request, the approval or decline, each move with the old time, the cancel, the payment
   - Each event names who did it: the dancer (with the link in the email), Nina, or the site (a request with no answer in time)
+- [ ] `nina:feedback-context` Feedback with its context, by the contract of `standards/FEEDBACK.md` of the hub (lars-his-projects/fleet): Nina and Lars give feedback on the page that they look at
+  - A feedback button on each page of the studio app, and on each public page of the preview for a person with a login: select an element, write one line, send; the issue "Feedback: ..." has the labels `feedback` and `P1`, the page address, the version and the sender (the present form of Nina stays, as feedback with no element)
+  - The context stays on the server: the selected element, a recording of the last 60 seconds of the page (rrweb) with the values of the input fields hidden, and the console errors; the issue has only a reference, and no data of a dancer goes into an issue
+  - When the change of the ticket is on the preview, the page shows a note at the same element with a thumbs-up and a thumbs-down; the answer goes to the issue
 
 ## 3. Book a lesson or the studio
 
