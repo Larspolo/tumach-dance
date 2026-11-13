@@ -7,6 +7,8 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
     include: ["tests/**/*.test.ts"],
+    // A fixed clock for each test: the tests use fixed dates, and the real clock makes them fail later (tests/setup-clock.ts).
+    setupFiles: ["tests/setup-clock.ts"],
     // next-intl imports "next/server" with no extension, which plain Node cannot resolve: Vite resolves it.
     server: { deps: { inline: ["next-intl"] } },
   },
