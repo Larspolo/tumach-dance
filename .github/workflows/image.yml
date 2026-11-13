@@ -36,7 +36,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/larspolo/tumach-dance
+          images: ghcr.io/${{ github.repository }}
           # A tag push has no default branch, so it never moves `preview`; a merge never moves `live`.
           tags: |
             type=raw,value=preview,enable={{is_default_branch}}

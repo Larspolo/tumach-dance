@@ -1,6 +1,6 @@
 # Project values of the agent system (#905). The tools in tools/ read this file (framework/tools/agent_config.py).
 
-repo = "Larspolo/tumach-dance"
+repo = "lars-his-projects/tumach-dance"
 owner = "Larspolo"
 branch = "main"
 

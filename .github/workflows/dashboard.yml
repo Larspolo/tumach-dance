@@ -34,7 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 framework/tools/dashboard.py --out out/dashboard.md
-      # The page (https://larspolo.github.io/tumach-dance/, #118): each step after the update of #1, and a failed
+      # The page (https://lars-his-projects.github.io/tumach-dance/, #118): each step after the update of #1, and a failed
       # page does not make the run red (continue-on-error): issue #1 is the dashboard of record.
       - name: Build the dashboard page
         id: site

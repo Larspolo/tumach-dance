@@ -14,7 +14,7 @@ Each run does one work cycle (the `autopilot` skill):
 4. It reports on the **Agent status** issue (label `agent-status`) with a short comment. GitHub sends you a
    notification. The dashboard in the issue body is generated from GitHub (`framework/tools/dashboard.py`, workflow
    `Dashboard`): waiting for you, working on, next up, recently done. It updates every 10 minutes. Runs only add
-   the process changes. The same workflow publishes the page https://larspolo.github.io/tumach-dance/: the goals of
+   the process changes. The same workflow publishes the page https://lars-his-projects.github.io/tumach-dance/: the goals of
    the roadmap with their state, and these sections (`tools/dashboard_site.py`).
 5. It improves its own process: it writes learnings, corrects its instructions and makes tooling tickets.
    One run per review slot (a gap of merged PRs in `[review]` of `agent.toml`: it halves from 80 to 10 while reviews
@@ -64,9 +64,9 @@ The file `.github/labels.txt` defines the labels. The Labels workflow creates th
 
 - **Scheduled cloud runs** (recommended): a scheduled task in Claude Code on the web starts a new session on
   a timer. Each run uses your Max quota. Change or stop the schedule at claude.ai/code (scheduled tasks).
-  The scheduled task must have the repository `Larspolo/tumach-dance`. Without it, the runs cannot clone the code.
+  The scheduled task must have the repository `lars-his-projects/tumach-dance`. Without it, the runs cannot clone the code.
   To set it: open claude.ai/code/routines → the task → menu next to its name → **Edit** → **Advanced
-  settings** → **General** → **Repository** → `Larspolo/tumach-dance`. Below it, select the **Cloud environment**
+  settings** → **General** → **Repository** → `lars-his-projects/tumach-dance`. Below it, select the **Cloud environment**
   that allows the Mojang hosts. Select the model in the model selector of the prompt box. **Save changes**.
   More runs can work at the same time (start them with **Run now**). They claim tickets with a comment, so two
   runs do not do the same ticket. With the argument `max`, a run continues until no ticket is ready, and it
@@ -101,7 +101,7 @@ ticket with numbered steps.
 The runs are paced without you. `framework/tools/usage.py` reads the usage of your subscription (the 5-hour and 7-day windows,
 as the Claude Code CLI reports them) and computes the number of runs: fast to 90 % of the 5-hour window 2 hours before
 its reset, then slower to 98 % at the reset (your decision, 2026-10-26), and not the week faster than it passes
-when `week_guard` in `agent.toml` is `true` (now `false`: only the 5-hour window counts, your decision, 2026-11-01).
+when `week_guard` in `agent.toml` is `true` (now `true`, with `week_free = 0`: the weekly pace counts from the start of the week, your decision, 2026-11-13).
 You do not need to send percentages.
 A run of the scheduled task cannot start other runs (#566). So the workflow `pacer.yml` (#3193, #3194) runs
 `framework/tools/pacer.py` every 10 minutes: it computes the runs that the target misses (`usage.fire`, at most `max_fire` of

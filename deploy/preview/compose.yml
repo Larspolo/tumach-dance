@@ -4,7 +4,7 @@ name: tumach-preview
 
 services:
   site:
-    image: ghcr.io/larspolo/tumach-dance:preview
+    image: ghcr.io/lars-his-projects/tumach-dance:preview
     restart: unless-stopped
     env_file: .env
     environment:
