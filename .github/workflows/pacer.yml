@@ -126,5 +126,10 @@ jobs:
             gh workflow run dashboard.yml --repo "$GITHUB_REPOSITORY" --ref main || true
             # the status comments and the cycle records to the branch metrics: the cron of metrics.yml fires a few times a day
             [ -d "$RUNNER_TEMP/metrics" ] && python3 framework/tools/metrics_log.py "$RUNNER_TEMP/metrics" --pacer "$RUNNER_TEMP/pacer.jsonl" --push || true
-            sleep 600
+            # The next cycle starts at a full 10 minutes of the clock (minute 00, 10, ...). The starter session gets its
+            # ticks 2 minutes later (minute 02, 12, ...): each tick reads a plan that is 2 to 4 minutes old and starts it
+            # one time. With a fixed `sleep 600` a cycle took 608 seconds, and the plan moved to the limit of the starter
+            # (a plan of 9 minutes starts nothing). Less than a minute to that time: wait for the one after.
+            wait=$((600 - $(date +%s) % 600)); [ $wait -ge 60 ] || wait=$((wait + 600))
+            sleep $wait
           done   # the trap starts the next loop
