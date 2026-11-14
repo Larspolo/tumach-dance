@@ -186,6 +186,20 @@ def who():
     return git("symbolic-ref", "--short", "HEAD", check=False).stdout.strip() or "unknown"
 
 
+def remember(number, name):
+    """Keep the name of the claim of this run on ticket `number` in the git config of this clone (it is not on the
+    remote). A run that changes its branch after the claim keeps its claim: a run claimed with `--or` on the branch of
+    its first candidate, made a branch for the ticket that it got, and the next beat stopped it as "another run"
+    (street-quiz #43, 2026-11-14). name None: forget it (a release)."""
+    key = f"tumach-dance.claim-{number}"
+    git("config", key, name, check=False) if name else git("config", "--unset", key, check=False)
+
+
+def remembered(number):
+    """The name that this clone claimed ticket `number` with, or None."""
+    return git("config", "--get", f"tumach-dance.claim-{number}", check=False).stdout.strip() or None
+
+
 def lane():
     """" lane NAME" when the run set `git config tumach-dance.lane NAME` (a Haiku run, #1727), else "": the pacer
     counts the runs of each lane (`health.lane_claims`)."""
@@ -471,13 +485,19 @@ def release(number, remote="origin", word="Release", by=None, adopt=None):
         return None
     ref = slot(number, max(found))
     line = subject(ref, remote)
+    if not adopt and not by and line.split(" ")[3:4] == [remembered(number)]:
+        adopt = remembered(number)                          # the own claim, made on another branch: it gets this name
     if line.split(" ")[3:4] not in ([by or who()], [adopt]):  # "Claim #N by <branch> (...)", "Beat #N by <branch>"
         sys.exit(f"{ref} belongs to another run: {owner(line)} took #{number} over ({line}). Stop the work on #{number}"
                  f" now: no push, no comment, no release; pick the next ticket.")
     own = account() or (m[0] if adopt and (m := re.search(r" account \S+", line)) else "")   # the account of the brief
     tag = own + (re.search(r" lane \w+$", line)[0] if adopt and re.search(r" lane \w+$", line) else lane())
     sha = git("commit-tree", EMPTY_TREE, "-p", "FETCH_HEAD", "-m", f"{word} #{number} by {by or who()}{tag}").stdout.strip()
-    return ref if push(sha, ref, remote) else None
+    if not push(sha, ref, remote):
+        return None
+    if not by:                                              # a claim with a given name (the pacer) is not of this clone
+        remember(number, None if word == "Release" else who())
+    return ref
 
 
 def revived(path=CONFIG["docs"]["learnings"], base=f"origin/{CONFIG['branch']}"):
@@ -919,6 +939,7 @@ def claim_ticket(number, takeover=False, remote="origin"):
             return 1
     ref = claim(number, takeover, remote, stale_limit(number, remote) if takeover else STALE)
     if ref:
+        remember(number, who())
         mark_commits()
         print(f"claimed {ref}")
         if on_github(remote) and not takeover:
