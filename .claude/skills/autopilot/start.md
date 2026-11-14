@@ -72,9 +72,9 @@ Candidates: open issues without `needs-human`, `blocked`, `epic`, `agent-status`
 least overlap with the work in progress (files and functions that open PRs change or claimed tickets name, #487),
 then the lowest issue number.
 Section `Candidates` shows them in this order, without held tickets (`dashboard.py --next`: all of them).
-A main run never takes a ticket of a `reserved` lane (`lane:haiku`, `lane:deep`, #1994).
-**Lane runs** (the argument names `lane haiku` or `lane deep`): read `queue.md`, section of the lane, before the pick.
-Before the pick (only deep runs while `reserved` names `deep`), check the open epics with no open sub-issue (at most 3 per run), and refill the queue when R < N
+A run of the default lane (Opus) never takes a ticket of a `reserved` lane (`lane:haiku`, `lane:sonnet`, `lane:fable`, #1994).
+**Lane runs** (the argument names `lane haiku`, `lane sonnet` or `lane fable`): read `queue.md`, section of the lane, before the pick.
+Before the pick (only the runs of the duty lane: `queue.md`), check the open epics with no open sub-issue (at most 3 per run), and refill the queue when R < N
 (N = the target and R = the ready tickets on the stderr line of `python3 framework/tools/usage.py --fire`): `queue.md`.
 If there is no candidate, go to step 8 and report "No ticket is ready".
 Claim with `python3 framework/tools/claim.py N --or M K` (the candidates in order: one call tries each). It pushes a unique

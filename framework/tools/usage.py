@@ -519,7 +519,7 @@ def fire(usage, now, burn=BURN, burn7=None, skip=(), status=None, started=None, 
         kinds = reviews()
         need, only_review = (" and ".join(kinds) + " due", True) if kinds else ("", False)
     refill = (1 if only_review else refill_runs(open_all, now)) if need else 0   # #3547: no refill run with no work
-    refill_lane = "deep" if "deep" in dashboard.RESERVED else None
+    refill_lane = dashboard.DUTY if dashboard.DUTY in dashboard.RESERVED else None
     wait = pending(started or {}, refs, now, refill_lane=refill_lane)
     eq += sum(n * weights.get(t, 1) for t, n in wait.items())
     lanes = [(n, 0 if n in skip else len(dashboard.candidates(open_all, lane=n)), weights[n]) for n in weights]   # agent.toml order

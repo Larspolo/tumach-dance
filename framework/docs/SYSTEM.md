@@ -126,6 +126,12 @@ cycle, at `max_ci_queue` (default 5) none. A run asks `usage.py --flow` in autop
 repairs PRs and takes no new ticket.
 A PR with the label `conflict` and no new commit for 10 minutes is stalled: a run takes it over (`claim.py`, #1773).
 Automerge adds the label when its own merge of main with the drivers finds a real conflict (#3199), Unconflict when its merge of main finds a real conflict.
+**The lanes** (owner, 2026-11-14): the name of a lane is its model. The lanes are `haiku`, `sonnet`, the default lane
+(Opus: the tickets with no lane label) and `fable`. `weights` and `reserved` in `[pacing]` name the lanes with a label,
+and `duty` names the lane of the epic check, the queue refill and the reviews. Each run has the default effort of the
+platform. With `starts = "session"` in `[pacing]`, the starter session of the hub starts each run with the model of
+its lane: the project needs no scheduled task and no secret, and the setup steps for the scheduled tasks in this
+document are not necessary.
 The target counts Opus runs. A run of a cheap lane counts its weight (#1727): a Haiku run sets `git config tumach-dance.lane haiku`,
 its claims end with ` lane haiku`, the `Usage:` lines count its runs (`· haiku N`), and `health.lane_weights` measures
 the weight from them (least squares, at least 10 intervals with Haiku runs; before that `weights` of `agent.toml`,

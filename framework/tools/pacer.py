@@ -525,6 +525,13 @@ def switch(config=None):
     return (usage.CONFIG if config is None else config)["pacing"]["pacer"] == "workflow"
 
 
+def starter(config=None):
+    """True when a starter session of the fleet starts the runs (`starts = "session"` in `[pacing]`): the pacer plans
+    and logs each cycle, and sends no call. Then a project needs no scheduled task and no secret of its own (the hub,
+    decision A2 of 2026-11-13). The starter reads `k` and `plan` of the newest record."""
+    return (usage.CONFIG if config is None else config).get("pacing", {}).get("starts") == "session"
+
+
 def main(argv=None, env=os.environ):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--dry-run", action="store_true", help="print the calls, send nothing")
@@ -564,13 +571,14 @@ def main(argv=None, env=os.environ):
     if many:
         line += " · accounts " + ", ".join(f"{n} missing {missing[n]:.1f}" if n in missing else f"{n} no read"
                                            for n in envs)
-    has = lambda acct, task: has_url(envs[acct], task)
+    plan_only = starter()                              # the starter session starts the runs: plan and log only
+    has = lambda acct, task: not plan_only and has_url(envs[acct], task)
     todo = [(task, envs[acct][f"PACER_URL_{task.upper()}"], envs[acct][f"PACER_TOKEN_{task.upper()}"], acct)
             for task, acct in assign(k, runs, missing, weights, has)]
     hour = recent_starts(a.log, now, 60) if a.log else {}   # the starts of the last hour: the `context:` line
     briefs = Briefs(todo, out, now, found, a.dry_run, hour, reads if many else None)
-    skipped = sorted({t for t, n in [*runs.items(), ("main", k - sum(runs.values()))]
-                      if n and not any(has(acct, t) for acct in missing)})
+    skipped = [] if plan_only else sorted({t for t, n in [*runs.items(), ("main", k - sum(runs.values()))]
+                                           if n and not any(has(acct, t) for acct in missing)})
     failed, limited, count = [], set(), {}             # limited: (account, task) at the hourly limit
     started = dict.fromkeys([*runs, "main"], 0)
 
@@ -625,6 +633,7 @@ def main(argv=None, env=os.environ):
     print(f"Pacer {at:%H:%MZ}: K={k}, "
           + ", ".join(f"{t} {n}" for t, n in runs.items())
           + f". {'Would start' if a.dry_run else 'Started'} " + json.dumps(started)
+          + (", the starter session starts them" if plan_only else "")
           + (f", no URL for {', '.join(skipped)}" if skipped else "")
           + (f", hourly limit: {', '.join(sorted({t for _, t in limited}))}" if limited else "")
           + (f", {'; '.join(unread)}" if unread else "")
@@ -642,6 +651,7 @@ def main(argv=None, env=os.environ):
                          for n, u in reads.items()} if many else None          # the quota of each account (#4239)
                 f.write(json.dumps({**record(at, found, burn, burn7, k, runs, started, line, problems, gh, quota),
                                     "briefs": briefs.given, "next": {str(n): t for n, t in briefs.next.items()}}
+                                   | ({"starts": "session"} if plan_only else {})
                                    | ({"accounts": {x: sum(c for (y, _), c in count.items() if y == x) for x in envs}}
                                       if many else {})) + "\n")
         except OSError as e:

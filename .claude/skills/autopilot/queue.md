@@ -11,24 +11,34 @@ pacer that this run is cheap, #1727). Pick only from its section `Candidates`, s
 process review, and stop when no `lane:haiku` ticket is ready. Do one ticket per run: stop after its report,
 also with the argument `max` (a Haiku call costs 5 times more above 100k prompt tokens, and the Haiku runs
 reached 91k to 200k; the pacer starts a fresh run with a 65k context for the next ticket, 2026-10-28). A ticket that is not as clear as its label says: release
-the claim, remove `lane:haiku`, comment why in one line, and take the next one. Write the report with `framework/tools/report.py` (`report.md`): it adds `· lane haiku` from the git config (#1982).
+the claim, change its label `lane:haiku` to `lane:sonnet`, comment why in one line, and take the next one. Write the report with `framework/tools/report.py` (`report.md`): it adds `· lane haiku` from the git config (#1982).
 
-## Deep lane (step 5)
+## Sonnet lane (step 5)
 
-The main runs work at low effort (owner, 2026-10-28). The scheduled task "tumach-dance autopilot deep" runs at high
-effort for the work where the thinking matters more than the typing (`ticket` skill, "Model lanes"). When the argument
-names `lane deep`, run `python3 framework/tools/cycle_start.py --lane deep` first: it sets `git config tumach-dance.lane deep` (the
-claims and the report then name the lane). Pick from its section `Candidates`. A deep run does the epic check and the queue refill of step 5, the roadmap
-review and the process review: while `reserved` in `[pacing]` of `steering/system/system.toml` names `deep`, `claim.py` gives those
-locks (`--review`, `--roadmap`, `--refill`) only to deep runs, and the other runs skip them. Stop when no `lane:deep`
-ticket is ready and the refill is done, or at 120k context (`more.md`): the main runs take the other tickets for less.
+When the argument names `lane sonnet`, do as a Haiku run does, with `--lane sonnet` and the `lane:sonnet` tickets: one
+ticket per run, and no epic check, queue refill, roadmap review or process review. A ticket that is not as clear as
+its label says: release the claim, remove `lane:sonnet` (the Opus runs then take it), comment why in one line, and take
+the next one.
+
+## Fable lane and the duty lane (step 5)
+
+The name of a lane is its model (owner, 2026-11-14). Each run has the default effort of the platform, and the Fable
+runs do the tickets where a wrong answer costs the most (`ticket` skill, "Model lanes"). When the argument names
+`lane fable`, run `python3 framework/tools/cycle_start.py --lane fable` first: it sets `git config tumach-dance.lane fable` (the
+claims and the report then name the lane). Pick from its section `Candidates`. Stop when no `lane:fable` ticket is
+ready, or at 120k context (`more.md`): the other runs take the other tickets for less.
+
+The duty lane does the epic check and the queue refill of step 5, the roadmap review and the process review. It is
+`duty` in `[pacing]` of `steering/system/system.toml`. With `duty = "opus"`, the runs of the default lane (no lane in
+the argument) do this work, and the runs of a lane with a label skip it. While `reserved` names the duty lane, only
+its runs do this work. `claim.py` gives the locks (`--review`, `--roadmap`, `--refill`) only to a run of the duty lane.
 
 ## Large tickets (step 4)
 
 If the size is L, split it into S or M sub-issues with the `ticket` skill. Give the parent label `epic`.
 If the top candidate of step 5 has `size:L`, split it now (`ticket` skill), then pick again.
-While `reserved` in `agent.toml` names `deep`, only a deep run splits (`claim.py E --refill` exits 1 in the other
-runs): give the ticket `lane:deep` and pick the next one.
+Only a run of the duty lane splits (`claim.py E --refill` exits 1 in the other runs): a run of another lane picks the
+next ticket. An L ticket has no lane label: remove one, so that the duty lane takes the ticket.
 
 ## Epics and refill (step 5)
 
@@ -48,12 +58,12 @@ for Nina", #552). When the epic waits only for one open ticket #N (all other cri
 PR of #N), end the check comment with the line `Close this epic when #N merges.`: when #N closes as completed by a
 merged PR, `close.yml` adds the evidence comment and the label `close` (`framework/tools/epic_autoclose.py`, #835),
 and the pacer starts no epic check for it. When an open criterion waits only for an open ticket of another epic (often a question for Nina), add a line
-"Part of #E" to the body of that ticket, outside its section `## For Nina`: else the pacer starts a deep run for the
-epic check of E in each cycle (`usage.refill_need`; 3 empty deep runs for #32 and #158 on 2026-11-01, #318). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
+"Part of #E" to the body of that ticket, outside its section `## For Nina`: else the pacer starts a run of the duty lane for the
+epic check of E in each cycle (`usage.refill_need`; 3 empty runs of the duty lane for #32 and #158 on 2026-11-01, #318). Else lock the epic first: `python3 framework/tools/claim.py E --refill`
 (E = the epic; exit 1: another run makes its sub-issue, skip the epic, #505). Then make one sub-issue (same priority)
 for the criteria that an agent can do. A criterion that needs the owner stays on the epic. Then pick again (#176, #155 waited while P3 tickets ran).
-Release checks: when `cycle_start.py` prints the section "Release checks (no ticket, make them in the refill)", a deep
-run makes a check ticket for each listed check (`roadmap` skill, "Release checks"), also when the open epics have work
+Release checks: when `cycle_start.py` prints the section "Release checks (no ticket, make them in the refill)", a run of the duty
+lane makes a check ticket for each listed check (`roadmap` skill, "Release checks"), also when the open epics have work
 left, and writes its number in the `ticket` column of `steering/project/RELEASE.md` (a PR). Lock it first:
 `python3 framework/tools/claim.py 0 --refill` (exit 1: another run makes them, #3342).
 Refill the queue when fewer candidates are ready than the target number of runs, so that parallel runs always find
@@ -67,7 +77,7 @@ than the ready tickets for this (`agent.toml`): many runs close tickets faster t
 2026-10-28: 3 ready tickets for 40 target runs). It starts them only while an open ticket is less than 60 minutes old
 (`usage.refill_runs`), else 1: an empty refill run costs quota. It starts none when R >= N and no epic or release check
 waits (`usage.refill_need`, #3547), and none when R < N and the refill has no source: no such check, no roadmap
-feature with no epic and no fallback (#3560). A due process or roadmap review starts one too (deep locks).
+feature with no epic and no fallback (#3560). A due process or roadmap review starts one too (the locks of the duty lane).
 It starts none while a refill lock is younger than `refill_gap` minutes (`agent.toml`, `usage.refill_recent`), unless R < N / 2
 or a review is due: a review has its own lock (owner, 2026-10-29).
 Give each new ticket its lane (`ticket` skill, "Model lanes").
