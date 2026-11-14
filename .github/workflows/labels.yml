@@ -15,6 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Rename the labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # A line "#rename OLD|NEW" of labels.txt: each issue keeps the label under its new name. When both names
+          # exist, the open issues with the old label get the new one, and the old label goes.
+          grep '^#rename ' .github/labels.txt | sed 's/^#rename //' | while IFS='|' read -r old new; do
+            names=$(gh label list --limit 500 --json name --jq '.[].name')
+            if ! grep -qxF "$old" <<<"$names"; then continue; fi
+            if ! grep -qxF "$new" <<<"$names"; then
+              gh label edit "$old" --name "$new"
+            else
+              for n in $(gh issue list --state open --label "$old" --limit 1000 --json number --jq '.[].number'); do
+                gh issue edit "$n" --add-label "$new" --remove-label "$old"
+              done
+              gh label delete "$old" --yes
+            fi
+          done
       - name: Create or update the labels
         env:
           GH_TOKEN: ${{ github.token }}

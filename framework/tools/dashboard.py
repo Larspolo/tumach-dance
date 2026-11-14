@@ -157,6 +157,10 @@ def overlap(issue, busy):
 
 LANE = "lane:"     # a lane label names the model of the runs that take the ticket (`lane:haiku`, #1715)
 RESERVED = tuple(CONFIG.get("pacing", {}).get("reserved", ()))   # lanes whose tickets Opus runs never take (#1994)
+# The lane of the epic check, the queue refill and the reviews, while `reserved` names it. Else the runs of the
+# default lane (no lane label) do them. The lanes have the names of their models since 2026-11-14 (owner): a
+# project with the old lane `deep` needs no `duty` line.
+DUTY = CONFIG.get("pacing", {}).get("duty", "deep")
 
 
 def candidates(issues, busy=frozenset(), now=None, lane=None, reserved=RESERVED, after=prs_after):

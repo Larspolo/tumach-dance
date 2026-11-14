@@ -1,6 +1,6 @@
 ---
 name: scheduled
-description: The start of a scheduled, unattended autopilot run. The prompt of each scheduled task is only "/scheduled ARGUMENT", so git controls the text (owner, 2026-10-29). Argument - the autopilot argument, for example "max", "max lane haiku" or "max lane deep".
+description: The start of a scheduled, unattended autopilot run. The prompt of each scheduled task is only "/scheduled ARGUMENT", so git controls the text (owner, 2026-10-29). Argument - the autopilot argument, for example "max", "max lane haiku", "max lane sonnet" or "max lane fable".
 ---
 
 # Scheduled run

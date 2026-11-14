@@ -11,9 +11,13 @@ TOOL = os.path.join(os.path.dirname(__file__), "..", "tools", "claim.py")
 
 
 def deep(dirs):
-    """The lock tests run as deep runs: agent.toml gives these locks only to the deep lane (2026-10-28)."""
-    for d in dirs:
-        subprocess.run(["git", "config", "tumach-dance.lane", "deep"], cwd=d, check=True)
+    """The lock tests run as runs of the duty lane: `claim.py` gives these locks only to that lane (2026-10-28). The
+    duty lane is a setting of the project (`duty` in `[pacing]`): a lane with a label while `reserved` names it, else
+    the default lane, which has no lane in the git config."""
+    import claim
+    if claim.duty() in claim.CONFIG.get("pacing", {}).get("reserved", ()):
+        for d in dirs:
+            subprocess.run(["git", "config", "tumach-dance.lane", claim.duty()], cwd=d, check=True)
 
 
 def test_one_run_refills_an_epic(clones):  # noqa: F811

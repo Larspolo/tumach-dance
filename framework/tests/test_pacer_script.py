@@ -29,7 +29,8 @@ def server():
     httpd.shutdown()
 
 
-def run(monkeypatch, k, runs, env, argv=()):
+def run(monkeypatch, k, runs, env, argv=(), plan_only=False):
+    monkeypatch.setattr(pacer, "starter", lambda config=None: plan_only)   # not the `starts` setting of the project
     monkeypatch.setattr(pacer.usage, "read_usage", lambda: {"five_hour": (0.2, 0, "allowed")})
     monkeypatch.setattr(pacer.usage, "fire", lambda *a, skip=(), status=None, **kw: (k, {t: 0 if t in skip else n for t, n in runs.items()}, "x"))
     monkeypatch.setattr(pacer.usage, "read_status", lambda: ([], ""))

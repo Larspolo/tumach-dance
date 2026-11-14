@@ -200,11 +200,17 @@ def account():
     return f" account {name}" if name else ""
 
 
+def duty():
+    """The lane of the process review, the roadmap review and the queue refill: `duty` in `[pacing]` of
+    `steering/system/system.toml`, default `deep` (the name of that lane before the lanes got the names of their models)."""
+    return CONFIG.get("pacing", {}).get("duty", "deep")
+
+
 def deep_lane():
-    """True when this run may do the process review, the roadmap review and the queue refill: always, but only the
-    runs of the deep lane while `reserved` in `[pacing]` of `steering/system/system.toml` names `deep` (owner, 2026-10-28): the main runs
-    work at low effort, and these steps steer many later tickets."""
-    return "deep" not in CONFIG.get("pacing", {}).get("reserved", ()) or lane() == " lane deep"
+    """True when this run may do the process review, the roadmap review and the queue refill. These steps steer many
+    later tickets (owner, 2026-10-28): while `reserved` in `[pacing]` names the lane `duty()`, only its runs do them.
+    Else the runs of the default lane do them, and a run of a lane with a label (a cheaper or a dearer model) does not."""
+    return lane() == (f" lane {duty()}" if duty() in CONFIG.get("pacing", {}).get("reserved", ()) else "")
 
 
 def push(sha, ref, remote="origin"):
@@ -749,8 +755,8 @@ def main(argv=None):
         print(f"fixmain {sha}: another run makes the ticket")
         return 1
     if (a.review or a.roadmap or a.refill) and not deep_lane():
-        print(f"the deep lane does the {'process review' if a.review else 'roadmap review' if a.roadmap else 'queue refill'}"
-              " (`reserved` in agent.toml names `deep`): skip it")
+        print(f"the {duty()} lane does the {'process review' if a.review else 'roadmap review' if a.roadmap else 'queue refill'}"
+              " (`duty` and `reserved` in `[pacing]`): skip it")
         return 1
     if a.review or a.roadmap:
         kind = "review" if a.review else "roadmap"

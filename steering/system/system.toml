@@ -8,9 +8,14 @@ week_share = 0.125              # the part of the weekly budget of the account t
 week_reserve = 0.10             # the part of the week that the runs leave to the sessions of the owner, until 12 hours before the weekly reset
 max_waiting_prs = 10            # flow brake: at this many old agent PRs the pacer starts only 1 repair run
 max_ci_queue = 5                # flow brake: at this many queued CI runs the pacer starts no run
-weights = { haiku = 0.25, deep = 4.0 }   # a lane run in Opus runs (start value); deep: high effort
-reserved = ["haiku", "deep"]    # lanes whose tickets Opus runs never take; with deep, only deep runs do the reviews and the refill
+weights = { haiku = 0.25, sonnet = 0.5, fable = 2.5 }   # a lane run in Opus runs: Haiku is measured; Sonnet and Fable are start values from the list prices (2026-11-14)
+reserved = ["haiku", "sonnet", "fable"]    # lanes whose tickets the Opus runs never take. The name of a lane is its model (owner, 2026-11-14)
+duty = "opus"                   # the lane of the epic check, the queue refill and the reviews. `opus` is the default lane (no lane label);
+                                # a reserved lane here (`fable`) gives this work to the runs of that lane only
 pacer = "workflow"              # pacer.yml starts the runs (framework/tools/pacer.py); another value stops its loop
+starts = "session"              # the starter session of the hub starts the planned runs (its docs/STARTER.md): the project
+                                # needs no scheduled task and no secret. With no `starts` line, pacer.yml starts them with the
+                                # API triggers of the scheduled tasks, as before 2026-11-14
 trigger = "trig_015JKzCbK8uPqq8FJnMWsYTK"   # the ID of the scheduled task "NAME autopilot": framework/docs/OPERATOR.md, section 3
 
 [review]                        # the process review (`improve` skill): merged PRs, never hours

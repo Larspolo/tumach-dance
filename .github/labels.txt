@@ -25,8 +25,10 @@ release|0e8a16|The epic "Release vX.Y.Z" (its milestone holds the scope): the Re
 hold|fbca04|On a PR: the Automerge workflow does not merge it
 automerge|0e8a16|On a PR: the Automerge workflow merges it when CI is green, on any branch
 conflict|b60205|On a PR: the Automerge workflow could not merge it
-lane:deep|5319e7|A hard ticket for a run at the default effort (ticket skill, "Model lanes")
+#rename lane:deep|lane:fable
+lane:fable|5319e7|A hard ticket for a Fable run (ticket skill, "Model lanes")
 lane:haiku|c2e0c6|A clear, templated ticket for a Haiku run (ticket skill, "Model lanes")
+lane:sonnet|bfd4f2|A clear ticket with little to decide, for a Sonnet run (ticket skill, "Model lanes")
 process|5319e7|Improves the agent system itself: the loop, the tools, the setup
 close|0e8a16|The Close workflow closes this issue as completed (#1740)
 site-down|b60205|The Site watch found that the live site does not work (tools/site_watch.py)
