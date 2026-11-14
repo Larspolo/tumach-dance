@@ -21,7 +21,7 @@ GREEN = [("quick", "completed", "success"), ("browser", "completed", "success")]
 
 def test_a_held_idle_pr_with_green_checks_asks_the_owner_to_remove_hold():
     line = start.pr_work(held_pr(), ISSUES, GREEN, None, NOW)
-    assert "ask the owner to remove `hold`" in line
+    assert "ask the owner on #581 with a card to remove" in line and "`hold`" in line
     assert "green" in line
     assert "#581" in line
 
@@ -30,8 +30,8 @@ def test_a_held_idle_pr_with_a_red_browser_check_names_it():
     checks = [("quick", "completed", "success"), ("browser", "completed", "failure")]
     line = start.pr_work(held_pr(), ISSUES, checks, None, NOW)
     assert "browser" in line
-    assert "ask the owner" not in line
-    assert "add `needs-human` to #581 with the reason" in line
+    assert "to remove" not in line
+    assert "ask the owner on #581 with a card that gives the reason" in line
 
 
 def test_a_held_pr_with_a_live_claim_or_recent_change_needs_no_work():
